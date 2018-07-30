@@ -136,7 +136,7 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 
-let server = app.listen(4000, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
