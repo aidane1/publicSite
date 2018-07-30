@@ -6,21 +6,21 @@ let fs = require("fs");
 
 let bodyParser = require("body-parser");
 
-// let User = require("../models/userchar");
+let User = require("../models/userchar");
 
-// let Course = require("../models/coursechar");
+let Course = require("../models/coursechar");
 
 let session = require("express-session");
 
-// let Events = require("../models/eventschar");
+let Events = require("../models/eventschar");
 
 let socket = require("socket.io")
 
 let cookieParser = require("cookie-parser");
 
-// let Texts = require("../models/textchar.js");
+let Texts = require("../models/textchar.js");
 
-// let Resources = require("../models/resourcechar.js");
+let Resources = require("../models/resourcechar.js");
 
 let nodemailer = require("nodemailer");
 
@@ -42,5 +42,9 @@ app.listen(4000, function() {
 });
 
 app.get("/", function(req,res) {
-  res.sendFile(__dirname + "/index.html");
+  res.redirect("/login");
 });
+
+app.get("/login", function(req, res) {
+  res.render("login", {error: ""})
+})

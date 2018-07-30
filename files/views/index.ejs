@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" type = "text/css" href = "css/home.css" >
+    <script src = "js/home.js"></script>
+    <title></title>
+    <script>
+
+      function changeFunction(x) {
+        x.classList.toggle("change");
+        document.getElementById("holder").classList.toggle("expanded");
+        document.getElementById("menu").classList.toggle("expand");
+      }
+      function confineFunction() {
+        menuIcon.classList.toggle("change");
+        document.getElementById("holder").classList.toggle("expanded");
+        document.getElementById("menu").classList.toggle("expand");
+      }
+      window.onload = function() {
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+          document.getElementById("chatroom").style.display = "none";
+        }
+      }
+
+
+
+    </script>
+    <style>
+
+      .LCRoom {
+
+        height: 50px;
+        /* border: 5px solid black; */
+      }
+
+      /* for computers */
+      @media screen and (min-width: 768px) {
+        .backdrop {
+
+          display: flex;
+
+          flex-wrap: wrap;
+          justify-content:center;
+        }
+        .box {
+
+          width: 350px;
+          height: 600px;
+          border: 5px solid black;
+          margin: 15px;
+          margin-right: 7%;
+          margin-left: 7%;
+        }
+        .initDisplay {
+          display: none;
+        }
+        .classHolder {
+          width: 340px;
+        }
+        .allHomework {
+          width: 30%;
+          height: 70%;
+          left: 35%;
+          min-width: 500px;
+          top: 15%;
+          z-index: 50;
+          position: absolute;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- <%=(courses[0].resource[0].url)%> -->
+
+
+    <div class = "backdrop" id = "backdrop">
+      <div class="menuIcon" onclick = "changeFunction(this)" id = "menuIcon">
+        <span class="line1"></span>
+        <span class="line2"></span>
+        <span class="line3"></span>
+      </div>
+      <nav class = "menu" id = "menu">
+        <ul class = "holder" id = "holder" onclick = "confineFunction()">
+          <li class = "item"><a href = "#courses">Courses</a></li>
+          <li class = "item"><a href = "#LC">LC's that are open</a></li>
+          <li class = "item"><a href = "#news">News & Calendar</a></li>
+          <li class = "item"><a href = "#money">Ways to get free money</a></li>
+          <li class = "item"><a href = "#resources">Resources</a></li>
+          <li class = "item"><a href = "/logout">Logout</a></li>
+          <li class = "item" id = "chatroom"><a href = "/chatroom">Chatroom</a></li>
+
+
+        </ul>
+      </nav>
+
+      <div id = "initDisplay" class = "box initDisplay">
+        <div class = "block">P V S S</div>
+
+      </div>
+
+      <div id = "allHomework" class = "allHomework">
+        <div id = 'x' onclick = "removeModal()" style = "cursor: pointer">&#10005;</div>
+        <div class = "modalHolder">
+          <ul class = "courseModalHolder">
+
+            <% homework.forEach(function(homeworkGiven) { %>
+              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('')%>')" class = "modalBlock"><%=homeworkGiven[0]%></li>
+            <% }); %>
+
+          </ul>
+        </div>
+        <% homework.forEach(function(theHomeworkGiven) { %>
+          <div class = "modalBox" id = "<%=theHomeworkGiven[0].split(' ').join('')%>">
+            <% for (var i = 0; i < theHomeworkGiven[1].length; i++) { %>
+              <br>
+              <% if (theHomeworkGiven[1][i].assignment != "") { %>
+                  <%=theHomeworkGiven[1][i].date%>
+                  <br>
+                  <%=theHomeworkGiven[1][i].assignment%>
+                  <br>
+                  notes: <%=theHomeworkGiven[1][i].notes%>
+                  <br>
+                  <br>
+              <% } else { %>
+                  <%=theHomeworkGiven[1][i].date%>
+                  <br>
+                  Q#<%=theHomeworkGiven[1][i].questions%>, pg.<%=theHomeworkGiven[1][i].page%>
+                  <br>
+                  notes: <%=theHomeworkGiven[1][i].notes%>
+                  <br>
+                  <br>
+              <% } %>
+
+            <% } %>
+          </div>
+        <% }); %>
+
+
+      </div>
+      <div id = "courses" class = "courses box" name = "courses">
+        <div class = "header">Courses</div>
+
+
+        <div class = "infoBox large">
+          <div class = "header2">Your courses today&nbsp; <a href = "courses" style = "font-size: 12px; color: #38c450">edit</a></div>
+          <div id = "todayCourses" class = "todayCourses">
+            <ul style = "list-style-type: none">
+
+
+
+              <% for (var i = 0; i < todaysCourses.length; i++) { %>
+                <% if (i == 0 ) { %>
+                  <li>9:10-10:12 : <%=blockOrder[i]%></li>
+                <% }  else if (i == 1) { %>
+                  <li>10:15-11:17 : <%=blockOrder[i]%></li>
+                  <li>11:19-11:29 : TA</li>
+                <% } else if (i == 2) { %>
+                  <li>11:29-12:31 : <%=blockOrder[i]%></li>
+                  <li>12:32-1:15 : Lunch</li>
+                <% } else if (i == 3) { %>
+                  <li>1:16-2:18 : <%=blockOrder[i]%></li>
+
+                <% } else if (i == 4) { %>
+                  <li>2:21-3:23 : <%=blockOrder[i]%></li>
+                <% }%>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+        <div class = "infoBox">
+          <div class = "header2">Today's homework</div>
+          <div id = "possibleCourses" class = "possibleCourses">
+            <table class = "switchTable">
+
+
+              <% homework.forEach(function(theHomeworkCourse) { %>
+                <tr>
+                  <td><a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a>&nbsp;&nbsp;<%=theHomeworkCourse[0]%></td>
+                  <td>
+
+                    <% if (theHomeworkCourse[1].length != 0) { %>
+                      <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
+                            Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%><br>
+                      <% } else { %>
+                            <a style = "text-decoration: underline; color: #38c450" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')">view assignment</a><br>
+                      <% } %>
+                    <% } %>
+
+
+
+
+                  </td>
+                </tr>
+              <% }); %>
+
+            </table>
+          </div>
+          <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" style = "text-decoration: underline; color: #38c450; cursor: pointer;"> view all</a></i>
+        </div>
+        <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned">
+          Click to submit assigned homework
+        </button></a>
+      </div>
+
+
+      <div id = "LC" class = "LC box" name = "LC">
+        <div class = "header">LC's that are open</div>
+        <ul class = "openRooms">
+          <% lcSchedule.forEach(function(LC) { %>
+            <li class = "LCRoom"><%=LC%></li>
+          <% }); %>
+
+        </ul>
+      </div>
+
+
+      <div id = "news" class = "news box" name = "news">
+        <div class = "header">News & Calendar</div>
+        <div class = "calendar">
+          <div class = "currentMonth">
+            <%=month%>
+          </div>
+          <table class = "shownCalendar" id = "calendar">
+
+            <tr>
+              <th>S</th>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
+            </tr>
+            <tr>
+              <% for (var i = 0; i < calendar.length; i++) { %>
+                  <% if (i >= calendar[0][2]) { %>
+
+
+                    <td><%=calendar[i-calendar[0][2]][1]+1%>
+
+                      <br>
+
+
+
+                      <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
+                        <% if (calendar[i-calendar[0][2]][2] === 0) { %>
+                          <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                        <% } else if (calendar[i-calendar[0][2]][2] === 6) { %>
+                          <div class = "event">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                        <% } else { %>
+                          <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                        <% } %>
+
+                        <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
+                          <%=calendar[i-calendar[0][2]][0][k]%>
+                          <hr>
+                        <% } %>
+                        <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
+                        </span>
+                        </div>
+
+
+
+                      <% } %>
+                    </td>
+                  <% } else { %>
+                    <td></td>
+                  <% } %>
+                  <%if((i+1) % 7 === 0) { %>
+                    </tr>
+                    <tr>
+                  <%}%>
+              <% } %>
+            </tr>
+
+          </table>
+        </div>
+
+        <button class = "newsMore">
+          <a href = "/calendar" style = "text-decoration: none; color: white;">Click to see more...</a>
+        </button>
+
+      </div>
+
+
+      <div id = "money" class = "money box" name = "money">
+        <div class = "header">Ways to get free money</div>
+      </div>
+
+
+      <div id = "resources" class = "resources box" name = "resources">
+        <div class = "header" style = "margin-bottom: 15px;">Resources</div>
+        <div class = "classHolder">
+          <ul class = "helperHolder">
+
+            <% courses.forEach(function(course) { %>
+              <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
+            <% }); %>
+
+          </ul>
+        </div>
+        <div class = "resourceBox" style = "display: block; background-color: white" id = "baseBox"></div>
+
+
+        <%for (var i = 0; i < courses.length; i++) {%>
+          <div class = "resourceBox" id = "rsb<%=courses[i].course.split(' ').join('')%>">
+            Videos:
+            <br>
+
+            <br>
+            <% if (courses[i].resource.length != 0) { %>
+              <% for (var j = 0; j < courses[i].resource.length; j++) { %>
+                <a href = "<%=courses[i].resource[j].url%>"><%=courses[i].resource[j].description%></a>
+                <br>
+                <br>
+              <% } %>
+
+            <% }%>
+            <br>
+            websites:
+            <br>
+            <br>
+            <br>
+            textbooks:
+          </div>
+        <%}%>
+
+        <div class = "addMore">
+          <i>Think we're missing something? submit it <a href = "/suggestions">here</a>...</i>
+        </div>
+
+      </div>
+
+    </div>
+    <div class = "colors" id = 'colors'>
+
+    </div>
+
+
+
+  </body>
+</html>
