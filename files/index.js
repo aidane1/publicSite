@@ -137,7 +137,9 @@ let server = app.listen(80, function() {
 });
 
 app.get("*", function(req, res) {
-  res.redirect("https://" + req.headers.host + req.url);
+  if (!req.secure) {
+      res.redirect("https://pvstudents.ca" + req.url);
+  }
 });
 
 
