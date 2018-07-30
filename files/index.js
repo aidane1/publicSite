@@ -142,7 +142,7 @@ app.enable('trust proxy');
 //   }
 // });
 
-//awfawf 
+//awfawf
 let server = app.listen(80, function() {
   console.log("listening for requests");
 });
@@ -522,7 +522,7 @@ app.get("/chatroom", function(req,res) {
 
 
 let io = socket(server);
-
+io.set('match origin protocol', true);
 io.on("connection", function(socket) {
 
 
