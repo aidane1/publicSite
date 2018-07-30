@@ -350,3 +350,191 @@ app.post("/courses", urlencodedParser, function(req, res) {
     res.redirect("/login");
   }
 });
+
+
+
+
+app.get("/add", function(req, res) {
+  res.sendFile(__dirname + "/add.html");
+});
+app.post("/add", urlencodedParser, function(req, res) {
+  var courseData = {
+    teacher : req.body.teacher,
+    course : req.body.course.toLowerCase(),
+    block : req.body.block.toUpperCase(),
+    code : req.body.code.toUpperCase()
+  }
+  Course.create(courseData, function() {
+    res.redirect("/add");
+  });
+});
+
+
+
+app.get("/calendar", function(req, res) {
+  let currentDate = new Date();
+  let monthsArray = [];
+  let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
+  Events.find({year : (currentDate).getFullYear()}, function(err, yearEvent) {
+    let theDay = new Date("september 1" + currentDate.getFullYear().toString()).getDay();
+    let daysArray = [];
+    let sumDays = 0;
+    let foundEvent = false;
+    for (var i = 0; i < 10; i++) {
+      let currentMonth = [];
+      for (var j = 0; j < getDays((i+8)%12); j++) {
+        let dayEvents = [];
+        foundEvent = false;
+        for (var k = 0; k < yearEvent.length; k++) {
+          if (yearEvent[k].month === (i+8)%12 && yearEvent[k].day === j) {
+            foundEvent = true;
+            dayEvents.push(yearEvent[k].time + ": " + yearEvent[k].info);
+          }
+        }
+        currentMonth.push([dayEvents, j, (theDay%7)]);
+        theDay++;
+      }
+      monthsArray.push(currentMonth);
+    }
+
+    res.render("calendar", {calendar : monthsArray, months : monthsNames});
+  });
+
+});
+
+
+
+app.get("/submit", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("submitWork", {user : user.username, courses : user.courses, error : ""});
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/submit", urlencodedParser, function(req, res) {
+  var tampered = false;
+  for (var key in req.body) {
+    if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed") {
+      tampered = true;
+
+    }
+  }
+  if (req.session.userId && !tampered) {
+    Course.findOne({_id : req.body.courseID}, function(err, course) {
+        req.body.date = new Date;
+        var newWork = course.homework;
+        newWork.push(req.body);
+
+        Course.findOneAndUpdate({_id : req.body.courseID}, {homework : newWork}).then(function() {
+
+        });
+    });
+    res.redirect("/");
+  } else if (!req.session.userId) {
+    res.redirect("/login");
+  } else if (tampered) {
+    //gonna add a ban function
+    User.findOneAndUpdate({_id : req.session.userId}, {banned : true}).then(function() {
+        res.redirect("/login?banned=true");
+    });
+  }
+});
+
+
+
+app.get("/logout", function(req, res) {
+  req.session.destroy();
+  res.redirect("/login");
+});
+
+app.get("/suggestions", function(req, res) {
+  if (req.session.userId) {
+    res.sendFile(__dirname + "/public/html/suggestions.html");
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/suggestions", urlencodedParser, function(req, res) {
+
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (((new Date()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
+
+
+
+
+        res.redirect("/");
+      } else {
+
+        let mailOptions = {
+          from: "pvsstudents@gmail.com",
+          to: "aidaneglin@gmail.com",
+          subject: "user suggestion",
+          text: req.body.body + "\n\n\nsubmitted by: " + user.firstName + " " + user.lastName + " (" + user.username + ")"
+        }
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+              console.log(error)
+            res.redirect("/")
+          } else {
+            let suggestions = user.suggestions;
+            suggestions.push([req.body.body, new Date()]);
+            User.findOneAndUpdate({_id : req.session.userId}, {suggestions: suggestions}).then(function() {
+              res.redirect("/");
+            });
+          }
+        });
+      }
+    });
+
+
+
+  } else {
+    res.redirect("/login");
+  }
+});
+
+
+
+app.get("/chatroom", function(req,res) {
+  if (req.session.userId) {
+    res.sendFile(__dirname + "/public/html/chatroom.html");
+
+  } else {
+    res.redirect("/login");
+  }
+});
+
+
+let io = socket(server);
+
+io.on("connection", function(socket) {
+
+
+  socket.on("chat", function(data) {
+
+    let id = mongoose.Types.ObjectId(data.id);
+    User.findOne({_id : id}, function(err, user) {
+      if (err) {
+
+      } else {
+
+        let userTextArray = user.texts;
+        userTextArray.push(data.message);
+        Texts.create({date : new Date(), body: data.message, submittedBy : user.username}, function(error, text) {
+          if (error) {
+
+          } else {
+
+          }
+        });
+        User.findOneAndUpdate({_id : user._id}, {texts : userTextArray}).then(function() {
+          data = {message : data.message, username : user.username, firstName: user.firstName, lastName:user.lastName};
+          io.emit("chat", data);
+        });
+      }
+    });
+  });
+});
