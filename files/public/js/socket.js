@@ -4,6 +4,15 @@ let message = document.getElementById("message");
 let btn = document.getElementById("send");
 let output = document.getElementById("outPut");
 
+message.addEventListener('keydown', function(event) {
+    const key = event.keycode; // "a", "1", "Shift", etc.
+    if (key === 13) {
+      let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
+      message.value  = "";
+      socket.emit("chat", info);
+    }
+});
+
 btn.addEventListener("click", function() {
   let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
   message.value  = "";
