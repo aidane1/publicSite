@@ -141,7 +141,7 @@ let server = app.listen(80, function() {
 
 app.get("/", function(req, res) {
   console.log(req.secure);
-
+  console.log(req.protocol);
   let currentDate = new Date();
   let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   if (req.session.userId) {
@@ -297,9 +297,7 @@ app.get("/courses", function(req, res) {
 });
 app.post("/courses", urlencodedParser, function(req, res) {
   if (req.session.userId) {
-    console.log(req.body);
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
-      console.log(theCourse);
       let badCourses = [];
       let goodCourses = [];
       if (typeof req.body.coursesCode === "string") {
