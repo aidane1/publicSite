@@ -37,7 +37,20 @@ mongoose.connection.once("open", function() {
 
 let app = express();
 
-app.listen(4000, function() {
+app.set("view engine", "ejs");
+
+app.use(session({
+  secret: 'a1q2T5-8#1+59',
+  resave: true,
+  saveUninitialized: false
+}));
+
+app.use(express.static('public'));
+
+app.use(cookieParser());
+
+
+var server = app.listen(4000, function() {
   console.log("listening for requests");
 });
 
