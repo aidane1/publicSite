@@ -54,10 +54,96 @@ let server = app.listen(4000, function() {
   console.log("listening for requests");
 });
 
-app.get("/", function(req,res) {
-  res.redirect("/login");
-});
 
+app.get("/", function(req, res) {
+
+  let currentDate = new Date();
+  let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (!user) {
+        res.redirect("/login");
+      } else {
+        var courseCodes = [];
+        user.courses.forEach(function(theCourse) {
+          courseCodes.push(theCourse._id);
+        });
+        Course.find({_id : courseCodes}, function(err, foundCourse) {
+          var homeworkList = [];
+          foundCourse.forEach(function(homeworkCourse) {
+            homeworkList.push([homeworkCourse.course, homeworkCourse.homework]);
+          });
+          // var todaysBlocks = blockToTime((currentDate).getDay() -1);
+          var todaysBlocks = blockToTime(0);
+          var todaysOrderedClasses = [];
+
+          for (var i = 0; i < todaysBlocks.length; i++) {
+            var foundBlock = false;
+            for (var j = 0; j < user.courses.length; j++) {
+              if (user.courses[j].block === todaysBlocks[i]) {
+
+                todaysOrderedClasses.push(user.courses[j].course);
+                foundBlock = true;
+              }
+            }
+            if (!foundBlock) {
+              todaysOrderedClasses.push("LC's");
+            }
+          }
+
+          Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
+            let daysArray = [];
+            let dayEvents = [];
+            for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
+              let todayArray = [];
+              let eventToday = false;
+              dayEvents = [];
+              for (var j = 0; j < monthEvent.length; j++) {
+                if (monthEvent[j].day === i) {
+                  eventToday = true;
+                  dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
+                }
+              }
+              if (!eventToday) {
+                todayArray.push([]);
+              } else {
+                todayArray.push(dayEvents);
+              }
+
+              todayArray.push(i);
+              todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
+              daysArray.push(todayArray);
+
+            }
+            var courseCodes = [];
+            for (var i = 0; i < user.courses.length; i++) {
+              courseCodes.push(user.courses[i].code);
+            }
+            Resources.find({class : courseCodes}, function(err, resource) {
+              // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
+
+              user.courses.forEach(function(userCourse) {
+                userCourse.resource = [];
+                for (var i = 0; i < resource.length; i++) {
+                  if (userCourse.code === resource[i].class) {
+
+                    userCourse.resource.push(resource[i]);
+                  }
+                }
+
+              });
+
+              res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
+            });
+
+          });
+        });
+      }
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
 
 
 
@@ -65,7 +151,6 @@ app.get("/", function(req,res) {
 app.get("/login", function(req, res) {
   res.render("login", {error: ""})
 })
-
 app.post("/login", urlencodedParser, async (req, res, next) => {
   try {
     let response = await User.authenticate(req.body.logname, req.body.logword);
@@ -84,8 +169,6 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 app.get("/signup", function(req, res) {
   res.render("signup", {error : "", data : ["", "", "", ""]});
 });
-
-
 app.post("/signup", urlencodedParser, function(req, res) {
   if (req.body.password != req.body.passwordConf) {
     res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.firstName, req.body.lastName]});
@@ -115,5 +198,72 @@ app.post("/signup", urlencodedParser, function(req, res) {
 
   } else {
     res.redirect("/signup");
+  }
+});
+
+
+
+
+app.get("/courses", function(req, res) {
+    if (req.session.userId) {
+      res.render("addCourses");
+    } else {
+      res.redirect("/login");
+    }
+});
+app.post("/courses", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock }, (err, theCourse) => {
+
+      let badCourses = [];
+      let goodCourses = [];
+      if (typeof req.body.coursesCode === "string") {
+        goodCourses.push(theCourse);
+      } else {
+        for (var i = 0; i < req.body.coursesBlock.length; i++) {
+          var currentCheck = req.body;
+          theCourse.forEach(function(course) {
+            if (course.code === currentCheck.coursesCode[i] && course.block === currentCheck.coursesBlock[i]) {
+              goodCourses.push(course);
+            }
+          });
+        }
+      }
+      theCourse = goodCourses;
+
+
+
+      if (typeof req.body.coursesCode === "string") {
+        if (theCourse === undefined || theCourse.length == 0) {
+          badCourses.push(req.body.coursesCode);
+        }
+      } else {
+
+        if (req.body.coursesCode.length != theCourse.length) {
+          for (var i = 0; i < req.body.coursesCode.length; i++) {
+            var found = false;
+            for (var j = 0; j < theCourse.length; j++) {
+              if (theCourse[j].code === req.body.coursesCode[i]) {
+                found = true;
+              }
+            }
+            if (!found) {
+              badCourses.push(req.body.coursesCode[i]);
+            }
+          }
+        } else {
+
+        }
+      }
+
+      User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse}).then(function() {
+
+      });
+    });
+
+
+    res.redirect("/");
+  } else {
+    res.redirect("/login");
   }
 });

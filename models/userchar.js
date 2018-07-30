@@ -44,6 +44,10 @@ const UserSchema = new Schema({
   suggestions: {
     type: Array,
     default: [["", new Date()]]
+  },
+  permissions: {
+    type: String,
+    default: "user"
   }
 });
 
