@@ -131,6 +131,8 @@ app.use(express.static('public'));
 
 app.use(cookieParser());
 
+app.enable('trust proxy');
+
 
 let server = app.listen(80, function() {
   console.log("listening for requests");
