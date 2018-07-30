@@ -140,6 +140,7 @@ let server = app.listen(80, function() {
 
 
 app.get("/", function(req, res) {
+  console.log(req.secure);
 
   let currentDate = new Date();
   let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
