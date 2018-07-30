@@ -63,13 +63,9 @@ function lcSchedule(day) {
   }
   return schedule[day];
 }
-
-
-
-
-
-
-
+function profanityFilter(string) {
+  return string.replace(/c\s*h\s*o\s*d\s*e|c\s*o\s*c\s*k|p\s*u\s*s\s*s\s*y|d\s*i\s*c\s*k|f\s*u\s*c\s*k\s*i\s*n\s*g|f\s*a\s*g\s*g\s*o\s*t|j\s*i\s*v\s*e|n\s*i\s*g\s*g\s*e\s*r|n\s*i\s*g\s*g\s*a|c\s*o\s*o\s*n|j\s*a\s*p|f\s*u\s*c\s*k|s\s*h\s*i\s*t|b\s*i\s*t\s*c\s*h|c\s*u\s*n\s*t|w\s*h\s*o\s*r\s*e/gi, "****");
+}
 
 
 
@@ -427,6 +423,10 @@ app.post("/submit", urlencodedParser, function(req, res) {
   if (req.session.userId && !tampered) {
     Course.findOne({_id : req.body.courseID}, function(err, course) {
         req.body.date = new Date;
+        req.body.questions = profanityFilter(req.body.questions);
+        req.body.pages = profanityFilter(req.body.pages);
+        req.body.assignment = profanityFilter(req.body.assignment);
+        req.body.notes = profanityFilter(req.body.notes);
         var newWork = course.homework;
         newWork.push(req.body);
 
@@ -514,10 +514,10 @@ app.get("/chatroom", function(req,res) {
 let io = socket(server);
 
 io.on("connection", function(socket) {
-  console.log("connected");
+
 
   socket.on("chat", function(data) {
-    console.log("chat");
+
     let id = mongoose.Types.ObjectId(data.id);
     User.findOne({_id : id}, function(err, user) {
       if (err) {
@@ -534,7 +534,7 @@ io.on("connection", function(socket) {
           }
         });
         User.findOneAndUpdate({_id : user._id}, {texts : userTextArray}).then(function() {
-          data = {message : data.message, username : user.username, firstName: user.firstName, lastName:user.lastName};
+          data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
           io.emit("chat", data);
         });
       }
