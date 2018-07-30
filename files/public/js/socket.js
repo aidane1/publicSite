@@ -4,6 +4,9 @@ let message = document.getElementById("message");
 let btn = document.getElementById("send");
 let output = document.getElementById("outPut");
 
+
+console.log("loaded");
+
 message.addEventListener('keydown', function(event) {
 
     const key = event.keyCode;
