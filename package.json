@@ -1,0 +1,22 @@
+{
+  "name": "publicsite",
+  "version": "1.0.0",
+  "description": "public PVSS site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aidane1/publicSite.git"
+  },
+  "author": "Aidan Eglin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aidane1/publicSite/issues"
+  },
+  "homepage": "https://github.com/aidane1/publicSite#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
