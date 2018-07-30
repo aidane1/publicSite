@@ -1,3 +1,78 @@
+function getDays(month) {
+  switch (month) {
+    case 0:
+      return 31;
+      break;
+    case 1:
+      var currentYear = ((new Date())).getFullYear();
+      if (currentYear % 4 === 0 && ((currentYear % 100 != 0) || (currentYear % 400 === 0))) {
+        return 29;
+      } else {
+        return 28;
+      }
+      break;
+    case 2:
+      return 31;
+      break;
+    case 3:
+      return 30;
+      break;
+    case 4:
+      return 31;
+      break;
+    case 5:
+      return 30;
+      break;
+    case 6:
+      return 31;
+      break;
+    case 7:
+      return 31;
+      break;
+    case 8:
+      return 30;
+      break;
+    case 9:
+      return 31;
+      break;
+    case 10:
+      return 30;
+      break;
+    case 11:
+      return 31;
+      break;
+  }
+}
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+function blockToTime(day) {
+  // let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
+  let schedule = [["A", "B", "C", "D", "E"], ["E", "D", "B", "C", "A"], ["D", "A", "C", "B", "E"], ["B", "C", "E", "A", "D"], ["D", "B", "A", "E", "C"]];
+
+  if (day === -1 || day === 5) {
+    return false;
+  }
+  return schedule[day];
+}
+function lcSchedule(day) {
+  let schedule = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
+  if (day === -1 || day === 5) {
+    return false;
+  }
+  return schedule[day];
+}
+
+
+
+
+
+
+
+
+
+
 let express = require("express");
 
 let mongoose = require("mongoose");
@@ -23,6 +98,14 @@ let Texts = require("../models/textchar.js");
 let Resources = require("../models/resourcechar.js");
 
 let nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "pvsstudents@gmail.com",
+    pass: "AidanEglin2002pvss"
+  }
+});
 
 
 mongoose.connect("mongodb://127.0.0.1/users");
