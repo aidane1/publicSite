@@ -116,6 +116,9 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
+Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
+
+
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 
 let app = express();
