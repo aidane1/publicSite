@@ -17,6 +17,20 @@
   },
   "homepage": "https://github.com/aidane1/publicSite#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "assert": "^1.4.1",
+    "bcrypt": "^3.0.0",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "datalist-polyfill": "^1.20.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.2.4",
+    "nodemailer": "^4.6.7",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }
