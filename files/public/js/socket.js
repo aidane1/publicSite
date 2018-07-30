@@ -1,5 +1,5 @@
 //makes connection
-let socket = io.connect("http://pvstudents.ca:80");
+let socket = io.connect("https://pvstudents.ca:80");
 let message = document.getElementById("message");
 let btn = document.getElementById("send");
 let output = document.getElementById("outPut");
