@@ -218,7 +218,7 @@ app.get("/", function(req, res) {
                 }
 
               });
-
+              console.log(homeworkList);
               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
             });
 
@@ -305,7 +305,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
       let badCourses = [];
       let goodCourses = [];
       if (typeof req.body.coursesCode === "string") {
-        
+
       } else {
         for (var i = 0; i < req.body.coursesBlock.length; i++) {
           var currentCheck = req.body;
