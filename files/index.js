@@ -305,7 +305,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
       let badCourses = [];
       let goodCourses = [];
       if (typeof req.body.coursesCode === "string") {
-        goodCourses.push(theCourse);
+        // goodCourses.push(theCourse);
       } else {
         for (var i = 0; i < req.body.coursesBlock.length; i++) {
           var currentCheck = req.body;
