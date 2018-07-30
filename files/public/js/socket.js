@@ -1,5 +1,5 @@
 //makes connection
-let socket = io.connect("http://localhost:3000");
+let socket = io.connect("http://localhost:80");
 let message = document.getElementById("message");
 let btn = document.getElementById("send");
 let output = document.getElementById("outPut");

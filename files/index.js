@@ -218,7 +218,6 @@ app.get("/", function(req, res) {
                 }
 
               });
-              console.log(homeworkList);
               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
             });
 
@@ -515,10 +514,10 @@ app.get("/chatroom", function(req,res) {
 let io = socket(server);
 
 io.on("connection", function(socket) {
-
+  console.log("connected");
 
   socket.on("chat", function(data) {
-
+    console.log("chat");
     let id = mongoose.Types.ObjectId(data.id);
     User.findOne({_id : id}, function(err, user) {
       if (err) {
