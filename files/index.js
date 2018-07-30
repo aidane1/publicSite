@@ -136,6 +136,10 @@ let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
+app.get("*", function(req, res) {
+  res.redirect("https://" + req.headers.host + req.url);
+});
+
 
 app.get("/", function(req, res) {
 
