@@ -296,8 +296,9 @@ app.get("/courses", function(req, res) {
 });
 app.post("/courses", urlencodedParser, function(req, res) {
   if (req.session.userId) {
+    console.log(req.body);
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
-
+      console.log(theCourse);
       let badCourses = [];
       let goodCourses = [];
       if (typeof req.body.coursesCode === "string") {
