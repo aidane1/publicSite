@@ -5,7 +5,9 @@ let btn = document.getElementById("send");
 let output = document.getElementById("outPut");
 
 message.addEventListener('keydown', function(event) {
-    const key = event.keycode; // "a", "1", "Shift", etc.
+
+    const key = event.keyCode;
+
     if (key === 13) {
       let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
       message.value  = "";
@@ -21,4 +23,5 @@ btn.addEventListener("click", function() {
 
 socket.on("chat", function(data) {
   output.innerHTML += '<div class = "messageHolder"<p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
+  output.lastChild.scrollIntoView();
 })
