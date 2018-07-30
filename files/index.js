@@ -134,6 +134,14 @@ app.use(cookieParser());
 app.enable('trust proxy');
 
 
+app.use (function (req, res, next) {
+  if (req.secure) {
+    next();
+  } else {
+    res.redirect('https://' + req.headers.host + req.url);
+  }
+});
+
 let server = app.listen(80, function() {
   console.log("listening for requests");
 });
@@ -142,9 +150,6 @@ let server = app.listen(80, function() {
 
 
 app.get("/", function(req, res) {
-  console.log(req.secure);
-  console.log(req.protocol);
-  console.log(req.connection.encrypted);
   let currentDate = new Date();
   let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   if (req.session.userId) {
