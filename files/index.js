@@ -553,4 +553,16 @@ io.on("connection", function(socket) {
       }
     });
   });
+
+  socket.on("disconnect", function(data) {
+    let id = mongoose.Types.ObjectId(data.id);
+    User.findOne({_id : id}, function(err, user) {
+      if (err) {
+
+      } else {
+        io.emit("disconnect", user.username);
+      }
+    });
+
+  });
 });

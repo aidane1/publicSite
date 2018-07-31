@@ -149,7 +149,7 @@
       <button id  = "send" name = "send">Send</button>
     </div>
     <div class = "back" style = "font-size: 40px; position: fixed; bottom: 15px; left: 10px;">
-      <a href = "/" style = "text-decoration:none; color:black">&#8592;</a>
+      <a id = "back" href = "/" style = "text-decoration:none; color:black">&#8592;</a>
     </div>
 
     <script>
@@ -157,7 +157,7 @@
       let message = document.getElementById("message");
       let btn = document.getElementById("send");
       let output = document.getElementById("outPut");
-
+      let back = document.getElementById("back");
 
       console.log("loaded");
 
@@ -176,6 +176,13 @@
         let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
         message.value  = "";
         socket.emit("chat", info);
+      });
+
+      back.addEventListener("click", function() {
+        socket.emit("disconnect", {id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]});
+      });
+      socket.on("disconnect", function(data) {
+        console.log(data);
       });
 
       socket.on("chat", function(data) {
