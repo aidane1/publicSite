@@ -233,7 +233,9 @@
         } else {
 
         }
+        console.log(output);
         output.innerHTML += '<div class = "messageHolder"><p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
+        console.log(output);
         output.lastChild.scrollIntoView();
       });
     </script>
