@@ -513,7 +513,8 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
-    res.sendFile(__dirname + "/public/html/chatroom.html");
+    console.log('yeet');
+    res.sendFile(__dirname + "/public/html/roomchat.html");
 
   } else {
     res.redirect("/login");
