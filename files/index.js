@@ -553,12 +553,12 @@ io.on("connection", function(socket) {
       }
     });
   });
-  socket.on("typing", function(id) {
-    User.findOne({_id : id}, function(err, user) {
+  socket.on("typing", function(data) {
+    User.findOne({_id : data.id}, function(err, user) {
       if (err) {
 
       } else {
-        socket.broadcast.emit("typing", user.username);
+        socket.broadcast.emit("typing", {username: user.username, typing: data.typing});
       }
     });
   });

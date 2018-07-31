@@ -190,19 +190,23 @@
 
       message.addEventListener("keypress", function() {
         if (message.value != "" || message.value != " ") {
-            socket.emit("typing", document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]);
+          socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
         } else {
-          currentTypers.splice(currentTypers.indexOf(data.Username), 1);
-          addTypeFunction();
+          socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
         }
       });
 
       let currentTypers = [];
       socket.on("typing", function(data) {
-        if (currentTypers.indexOf(data) > -1) {
+        if (currentTypers.indexOf(data).username > -1) {
+          if (!data.typing) {
+            currentTypers.splice(currentTypers.indexOf(data.username), 1);
+            addTypeFunction();
+          } else {
 
+          }
         } else {
-          currentTypers.push(data);
+          currentTypers.push(data.username);
           addTypeFunction();
         }
       });
@@ -219,7 +223,7 @@
 
       socket.on("chat", function(data) {
         if (currentTypers.indexOf(data.username) > -1) {
-          currentTypers.splice(currentTypers.indexOf(data.Username), 1);
+          currentTypers.splice(currentTypers.indexOf(data.username), 1);
           addTypeFunction();
         } else {
 
