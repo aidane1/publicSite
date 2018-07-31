@@ -220,7 +220,10 @@
         currentTypers.forEach(function(data) {
           feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
         });
-        feedback.lastChild.scrollIntoView();
+        console.log(feedback);
+        if (currentTypers.length != 0) {
+          feedback.lastChild.scrollIntoView();
+        }
       }
 
 
