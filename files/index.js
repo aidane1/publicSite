@@ -149,9 +149,6 @@ let server = app.listen(80, function() {
 });
 
 
-app.get("/favicon.ico", function(req,res) {
-  res.sendFile("public/images/favicon.ico");
-});
 
 app.get("/", function(req, res) {
   let currentDate = new Date();
