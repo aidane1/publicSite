@@ -515,7 +515,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
-    Texts.find({date: {$gt:new ISODate()}}, function(err, texts) {
+    Texts.find({date: {$gt:new Date()}}, function(err, texts) {
       console.log(texts);
     });
     res.sendFile(__dirname + "/public/html/roomchat.html");
