@@ -525,6 +525,7 @@ app.get("/chatroom", function(req,res) {
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
+  console.log("test");
 
 
   socket.on("chat", function(data) {
