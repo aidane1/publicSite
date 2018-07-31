@@ -188,16 +188,34 @@
 
       message.addEventListener("keypress", function() {
         socket.emit("typing", document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]);
-      })
-
-      socket.on("typing", function(data) {
-        feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
       });
+
+      let currentTypers = [];
+      socket.on("typing", function(data) {
+        if (currentTypers.indexOf(data) > -1) {
+
+        } else {
+          currentTypers.push(data);
+          addTypeFunction();
+        }
+      });
+
+      function addTypeFunction() {
+        feedback.innerHTML = "";
+        currentTypers.forEach(function(data) {
+          feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
+        });
+      }
 
 
 
       socket.on("chat", function(data) {
+        if (currentTypers.indexOf(data.username) > -1) {
+          array.splice(currentTypers.indexOf(data.Username), 1);
+          addTypeFunction();
+        } else {
 
+        }
         output.innerHTML += '<div class = "messageHolder"><p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
         output.lastChild.scrollIntoView();
       });
