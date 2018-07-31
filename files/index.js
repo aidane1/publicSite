@@ -544,7 +544,7 @@ io.on("connection", function(socket) {
           if (error) {
 
           } else {
-
+            console.log(text);
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
