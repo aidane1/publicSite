@@ -515,7 +515,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
     let currentDate = new Date();
-    console.log(new Date(months[(currentDate.getMonth())],currentDate.getDay()) + " " + currentDate.getDay() + ", " + currentDate.getFullYear());
+    console.log(new Date(2018, 7, 5));
     Texts.find({date: {$gt:new Date(currentDate.getFullYear(),months[(currentDate.getMonth())],currentDate.getDay())}}, function(err, texts) {
       console.log(texts);
     });
