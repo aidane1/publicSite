@@ -66,7 +66,7 @@ function lcSchedule(day) {
 function profanityFilter(string) {
   return string.replace(/c+\s*h+\s*o+\s*d+\s*e+|c+\s*o+\s*c+\s*k+|p+\s*u+\s*s+\s*s+\s*y+|d+\s*i+\s*c+\s*k+|f+\s*u+\s*c+\s*k+\s*i+\s*n+\s*g+|f+\s*a\s*g\s*g\s*o\s*t|j\s*i\s*v\s*e|n\s*i\s*g\s*g\s*e\s*r|n\s*i\s*g\s*g\s*a|c\s*o\s*o\s*n|j\s*a\s*p|f\s*u\s*c\s*k|s\s*h\s*i\s*t|b\s*i\s*t\s*c\s*h|c\s*u\s*n\s*t|w\s*h\s*o\s*r\s*e/gi, "****");
 }
-
+let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 
 let express = require("express");
@@ -152,7 +152,6 @@ let server = app.listen(80, function() {
 
 app.get("/", function(req, res) {
   let currentDate = new Date();
-  let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
@@ -515,7 +514,9 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
-    Texts.find({date: {$gt:new Date()}}, function(err, texts) {
+    let currentDate = new Date();
+    console.log(new Date(currentDate.getFullYear(),months[(currentDate.getMonth())],currentDate.getDay()));
+    Texts.find({date: {$gt:new Date(currentDate.getFullYear(),months[(currentDate.getMonth())],currentDate.getDay())}}, function(err, texts) {
       console.log(texts);
     });
     res.sendFile(__dirname + "/public/html/roomchat.html");
