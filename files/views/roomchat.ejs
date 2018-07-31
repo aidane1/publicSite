@@ -211,7 +211,7 @@
 
       socket.on("chat", function(data) {
         if (currentTypers.indexOf(data.username) > -1) {
-          array.splice(currentTypers.indexOf(data.Username), 1);
+          currentTypers.splice(currentTypers.indexOf(data.Username), 1);
           addTypeFunction();
         } else {
 
