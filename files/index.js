@@ -520,10 +520,10 @@ app.get("/chatroom", function(req,res) {
       texts.sort(function(a, b) {
         return a.date>b.date ? -1 : a.date<b.date ? 1 : 0;
       });
-      console.log(texts);
     });
 
-    res.sendFile(__dirname + "/public/html/roomchat.html");
+    res.render("/roomchat", {texts: texts});
+    
 
   } else {
     res.redirect("/login");
