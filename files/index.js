@@ -541,7 +541,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else {
-        Texts.create({date : new Date(), body: data.message, submittedBy : user.username}, function(error, text) {
+        Texts.create({date : new Date(), body: data.message, submittedBy : user.username, firstName: user.firstName, lastName:user.lastName}, function(error, text) {
           if (error) {
 
           } else {

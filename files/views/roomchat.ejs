@@ -138,7 +138,11 @@
     <div class = "schoolChat" id = "schoolChat">
       <div class = "chatWindow" id = "chatWindow">
         <div class = "outPut" id = "outPut">
-
+          <% texts.forEach(function(text) { %>
+            <div class = "messageHolder">
+              <p><strong><%=text.submittedBy%></strong>: <%=text.body%></p><div class = "name"><%=text.firstName%> <%=text.lastName%></div>
+            </div>
+          <% }); %>
         </div>
       </div>
       <input type = "text" id = "message" name = "message" placeholder="message..."maxlength="128"/>
