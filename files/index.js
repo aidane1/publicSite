@@ -537,20 +537,16 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else {
-
-        let userTextArray = user.texts;
         userTextArray.push(data.message);
         Texts.create({date : new Date(), body: data.message, submittedBy : user.username}, function(error, text) {
           if (error) {
-            console.log(error);
+          
           } else {
-            console.log(text);
+
           }
         });
-        User.findOneAndUpdate({_id : user._id}, {texts : userTextArray}).then(function() {
-          data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
-          io.emit("chat", data);
-        });
+        data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
+        io.emit("chat", data);
       }
     });
   });
