@@ -545,7 +545,7 @@ io.on("connection", function(socket) {
           if (error) {
 
           } else {
-            console.log(text);
+
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
@@ -560,7 +560,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else {
-        io.emit("disconnect", user.username);
+        io.emit("disconnect", user);
       }
     });
 
