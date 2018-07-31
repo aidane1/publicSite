@@ -542,9 +542,9 @@ io.on("connection", function(socket) {
         userTextArray.push(data.message);
         Texts.create({date : new Date(), body: data.message, submittedBy : user.username}, function(error, text) {
           if (error) {
-
+            console.log(error);
           } else {
-
+            console.log(text);
           }
         });
         User.findOneAndUpdate({_id : user._id}, {texts : userTextArray}).then(function() {
