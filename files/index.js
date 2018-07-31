@@ -519,11 +519,12 @@ app.get("/chatroom", function(req,res) {
     Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours())}}, function(err, texts) {
       texts.sort(function(a, b) {
         return a.date>b.date ? -1 : a.date<b.date ? 1 : 0;
-      })
+      });
+      console.log(texts);
     });
-    console.log(texts);
+
     res.sendFile(__dirname + "/public/html/roomchat.html");
- 
+
   } else {
     res.redirect("/login");
   }
