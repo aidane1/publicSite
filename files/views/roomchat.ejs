@@ -191,6 +191,9 @@
       message.addEventListener("keypress", function() {
         if (message.value != "" || message.value != " ") {
             socket.emit("typing", document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]);
+        } else {
+          currentTypers.splice(currentTypers.indexOf(data.Username), 1);
+          addTypeFunction();
         }
       });
 
@@ -209,6 +212,7 @@
         currentTypers.forEach(function(data) {
           feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
         });
+        feedback.lastChild.scrollIntoView();
       }
 
 
