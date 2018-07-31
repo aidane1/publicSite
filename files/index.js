@@ -519,7 +519,7 @@ app.get("/chatroom", function(req,res) {
       texts.sort(function(a, b) {
         return a.date>b.date ? -1 : a.date<b.date ? 1 : 0;
       });
-      res.render("/roomchat", {texts: texts});
+      res.render("roomchat", {texts: texts});
     });
 
   } else {
