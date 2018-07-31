@@ -198,7 +198,7 @@
 
       let currentTypers = [];
       socket.on("typing", function(data) {
-        if (currentTypers.indexOf(data).username > -1) {
+        if (currentTypers.indexOf(data.username) > -1) {
           if (!data.typing) {
             console.log("first");
             currentTypers.splice(currentTypers.indexOf(data.username), 1);
