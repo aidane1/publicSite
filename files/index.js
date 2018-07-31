@@ -519,6 +519,9 @@ app.get("/chatroom", function(req,res) {
       texts.sort(function(a, b) {
         return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
       });
+      for (var i = 0; i < texts.length; i++) {
+        texts[i].body = profanityFilter(texts[i].body);
+      }
       res.render("roomchat", {texts: texts});
     });
 
