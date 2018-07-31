@@ -189,7 +189,7 @@
       });
 
       message.addEventListener("keypress", function() {
-        if (message.value != "" || message.value != " ") {
+        if (message.value != "" && message.value != " ") {
           socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
         } else {
           socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
@@ -200,13 +200,15 @@
       socket.on("typing", function(data) {
         if (currentTypers.indexOf(data).username > -1) {
           if (!data.typing) {
+            console.log("first");
             currentTypers.splice(currentTypers.indexOf(data.username), 1);
             addTypeFunction();
           } else {
-
+            console.log("second");
           }
         } else {
           currentTypers.push(data.username);
+          console.log('pushed');
           addTypeFunction();
         }
       });
