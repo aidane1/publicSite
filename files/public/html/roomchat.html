@@ -6,22 +6,69 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
 
     <style>
-      * {
-        font-family: sans-serif;
-      }
-      html {
-        width: 100%;
-        height: 100%;
-        margin: 0px;
-        padding: 0px;
-      }
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #26a4ff;
-      }
+    * {
+      font-family: sans-serif;
+      box-sizing: border-box;
+    }
+    html {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #26a4ff;
+    }
+    .schoolChat {
+      width: 100%;
+      height: 50%;
+      border: 2px solid black;
+    }
+    .chatWindow {
+      width:100%;
+      display: block;
+      border-radius: 5px;
+      margin:auto;
+      overflow: auto;
+      height: 100%;
+    }
+    #message {
+      width: 100%;
+      height: 40px;
+      border: 1px solid black;
+      outline: none;
+      background-color: white;
+      margin-top: 15px;
+
+    }
+    #send {
+      width: 100%;
+      height: 30px;
+      margin-top: 15px;
+      border: 1px solid black;
+
+      border-radius: 5px;
+    }
+    .name {
+      font-size: 11px;
+      position: relative;
+      top: -15px;
+      font-style: italic;
+      color: red;
+      margin: 0px;
+    }
+
+    .messageHolder {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid black;
+      padding: 5px;
+    }
+    @media screen and (min-width: 768px) {
       .schoolChat {
         width : 50%;
         height: 50%;
@@ -82,6 +129,7 @@
         border-bottom: 1px solid black;
         padding: 5px;
       }
+    }
     </style>
   </head>
   <body>
