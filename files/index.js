@@ -115,6 +115,7 @@ mongoose.connection.once("open", function() {
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
 
+
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 
 let app = express();
@@ -148,7 +149,9 @@ let server = app.listen(80, function() {
 });
 
 
-
+app.get("/favicon.ico", function(req,res) {
+  res.sendFile("public/images/favicon.ico");
+});
 
 app.get("/", function(req, res) {
   let currentDate = new Date();
