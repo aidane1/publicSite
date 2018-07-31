@@ -169,16 +169,7 @@
 
       console.log("loaded");
 
-      message.addEventListener('keydown', function(event) {
 
-          const key = event.keyCode;
-
-          if (key === 13) {
-            let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
-            message.value  = "";
-            socket.emit("chat", info);
-          }
-      });
 
       btn.addEventListener("click", function() {
         let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
@@ -189,6 +180,17 @@
       });
 
       message.addEventListener("keypress", function() {
+
+        const key = event.keyCode;
+
+        if (key === 13) {
+          let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
+          message.value  = "";
+          socket.emit("chat", info);
+        }
+
+
+
         if (message.value != "" && message.value != " ") {
           socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
         } else {
@@ -224,6 +226,7 @@
 
 
       socket.on("chat", function(data) {
+        console.log(data);
         if (currentTypers.indexOf(data.username) > -1) {
           currentTypers.splice(currentTypers.indexOf(data.username), 1);
           addTypeFunction();
