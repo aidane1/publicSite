@@ -69,6 +69,10 @@
       border-bottom: 1px solid black;
       padding: 5px;
     }
+    .feeback {
+      width: 100%;
+      background-color: grey;
+    }
     @media screen and (min-width: 768px) {
       .schoolChat {
         width : 50%;
@@ -144,6 +148,9 @@
             </div>
           <% }); %>
         </div>
+        <div class = "feedback" id = "feedback">
+
+        </div>
       </div>
       <input type = "text" id = "message" name = "message" placeholder="message..."maxlength="128"/>
       <button id  = "send" name = "send">Send</button>
@@ -158,6 +165,7 @@
       let btn = document.getElementById("send");
       let output = document.getElementById("outPut");
       let back = document.getElementById("back");
+      let feedback = document.getElementById("feedback");
 
       console.log("loaded");
 
@@ -178,15 +186,19 @@
         socket.emit("chat", info);
       });
 
-      back.addEventListener("click", function() {
-        socket.emit("disconnect", {id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]});
-      });
-      socket.on("disconnect", function(data) {
-        console.log(data);
+      message.addEventListener("keypress", function() {
+        socket.emit("typing", document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]);
+      })
+
+      socket.on("typing", function(data) {
+        feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
       });
 
+
+
       socket.on("chat", function(data) {
-        output.innerHTML += '<div class = "messageHolder"<p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
+
+        output.innerHTML += '<div class = "messageHolder"><p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
         output.lastChild.scrollIntoView();
       });
     </script>
