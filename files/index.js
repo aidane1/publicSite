@@ -515,7 +515,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
-    console.log('yeet');
+
     res.sendFile(__dirname + "/public/html/roomchat.html");
 
   } else {
@@ -527,7 +527,7 @@ app.get("/chatroom", function(req,res) {
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
-  console.log("test");
+
 
 
   socket.on("chat", function(data) {
