@@ -14,6 +14,12 @@ const TextSchema = new Schema({
   submittedBy : {
     type: String
   },
+  firstName: {
+    type: String
+  },
+  lastName: {
+    type: String
+  }
 });
 
 var Text = mongoose.model('Text', TextSchema);
