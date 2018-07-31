@@ -517,8 +517,11 @@ app.get("/chatroom", function(req,res) {
     let currentDate = new Date();
     console.log(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
     Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours())}}, function(err, texts) {
-      console.log(texts);
+      text.sort(function(a, b) {
+        return a.date>b.date ? -1 : a.date<b.date ? 1 : 0;
+      })
     });
+    console.log(texts);
     res.sendFile(__dirname + "/public/html/roomchat.html");
 
   } else {
