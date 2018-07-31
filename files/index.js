@@ -515,8 +515,8 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
     let currentDate = new Date();
-    console.log(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay()));
-    Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay())}}, function(err, texts) {
+    console.log(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+    Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())}}, function(err, texts) {
       console.log(texts);
     });
     res.sendFile(__dirname + "/public/html/roomchat.html");
