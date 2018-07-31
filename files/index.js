@@ -515,15 +515,12 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
     let currentDate = new Date();
-    console.log(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
     Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours())}}, function(err, texts) {
       texts.sort(function(a, b) {
         return a.date>b.date ? -1 : a.date<b.date ? 1 : 0;
       });
+      res.render("/roomchat", {texts: texts});
     });
-
-    res.render("/roomchat", {texts: texts});
-    
 
   } else {
     res.redirect("/login");
