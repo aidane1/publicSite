@@ -304,8 +304,9 @@ app.get("/courses", function(req, res) {
       res.redirect("/login");
     }
 });
-console.log(req.body);
+
 app.post("/courses", urlencodedParser, function(req, res) {
+  console.log(req.body);
   if (req.session.userId && req.body.coursesCode) {
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
       let badCourses = [];
