@@ -435,7 +435,7 @@ app.get("/calendar", function(req, res) {
       monthsArray.push(currentMonth);
     }
 
-    console.log(calendar);
+    
     res.render("calendar", {calendar : monthsArray, months : monthsNames});
   });
 
