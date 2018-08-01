@@ -522,12 +522,19 @@ app.get("/chatroom", function(req,res) {
       for (var i = 0; i < texts.length; i++) {
         texts[i].body = profanityFilter(texts[i].body);
       }
-      res.render("roomchat", {texts: texts});
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("roomchat", {texts: texts, permissions : user.permissions});
+      });
+
     });
 
   } else {
     res.redirect("/login");
   }
+});
+
+app.post("/chatroom", urlencodedParser, function(req, res) {
+
 });
 
 
@@ -552,7 +559,9 @@ io.on("connection", function(socket) {
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
-        io.emit("chat", data);
+        if (user.permissions != "muted") {
+          io.emit("chat", data);
+        }
       }
     });
   });
@@ -560,7 +569,7 @@ io.on("connection", function(socket) {
     User.findOne({_id : data.id}, function(err, user) {
       if (err) {
 
-      } else {
+      } else if (user.permissions != "muted"){
         socket.broadcast.emit("typing", {username: user.username, typing: data.typing});
       }
     });
