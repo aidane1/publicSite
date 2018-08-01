@@ -112,15 +112,13 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
-contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8"));
-console.log(contents[1]);
-fs.writeFile("periodicTable.js", contents, function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-        console.log("written successfully");
-    }
-});
+contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8");
+console.log("[")
+for (var i = 0; i < contents.length; i++) {
+  console.log(contents[i]);
+  console.log(",");
+}
+console.log("]");
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
 
