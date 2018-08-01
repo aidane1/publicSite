@@ -397,7 +397,7 @@ app.post("/add", urlencodedParser, function(req, res) {
               time: req.body.time,
               info: req.body.info
             }
-            Event.create(eventData, function() {
+            Events.create(eventData, function() {
               res.redirect("/add");
             })
           }
