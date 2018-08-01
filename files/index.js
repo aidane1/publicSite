@@ -368,15 +368,38 @@ app.get("/add", function(req, res) {
   res.sendFile(__dirname + "/add.html");
 });
 app.post("/add", urlencodedParser, function(req, res) {
-  var courseData = {
-    teacher : req.body.teacher,
-    course : req.body.course.toLowerCase(),
-    block : req.body.block.toUpperCase(),
-    code : req.body.code.toUpperCase()
-  }
-  Course.create(courseData, function() {
-    res.redirect("/add");
-  });
+  User.findOne({_id : req.session.userId}, function(err, user) {
+    if (err) {
+      res.redirect("/");
+    } else {
+      if (user.permissions === "admin") {
+        if (req.body.hasOwnProperty("teacher")) {
+          var courseData = {
+            teacher : req.body.teacher,
+            course : req.body.course.toLowerCase(),
+            block : req.body.block.toUpperCase(),
+            code : req.body.code.toUpperCase()
+          }
+          Course.create(courseData, function() {
+            res.redirect("/add");
+          });
+        } else if (req.body.hasOwnProperty("year")) {
+          if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
+            var eventData = {
+              year: req.body.year,
+              month: req.body.month,
+              day: req.body.day,
+              time: req.body.time,
+              info: req.body.info
+            }
+            Event.create(eventData, function() {
+              res.redirect("/add");
+            })
+          }
+        }
+      }
+    }
+  })
 });
 
 
