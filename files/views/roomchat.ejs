@@ -174,8 +174,9 @@
       btn.addEventListener("click", function() {
         let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
         if (message.value != "" && message.value != " ") {
-          socket.emit("chat", info);
           message.value  = "";
+          socket.emit("chat", info);
+
         }
       });
 

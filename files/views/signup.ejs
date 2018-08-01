@@ -131,15 +131,15 @@
       </div>
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/signup">
-          <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required/></div>
+          <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
           <br>
-          <div class = "inputLabel"><label for "lastName" >Last Name: </label><input value = "<%=data[2]%>" type = "text" name = "lastName" placeholder = "Enter lastName..." class = "userInput" required/></div>
+          <div class = "inputLabel"><label for "lastName" >Last Name: </label><input value = "<%=data[2]%>" type = "text" name = "lastName" placeholder = "Enter lastName..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
           <br>
-          <div class = "inputLabel"><label for "email" >Username: </label><input value = "<%=data[0]%>" type = "text" name = "username" placeholder = "Enter Username..." class = "userInput" required/></div>
+          <div class = "inputLabel"><label for "email" >Username: </label><input value = "<%=data[0]%>" type = "text" name = "username" placeholder = "Enter Username..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
           <br>
-          <div class = "inputLabel"><label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput" required/></div>
+          <div class = "inputLabel"><label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
           <br>
-          <div class = "inputLabel"><label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput" required/></div>
+          <div class = "inputLabel"><label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
           <input type = "submit" id = "submit" style = "margin-bottom: 50px">
         </form>
         <!-- <center><div class = "login"><i><h6>already have an account? <a href = "/login">login</a></h6></i></div></center> -->
