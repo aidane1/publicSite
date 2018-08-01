@@ -534,7 +534,15 @@ app.get("/chatroom", function(req,res) {
 });
 
 app.post("/chatroom", urlencodedParser, function(req, res) {
-  console.log(req.body);
+  User.findOne({_id : req.session.userId}, function(err, user) {
+    if (user.permissions === "admin") {
+      User.findOneAndUpdate({username : req.body.mutedUser}, {$set{permissions: "muted"}}, function(err, found) {
+        res.redirect("/chatroom");
+      });
+    }
+
+  });
+
 });
 
 
