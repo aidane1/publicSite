@@ -173,7 +173,7 @@
     <script>
 
       function muteFunction(text) {
-        console.log(text.parentNode.childElements[0]);
+        console.log(text.parentNode.childNodes[0].childNodes[0].innerHTML);
       }
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
       var message = document.getElementById("message");
