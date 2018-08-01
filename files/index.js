@@ -534,7 +534,7 @@ app.get("/chatroom", function(req,res) {
 });
 
 app.post("/chatroom", urlencodedParser, function(req, res) {
-
+  console.log(req.body);
 });
 
 

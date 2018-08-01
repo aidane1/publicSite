@@ -174,6 +174,16 @@
 
       function muteFunction(text) {
         console.log(text.parentNode.childNodes[0].childNodes[0].innerHTML);
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/chatroom";
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "mutedUser";
+        input.value = text.parentNode.childNodes[0].childNodes[0].innerHTML;
+        form.appendChild(input);
+        document.appendChild(form);
+        form.submit;
       }
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
       var message = document.getElementById("message");
