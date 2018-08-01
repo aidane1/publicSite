@@ -112,13 +112,7 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
-contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8"));
-console.log("[")
-for (var i = 0; i < contents.length; i++) {
-  console.log(contents[i]);
-  console.log(",");
-}
-console.log("]");
+
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
 
@@ -150,9 +144,16 @@ app.use (function (req, res, next) {
   }
 });
 
-//awfawf
+
 let server = app.listen(80, function() {
   console.log("listening for requests");
+});
+
+
+app.get("/periodic-table", function() {
+  if (req.session.userId) {
+    res.sendFile(__dirname + "/public/html/periodicTable.html");
+  }
 });
 
 

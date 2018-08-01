@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>PVSS student website</title>
+    <script src = "../js/periodicTable.js"></script>
+    <script>
+      window.onload = function() {
+        let blocks = document.getElementsByTagName("td");
+        counter = 0;
+        for (var i = 0; i < blocks.length; i++) {
+          if (blocks[i].classList.contains("none")) {
+
+          } else {
+            blocks[i].classList += periodicTable[counter].groupBlock.split(" ").join("");
+            blocks[i].id = periodicTable[counter].name;
+            let holder = document.createElement("div");
+            holder.className = "infoHolder";
+            let number = document.createElement("div");
+            number.className = "atomicNumber";
+            number.innerHTML = periodicTable[counter].atomicNumber;
+            let symbol = document.createElement("symbol");
+            symbol.className = "symbol";
+            symbol.innerHTML = periodicTable[counter].symbol;
+            let name = document.createElement("div");
+            name.className = "name";
+            name.innerHTML = periodicTable[counter].name;
+            let mass = document.createElement("div");
+            mass.className = "atomicMass";
+            mass.innerHTML = periodicTable[counter].atomicMass.toString().substring(0, 6).split("(").join("");
+            holder.appendChild(number);
+            holder.appendChild(symbol);
+            holder.appendChild(name);
+            holder.appendChild(mass);
+            blocks[i].appendChild(holder);
+            counter++;
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-size: 8px;
+
+      }
+      .periodicTable {
+        display: block;
+        width: 900px;
+        margin: auto;
+        border-collapse: collapse;
+        position: absolute;
+        top: 50px;
+
+
+      }
+      .periodicTable tr {
+
+      }
+      .periodicTable td {
+        position: relative;
+        padding: 0px;
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+      }
+      .thin {
+
+        background-color: red;
+      }
+      .none {
+        visibility: hidden;
+      }
+      .infoHolder {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+      }
+      .name {
+        position: absolute;
+        top: 22px;
+        left: 0px;
+        right: 0px;
+      }
+      .symbol {
+        position: absolute;
+        font-size: 15px;
+        top: 7px;
+      }
+      .atomicMass {
+        position: absolute;
+        top: 30px;
+      }
+      .noblegas {
+        background-color: #00a5ff;
+      }
+
+      .alkalimetal {
+        background-color: #ff3535;
+      }
+      .alkalineearthmetal {
+        background-color: #ff7a28;
+      }
+      .metalloid {
+        background-color: #00ba4a;
+      }
+      .nonmetal {
+        background-color: #7ccdff;
+      }
+      .halogen {
+        background-color: #8844c4;
+      }
+      .lanthanoid {
+        background-color: #47c689;
+      }
+      .actinoid {
+        background-color: #c64949;
+      }
+      .transitionmetal {
+        background-color: #ffe928;
+      }
+      .metal {
+        background-color: #5b635e;
+      }
+      .post-transitionmetal {
+
+      }
+      .display {
+        width: 100%;
+        height: 200px;
+        border: 5px solid black;
+        display: block;
+        position: relative;
+
+      }
+      @media screen and (min-width: 768px) {
+        .periodicTable {
+          display: block;
+          width: 900px;
+          margin: auto;
+          border-collapse: collapse;
+          position: absolute;
+          top: 100px;
+          left: 200px;
+          right: 200px;
+        }
+        .display {
+
+          width: 70%;
+          height: 200px;
+          border: 5px solid black;
+          position: absolute;
+          left: 15%;
+          right: 15%;
+          top: 700px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table class = "periodicTable" id = "periodicTable">
+      <tr>
+        <td></td>
+        <td colspan="16"  class = "none"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td colspan="10" class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td colspan="10"  class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="18" class = "none"></td>
+      </tr>
+      <tr>
+        <td colspan="3" class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="3" class = "none"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <div class = "display" id = "display">
+
+    </div>
+  </body>
+</html>
