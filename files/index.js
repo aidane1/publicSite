@@ -373,7 +373,7 @@ app.post("/add", urlencodedParser, function(req, res) {
       res.redirect("/");
     } else {
       if (user.permissions === "admin") {
-        if (req.body.hasOwnProperty("teacher")) {
+        if (req.body.teacher && req.body.course && req.body.block && req.body.code) {
           var courseData = {
             teacher : req.body.teacher,
             course : req.body.course.toLowerCase(),
@@ -387,8 +387,8 @@ app.post("/add", urlencodedParser, function(req, res) {
           if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
             var eventData = {
               year: req.body.year,
-              month: req.body.month,
-              day: req.body.day,
+              month: req.body.month-1,
+              day: req.body.day-1,
               time: req.body.time,
               info: req.body.info
             }
