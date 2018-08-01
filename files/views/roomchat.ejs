@@ -183,7 +183,7 @@
         input.value = text.parentNode.childNodes[0].childNodes[0].innerHTML;
         form.appendChild(input);
         document.body.appendChild(form);
-        console.log(form);
+        
         form.submit();
       }
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});

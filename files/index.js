@@ -135,13 +135,13 @@ app.use(cookieParser());
 app.enable('trust proxy');
 
 
-// app.use (function (req, res, next) {
-//   if (req.secure) {
-//     next();
-//   } else {
-//     res.redirect('https://' + req.headers.host + req.url);
-//   }
-// });
+app.use (function (req, res, next) {
+  if (req.secure) {
+    next();
+  } else {
+    res.redirect('https://' + req.headers.host + req.url);
+  }
+});
 
 //awfawf
 let server = app.listen(80, function() {
@@ -535,16 +535,27 @@ app.get("/chatroom", function(req,res) {
 
 app.post("/chatroom", urlencodedParser, function(req, res) {
   User.findOne({_id : req.session.userId}, function(err, user) {
-    if (user.permissions === "admin") {
-      User.findOneAndUpdate({username : req.body.mutedUser}, {permissions: "muted"}).then(function() {
-          res.redirect("/chatroom");
-      });
-    } else {
+    if (err) {
       res.redirect("/chatroom");
     }
-
+     else {
+       if (user.permissions === "admin") {
+         User.findOne({username : req.body.mutedUser}, function(error, mute) {
+           if (error) {
+             res.redirect("/chatroom");
+           } else {
+             if (mute.permissions != "admin") {
+               User.findOneAndUpdate({_id : mute._id}, {permissions: "muted"}).then(function() {
+                   res.redirect("/chatroom");
+               });
+             }
+           }
+         });
+       } else {
+         res.redirect("/chatroom");
+       }
+     }
   });
-
 });
 
 
