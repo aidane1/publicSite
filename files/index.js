@@ -99,7 +99,7 @@ let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "pvsstudents@gmail.com",
-    pass: "AidanEglin2002pvss"
+    pass: "AidanEglin2002pvstudents"
   }
 });
 
@@ -401,7 +401,21 @@ app.post("/add", urlencodedParser, function(req, res) {
               res.redirect("/add");
             })
           }
+        } else if (req.body.url) {
+          if (req.body.url && req.body.class && req.body.type && req.body.description) {
+            var resourceData = {
+              url: req.body.url,
+              class: req.body.class,
+              type: req.body.type,
+              description: req.body.description
+            }
+            Resources.create(resourceData, function() {
+              res.redirect("/add");
+            });
+          }
         }
+      } else {
+        res.redirect("/login");
       }
     }
   })
@@ -435,7 +449,7 @@ app.get("/calendar", function(req, res) {
       monthsArray.push(currentMonth);
     }
 
-    
+
     res.render("calendar", {calendar : monthsArray, months : monthsNames});
   });
 
