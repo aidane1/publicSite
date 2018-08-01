@@ -150,14 +150,17 @@
         top: 0px;
       }
       .identifier {
+        position: relative;
         width: 100px;
         height: 50px;
+        border: 1px solid black;
       }
-      .identifier::after {
-        content: "";
+      .color {
         width: 50px;
         height: 50px;
-        background-color: red;
+        position: absolute;
+        right: 0px;
+        top: 0px;
       }
       @media screen and (min-width: 768px) {
         .periodicTable {
@@ -333,7 +336,11 @@
       </tr>
     </table>
     <div class = "display" id = "display">
-      <div class = "identifier">Test: </div>
+      <div class = "identifier">Noble Gas: <div class = "color noblegas"></div></div>
+      <div class = "identifier">Alkali Metal: <div class = "color alkalimetal"></div></div>
+      <div class = "identifier">Alkaline Earth Metal: <div class = "color alkalineearthmetal"></div></div>
+      <div class = "identifier">Transition Metal: <div class = "color transitionmetal"></div></div>
+      <div class = "identifier">Halogen: <div class = "color halogen"></div></div>
     </div>
   </body>
 </html>
