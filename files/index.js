@@ -536,9 +536,11 @@ app.get("/chatroom", function(req,res) {
 app.post("/chatroom", urlencodedParser, function(req, res) {
   User.findOne({_id : req.session.userId}, function(err, user) {
     if (user.permissions === "admin") {
-      User.findOneAndUpdate({username : req.body.mutedUser}, {$set{permissions: "muted"}}, function(err, found) {
-        res.redirect("/chatroom");
+      User.findOneAndUpdate({username : req.body.mutedUser}, {permissions: "muted"}).then(function() {
+          res.redirect("/chatroom");
       });
+    } else {
+      res.redirect("/chatroom");
     }
 
   });
