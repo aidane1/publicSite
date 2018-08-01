@@ -112,8 +112,8 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
-contents = fs.readFileSync("periodicTable.json", "utf-8");
-console.log(JSON.parse(contents));
+contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8"));
+console.log(contents[1]);
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
 
