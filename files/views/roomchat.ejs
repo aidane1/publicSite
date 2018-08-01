@@ -161,11 +161,11 @@
 
     <script>
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
-      let message = document.getElementById("message");
-      let btn = document.getElementById("send");
-      let output = document.getElementById("outPut");
+      var message = document.getElementById("message");
+      var btn = document.getElementById("send");
+      var output = document.getElementById("outPut");
       // let back = document.getElementById("back");
-      let feedbackTest = document.getElementById("feedback");
+      var feedbackTest = document.getElementById("feedback");
 
       console.log("loaded");
 
