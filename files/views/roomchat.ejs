@@ -201,9 +201,11 @@
         const key = event.keyCode;
 
         if (key === 13) {
+          console.log("entered");
           let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
           message.value  = "";
           if (permissions != "muted") {
+            console.log("not muted 1");
             socket.emit("chat", info);
             socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
           }
@@ -212,8 +214,9 @@
 
 
         if (message.value != "" && message.value != " " && permissions != "muted") {
+          console.log("not muted 2")
           socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
-        } else {
+        } else if (permissions != "muted"){
           socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
         }
       });

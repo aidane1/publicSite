@@ -559,7 +559,9 @@ io.on("connection", function(socket) {
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
+        console.log("first log");
         if (user.permissions != "muted") {
+          console.log("got to here");
           io.emit("chat", data);
         }
       }
