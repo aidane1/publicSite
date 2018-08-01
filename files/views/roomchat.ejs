@@ -136,6 +136,8 @@
       }
     }
     .mute {
+      position: absolute;
+      right: 0px;
       height: 100%;
       width: 40px;
       background-color: red;
@@ -170,7 +172,7 @@
     <script>
 
       function muteFunction(text) {
-        console.log(text.parentNode);
+        console.log(text.parentNode.childElements[0].childElements[0].innerHTML);
       }
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
       var message = document.getElementById("message");
@@ -182,7 +184,7 @@
       let permissions = output.className;
       console.log(permissions);
 
-      console.log("loaded");
+
 
 
 
@@ -225,15 +227,15 @@
       socket.on("typing", function(data) {
         if (currentTypers.indexOf(data.username) > -1) {
           if (!data.typing) {
-            console.log("first");
+
             currentTypers.splice(currentTypers.indexOf(data.username), 1);
             addTypeFunction();
           } else {
-            console.log("second");
+
           }
         } else {
           currentTypers.push(data.username);
-          console.log('pushed');
+
           addTypeFunction();
         }
       });
@@ -243,7 +245,7 @@
         currentTypers.forEach(function(data) {
           feedbackTest.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
         });
-        console.log(feedback);
+
         if (currentTypers.length != 0) {
           feedbackTest.lastChild.scrollIntoView();
         }
