@@ -136,7 +136,8 @@
       }
     }
     .mute {
-      position: absolute;
+      display: block;
+
       right: 0px;
       height: 100%;
       width: 40px;
@@ -172,7 +173,7 @@
     <script>
 
       function muteFunction(text) {
-        console.log(text.parentNode.childElements[0].childElements[0].innerHTML);
+        console.log(text.parentNode.childElements[0]);
       }
       let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
       var message = document.getElementById("message");
