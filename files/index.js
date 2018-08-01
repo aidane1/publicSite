@@ -388,7 +388,7 @@ app.post("/add", urlencodedParser, function(req, res) {
           Course.create(courseData, function() {
             res.redirect("/add");
           });
-        } else if (req.body.hasOwnProperty("year")) {
+        } else if (req.body.year) {
           if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
             var eventData = {
               year: req.body.year,
