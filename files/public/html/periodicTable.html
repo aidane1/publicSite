@@ -145,12 +145,19 @@
       .display {
         width: 500px;
         height: 200px;
-        border: 5px solid black;
-        display: block;
         position: absolute;
         left: 100px;
         top: 0px;
-
+      }
+      .identifier {
+        width: 100px;
+        height: 50px;
+      }
+      .identifier::after {
+        content: "";
+        width: 50px;
+        height: 50px;
+        background-color: red;
       }
       @media screen and (min-width: 768px) {
         .periodicTable {
@@ -326,7 +333,7 @@
       </tr>
     </table>
     <div class = "display" id = "display">
-
+      <div class = "identifier">Test: </div>
     </div>
   </body>
 </html>
