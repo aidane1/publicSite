@@ -112,7 +112,7 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
-contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8");
+contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8"));
 console.log("[")
 for (var i = 0; i < contents.length; i++) {
   console.log(contents[i]);
