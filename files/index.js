@@ -413,7 +413,7 @@ app.get("/calendar", function(req, res) {
   let currentDate = new Date();
   let monthsArray = [];
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
-  Events.find({year : (currentDate).getFullYear()}, function(err, yearEvent) {
+  Events.find({}, function(err, yearEvent) {
     let theDay = new Date("september 1" + currentDate.getFullYear().toString()).getDay();
     let daysArray = [];
     let sumDays = 0;
@@ -435,6 +435,7 @@ app.get("/calendar", function(req, res) {
       monthsArray.push(currentMonth);
     }
 
+    console.log(calendar);
     res.render("calendar", {calendar : monthsArray, months : monthsNames});
   });
 
