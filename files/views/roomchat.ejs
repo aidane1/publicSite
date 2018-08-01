@@ -165,13 +165,14 @@
       let btn = document.getElementById("send");
       let output = document.getElementById("outPut");
       // let back = document.getElementById("back");
-      let feedback = document.getElementById("feedback");
+      let feedbackTest = document.getElementById("feedback");
 
       console.log("loaded");
 
 
 
       btn.addEventListener("click", function() {
+        console.log("yeet we gottem");
         let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
         if (message.value != "" && message.value != " ") {
           message.value  = "";
@@ -218,13 +219,13 @@
       });
 
       function addTypeFunction() {
-        feedback.innerHTML = "";
+        feedbackTest.innerHTML = "";
         currentTypers.forEach(function(data) {
-          feedback.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
+          feedbackTest.innerHTML += "<div class = 'typing' id  = '" + data + "'><i>" + data + " is typing a message...</i></div>";
         });
         console.log(feedback);
         if (currentTypers.length != 0) {
-          feedback.lastChild.scrollIntoView();
+          feedbackTest.lastChild.scrollIntoView();
         }
       }
 
