@@ -115,7 +115,11 @@ mongoose.connection.once("open", function() {
 contents = JSON.parse(fs.readFileSync("periodicTable.json", "utf-8"));
 console.log(contents[1]);
 fs.writeFile("periodicTable.js", contents, function(err) {
-    
+    if (err) {
+      console.log(err);
+    } else {
+        console.log("written successfully");
+    }
 });
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
