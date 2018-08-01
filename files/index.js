@@ -365,14 +365,19 @@ app.post("/courses", urlencodedParser, function(req, res) {
 
 
 app.get("/add", function(req, res) {
-  res.sendFile(__dirname + "/add.html");
+  if (req.session.userId) {
+      res.sendFile(__dirname + "/add.html");
+  } else {
+    res.redirect("/login");
+  }
+
 });
 app.post("/add", urlencodedParser, function(req, res) {
   User.findOne({_id : req.session.userId}, function(err, user) {
     if (err) {
       res.redirect("/");
     } else {
-      if (user.permissions === "admin") {
+      if (user != undefined && user.permissions === "admin") {
         if (req.body.teacher && req.body.course && req.body.block && req.body.code) {
           var courseData = {
             teacher : req.body.teacher,
