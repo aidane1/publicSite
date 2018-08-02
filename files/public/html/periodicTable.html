@@ -38,7 +38,13 @@
           }
         }
       }
-      function clickFunction(element) {
+      function clickFunction(node) {
+        let element = node.id;
+        for (var i = 0; i < periodicTable.length; i++) {
+          if (periodicTable[i].name === element) {
+            element = periodicTable[i];
+          }
+        }
         console.log(element);
       }
     </script>
