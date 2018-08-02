@@ -517,15 +517,5 @@ nav a:hover {
     .calendar {
       margin-top: 10px;
     }
-    .allHomework {
-      width: 600px;
-      height: 700px;
-      position: fixed;
-      left: 50%;
-      top: 10%;
-      transform: translateX(-50%);
-      background-color: white;
-      border-radius: 10px;
-      display: none;
-    }
+    
   }
