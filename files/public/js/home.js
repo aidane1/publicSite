@@ -38,6 +38,7 @@ function showFunction(id, element) {
 function modalDisplay(course) {
   var modal = document.getElementById("allHomework");
   var backModal = document.getElementById("modal");
+  console.log(backModal);
   // document.getElementById(course).className = "modalBox display";
   backModal.style.visibility = "visible";
   modal.style.display = "block";
