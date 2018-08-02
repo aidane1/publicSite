@@ -254,13 +254,14 @@ app.post("/", urlencodedParser, function(req,res) {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = req.body.removedHomework.split("_")[3];
-          Course.findOne({course: course, block: block}, function(err, course) {
+          Course.findOne({course: course, block: block}, function(err, theCourse) {
+            console.log(theCourse)
             if (err) {
               res.redirect("/login");
             } else {
-              if(course.course) {
+              if(theCourse != undefined && theCourse != "" && theCourse.course) {
                 let homework = course.homework.slice(index, 1);
-                Course.findOneAndUpdate({_id : course.id}, {homework : homework}).then(function() {
+                Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
                   res.redirect("/");
                 });
               } else {
