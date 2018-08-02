@@ -235,6 +235,7 @@ app.get("/", function(req, res) {
                 }
 
               });
+              console.log(homeworkList);
               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
             });
 
@@ -492,6 +493,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         req.body.notes = profanityFilter(req.body.notes);
         var newWork = course.homework;
         newWork.push(req.body);
+
 
         Course.findOneAndUpdate({_id : req.body.courseID}, {homework : newWork}).then(function() {
 
