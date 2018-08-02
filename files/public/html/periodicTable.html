@@ -55,6 +55,12 @@
         modal.style.visibility = "visible";
         box.style.visibility = "visible";
       }
+      function closeFunction() {
+        let modal = document.getElementById("backGround");
+        let box = document.getElementById("elementModal");
+        modal.style.visibility = "hidden";
+        box.style.visibility = "hidden";
+      }
     </script>
     <style>
       html {
@@ -387,7 +393,7 @@
       <div class = "identifier">Actinoid: <div class = "color actinoid"></div></div>
       <div class = "identifier">Non<br>Metal: <div class = "color nonmetal"></div></div>
     </div>
-    <div class = "backGround" id = "backGround">
+    <div class = "backGround" id = "backGround" onclick = "closeFunction()">
 
     </div>
     <div class = "elementModal" id = "elementModal">
