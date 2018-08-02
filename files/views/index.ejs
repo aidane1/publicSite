@@ -26,19 +26,20 @@
         console.log(element);
         element = element.id.split("_");
         let length = element.length-3;
-        let finalString = "";
+        let finalString = [];
         for (var i = 0; i < element.length; i++) {
           if (length != 0) {
-            finalString += element[i];
-            finalString += " ";
+            finalString.push(element[i]);
+            finalString.push(" ");
             length--;
           } else if (i != element.length-1){
-            finalString+= element[i];
-            finalString += "_";
+            finalString.push(element[i]);
+            finalString.push("_");
           } else {
-            finalString += element[i];
+            finalString.push(element[i]);
           }
         }
+        finalString = finalString.join("");
 
         let form = document.createElement("form");
         let input = document.createElement("input");
