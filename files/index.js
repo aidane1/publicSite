@@ -245,6 +245,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/", urlencodedParser, function(req,res) {
+  console.log(req.body);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err) {
@@ -255,12 +256,14 @@ app.post("/", urlencodedParser, function(req,res) {
           let block = req.body.removedHomework.split("_")[2];
           let index = req.body.removedHomework.split("_")[3];
           Course.findOne({course: course, block: block}, function(err, theCourse) {
+            console.log("gotToHere");
             if (err) {
               res.redirect("/login");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
                 console.log(theCourse.homework);
                 let homework = theCourse.homework.splice(theCourse.homework.length-1-index, 1);
+                console.log(homework);
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
                   res.redirect("/");
                 });
