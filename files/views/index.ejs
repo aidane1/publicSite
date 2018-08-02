@@ -149,7 +149,7 @@
         </div>
         <% homework.forEach(function(theHomeworkGiven) { %>
           <div class = "modalBox" id = "<%=theHomeworkGiven[0].split(' ').join('')%>">
-            <% for (var i = 0; i < theHomeworkGiven[1].length; i++) { %>
+            <% for (var i = theHomeworkGiven[1].length-1; i >= 0; i--) { %>
               <br>
               <% if (theHomeworkGiven[1][i].assignment != "") { %>
                   <%=theHomeworkGiven[1][i].date%>
