@@ -25,7 +25,7 @@
       function removeFunction(element) {
         console.log(element);
         element = element.id.split("_");
-        let length = element.split("_").length-3;
+        let length = element.length-3;
         let finalString = "";
         for (var i = 0; i < element.length; i++) {
           if (length != 0) {
