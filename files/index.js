@@ -259,7 +259,7 @@ app.post("/", urlencodedParser, function(req,res) {
               res.redirect("/login");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
-                console.log(homework);
+                console.log(theCourse.homework);
                 let homework = theCourse.homework.slice(index, 1);
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
                   res.redirect("/");
