@@ -251,19 +251,15 @@ app.post("/", urlencodedParser, function(req,res) {
         res.redirect('/login');
       } else {
         if (user.permissions === "admin") {
-          console.log(req.body.removedHomework);
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = req.body.removedHomework.split("_")[3];
-          console.log(course);
-          console.log(block);
           Course.findOne({course: course, block: block}, function(err, theCourse) {
-            console.log(theCourse)
             if (err) {
               res.redirect("/login");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
-                let homework = course.homework.slice(index, 1);
+                let homework = theCourse.homework.slice(index, 1);
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
                   res.redirect("/");
                 });
