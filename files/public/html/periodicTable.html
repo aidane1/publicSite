@@ -51,7 +51,15 @@
       function makeModalBox(element) {
         let modal = document.getElementById("backGround");
         let box = document.getElementById("elementModal");
-        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l)") : ("g/cm<sup>3</sup>)")) + element.density +  "<br>standard state: " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273.15).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273.15) + "&deg" + "<br>electron egativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType ;
+        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l)") : ("g/cm<sup>3</sup>)")) + element.density +  "<br>standard state: " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273.15).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273.15) + "&deg" + "<br>electron egativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType;
+        var leftArrow = document.createElement("div");
+        var rightArrow = document.createElement("div");
+        leftArrow.className = "leftArrow";
+        rightArrow.className = "rightArrow";
+        leftArrow.setAttribute("onclick", "moveFunction('left', " + element.atomicNumber.toString() + ")");
+        rightArrow.setAttribute("onclick", "moveFunction('right', " + element.atomicNumber.toString() + ")");
+        box.appendChild(leftArrow);
+        box.appendChild(rightArrow);
         modal.style.visibility = "visible";
         box.style.visibility = "visible";
       }
@@ -209,6 +217,22 @@
         visibility: hidden;
         text-align: center;
         font-size: 18px;
+      }
+      .leftArrow {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        bottom: 0px;
+        left: 0px;
+        background-color: grey;
+      }
+      .rightArrow {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        bottom: 0px;
+        right: 0px;
+        background-color: grey;
       }
       @media screen and (min-width: 768px) {
         .periodicTable {
