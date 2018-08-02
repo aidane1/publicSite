@@ -22,6 +22,9 @@
       window.onload = function() {
 
       }
+      function removeFunction(element) {
+        console.log(element);
+      }
 
 
 
@@ -42,6 +45,13 @@
         background-color: black;
         opacity: 0.7;
         visibility: hidden;
+      }
+      .remove {
+        width: 50px;
+        height: 20px;
+        background-color: red;
+        font-size: 12px;
+        text-align: center;
       }
 
       /* for computers */
@@ -158,6 +168,11 @@
                   <br>
                   notes: <%=theHomeworkGiven[1][i].notes%>
                   <br>
+                  <% if (permissions === "admin") { %>
+                    <div class = "remove" id = "<%=theHomeworkGiven[0]%>_<%=i%>" onclick = "removeFunction(this)">
+                      remove
+                    </div>
+                  <% } %>
                   <br>
               <% } else { %>
                   <%=theHomeworkGiven[1][i].date%>
@@ -166,6 +181,11 @@
                   <br>
                   notes: <%=theHomeworkGiven[1][i].notes%>
                   <br>
+                  <% if (permissions === "admin") { %>
+                    <div class = "remove" id = "<%=theHomeworkGiven[0]%>_<%=i%>" onclick = "removeFunction(this)">
+                      remove
+                    </div>
+                  <% } %>
                   <br>
               <% } %>
 

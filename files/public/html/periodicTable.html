@@ -51,7 +51,7 @@
       function makeModalBox(element) {
         let modal = document.getElementById("backGround");
         let box = document.getElementById("elementModal");
-        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l: )") : ("g/cm<sup>3</sup>: )")) + element.density +  "<br>standard state: " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273) + "&deg" + "<br>electron egativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType;
+        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l) :") : ("g/cm<sup>3</sup>): ")) + element.density +  "<br>standard state: " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273) + "&deg" + "<br>electron egativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType;
         var leftArrow = document.createElement("div");
         var rightArrow = document.createElement("div");
         leftArrow.className = "leftArrow";
