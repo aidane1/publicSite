@@ -24,6 +24,16 @@
       }
       function removeFunction(element) {
         console.log(element);
+        let form = document.createElement("form");
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.value = element;
+        input.name = "removedHomework";
+        form.action = "/";
+        form.method = "POST";
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
       }
 
 
@@ -152,7 +162,7 @@
           <ul class = "courseModalHolder">
 
             <% homework.forEach(function(homeworkGiven) { %>
-              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('')%>')" class = "modalBlock"><%=homeworkGiven[0]%></li>
+              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock"><%=homeworkGiven[0]%></li>
             <% }); %>
 
           </ul>

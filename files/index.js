@@ -244,6 +244,40 @@ app.get("/", function(req, res) {
   }
 });
 
+app.post("/", urlencodedParser, function(req,res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err) {
+        res.redirect('/login');
+      } else {
+        if (user.permissions === "admin") {
+          let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
+          let block = req.body.removedHomework.split("_")[2];
+          let index = req.body.removedHomework.split("_")[3];
+          Course.findOne({course: course, block: block}, function(err, course) {
+            if (err) {
+              res.redirect("/login");
+            } else {
+              if(course.course) {
+                let homework = course.homework.slice(index, 1);
+                Course.findOneAndUpdate({_id : course.id}, {homework : homework}).then(function() {
+                  res.redirect("/");
+                });
+              } else {
+                res.redirect("/login");
+              }
+            }
+
+          });
+        } else {
+          res.redirect("/login");
+        }
+      }
+    })
+  } else {
+    res.redirect("/login");
+  }
+});
 
 
 
