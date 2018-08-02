@@ -235,7 +235,7 @@ app.get("/", function(req, res) {
                 }
 
               });
-              
+
               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
             });
 
@@ -602,6 +602,8 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
                User.findOneAndUpdate({_id : mute._id}, {permissions: "muted"}).then(function() {
                    res.redirect("/chatroom");
                });
+             } else {
+               res.redirect("/chatroom");
              }
            }
          });
