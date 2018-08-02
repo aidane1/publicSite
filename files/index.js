@@ -153,6 +153,8 @@ let server = app.listen(80, function() {
 app.get("/periodic-table", function(req, res) {
   if (req.session.userId) {
     res.sendFile(__dirname + "/public/html/periodicTable.html");
+  } else {
+    res.redirect("/login");
   }
 });
 
