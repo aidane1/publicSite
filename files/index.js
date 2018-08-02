@@ -170,7 +170,7 @@ app.get("/", function(req, res) {
         Course.find({_id : courseCodes}, function(err, foundCourse) {
           var homeworkList = [];
           foundCourse.forEach(function(homeworkCourse) {
-            homeworkList.push([homeworkCourse.course, homeworkCourse.homework]);
+            homeworkList.push([homeworkCourse.course, homeworkCourse.homework, homeworkCourse.block]);
           });
           // var todaysBlocks = blockToTime((currentDate).getDay() -1);
           var todaysBlocks = blockToTime(0);
