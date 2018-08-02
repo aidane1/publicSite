@@ -23,25 +23,20 @@
 
       }
       function removeFunction(element) {
-        console.log(element);
         element = element.id.split("_");
         let length = element.length-4;
         let finalString = [];
         for (var i = 0; i < element.length; i++) {
+
+          finalString.push(element[i]);
           if (length != 0) {
-            finalString.push(element[i]);
             finalString.push(" ");
             length--;
-          } else if (i != element.length-1){
-            finalString.push(element[i]);
+          } else if (i != element.length-1) {
             finalString.push("_");
-          } else {
-            finalString.push(element[i]);
           }
         }
-        console.log(finalString);
         finalString = finalString.join("");
-        console.log(finalString)
 
         let form = document.createElement("form");
         let input = document.createElement("input");
