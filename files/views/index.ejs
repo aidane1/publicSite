@@ -24,7 +24,21 @@
       }
       function removeFunction(element) {
         console.log(element);
-        element = element.id;
+        element = element.id.split("_");
+        let length = element.split("_").length-3;
+        let finalString = "";
+        for (var i = 0; i < element.length; i++) {
+          if (length != 0) {
+            finalString += element[i];
+            finalString += " ";
+          } else if (i != element.length-1){
+            finalString+= element[i];
+            finalString += "_";
+          } else {
+            finalString += element[i];
+          }
+        }
+
         let form = document.createElement("form");
         let input = document.createElement("input");
         input.type = "hidden";
