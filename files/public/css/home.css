@@ -234,9 +234,9 @@ nav a:hover {
   .allHomework {
     width: 90%;
     height: 90%;
-    position: absolute;
+    position: fixed;
     left: 5%;
-    top: 110%;
+    top: 10%;
     background-color: white;
     border-radius: 10px;
     display: none;
