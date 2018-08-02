@@ -235,7 +235,7 @@ app.get("/", function(req, res) {
                 }
 
               });
-              console.log(homeworkList);
+              
               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
             });
 
