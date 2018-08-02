@@ -232,11 +232,12 @@ nav a:hover {
     margin-top: 50px;
   }
   .allHomework {
-    width: 90%;
-    height: 90%;
+    width: 600px;
+    height: 700px;
     position: fixed;
-    left: 5%;
+    left: 50%;
     top: 10%;
+    transform: translateX(-50%);
     background-color: white;
     border-radius: 10px;
     display: none;
