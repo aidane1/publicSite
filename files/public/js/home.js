@@ -37,11 +37,14 @@ function showFunction(id, element) {
 }
 function modalDisplay(course) {
   var modal = document.getElementById("allHomework");
+  var backModal = document.getElementById("modal");
   // document.getElementById(course).className = "modalBox display";
+  backModal.style.visibility = "visible";
   modal.style.display = "block";
 }
 function removeModal() {
   document.getElementById("allHomework").style.display = "none";
+  document.getElementById("modal").style.visibility = "none";
 }
 function displayHomework(course) {
   var boxes = document.getElementsByClassName("modalBox");
