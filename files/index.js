@@ -262,8 +262,13 @@ app.post("/", urlencodedParser, function(req,res) {
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
                 console.log(theCourse.homework);
-                // let homework = theCourse.homework.splice(theCourse.homework.length-1-index, 1);
-                let homework = theCourse.homework.splice(0, 1);
+                let homework;
+                if (theCourse.homework.length === 1) {
+                  homework = [];
+                } else {
+                  homework = theCourse.homework.splice(theCourse.homework.length-1-index, 1);
+                }
+
                 console.log(homework);
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
                   res.redirect("/");
