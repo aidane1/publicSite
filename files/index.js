@@ -254,6 +254,8 @@ app.post("/", urlencodedParser, function(req,res) {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = req.body.removedHomework.split("_")[3];
+          console.log(course);
+          console.log(block);
           Course.findOne({course: course, block: block}, function(err, theCourse) {
             console.log(theCourse)
             if (err) {
