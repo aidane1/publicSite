@@ -44,7 +44,7 @@ function modalDisplay(course) {
 }
 function removeModal() {
   document.getElementById("allHomework").style.display = "none";
-  document.getElementById("modal").style.visibility = "none";
+  document.getElementById("modal").style.visibility = "hidden";
 }
 function displayHomework(course) {
   var boxes = document.getElementsByClassName("modalBox");
