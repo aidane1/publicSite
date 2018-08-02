@@ -53,6 +53,7 @@
         let box = document.getElementById("elementModal");
         box.innerHTML = element.name + "<br>" + element.symbol + "<br>" + element.atomicNumber.toString() + "<br>" + element.atomicMass.toString() + "<br>";
         modal.style.visibility = "visible";
+        box.style.visibility = "visible";
       }
     </script>
     <style>
@@ -199,7 +200,7 @@
         top: 50px;
         bottom: 50px;
         background-color: white;
-        opacity: 1;
+        visibility: hidden;
       }
       @media screen and (min-width: 768px) {
         .periodicTable {
