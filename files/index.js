@@ -488,7 +488,6 @@ app.post("/submit", urlencodedParser, function(req, res) {
     Course.findOne({_id : req.body.courseID}, function(err, course) {
         req.body.date = new Date;
         req.body.questions = profanityFilter(req.body.questions);
-        req.body.pages = profanityFilter(req.body.pages);
         req.body.assignment = profanityFilter(req.body.assignment);
         req.body.notes = profanityFilter(req.body.notes);
         var newWork = course.homework;
