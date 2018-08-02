@@ -15,18 +15,18 @@
             blocks[i].classList += periodicTable[counter].groupBlock.split(" ").join("");
             blocks[i].id = periodicTable[counter].name;
             blocks[i].setAttribute("onclick", "clickFunction(this)");
-            let holder = document.createElement("div");
+            var holder = document.createElement("div");
             holder.className = "infoHolder";
-            let number = document.createElement("div");
+            var number = document.createElement("div");
             number.className = "atomicNumber";
             number.innerHTML = periodicTable[counter].atomicNumber;
-            let symbol = document.createElement("symbol");
+            var symbol = document.createElement("symbol");
             symbol.className = "symbol";
             symbol.innerHTML = periodicTable[counter].symbol;
-            let name = document.createElement("div");
+            var name = document.createElement("div");
             name.className = "name";
             name.innerHTML = periodicTable[counter].name;
-            let mass = document.createElement("div");
+            var mass = document.createElement("div");
             mass.className = "atomicMass";
             mass.innerHTML = periodicTable[counter].atomicMass.toString().substring(0, 6).split("(").join("");
             holder.appendChild(number);
@@ -46,6 +46,13 @@
           }
         }
         console.log(element);
+      }
+
+      function makeModalBox(element) {
+        let modal = document.getElementById("backGround");
+        let box = document.getElementById("elementModal");
+        box.innerHTML = element.name + "<br>" + element.symbol + "<br>" + element.atomicNumber.toString() + "<br>" + element.atomicMass.toString() + "<br>";
+        modal.style.visibility = "visible";
       }
     </script>
     <style>
@@ -176,11 +183,14 @@
         top: 0px;
       }
       .backGround {
+        position: fixed;
+        top: 0px;
+        left: 0px;
         width: 100%;
         height: 100%;
         background-color: black;
         opacity: 0.6;
-        display: none;
+        visibility: hidden;
       }
       .elementModal {
         position: fixed;
