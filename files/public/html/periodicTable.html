@@ -57,7 +57,9 @@
         leftArrow.className = "leftArrow";
         rightArrow.className = "rightArrow";
         leftArrow.setAttribute("onclick", "moveFunction('left', " + element.atomicNumber.toString() + ")");
+        leftArrow.innerHTML = "&larr;";
         rightArrow.setAttribute("onclick", "moveFunction('right', " + element.atomicNumber.toString() + ")");
+        rightArrow.innerHTML = "&rarr";
         box.appendChild(leftArrow);
         box.appendChild(rightArrow);
         modal.style.visibility = "visible";
@@ -69,6 +71,17 @@
         modal.style.visibility = "hidden";
         box.style.visibility = "hidden";
       }
+      function moveFunction(direction, number) {
+        number = parseInt(number) + (direction === "left" ? -1 : 1);
+        var element;
+        for (var i = 0; i < periodicTable.length; i++) {
+          if (periodicTable[i].atomicNumber === number) {
+            element = periodicTable[i];
+          }
+        }
+        makeModalBox(element);
+      }
+
     </script>
     <style>
       html {
@@ -225,6 +238,9 @@
         bottom: 0px;
         left: 0px;
         background-color: grey;
+        font-size: 40px;
+        text-align: center;
+        vertical-align: middle;
       }
       .rightArrow {
         position: absolute;
@@ -233,6 +249,9 @@
         bottom: 0px;
         right: 0px;
         background-color: grey;
+        font-size: 40px;
+        text-align: center;
+        vertical-align: middle;
       }
       @media screen and (min-width: 768px) {
         .periodicTable {
