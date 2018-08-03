@@ -114,28 +114,30 @@ mongoose.connection.once("open", function() {
   console.log("connection error: " + error);
 });
 
-var post = new Posts.Post({
+var post = {
   date: new Date(),
   title: "A test post",
   submittedBy: "AidanEglin"
-});
-post.save(function(err) {
-  if (err) {
-    return err;
+}
+Posts.Post.create(post, function(error, post) {
+  if(error) {
+    console.log(error);
   }
-
-  var comment1 = new Posts.Comment({
+  var comment1 = {
     body: "this is a test comment",
     submittedBy: "AidanEglin",
     parentPost: post._id
-  });
+  };
 
-  comment1.save(function(err) {
-    if (err) {
-      return err;
+  Posts.Comments.create(comment1, function(error, comment) {
+    if (error) {
+      console.log(error);
     }
   });
 });
+
+
+
 Posts.Post.findOne({title: "A test post"}, function(err, post) {
   console.log(post);
 });
