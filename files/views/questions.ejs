@@ -62,7 +62,7 @@
 
               currentElement.style.right = (parseInt(currentElement.style.right) - interval*velocity*2).toString() + "px";
 
-              if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 16) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -16)) {
+              if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 21) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -21)) {
                 var replyBoxes = document.getElementsByClassName("replyBox");
                 for (var i = 0; i < replyBoxes.length; i++) {
                   replyBoxes[i].classList.remove("boxFull");
