@@ -5,9 +5,7 @@ const Schema = mongoose.Schema;
 
 
 const postSchema = new Schema({
-  _id : {
-    type: Schema.Types.ObjectId
-  },
+
   date: {
     type: Date
   },
