@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   _id : {
-    type: Schema.types.ObjectId
+    type: Schema.Types.ObjectId
   },
   date: {
     type: Date
