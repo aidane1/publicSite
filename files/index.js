@@ -136,7 +136,9 @@ post.save(function(err) {
     }
   });
 });
-console.log(post);
+Posts.Post.findOne({title: "A test post"}, function(err, post) {
+  console.log(post);
+});
 
 
 
