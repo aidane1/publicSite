@@ -120,7 +120,9 @@ var post = new Posts.Post({
   submittedBy: "AidanEglin"
 });
 post.save(function(err) {
-  if (err) return handleError(err);
+  if (err) {
+    return err;
+  }
 
   var comment1 = new Posts.Comment({
     body: "this is a test comment",
@@ -129,7 +131,9 @@ post.save(function(err) {
   });
 
   comment1.save(function(err) {
-    if (err) return handleError(err);
+    if (err) {
+      return err;
+    }
   });
 });
 
