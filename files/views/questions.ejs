@@ -60,7 +60,7 @@
               var interval = (parseInt(currentElement.style.right) > 0 ? 1 : -1);
 
 
-              currentElement.style.right = (parseInt(currentElement.style.right) - interval*20).toString() + "px";
+              currentElement.style.right = (parseInt(currentElement.style.right) - interval*8).toString() + "px";
 
               if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 11) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -11)) {
                 var replyBoxes = document.getElementsByClassName("replyBox");
@@ -77,7 +77,7 @@
                 finished = false;
               }
 
-            }, 5);
+            }, 2);
           }
 
 
