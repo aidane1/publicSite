@@ -60,9 +60,9 @@
               var interval = (parseInt(currentElement.style.right) > 0 ? 1 : -1);
 
 
-              currentElement.style.right = (parseInt(currentElement.style.right) - interval*8).toString() + "px";
+              currentElement.style.right = (parseInt(currentElement.style.right) - interval*15).toString() + "px";
 
-              if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 11) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -11)) {
+              if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 16) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -16)) {
                 var replyBoxes = document.getElementsByClassName("replyBox");
                 for (var i = 0; i < replyBoxes.length; i++) {
                   replyBoxes[i].classList.remove("boxFull");
@@ -77,7 +77,7 @@
                 finished = false;
               }
 
-            }, 2);
+            }, 3);
           }
 
 
