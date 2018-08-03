@@ -136,6 +136,7 @@ post.save(function(err) {
     }
   });
 });
+console.log(post);
 
 
 
