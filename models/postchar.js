@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
   _id : {
     type: Schema.types.ObjectId
-  }
+  },
   date: {
     type: Date
   },
@@ -30,7 +30,7 @@ const commentSchema = new Schema({
   },
   body: {
     type: String
-  }
+  },
   submittedBy: {
     type: String
   }
