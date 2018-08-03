@@ -243,7 +243,6 @@ app.get("/", function(req, res) {
     res.redirect("/login");
   }
 });
-
 app.post("/", urlencodedParser, function(req,res) {
   console.log(req.body);
   if (req.session.userId) {
@@ -354,7 +353,6 @@ app.get("/courses", function(req, res) {
       res.redirect("/login");
     }
 });
-
 app.post("/courses", urlencodedParser, function(req, res) {
   console.log(req.body);
   if (req.session.userId && req.body.coursesCode) {
@@ -605,6 +603,11 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 });
 
 
+app.get("/questions", function(req, res) {
+  res.render("questions", {});
+});
+
+
 
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
@@ -626,7 +629,6 @@ app.get("/chatroom", function(req,res) {
     res.redirect("/login");
   }
 });
-
 app.post("/chatroom", urlencodedParser, function(req, res) {
   User.findOne({_id : req.session.userId}, function(err, user) {
     if (err) {
