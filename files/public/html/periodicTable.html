@@ -51,7 +51,7 @@
       function makeModalBox(element) {
         let modal = document.getElementById("backGround");
         let box = document.getElementById("elementModal");
-        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l) :") : ("g/cm<sup>3</sup>): ")) + element.density +  "<br>standard state: " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273) + "&deg" + "<br>electron egativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType;
+        box.innerHTML = "name: " + element.name + "<br>symbol: " + element.symbol + "<br>atomic number: " + element.atomicNumber.toString() + "<br>atomic mass: " + element.atomicMass + "<br>density( " +(element.standardState === "gas" ? ("kg/l) :") : ("g/cm<sup>3</sup>): ")) + element.density +  "<br>standard state (273.15K and 101.3Kpa): " + element.standardState + "<br>melting point (C): " + (element.meltingPoint-273).toString() + "&deg" + "<br>boiling point (C): " + (element.boilingPoint-273) + "&deg" + "<br>electron negativity: " + element.electronegativity.toString() + "<br>oxidation states: " + element.oxidationStates + "<br>bonding type: " + element.bondingType;
         var leftArrow = document.createElement("div");
         var rightArrow = document.createElement("div");
         leftArrow.className = "leftArrow";
@@ -443,16 +443,16 @@
       </tr>
     </table>
     <div class = "display" id = "display">
-      <div class = "identifier">Noble<br>Gas: <div class = "color noblegas"></div></div>
-      <div class = "identifier">Alkali<br>Metal: <div class = "color alkalimetal"></div></div>
-      <div class = "identifier">Alkaline<br>Earth<br>Metal: <div class = "color alkalineearthmetal"></div></div>
-      <div class = "identifier">Transition<br>Metal: <div class = "color transitionmetal"></div></div>
-      <div class = "identifier">Halogen<div class = "color halogen"></div></div>
-      <div class = "identifier">Metal: <div class = "color metal"></div></div>
-      <div class = "identifier">Metalloid: <div class = "color metalloid"></div></div>
-      <div class = "identifier">Lanthanoid: <div class = "color lanthanoid"></div></div>
-      <div class = "identifier">Actinoid: <div class = "color actinoid"></div></div>
-      <div class = "identifier">Non<br>Metal: <div class = "color nonmetal"></div></div>
+      <div class = "identifier">Noble<br>Gases: <div class = "color noblegas"></div></div>
+      <div class = "identifier">Alkali<br>Metals: <div class = "color alkalimetal"></div></div>
+      <div class = "identifier">Alkaline<br>Earth<br>Metals: <div class = "color alkalineearthmetal"></div></div>
+      <div class = "identifier">Transition<br>Metals: <div class = "color transitionmetal"></div></div>
+      <div class = "identifier">Halogens:<div class = "color halogen"></div></div>
+      <div class = "identifier">Metals: <div class = "color metal"></div></div>
+      <div class = "identifier">Metalloids: <div class = "color metalloid"></div></div>
+      <div class = "identifier">Lanthanides: <div class = "color lanthanoid"></div></div>
+      <div class = "identifier">Actinides: <div class = "color actinoid"></div></div>
+      <div class = "identifier">Non<br>Metals: <div class = "color nonmetal"></div></div>
     </div>
     <div class = "backGround" id = "backGround" onclick = "closeFunction()">
 
