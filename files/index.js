@@ -93,6 +93,8 @@ let Texts = require("../models/textchar.js");
 
 let Resources = require("../models/resourcechar.js");
 
+let Posts = require("../models/postchar.js")
+
 let nodemailer = require("nodemailer");
 
 let transporter = nodemailer.createTransport({
@@ -111,6 +113,26 @@ mongoose.connection.once("open", function() {
 }).on("error", function(error) {
   console.log("connection error: " + error);
 });
+
+var post = new Posts.Post({
+  date: new Date(),
+  title: "A test post",
+  submittedBy: "AidanEglin"
+});
+post.save(function(err) {
+  if (err) return handleError(err);
+
+  var comment1 = new Posts.Comment({
+    body: "this is a test comment",
+    submittedBy: "AidanEglin",
+    parentPost: post._id
+  });
+
+  comment1.save(function(err) {
+    if (err) return handleError(err);
+  });
+});
+
 
 
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
