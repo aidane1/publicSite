@@ -698,7 +698,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
   console.log(req.body);
   console.log(req.params);
   if (req.session.userId) {
-    User.findOne({_id : req.body.id}, function(err, user) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
       let params = {
         parentPost: mongoose.Types.ObjectId(req.params.id),
         body: req.body.comment,
