@@ -182,7 +182,8 @@ app.set("view engine", "ejs");
 app.use(session({
   secret: 'a1q2T5-8#1+59',
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  expires:  new Date(Date.now() + 86400*1000)
 }));
 
 app.use(express.static('public'));
