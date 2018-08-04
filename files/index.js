@@ -141,20 +141,21 @@ mongoose.connection.once("open", function() {
 //   console.log(post);
 // });
 
-Posts.Comment.create({body: "test comment", submittedBy: "AidanEglin"}, function(err, comment) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(comment);
-    Posts.Post.create({date: new Date(), title: "title test", submittedBy: "AidanEglin", comments: comment._id}, function(error, post) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(post);
-      }
-    });
-  }
-});
+// Posts.Comment.create({body: "test comment", submittedBy: "AidanEglin"}, function(err, comment) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(comment);
+//     Posts.Post.create({date: new Date(), title: "title test", submittedBy: "AidanEglin", comments: comment._id}, function(error, post) {
+//       if (error) {
+//         console.log(error);
+//       } else {
+//         console.log(post);
+//       }
+//     });
+//   }
+// });
+
 
 
 Posts.Post.findOne({title: "title test"}).populate("comments").exec(function(err,post) {
