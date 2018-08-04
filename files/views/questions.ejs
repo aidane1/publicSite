@@ -225,12 +225,15 @@
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
+        <br>
         <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify"required />
+        <br>
         <div class = "header">Submit As: </div>
         <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
         <br>
 
         <label for "user">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User: </label><input type = "radio" value = "<%=user.username%>" name = "anon" id = "user" class = "radio" required/>
+        <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
         <textarea style = "width: 80%; height: 200px; display: block; margin: auto; outline: none;" placeholder="Enter your body here" name = "body"></textarea>
@@ -239,7 +242,7 @@
         <center><div id = "backUp" style = "font-size: 40px" onclick = "submitPost()">&#x21e7;</div<
       </form>
     </div>
-    <div class = "back" style = "font-size: 20px; position: fixed; top: 5px; left: 10px;">
+    <div class = "back" style = "font-size: 20px; position: fixed; bottom: 10px; left: 10px;">
       <a id = "back" href = "/" style = "text-decoration:none; color:black">&#8592;</a>
     </div>
   </body>
