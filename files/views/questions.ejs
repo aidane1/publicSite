@@ -197,6 +197,19 @@
         font-size: 15px;
         font-weight: bold;
         display: block;
+        margin-top: 10px;
+      }
+      @media screen and (max-width: 320px) {
+        .textarea {
+          height: 100px;
+        }
+        #title {
+          height: 30px;
+          font-size: 14px;
+        }
+        .header {
+          margin-top: 5px;
+        }
       }
 
 
@@ -225,9 +238,7 @@
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
-        <br>
         <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify"required />
-        <br>
         <div class = "header">Submit As: </div>
         <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
         <br>
@@ -236,7 +247,7 @@
         <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
-        <textarea style = "width: 80%; height: 200px; display: block; margin: auto; outline: none;" placeholder="Enter your body here" name = "body"></textarea>
+        <textarea style = "width: 80%; height: 200px; display: block; margin: auto; outline: none;" placeholder="Enter your body here" name = "body" id = "textarea"></textarea>
         <center><input type = "submit" class = "submit"/></center>
         <br>
         <center><div id = "backUp" style = "font-size: 40px" onclick = "submitPost()">&#x21e7;</div<
