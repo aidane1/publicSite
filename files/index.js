@@ -660,9 +660,16 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 
 app.get("/questions", function(req, res) {
-  Posts.Post.find({}, function(err, posts) {
-    res.render("questions", {posts: posts});
-  });
+  if (req.session.userId) {
+    Posts.Post.find({}, function(err, posts) {
+      User.findOne({_id : req.body.sessionId}, function(error, user) {
+        res.render("questions", {posts: posts, user: user});
+      })
+    });
+  } else {
+    res.redirect("/login");
+  }
+
 });
 app.post("/questions", urlencodedParser, function(req, res) {
   let info = {
