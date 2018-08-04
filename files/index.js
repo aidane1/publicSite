@@ -137,10 +137,27 @@ mongoose.connection.once("open", function() {
 // });
 
 
-Posts.Post.findOneAndUpdate({submittedBy: "AidanEglin"}, {$push: {comments: mongoose.Types.ObjectId("5b64ee2c0257e76f37884dc9")}});
+// Posts.Post.findOneAndUpdate({submittedBy: "AidanEglin"}, {$push: {comments: mongoose.Types.ObjectId("5b64ee2c0257e76f37884dc9")}}, function(err, post) {
+//   console.log(post);
+// });
+
+Posts.Comment.create({body: "test comment", submittedBy: "AidanEglin"}, function(err, comment) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(comment);
+    Posts.Post.create({date: new Date(), title: "title test", submittedBy: "AidanEglin", comments: comment._id}, function(error, post) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(post);
+      }
+    });
+  }
+});
 
 
-Posts.Post.findOne({submittedBy: "AidanEglin"}).populate("comments").exec(function(err,post) {
+Posts.Post.findOne({title: "title test"}).populate("comments").exec(function(err,post) {
   if (err) {
     console.log(err);
   } else {
