@@ -137,7 +137,13 @@ Posts.Post.create(post, function(error, post) {
 });
 
 
-
+Posts.Comment.findOne({submittedBy: "AidanEglin"}).populate("parentPost").exec(function(err,story) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(story);
+  }
+});
 Posts.Post.findOne({title: "A test post"}, function(err, post) {
   console.log(post);
 });
