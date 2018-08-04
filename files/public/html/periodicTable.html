@@ -12,6 +12,9 @@
           if (blocks[i].classList.contains("none")) {
 
           } else {
+            blocks[i].style.border = "1px solid black";
+            blocks[i].style.height = "50px";
+            blocks[i].style.padding = "0px";
             blocks[i].classList += periodicTable[counter].groupBlock.split(" ").join("");
             blocks[i].id = periodicTable[counter].name;
             blocks[i].setAttribute("onclick", "clickFunction(this)");
@@ -122,10 +125,10 @@
       }
       .periodicTable td {
         position: relative;
-        padding: 0px;
+
         width: 50px;
-        height: 50px;
-        border: 1px solid black;
+
+        /* border: 1px solid black; */
       }
       .thin {
 
@@ -260,6 +263,37 @@
         vertical-align: middle;
         cursor: pointer;
       }
+      .bottom {
+        visibility: visible;
+        box-sizing: border-box;
+        height: 50px;
+        position: absolute;
+        top: 25px;
+        background-color: #528ff2;
+        border-radius: 50px;
+        z-index: -40;
+
+      }
+      .side {
+        visibility: visible;
+        box-sizing: border-box;
+        background-color: #528ff2;
+        z-index: -5;
+        border-bottom-left-radius: 25px;
+        height: 50px;
+        position: absolute;
+        left: 25px;
+
+      }
+      .small {
+        visibility: visible;
+        box-sizing: border-box;
+        background-color: #528ff2;
+        z-index: -5;
+        height: 50px;
+        position: absolute;
+        left: 25px;
+      }
       @media screen and (min-width: 768px) {
         .periodicTable {
           display: block;
@@ -288,7 +322,6 @@
           left: 50%;
           transform: translateX(-50%);
           top: 200px;
-      \
         }
       }
     </style>
@@ -365,27 +398,52 @@
       <tr>
         <td></td>
         <td></td>
+        <td class = "none small" style = "left: 24px; border-top-left-radius: 25px;"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td class = "none small" style = "left: 24px"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
         <td class = "none"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
         <td class = "none"></td>
+        <td class = 'none small' style = "border-top-right-radius: 25px"></td>
+        <td colspan="15" class = "none bottom"></td>
+      </tr>
+      <tr>
+        <td colspan="2" class = "none"></td>
+        <td class = "none small"></td>
         <td></td>
         <td></td>
         <td></td>
@@ -403,28 +461,8 @@
         <td></td>
       </tr>
       <tr>
-        <td colspan="18" class = "none"></td>
-      </tr>
-      <tr>
-        <td colspan="3" class = "none"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="3" class = "none"></td>
+        <td colspan="2" class = "none"></td>
+        <td class = "none side"></td>
         <td></td>
         <td></td>
         <td></td>
