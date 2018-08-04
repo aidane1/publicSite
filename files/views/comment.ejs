@@ -103,19 +103,20 @@
         Loreum ipsum, dolor sit amet?
       </div>
       <div class = "body">
-          <%=post%><br>
-          <%=comments%>
+          <%=post.body%><br>
       </div>
       <div class = "bar" onclick = "commentFunction()">
         &#10555;
       </div>
       <div class = "comments">
-        <div class = "comment">
-          L-Fucking-Mao that's so gay oh my god
-          <div class = "submittedBy">
-            AidanEglin
+        <%comments.forEach(function(comment) { %>
+          <div class = "comments">
+            <%=comment.body%>
+            <div class = "submittedBy">
+              <%=comment.submittedBy%>
+            </div>
           </div>
-        </div>
+        <% }); %>
       </div>
     </div>
     <div class = "submitComment" id = "submitComment">
