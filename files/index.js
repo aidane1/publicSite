@@ -683,6 +683,22 @@ app.post("/questions", urlencodedParser, function(req, res) {
   });
 });
 
+app.get("/questions/:id", function(req, res) {
+  Posts.Post.findOne({_id : req.params.id}, function(err, post) {
+    if (!post) {
+      //do stuff if they search for a bad post
+    } else {
+      Posts.Comment.find({_id : post.comments}, function(error, comments) {
+        res.render("comments", {post: post, comments: comments});
+      });
+    }
+  });
+});
+app.post("/questions/:id", urlencodedParser, function(req, res) {
+  console.log(req.body);
+  console.log(req.params.id);
+  res.redirect("/questions/" + req.params.id);
+});
 
 
 app.get("/chatroom", function(req,res) {

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+      function commentFunction() {
+        var comment = document.getElementById("submitComment");
+        comment.classList.toggle("commentDown");
+      }
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: sans-serif;
+      }
+      html {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+        background-color: black;
+      }
+      .container {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+
+      }
+      .title {
+        display: block;
+        padding: 10px;
+        margin-top: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+        background-color: #28bf41;
+      }
+      .body {
+        width: 100%;
+        padding: 10px;
+
+        border-bottom: 1px solid white;
+        color: white;
+        font-size: 12px;
+
+      }
+      .bar {
+
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+        color: white;
+        border: 1px solid white;
+        height: 30px;
+        background-color: #26a4ff;
+      }
+      .comments {
+        color: white;
+        font-size: 12px;
+        padding: 10px;
+      }
+      .comment {
+        padding: 5px;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+      }
+      .submittedBy {
+        margin-top: 10px;
+        font-size: 8px;
+        color: grey;
+        font-style: italic;
+      }
+      .submitComment {
+        width: 100%;
+        height: 100%;
+        background-color: orange;
+        position: fixed;
+        top: -100%;
+
+        transition: top 1.2s;
+      }
+      .commentDown {
+        top: 0%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "container" id = "container">
+      <div class = "title">
+        Loreum ipsum, dolor sit amet?
+      </div>
+      <div class = "body">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque quis quam tortor. In vel vulputate velit, ut luctus turpis. Nam venenatis laoreet diam at feugiat. Cras egestas ex nec elementum accumsan. Maecenas in sapien hendrerit, efficitur tortor nec, dignissim quam. Proin viverra ornare eros, non maximus libero tempus fringilla. Integer tortor mi, finibus vel imperdiet in, tempus vitae lorem. Nam cursus urna eget ante feugiat, vel aliquam massa placerat. Ut aliquet, dolor eu euismod pulvinar, nisl lectus accumsan dui, et venenatis ex elit ut leo. Curabitur efficitur nec felis in ultricies. Proin euismod cursus tincidunt. Cras a sapien vel velit volutpat auctor. Vivamus ac mi at lorem consequat pretium sed nec ipsum. Maecenas molestie mauris et lobortis pellentesque. Curabitur sit amet vulputate odio.
+
+      </div>
+      <div class = "bar" onclick = "commentFunction()">
+        &#10555;
+      </div>
+      <div class = "comments">
+        <div class = "comment">
+          L-Fucking-Mao that's so gay oh my god
+          <div class = "submittedBy">
+            AidanEglin
+          </div>
+        </div>
+        <div class = "comment">
+          L-Fucking-Mao that's so gay oh my god
+          <div class = "submittedBy">
+            AidanEglin
+          </div>
+        </div>
+        <div class = "comment">
+          L-Fucking-Mao that's so gay oh my god
+          <div class = "submittedBy">
+            AidanEglin
+          </div>
+        </div>
+        <div class = "comment">
+          L-Fucking-Mao that's so gay oh my god
+          <div class = "submittedBy">
+            AidanEglin
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class = "submitComment" id = "submitComment">
+      <form action = "/questions/:id" method = "POST">
+        <h3>Enter your comment below</h3>
+        <textarea placeholder="Enter comment here..." name = "comment" style = "width: 90%; display: block; margin: auto; height: 300px; outline: none">
+
+        </textarea>
+        <input type = "submit" style = "display: block; width: 100px; height: 30px; background-color: white; margin: auto; margin-top: 10px"/>
+        <br>
+        <br>
+        <center><div id = "backUp" style = "font-size: 40px;" onclick = "commentFunction()">&#x21e7;</div>
+      </form>
+    </div>
+  </body>
+</html>
