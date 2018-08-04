@@ -199,6 +199,13 @@
         display: block;
         margin-top: 10px;
       }
+      #textarea {
+        height: 200px;
+        width: 80%;
+        display: block;
+        margin: auto;
+        outline: none;
+      }
       @media screen and (max-width: 320px) {
         #textarea {
           height: 100px;
@@ -247,7 +254,7 @@
         <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
-        <textarea style = "width: 80%; height: 200px; display: block; margin: auto; outline: none;" placeholder="Enter your body here" name = "body" id = "textarea"></textarea>
+        <textarea placeholder="Enter your body here" name = "body" id = "textarea"></textarea>
         <center><input type = "submit" class = "submit"/></center>
         <br>
         <center><div id = "backUp" style = "font-size: 40px" onclick = "submitPost()">&#x21e7;</div<
