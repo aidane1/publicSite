@@ -689,7 +689,7 @@ app.get("/questions/question", function(req, res) {
       //do stuff if they search for a bad post
     } else {
       Posts.Comment.find({_id : post.comments}, function(error, comments) {
-        res.render("comment", {post: post, comments: comments});
+        res.render("comment", {post: post, comments: comments, id  : req.params.id});
       });
     }
   });
