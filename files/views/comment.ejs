@@ -109,23 +109,16 @@
         &#10555;
       </div>
       <div class = "comments">
-        <%if (comments.length != 0) { %>
+
           <%comments.forEach(function(comment) { %>
             <div class = "comment">
-              <%=comment.body%>
+              <%= comment.body %>
               <div class = "submittedBy">
-                <%=comment.submittedBy%>
+                <%= comment.submittedBy %>
               </div>
             </div>
           <% }); %>
-        <% } else { %>
-          <div class = "comment">
-            It's really empty here...
-            <div class = 'submittedBy'>
-              computer
-            </div>
-          </div>
-        <% } %>
+        
 
       </div>
     </div>
