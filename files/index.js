@@ -129,7 +129,7 @@ Posts.Post.create(post, function(error, post) {
     parentPost: post._id
   };
 
-  Posts.Comments.create(comment1, function(error, comment) {
+  Posts.Comment.create(comment1, function(error, comment) {
     if (error) {
       console.log(error);
     }
