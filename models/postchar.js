@@ -15,13 +15,16 @@ const postSchema = new Schema({
   submittedBy: {
     type: String
   },
+  body: {
+    type: String
+  }
   comments: [{type: Schema.Types.ObjectId, ref: Comment}]
 });
 
 
 const commentSchema = new Schema({
   parentPost: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Post"
   },
   body: {
