@@ -94,6 +94,18 @@
       .commentDown {
         top: 0%;
       }
+      .textarea {
+        width: 90%;
+        height: 300px;
+        display: block;
+        margin: auto;
+        outline: none;
+      }
+      @media screen and (max-width: 320px) {
+        .textarea {
+          height: 150px;
+        }
+      }
 
     </style>
   </head>
@@ -135,7 +147,7 @@
     <div class = "submitComment" id = "submitComment">
       <form action = "/questions/<%=id%>" method = "POST">
         <h3>Enter your comment below</h3>
-        <textarea placeholder="Enter comment here..." name = "comment" style = "width: 90%; display: block; margin: auto; height: 300px; outline: none">
+        <textarea placeholder="Enter comment here..." name = "comment" class = "textarea" style = "width: 90%; display: block; margin: auto; height: 300px; outline: none">
 
         </textarea>
         <input type = "submit" style = "display: block; width: 100px; height: 30px; background-color: white; margin: auto; margin-top: 10px"/>
