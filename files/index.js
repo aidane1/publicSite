@@ -683,7 +683,7 @@ app.post("/questions", urlencodedParser, function(req, res) {
   });
 });
 
-app.get("/questions/:id", function(req, res) {
+app.get("/questions/question", function(req, res) {
   Posts.Post.findOne({_id : req.params.id}, function(err, post) {
     if (!post) {
       //do stuff if they search for a bad post
@@ -694,7 +694,7 @@ app.get("/questions/:id", function(req, res) {
     }
   });
 });
-app.post("/questions/:id", urlencodedParser, function(req, res) {
+app.post("/questions/question", urlencodedParser, function(req, res) {
   console.log(req.body);
   console.log(req.params);
   res.redirect("/questions/" + req.params.id);
