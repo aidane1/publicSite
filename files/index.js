@@ -662,7 +662,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/questions", function(req, res) {
   if (req.session.userId) {
     Posts.Post.find({}, function(err, posts) {
-      User.findOne({_id : req.body.sessionId}, function(error, user) {
+      User.findOne({_id : req.session.userId}, function(error, user) {
         res.render("questions", {posts: posts, user: user});
       })
     });
