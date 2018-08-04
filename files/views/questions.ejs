@@ -86,6 +86,10 @@
 
         });
       }
+      function submitPost() {
+        var submitPost = document.getElementById("submitPost");
+        submitPost.classList.toggle("submitPostSee");
+      }
     </script>
     <style>
       * {
@@ -106,10 +110,12 @@
       }
       .questionHolder {
         width: 100%;
-        height: 100%;
-        /* overflow-y: auto; */
+
+        overflow-y: auto;
+        overflow-x: hidden;
         position: fixed;
-        top: 0px;
+        top: 40px;
+        bottom: 40px;
         left: 0px;
         background-color: black;
 
@@ -138,8 +144,6 @@
       .boxFull {
         background-color: #28bf41;
       }
-
-
       .submittedBy {
         font-size: 10px;
       }
@@ -148,73 +152,85 @@
         height: 15px;
         position: absolute;
         top: 30%;
+      }
+      .bar {
+        width: 100%;
+        height: 40px;
+        border: 1px solid grey;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        background-color: #26a4ff;
+        text-align: center;
+        font-size: 30px;
+      }
+      .submitPost {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: -100%;
+        background-color: orange;
+        transition: top 1.2s;
+      }
+      .submitPostSee {
+        top: 0%;
+      }
+      #title {
+        display: block;
+        width: 100%;
+        height: 50px;
+        font-size: 15px;
+        outline: none;
+      }
+      .radio {
+          width: 25px;
+          height: 25px;
 
       }
+      .submit {
+        width: 100px;
+        height: 30px;
+        background-color: white;
+        margin-top: 10px;
+      }
+
+
     </style>
   </head>
   <body>
+
     <div class = "questionHolder">
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-        <div class = "replyBox">
-          <div class = "reply">
-            REPLY
+      <% posts.forEach(function(post) { %>
+        <div class = "question" id = "<%=post._id">
+          <div class = "questionTitle"><%=post.title%></div>
+          <div class = "submittedBy"><%=post.submittedBy</div>
+          <div class = "replyBox">
+            <div class = "reply">OPEN</div>
           </div>
         </div>
-      </div>
-      <div class = "question">
-        <div class = "questionTitle">
-          Loreum ipsum dolor sit amet, consectuer cor di amen ?
-        </div>
-        <div class = "submittedBy">
-          by: AidanEglin
-        </div>
-      </div>
+      <% }) %>
+
+    </div>
+
+    <div class = "bar" style = "top: 0px">
+      Questions
+    </div>
+    <div class = "bar">
+      &larr; &nbsp;&nbsp;&nbsp; <div id = "submit" style = "display: inline;" onclick = "submitPost()">&#9998;</div> &nbsp;&nbsp;&nbsp; &rarr;
+    </div>
+    <div class = "submitPost" id = "submitPost">
+      <form method = "POST" action = "/questions">
+        <label for "title"><h3>Title:</h3> </label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify"required />
+        <h3>Submit as: </h3>
+        <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
+        <br>
+
+        <label for "user">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User: </label><input type = "radio" value = "user" name = "anon" id = "user" class = "radio" required/>
+        <hr>
+        <h3 style = "display: inline">Body: </h3><br>
+        <textarea style = "width: 80%; height: 200px; display: block; margin: auto; outline: none;" placeholder="Enter your body here" name = "body"></textarea>
+        <center><input type = "submit" class = "submit"/></center>
+      </form>
     </div>
   </body>
 </html>

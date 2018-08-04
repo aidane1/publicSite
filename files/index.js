@@ -158,13 +158,13 @@ mongoose.connection.once("open", function() {
 
 
 
-Posts.Post.findOne({title: "title test"}).populate("comments").exec(function(err,post) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(post);
-  }
-});
+// Posts.Post.findOne({title: "title test"}).populate("comments").exec(function(err,post) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(post);
+//   }
+// });
 
 
 
@@ -660,7 +660,20 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 
 app.get("/questions", function(req, res) {
-  res.render("questions", {});
+  Posts.Post.find({}, function(err, posts) {
+    res.render("questions", {posts: posts});
+  });
+});
+app.post("/questions", urlencodedParser, function(req, res) {
+  let info = {
+    body: req.body.body,
+    title: req.body.title,
+    submittedBy: req.body.anon,
+    date: new Date()
+  }
+  Posts.Post.create(info, function(err, post) {
+    res.redirect("/questions");
+  });
 });
 
 
