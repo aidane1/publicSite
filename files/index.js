@@ -697,7 +697,20 @@ app.get("/questions/:id", function(req, res) {
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   console.log(req.body);
   console.log(req.params);
-  res.redirect("/questions/" + req.params.id);
+  if (req.session.userId) {
+    User.findOne({_id : req.body.id}, function(err, user) {
+      let params = {
+        parentPost: mongoose.Types.ObjectId(req.params.id),
+        body: req.body.comment,
+        submittedBy: user.username
+      }
+      Posts.Comment.create(params, function(err, comment) {
+        Posts.Post.findOneAndUpdate({_id : req.params.id}, {$push:{comments : comment._id}});
+        res.redirect("/questions/" + req.params.id);
+      })
+    });
+
+  }
 });
 
 
