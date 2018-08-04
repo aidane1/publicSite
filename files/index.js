@@ -711,8 +711,15 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
       }
       Posts.Comment.create(params, function(err, comment) {
         console.log(comment);
-        Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$push:{comments : comment._id}});
-        res.redirect("/questions/" + req.params.id);
+        Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
+          console.log(post)
+            Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+              console.log(post);
+              res.redirect("/questions/" + req.params.id);
+            });
+        });
+
+
       })
     });
 
