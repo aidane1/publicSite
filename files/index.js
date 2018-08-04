@@ -684,15 +684,20 @@ app.post("/questions", urlencodedParser, function(req, res) {
 });
 
 app.get("/questions/:id", function(req, res) {
-  Posts.Post.findOne({_id : req.params.id}, function(err, post) {
-    if (!post) {
-      //do stuff if they search for a bad post
-    } else {
-      Posts.Comment.find({_id : post.comments}, function(error, comments) {
-        res.render("comment", {post: post, comments: comments, id : req.params.id});
-      });
-    }
-  });
+  if (req.session.userId) {
+    Posts.Post.findOne({_id : req.params.id}, function(err, post) {
+      if (!post) {
+        //do stuff if they search for a bad post
+      } else {
+        Posts.Comment.find({_id : post.comments}, function(error, comments) {
+          res.render("comment", {post: post, comments: comments, id : req.params.id});
+        });
+      }
+    });
+  } else {
+    res.redirect("/login");
+  }
+
 });
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   console.log(req.body);
@@ -705,7 +710,8 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
         submittedBy: user.username
       }
       Posts.Comment.create(params, function(err, comment) {
-        Posts.Post.findOneAndUpdate({_id : req.params.id}, {$push:{comments : comment._id}});
+        console.log(comment);
+        Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$push:{comments : comment._id}});
         res.redirect("/questions/" + req.params.id);
       })
     });
