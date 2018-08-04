@@ -245,7 +245,7 @@
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
-        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify"required />
+        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required />
         <div class = "header">Submit As: </div>
         <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
         <br>
@@ -254,7 +254,7 @@
         <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
-        <textarea placeholder="Enter your body here" name = "body" id = "textarea"></textarea>
+        <textarea placeholder="Enter your body here" name = "body" id = "textarea" maxlength="512"></textarea>
         <center><input type = "submit" class = "submit"/></center>
         <br>
         <center><div id = "backUp" style = "font-size: 40px" onclick = "submitPost()">&#x21e7;</div>
