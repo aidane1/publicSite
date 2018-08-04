@@ -696,7 +696,7 @@ app.get("/questions/:id", function(req, res) {
 });
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   console.log(req.body);
-  console.log(req.params.id);
+  console.log(req.params);
   res.redirect("/questions/" + req.params.id);
 });
 
