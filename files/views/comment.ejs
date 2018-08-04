@@ -60,7 +60,7 @@
 
         width: 100%;
         text-align: center;
-        font-size: 30px;
+        font-size: 20px;
         color: white;
         border: 1px solid white;
         height: 30px;
@@ -100,7 +100,7 @@
   <body>
     <div class = "container" id = "container">
       <div class = "title">
-        Loreum ipsum, dolor sit amet?
+        <%=post.title>%
       </div>
       <div class = "body">
           <%=post.body%><br>
@@ -109,14 +109,24 @@
         &#10555;
       </div>
       <div class = "comments">
-        <%comments.forEach(function(comment) { %>
-          <div class = "comments">
-            <%=comment.body%>
-            <div class = "submittedBy">
-              <%=comment.submittedBy%>
+        <%if (comments.length != 0) { %>
+          <%comments.forEach(function(comment) { %>
+            <div class = "comment">
+              <%=comment.body%>
+              <div class = "submittedBy">
+                <%=comment.submittedBy%>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class = "comment">
+            It's really empty here...
+            <div class = 'submittedBy'>
+              computer
             </div>
           </div>
-        <% }); %>
+        <% } %>
+
       </div>
     </div>
     <div class = "submitComment" id = "submitComment">
