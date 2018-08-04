@@ -137,7 +137,7 @@ mongoose.connection.once("open", function() {
 // });
 
 
-Posts.Post.findOneAndUpdate({submittedBy: "AidanEglin"}, {$push: {comments: mongoose.Types.ObjectId("5b64ee2c0257e76f37884dc9"}});
+Posts.Post.findOneAndUpdate({submittedBy: "AidanEglin"}, {$push: {comments: mongoose.Types.ObjectId("5b64ee2c0257e76f37884dc9")}});
 
 
 Posts.Post.findOne({submittedBy: "AidanEglin"}).populate("comments").exec(function(err,post) {
