@@ -183,7 +183,8 @@ app.use(session({
   secret: 'a1q2T5-8#1+59',
   resave: true,
   saveUninitialized: false,
-  expires:  new Date(Date.now() + 86400*1000)
+  expires:  new Date(Date.now() + 10000),
+  maxAge: 10000
 }));
 
 app.use(express.static('public'));
