@@ -639,7 +639,7 @@ app.post("/questions", urlencodedParser, function(req, res) {
 });
 
 app.get("/questions/:id", function(req, res) {
-  res.cookie("path", "/questions" + req.params.id);
+  res.cookie("path", "/questions/" + req.params.id);
   if (req.session.userId) {
     Posts.Post.findOne({_id : req.params.id}, function(err, post) {
       if (!post) {
