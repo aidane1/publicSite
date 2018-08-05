@@ -162,8 +162,6 @@ app.get("/periodic-table", function(req, res) {
 app.get("/", function(req, res) {
   let currentDate = new Date();
   res.cookie("path", "/");
-  console.log(req.session.cookie.maxAge/1000);
-  console.log(req.session.views);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
@@ -303,7 +301,6 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
   try {
     let response = await User.authenticate(req.body.logname, req.body.logword);
     req.session.userId = response._id;
-    req.session.views++;
     res.cookie("sessionID", response._id);
     res.redirect(req.cookies.path || "/");
   } catch(e) {
@@ -337,7 +334,6 @@ app.post("/signup", urlencodedParser, function(req, res) {
           res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
         } else {
           req.session.userId = user._id;
-          req.session.views++;
           res.cookie("sessionID", req.session.userId);
           return res.redirect("/courses");
         }
