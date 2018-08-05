@@ -690,6 +690,7 @@ app.get("/questions/:id", function(req, res) {
     Posts.Post.findOne({_id : req.params.id}, function(err, post) {
       if (!post) {
         //do stuff if they search for a bad post
+        res.redirect("/questions")
       } else {
         Posts.Comment.find({_id : post.comments}, function(error, comments) {
           res.render("comment", {post: post, comments: comments, id : req.params.id});
