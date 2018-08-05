@@ -357,7 +357,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
     let response = await User.authenticate(req.body.logname, req.body.logword);
     req.session.userId = response._id;
     res.cookie("sessionID", response._id);
-    res.redirect(req.cookie.path || "/");
+    res.redirect(res.cookie.path || "/");
   } catch(e) {
     console.log(e);
     res.render("login", {error : "Username or Password incorrect. Please try again."});
