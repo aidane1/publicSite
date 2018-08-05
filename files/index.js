@@ -216,7 +216,7 @@ app.get("/periodic-table", function(req, res) {
 
 app.get("/", function(req, res) {
   let currentDate = new Date();
-  res.cookies("path", "/");
+  res.cookie("path", "/");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
@@ -357,7 +357,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
     let response = await User.authenticate(req.body.logname, req.body.logword);
     req.session.userId = response._id;
     res.cookie("sessionID", response._id);
-    res.redirect(req.cookies.path || "/");
+    res.redirect(req.cookie.path || "/");
   } catch(e) {
     console.log(e);
     res.render("login", {error : "Username or Password incorrect. Please try again."});
@@ -368,7 +368,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 
 
 app.get("/signup", function(req, res) {
-  res.cookies("path", "/signup");
+  res.cookie("path", "/signup");
   res.render("signup", {error : "", data : ["", "", "", ""]});
 });
 app.post("/signup", urlencodedParser, function(req, res) {
@@ -407,7 +407,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
 
 
 app.get("/courses", function(req, res) {
-    res.cookies("path", "/courses");
+    res.cookie("path", "/courses");
     if (req.session.userId) {
       res.render("addCourses");
     } else {
@@ -475,7 +475,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
 
 
 app.get("/add", function(req, res) {
-  res.cookies("path", "/add");
+  res.cookie("path", "/add");
   if (req.session.userId) {
       res.sendFile(__dirname + "/add.html");
   } else {
@@ -535,7 +535,7 @@ app.post("/add", urlencodedParser, function(req, res) {
 
 
 app.get("/calendar", function(req, res) {
-  res.cookies("path", "/calendar");
+  res.cookie("path", "/calendar");
   let currentDate = new Date();
   let monthsArray = [];
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
@@ -570,7 +570,7 @@ app.get("/calendar", function(req, res) {
 
 
 app.get("/submit", function(req, res) {
-  res.cookies("path", "/submit");
+  res.cookie("path", "/submit");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
         res.render("submitWork", {user : user.username, courses : user.courses, error : ""});
@@ -620,7 +620,7 @@ app.get("/logout", function(req, res) {
 });
 
 app.get("/suggestions", function(req, res) {
-  res.cookies("path", "/suggestions");
+  res.cookie("path", "/suggestions");
   if (req.session.userId) {
     res.sendFile(__dirname + "/public/html/suggestions.html");
   } else {
@@ -669,7 +669,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 
 
 app.get("/questions", function(req, res) {
-  res.cookies("path", "/questions");
+  res.cookie("path", "/questions");
   if (req.session.userId) {
     Posts.Post.find({}).sort({"date": -1}).limit(20).exec(function(err, posts) {
       User.findOne({_id : req.session.userId}, function(error, user) {
@@ -694,7 +694,7 @@ app.post("/questions", urlencodedParser, function(req, res) {
 });
 
 app.get("/questions/:id", function(req, res) {
-  res.cookies("path", "/questions" + req.params.id);
+  res.cookie("path", "/questions" + req.params.id);
   if (req.session.userId) {
     Posts.Post.findOne({_id : req.params.id}, function(err, post) {
       if (!post) {
@@ -740,7 +740,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 
 
 app.get("/chatroom", function(req,res) {
-  res.cookies("path", "/chatroom");
+  res.cookie("path", "/chatroom");
   if (req.session.userId) {
     let currentDate = new Date();
     Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours())}}, function(err, texts) {
