@@ -788,6 +788,27 @@ app.get("/schedule", function(req, res) {
 
 });
 
+app.get("/view-courses", function(req, res) {
+  res.cookie("path", "/chatroom");
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      let blockObject = {
+        A: ["LC", ""],
+        B: ["LC", ""],
+        C: ["LC", ""],
+        D: ["LC", ""],
+        E: ["LC", ""]
+      }
+      user.courses.forEach(function(course) {
+        blockObject[course.block] = [course.course, course.teacher];
+      });
+      res.render("viewOther", {courses : blockObject});
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {

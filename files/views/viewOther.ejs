@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+      var dataArray = [["MSC-10", "Science 10"],["MBI-11","Biology 11"],["MBI-12","Biology 12"],["MCH-11","Chemistry 11"],["MCH-12","Chemistry 12"], ["MPH-11", "Physics 11"], ["MPH-12","Physics 12"], ["MSCT-11","Horticulture Science 11"], ["MSS-10","Socials 10"], ["MESC-11","Human Geography 11"], ["MSS-11","Socials 11"], ["MHI-12","History 12"], ["MLAW-12","Law 12"], ["MIDS-2F","Law/Psyc 12"], ["YPSYC2A", "Psyc 12"], ["MPE-10", "PE 10"], ["MPE-11", "PE 11"], ["MPE-12", "PE 12"], ["MEN-12", "English 12"], ["MEN-11", "English 11"], ["MLIT-12", "English Literature 12"], ["MFMP-10", "Math 10"], ["MWPM-10", "Workplace Math 10"], ["MAWM-11", "A&W Math 11"], ["MFOM-11", "Foundation of Math 11"], ["MPREC-11", "Precalculus 11"], ["MAWM-12", "A&W Math 12"], ["MCALC-12", "Calculus 12"], ["MFOM-12", "Foundations of Math 12"], ["MPREC-12", "Precalculus 12"], ["XBA-9", "Conc. band 9"], ["MPE-9", "PE-9"]];
+
+
+      let aArray = [["Mr.Austin", "MPH-12"], "A"];
+      let bArray = [["Mr.Majerech", "XBA-9"], "B"];
+      let cArray = [["Mr.Austin", "MBI-11"], "C"];
+      let dArray = [["Mr.Hughes", "MESC-11"], ["Mr.Landry", "MPE-9"], "D"];
+      let eArray = ["E"];
+      let coursesArray = [aArray, bArray, cArray, dArray, eArray];
+      function makeCourses() {
+        coursesArray.forEach(function(course) {
+          for (var i = 0; i < course.length-1; i++) {
+            let div = document.createElement("div");
+            div.setAttribute("class", "courseName");
+            for (var j = 0; j < dataArray.length; j++) {
+              if (dataArray[j][0] == course[i][1]) {
+                div.innerHTML = course[i][0] + "'s " + dataArray[j][1];
+              }
+            }
+            document.getElementById("courseContent" + course[course.length-1]).appendChild(div);
+          }
+        });
+      }
+      function expandFunction(element) {
+        element.classList.toggle("displayed");
+      }
+      window.onload = function() {
+        makeCourses();
+      }
+    </script>
+    <style>
+    * {
+      font-family: sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 0px;
+      margin: 0px;
+      background-color: #67ac5b;
+    }
+    label {
+      color: white;
+    }
+    .courseHolder {
+      width: 100%;
+      height: 100%;
+      display: block;
+      margin: auto;
+      margin-top: 50px;
+    }
+
+    .display {
+      padding: 10px;
+      font-size: 15px;
+      color: white;
+    }
+    .done {
+      width: 100%;
+      height: 60px;
+      display: block;
+      font-size: 25px;
+      background-color: #26a4ff;
+      border-radius: 9px;
+      outline: none;
+      position: fixed;
+      bottom: 0px;
+    }
+    #header {
+      display: block;
+      margin: auto;
+      width: 200px;
+      font-size: 20px;
+      margin-top: 5px;
+    }
+    .later {
+      width:60px;
+      height: 30px;
+      background-color: white;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      border-radius: 10px;
+    }
+    .later a {
+      text-decoration: none;
+      font-size: 15px;
+      color: blue;
+
+    }
+
+    .course {
+      padding: 5%;
+      background-color: white;
+      border: 2px solid black;
+      text-align: center;
+      font-size: 18px;
+      border-radius: 5px;
+
+    }
+    .courseContent {
+      display: none;
+      font-size: 13px;
+      text-align: center;
+
+
+    }
+    .displayed .courseContent {
+      display: block;
+    }
+    .courseName {
+      width: 100%;
+      padding: 7px;
+      border: 1px solid black;
+      font-size: 14px;
+    }
+    .courseHolder {
+      overflow: auto;
+    }
+    .displayCourses {
+      font-size: 15px;
+    }
+    @media screen and (min-width: 768px) {
+      .courseHolder {
+        display: flex;
+      }
+      .course {
+        flex-grow: 1;
+        padding: 0px;
+        padding-top: 5%;
+        padding-bottom: 5%;
+
+      }
+      .courseContent {
+
+
+      }
+      .courseName {
+
+        width: 80%;
+        display: block;
+        margin: auto;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <div class = "back" style = "font-size: 40px;color: white; position: absolute; top: 5px; left: 10px;">
+      <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
+    </div>
+    <div id = "courses" class = "courses">
+      <div class = "courseHolder" id = "courseHolder">
+        <div class = "course" id = "A" onclick = "expandFunction(this)">
+          (current: <%=courses.A[0]%>)A
+          <div class = "courseContent" id = "courseContentA">
+            Click on the header to close
+          </div>
+        </div>
+        <div class = "course" id = "B" onclick = "expandFunction(this)">
+          (current: <%=courses.B[0]%>)B
+          <div class = "courseContent" id = "courseContentB">
+            Click on the header to close
+          </div>
+        </div>
+        <div class = "course" id = "C" onclick = "expandFunction(this)">
+          (current: <%=courses.C[0]%>)C
+          <div class = "courseContent" id = "courseContentC">
+            Click on the header to close
+          </div>
+        </div>
+        <div class = "course" id = "D" onclick = "expandFunction(this)">
+          (current: <%=courses.D[0]%>)D
+          <div class = "courseContent" id = "courseContentD">
+            Click on the header to close
+          </div>
+        </div>
+        <div class = "course" id = "E" onclick = "expandFunction(this)">
+          (current: <%=courses.E[0]%>)E
+          <div class = "courseContent" id = "courseContentE">
+            Click on the header to close
+          </div>
+        </div>
+      </div>
+
+  </body>
+</html>
