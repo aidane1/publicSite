@@ -32,12 +32,12 @@
 
               if (startValue - xVal > 100 && !finished) {
                 finished = true;
-                console.log(currentElement.childNodes);
+
                 currentElement.childNodes[7].classList.add("boxFull");
               }
               if (finished && (startValue - xVal < 100)) {
                 finished = false;
-                console.log(currentElement.childNodes);
+                
                 currentElement.childNodes[7].classList.remove("boxFull");
               }
             }
