@@ -113,7 +113,19 @@ nav a:hover {
     max-width: 0px;
   }
 
-  
+  .openRooms {
+    /* background-color: red; */
+    width: 100%;
+    display:block;
+    margin-top: 25px;
+  }
+  .LCRoom {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid black;
+    background-color: #298701;
+
+  }
   .newsBox {
     width: 90%;
     height: 60%;
