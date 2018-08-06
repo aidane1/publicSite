@@ -34,8 +34,8 @@
                 finished = true;
 
                 for (var i = 0; i < currentElement.childNodes.length; i++) {
-                  if (currentElement[i].classList.contains("replyBox")) {
-                    currentElement[i].classList.add("boxFull");
+                  if (currentElement.childNodes[i].classList.contains("replyBox")) {
+                    currentElement.childNodes[i].classList.add("boxFull");
                   }
                 }
               }
@@ -43,8 +43,8 @@
                 finished = false;
 
                 for (var i = 0; i < currentElement.childNodes.length; i++) {
-                  if (currentElement[i].classList.contains("replyBox")) {
-                    currentElement[i].classList.remove("boxFull");
+                  if (currentElement.childNodes[i].classList.contains("replyBox")) {
+                    currentElement.childNodes[i].classList.remove("boxFull");
                   }
                 }
 
