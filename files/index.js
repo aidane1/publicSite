@@ -616,9 +616,12 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/questions", function(req, res) {
   res.cookie("path", "/questions");
   if (req.session.userId) {
-    Posts.Post.find({}).sort({"date": -1}).limit(20).exec(function(err, posts) {
+    Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20).exec(function(err, posts) {
+      posts = posts.slice((parseInt(req.query.page)-1)*20);
       User.findOne({_id : req.session.userId}, function(error, user) {
-        res.render("questions", {posts: posts, user: user});
+        Posts.Post.count({}, function(err, count) {
+          res.render("questions", {posts: posts, user: user, page: parseInt(req.query.page), max: Math.ceil(count/20)});
+        });
       })
     });
   } else {
@@ -749,7 +752,7 @@ app.get("/schedule", function(req, res) {
         blockObject[course.block] = [course.course, course.teacher];
       });
 
-      
+
       res.render("schedule", {courses : blockObject});
     });
 

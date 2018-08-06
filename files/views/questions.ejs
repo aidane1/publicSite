@@ -249,7 +249,14 @@
       </div>
     </div>
     <div class = "bar">
-      &larr; &nbsp;&nbsp;&nbsp; <div id = "submit" style = "display: inline;" onclick = "submitPost()">&#9998;</div> &nbsp;&nbsp;&nbsp; &rarr;
+      <%if (page > 0) { %>
+        <a href = "/questions?page=<%=page-1%>"><&larr;</a>
+      <% } %>
+       &nbsp;&nbsp;&nbsp; <div id = "submit" style = "display: inline;" onclick = "submitPost()">&#9998;</div> &nbsp;&nbsp;&nbsp;
+      <%if (page < max) { %>
+        <a href = "/questions?page=<%=page+1%>">&rarr;</a>
+      <% } %>
+
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
