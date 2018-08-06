@@ -633,15 +633,36 @@ app.get("/questions", function(req, res) {
 
 });
 app.post("/questions", urlencodedParser, function(req, res) {
-  let info = {
-    body: req.body.body,
-    title: req.body.title,
-    submittedBy: req.body.anon,
-    date: new Date()
+  if(req.session.userId) {
+    if (req.body.deleteElement) {
+       User.findOne({_id : req.session.userId}, function(err, user) {
+         if (user.permissions === "admin") {
+           Posts.Post.remove({_id : req.body.deleteElement}).then(() => {
+              Posts.Comment.remove({parentPost : req.body.deleteElement}).then(() => {
+                res.redirect("/questions?page=0");
+              });
+           });
+
+
+         } else {
+           res.redirect("/login");
+         }
+       });
+    } else {
+      let info = {
+        body: req.body.body,
+        title: req.body.title,
+        submittedBy: req.body.anon,
+        date: new Date()
+      }
+      Posts.Post.create(info, function(err, post) {
+        res.redirect("/questions");
+      });
+    }
+  } else {
+    res.redirect("/login");
   }
-  Posts.Post.create(info, function(err, post) {
-    res.redirect("/questions");
-  });
+
 });
 
 app.get("/questions/:id", function(req, res) {

@@ -86,6 +86,18 @@
         var submitPost = document.getElementById("submitPost");
         submitPost.classList.toggle("submitPostSee");
       }
+      function deleteFunction(id) {
+        var form = document.currentElement("form");
+        form.method = "POST";
+        form.action = "/questions";
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.value = id;
+        input.name = "deleteElement";
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+      }
     </script>
     <style>
       * {
@@ -210,6 +222,12 @@
         margin: auto;
         outline: none;
       }
+      .delete {
+        width: 75px;
+        height: 40px;
+        background-color: red;
+        text-align: center;
+      }
       @media screen and (max-width: 320px) {
         #textarea {
           height: 100px;
@@ -234,6 +252,12 @@
         <div class = "question" id = "<%=post._id%>">
           <div class = "questionTitle"><%=post.title%></div>
           <div class = "submittedBy"><%=post.submittedBy%></div>
+          <% if (user.permissions === "admin") { %>
+
+            <div class = "delete" onclick = "deleteFunction('<%=post._id')">
+              delete
+            </div>
+          <% }%>
           <div class = "replyBox">
             <div class = "reply">OPEN</div>
           </div>
