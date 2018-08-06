@@ -33,12 +33,21 @@
               if (startValue - xVal > 100 && !finished) {
                 finished = true;
 
-                currentElement.childNodes[7].classList.add("boxFull");
+                for (var i = 0; i < currentElement.childNodes.length; i++) {
+                  if (currentElement[i].classList.contains("replyBox")) {
+                    currentElement[i].classList.add("boxFull");
+                  }
+                }
               }
               if (finished && (startValue - xVal < 100)) {
                 finished = false;
-                
-                currentElement.childNodes[7].classList.remove("boxFull");
+
+                for (var i = 0; i < currentElement.childNodes.length; i++) {
+                  if (currentElement[i].classList.contains("replyBox")) {
+                    currentElement[i].classList.remove("boxFull");
+                  }
+                }
+
               }
             }
           });
