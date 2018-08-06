@@ -616,6 +616,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 app.get("/questions", function(req, res) {
   res.cookie("path", "/questions");
   if (req.session.userId) {
+    console.log(req.query);
     console.log(parseInt(req.query.page));
     Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20).exec(function(err, posts) {
       posts = posts.slice((parseInt(req.query.page)-1)*20);
