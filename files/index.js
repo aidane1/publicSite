@@ -737,7 +737,14 @@ app.get("/schedule", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       console.log(user.courses);
-      res.render("schedule", {courses : user.courses});
+      let blockObject = {
+
+      }
+      user.courses.forEach(function(course) {
+        blockObject[course.block] = [course.course, course.teacher];
+      });
+      console.log(blockObject)
+      res.render("schedule", {courses : blockObject});
     });
 
   } else {
