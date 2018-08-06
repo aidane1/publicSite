@@ -16,7 +16,9 @@
             let xVal = (event.touches["0"].clientX);
             startValue = xVal;
 
-            let selectedElement = event.target.parentNode;
+            if (!selectedElement.classList.contains("question")) {
+              let selectedElement = event.target.parentNode;
+            }
             if (selectedElement.classList.contains("question")) {
               currentElement = selectedElement;
             } else {
@@ -89,7 +91,7 @@
       function deleteFunction(id) {
         if (confirm("Are you sure you would like to delete this post?")) {
           console.log(id);
-          var form = document.currentElement("form");
+          var form = document.createElement("form");
           form.method = "POST";
           form.action = "/questions";
           var input = document.createElement("input");
