@@ -254,7 +254,7 @@
           <div class = "submittedBy"><%=post.submittedBy%></div>
           <% if (user.permissions === "admin") { %>
 
-            <div class = "delete" onclick = "deleteFunction('<%=post._id')%>">
+            <div class = "delete" onclick = "deleteFunction('<%=post._id%>')">
               delete
             </div>
           <% }%>
