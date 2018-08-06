@@ -738,11 +738,16 @@ app.get("/schedule", function(req, res) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       console.log(user.courses);
       let blockObject = {
-
+        A: ["LC", ""],
+        B: ["LC", ""],
+        C: ["LC", ""],
+        D: ["LC", ""],
+        E: ["LC", ""]
       }
       user.courses.forEach(function(course) {
         blockObject[course.block] = [course.course, course.teacher];
       });
+
       console.log(blockObject)
       res.render("schedule", {courses : blockObject});
     });
