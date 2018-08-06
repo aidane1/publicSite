@@ -735,8 +735,8 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 
 app.get("/schedule", function(req, res) {
   if (req.session.userId) {
-    User.find({_id : req.session.userId}, function(err, user) {
-      console.log(user);
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      console.log(user.courses);
       res.render("schedule", {courses : user.courses});
     });
 
