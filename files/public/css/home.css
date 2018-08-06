@@ -122,10 +122,9 @@ nav a:hover {
   .LCRoom {
     text-align: center;
     width: 100%;
-    height: 50px;
     border: 1px solid black;
     background-color: #298701;
-
+    position: relative;
   }
   .newsBox {
     width: 90%;
