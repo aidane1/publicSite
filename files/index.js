@@ -733,6 +733,19 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 });
 
 
+app.get("/schedule", function(req, res) {
+  if (req.session.userId) {
+    Users.find({_id : req.session.userId}, function(err, user) {
+      console.log(user.courses);
+      res.render("schedule", {courses : user.courses});
+    });
+
+  } else {
+    res.redirect("/login");
+  }
+
+});
+
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
