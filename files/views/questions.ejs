@@ -252,12 +252,7 @@
         <div class = "question" id = "<%=post._id%>">
           <div class = "questionTitle"><%=post.title%></div>
           <div class = "submittedBy"><%=post.submittedBy%></div>
-          <% if (user.permissions === "admin") { %>
-
-            <div class = "delete" onclick = "deleteFunction('<%=post._id')">
-              delete
-            </div>
-          <% }%>
+          
           <div class = "replyBox">
             <div class = "reply">OPEN</div>
           </div>
