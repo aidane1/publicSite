@@ -87,16 +87,21 @@
         submitPost.classList.toggle("submitPostSee");
       }
       function deleteFunction(id) {
-        var form = document.currentElement("form");
-        form.method = "POST";
-        form.action = "/questions";
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.value = id;
-        input.name = "deleteElement";
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
+        if (confirm("Are you sure you would like to delete this post?")) {
+          console.log(id);
+          var form = document.currentElement("form");
+          form.method = "POST";
+          form.action = "/questions";
+          var input = document.createElement("input");
+          input.type = "hidden";
+          input.value = id;
+          input.name = "deleteElement";
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        } else {
+
+        }
       }
     </script>
     <style>
@@ -224,7 +229,7 @@
       }
       .delete {
         width: 75px;
-        height: 40px;
+        height: 30px;
         background-color: red;
         text-align: center;
       }
