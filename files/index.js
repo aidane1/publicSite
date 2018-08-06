@@ -734,6 +734,7 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 
 
 app.get("/schedule", function(req, res) {
+  req.cookie("path", "/schedule");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       console.log(user.courses);
