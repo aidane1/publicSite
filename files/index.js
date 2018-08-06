@@ -789,7 +789,7 @@ app.get("/schedule", function(req, res) {
 });
 
 app.get("/view-courses", function(req, res) {
-  res.cookie("path", "/chatroom");
+  res.cookie("path", "/view-courses");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let blockObject = {
