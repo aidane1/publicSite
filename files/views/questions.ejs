@@ -33,18 +33,18 @@
               if (startValue - xVal > 100 && !finished) {
                 finished = true;
 
-                for (var i = 0; i < currentElement.childNodes.length; i++) {
-                  if (currentElement.childNodes[i].classList != 0 && currentElement.childNodes[i].classList.contains("replyBox")) {
-                    currentElement.childNodes[i].classList.add("boxFull");
+                for (var i = 0; i < currentElement.children.length; i++) {
+                  if (currentElement.children[i].classList.contains("replyBox")) {
+                    currentElement.children[i].classList.add("boxFull");
                   }
                 }
               }
               if (finished && (startValue - xVal < 100)) {
                 finished = false;
 
-                for (var i = 0; i < currentElement.childNodes.length; i++) {
-                  if (currentElement.childNodes[i].classList != 0 && currentElement.childNodes[i].classList.contains("replyBox")) {
-                    currentElement.childNodes[i].classList.remove("boxFull");
+                for (var i = 0; i < currentElement.children.length; i++) {
+                  if (currentElement.children[i].classList.contains("replyBox")) {
+                    currentElement.children[i].classList.remove("boxFull");
                   }
                 }
 
