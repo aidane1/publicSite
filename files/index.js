@@ -734,10 +734,10 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 
 
 app.get("/schedule", function(req, res) {
-  req.cookie("path", "/schedule");
+  res.cookie("path", "/schedule");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      console.log(user.courses);
+
       let blockObject = {
         A: ["LC", ""],
         B: ["LC", ""],
@@ -749,7 +749,7 @@ app.get("/schedule", function(req, res) {
         blockObject[course.block] = [course.course, course.teacher];
       });
 
-      console.log(blockObject)
+      
       res.render("schedule", {courses : blockObject});
     });
 
