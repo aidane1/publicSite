@@ -618,15 +618,17 @@ app.get("/questions", function(req, res) {
   if (req.session.userId) {
     if (req.query.page == undefined) {
       res.redirect("/questions?page=0");
+    } else {
+      Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20+20).exec(function(err, posts) {
+        posts = posts.slice((parseInt(req.query.page))*20);
+        User.findOne({_id : req.session.userId}, function(error, user) {
+          Posts.Post.countDocuments({}, function(err, count) {
+            res.render("questions", {posts: posts, user: user, page: parseInt(req.query.page), max: Math.ceil(count/20)});
+          });
+        })
+      });
     }
-    Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20+20).exec(function(err, posts) {
-      posts = posts.slice((parseInt(req.query.page))*20);
-      User.findOne({_id : req.session.userId}, function(error, user) {
-        Posts.Post.countDocuments({}, function(err, count) {
-          res.render("questions", {posts: posts, user: user, page: parseInt(req.query.page), max: Math.ceil(count/20)});
-        });
-      })
-    });
+
   } else {
     res.redirect("/login");
   }
