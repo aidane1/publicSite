@@ -316,12 +316,12 @@
 
       <div id = "LC" class = "LC box" name = "LC">
         <div class = "header">LC's that are open</div>
-        <ul class = "openRooms">
+        <div class = "openRooms">
           <% lcSchedule.forEach(function(LC) { %>
-            <li class = "LCRoom"><%=LC%></li>
+            <div class = "LCRoom"><%=LC%></div>
           <% }); %>
 
-        </ul>
+        </div>
       </div>
 
 
