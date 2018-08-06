@@ -16,7 +16,7 @@
             let xVal = (event.touches["0"].clientX);
             startValue = xVal;
 
-            
+
             let selectedElement = (event.target.parentNode.classList.contains("question") ? event.target.parentNode : event.target);
             if (selectedElement.classList.contains("question")) {
               currentElement = selectedElement;
@@ -32,11 +32,13 @@
 
               if (startValue - xVal > 100 && !finished) {
                 finished = true;
-                currentElement.childNodes[5].classList.add("boxFull");
+                console.log(currentElement.childNodes);
+                currentElement.childNodes[6].classList.add("boxFull");
               }
               if (finished && (startValue - xVal < 100)) {
                 finished = false;
-                currentElement.childNodes[5].classList.remove("boxFull");
+                console.log(currentElement.childNodes);
+                currentElement.childNodes[6].classList.remove("boxFull");
               }
             }
           });
