@@ -22,101 +22,9 @@
         document.getElementById("holder").addEventListener("transitionend", function() {
 
         });
-
-
-      }
-
-      var currentShown = "none"
-      function showFunction(id, element) {
-        var rsBlocks = document.getElementsByClassName("resourceBox");
-        var elementTab = document.getElementsByClassName("elementBlock")
-        for (var i  = 0; i < rsBlocks.length; i++) {
-          rsBlocks[i].style.display = "none";
-        }
-        for (var i = 0; i < elementTab.length; i++) {
-          elementTab[i].className = "elementBlock";
-        }
-        if (currentShown != id) {
-          document.getElementById(id).style.display = "block";
-          element.className = "elementBlock liHover";
-          currentShown = id;
-
-        } else {
-          document.getElementById("baseBox").style.display = "block";
-          element.className = "elementBlock";
-          currentShown = "none";
-        }
-      }
-      function modalDisplay(course) {
-        var modal = document.getElementById("allHomework");
-        var backModal = document.getElementById("modal");
-        console.log(backModal);
-        // document.getElementById(course).className = "modalBox display";
-        backModal.style.visibility = "visible";
-        modal.style.display = "block";
-      }
-      function removeModal() {
-        document.getElementById("allHomework").style.display = "none";
-        document.getElementById("modal").style.visibility = "hidden";
-      }
-      function displayHomework(course) {
-        var boxes = document.getElementsByClassName("modalBox");
-        for (var i = 0; i < boxes.length; i++) {
-          boxes[i].className = "modalBox";
-        }
-        document.getElementById(course).className = "modalBox display";
-      }
-
-      function minutesToTime(min) {
-        let hour = min/60;
-        let minute = min%60;
-        return [hour, minute];
       }
 
 
-      function changeFunction(x) {
-        x.classList.toggle("change");
-        document.getElementById("holder").classList.toggle("expanded");
-        document.getElementById("menu").classList.toggle("expand");
-      }
-      function confineFunction() {
-        menuIcon.classList.toggle("change");
-        document.getElementById("holder").classList.toggle("expanded");
-        document.getElementById("menu").classList.toggle("expand");
-      }
-
-      function removeFunction(element) {
-        if (confirm("Are you sure you would like to remove this homework?")) {
-          element = element.id.split("_");
-          let length = element.length-4;
-          let finalString = [];
-          for (var i = 0; i < element.length; i++) {
-
-            finalString.push(element[i]);
-            if (length != 0) {
-              finalString.push(" ");
-              length--;
-            } else if (i != element.length-1) {
-              finalString.push("_");
-            }
-          }
-          finalString = finalString.join("");
-
-          let form = document.createElement("form");
-          let input = document.createElement("input");
-          input.type = "hidden";
-          input.value = finalString;
-          input.name = "removedHomework";
-          form.action = "/";
-          form.method = "POST";
-          form.appendChild(input);
-          document.body.appendChild(form);
-          form.submit();
-        } else {
-
-        }
-
-      }
 
 
 
@@ -1037,6 +945,98 @@
     </div>
 
 
+    <script>
+      var currentShown = "none"
+      function showFunction(id, element) {
+        var rsBlocks = document.getElementsByClassName("resourceBox");
+        var elementTab = document.getElementsByClassName("elementBlock")
+        for (var i  = 0; i < rsBlocks.length; i++) {
+          rsBlocks[i].style.display = "none";
+        }
+        for (var i = 0; i < elementTab.length; i++) {
+          elementTab[i].className = "elementBlock";
+        }
+        if (currentShown != id) {
+          document.getElementById(id).style.display = "block";
+          element.className = "elementBlock liHover";
+          currentShown = id;
 
+        } else {
+          document.getElementById("baseBox").style.display = "block";
+          element.className = "elementBlock";
+          currentShown = "none";
+        }
+      }
+      function modalDisplay(course) {
+        var modal = document.getElementById("allHomework");
+        var backModal = document.getElementById("modal");
+        console.log(backModal);
+        // document.getElementById(course).className = "modalBox display";
+        backModal.style.visibility = "visible";
+        modal.style.display = "block";
+      }
+      function removeModal() {
+        document.getElementById("allHomework").style.display = "none";
+        document.getElementById("modal").style.visibility = "hidden";
+      }
+      function displayHomework(course) {
+        var boxes = document.getElementsByClassName("modalBox");
+        for (var i = 0; i < boxes.length; i++) {
+          boxes[i].className = "modalBox";
+        }
+        document.getElementById(course).className = "modalBox display";
+      }
+
+      function minutesToTime(min) {
+        let hour = min/60;
+        let minute = min%60;
+        return [hour, minute];
+      }
+
+
+      function changeFunction(x) {
+        x.classList.toggle("change");
+        document.getElementById("holder").classList.toggle("expanded");
+        document.getElementById("menu").classList.toggle("expand");
+      }
+      function confineFunction() {
+        menuIcon.classList.toggle("change");
+        document.getElementById("holder").classList.toggle("expanded");
+        document.getElementById("menu").classList.toggle("expand");
+      }
+
+      function removeFunction(element) {
+        if (confirm("Are you sure you would like to remove this homework?")) {
+          element = element.id.split("_");
+          let length = element.length-4;
+          let finalString = [];
+          for (var i = 0; i < element.length; i++) {
+
+            finalString.push(element[i]);
+            if (length != 0) {
+              finalString.push(" ");
+              length--;
+            } else if (i != element.length-1) {
+              finalString.push("_");
+            }
+          }
+          finalString = finalString.join("");
+
+          let form = document.createElement("form");
+          let input = document.createElement("input");
+          input.type = "hidden";
+          input.value = finalString;
+          input.name = "removedHomework";
+          form.action = "/";
+          form.method = "POST";
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        } else {
+
+        }
+
+      }
+    </script>
   </body>
 </html>
