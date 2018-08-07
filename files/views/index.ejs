@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <meta charset = "utf-8">
+    <name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <meta name = "description" content = "The PVSS student home page. View your courses, schedule, resources, and more here.">
     <link rel = "stylesheet" type = "text/css" href = "css/home.css" >
     <script src = "js/home.js"></script>
     <link rel = "shortcut icon" type = "image/x-icon" href = "../public/images/favicon.ico" />
@@ -283,7 +285,9 @@
 
               <% homework.forEach(function(theHomeworkCourse) { %>
                 <tr>
-                  <td><a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a>&nbsp;&nbsp;<%=theHomeworkCourse[0]%></td>
+                  <td>
+                    <!-- <a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a> -->
+                    &nbsp;&nbsp;<%=theHomeworkCourse[0]%></td>
                   <td>
 
                     <% if (theHomeworkCourse[1].length != 0) { %>
