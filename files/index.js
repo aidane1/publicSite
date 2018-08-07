@@ -132,7 +132,7 @@ app.use(session({
   }
 }));
 
-app.use(express.static('files'));
+app.use(express.static('/'));
 
 app.use(cookieParser());
 
