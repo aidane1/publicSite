@@ -4,6 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background": "linear-gradient(#f28e37, #f77d13, #f9e66b)",
+  "background-color": "#f28e37",
   "description": "A website for PVSS students.",
   "icons": [
     {
