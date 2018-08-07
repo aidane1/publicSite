@@ -1,0 +1,8 @@
+{
+  "name": "PVSS student site",
+  "short_name": "PV students",
+  "start_url": "/",
+  "display": "standalone",
+  "background": "linear-gradient(#f28e37, #f77d13, #f9e66b)",
+  "description": "A website for PVSS students.",
+}
