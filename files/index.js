@@ -154,7 +154,7 @@ let server = app.listen(80, function() {
 
 
 app.get("/periodic-table", function(req, res) {
-  res.sendFile(__dirname + "/public/html/periodicTable.html");
+  res.render("periodicTable");
 });
 
 
@@ -567,7 +567,7 @@ app.get("/logout", function(req, res) {
 app.get("/suggestions", function(req, res) {
   res.cookie("path", "/suggestions");
   if (req.session.userId) {
-    res.sendFile(__dirname + "/public/html/suggestions.html");
+    res.render("suggestions");
   } else {
     res.redirect("/login");
   }
