@@ -10,6 +10,69 @@
     <link rel = "shortcut icon" type = "image/ico" href = "../public/images/favicon.ico" />
     <title>PVSS student website</title>
     <script>
+      window.onload = function() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+            });
+          });
+        });
+        document.getElementById("holder").addEventListener("transitionend", function() {
+
+        });
+
+
+      }
+
+      var currentShown = "none"
+      function showFunction(id, element) {
+        var rsBlocks = document.getElementsByClassName("resourceBox");
+        var elementTab = document.getElementsByClassName("elementBlock")
+        for (var i  = 0; i < rsBlocks.length; i++) {
+          rsBlocks[i].style.display = "none";
+        }
+        for (var i = 0; i < elementTab.length; i++) {
+          elementTab[i].className = "elementBlock";
+        }
+        if (currentShown != id) {
+          document.getElementById(id).style.display = "block";
+          element.className = "elementBlock liHover";
+          currentShown = id;
+
+        } else {
+          document.getElementById("baseBox").style.display = "block";
+          element.className = "elementBlock";
+          currentShown = "none";
+        }
+      }
+      function modalDisplay(course) {
+        var modal = document.getElementById("allHomework");
+        var backModal = document.getElementById("modal");
+        console.log(backModal);
+        // document.getElementById(course).className = "modalBox display";
+        backModal.style.visibility = "visible";
+        modal.style.display = "block";
+      }
+      function removeModal() {
+        document.getElementById("allHomework").style.display = "none";
+        document.getElementById("modal").style.visibility = "hidden";
+      }
+      function displayHomework(course) {
+        var boxes = document.getElementsByClassName("modalBox");
+        for (var i = 0; i < boxes.length; i++) {
+          boxes[i].className = "modalBox";
+        }
+        document.getElementById(course).className = "modalBox display";
+      }
+
+      function minutesToTime(min) {
+        let hour = min/60;
+        let minute = min%60;
+        return [hour, minute];
+      }
+
 
       function changeFunction(x) {
         x.classList.toggle("change");
@@ -21,9 +84,7 @@
         document.getElementById("holder").classList.toggle("expanded");
         document.getElementById("menu").classList.toggle("expand");
       }
-      window.onload = function() {
 
-      }
       function removeFunction(element) {
         if (confirm("Are you sure you would like to remove this homework?")) {
           element = element.id.split("_");
