@@ -5,8 +5,8 @@
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
     <meta name = "description" content = "The PVSS student home page. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
     <meta name = "theme-color" content = "#f77d13" />
-    <link rel = "shortcut icon" type = "image/x-icon" href = "images/favicon.ico" />
-    <link rel = "shortcut icon" type = "image/ico" href = "images/favicon.ico" />
+    <link rel = "shortcut icon" type = "image/x-icon" href = "public/images/favicon.ico" />
+    <link rel = "shortcut icon" type = "image/ico" href = "public/images/favicon.ico" />
     <link rel = "manifest" href = "manifests/home.json  " />
     <title>PVSS student website | Home</title>
     <script>
@@ -1031,7 +1031,7 @@
   </script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/../sw.js').then(function(reg) {
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
         console.log('Registration succeeded. Scope is ' + reg.scope);
       }).catch(function(error) {
         console.log('Registration failed with ' + error);
