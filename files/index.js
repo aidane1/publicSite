@@ -345,11 +345,10 @@ app.post("/", urlencodedParser, function(req,res) {
                 } else {
                   console.log(theCourse.homework.length-1-index);
                   console.log(theCourse.homework.length-index);
-                  homework = theCourse.homework.slice(theCourse.homework.length-1-index, theCourse.homework.length-index);
+                  theCourse.homework.slice(theCourse.homework.length-1-index, theCourse.homework.length-index);
                 }
 
-                console.log(homework);
-                Course.findOneAndUpdate({_id : theCourse.id}, {homework : homework}).then(function() {
+                Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
                   res.redirect("/");
                 });
               } else {
