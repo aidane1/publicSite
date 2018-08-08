@@ -175,7 +175,7 @@ app.get("/", function(req, res) {
           //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
           courses.forEach(function(course) {
             courseCodes.push(course.code);
-            homeworkList.push([course.course, course.homework, course.block])
+            homeworkList.push([course.course, course.homework, course.block, course.teacher])
           });
           //gets the order of todays blocks from a function
           let todaysBlocks = blockToTime((currentDate).getDay() -1);
@@ -323,7 +323,6 @@ app.get("/", function(req, res) {
 //   }
 // });
 app.post("/", urlencodedParser, function(req,res) {
-  console.log(req.body);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err) {
@@ -333,21 +332,18 @@ app.post("/", urlencodedParser, function(req,res) {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = parseInt(req.body.removedHomework.split("_")[3]);
-          Course.findOne({course: course, block: block}, function(err, theCourse) {
+          let teacher = parseInt(req.body.removedHomework.split("_")[r]);
+          Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
             if (err) {
               res.redirect("/login");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
-                console.log(theCourse.homework);
                 let homework;
                 if (theCourse.homework.length === 1) {
                   homework = [];
                 } else {
-                  console.log(index);
-                  
                   theCourse.homework.splice(index, 1);
                 }
-
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
                   res.redirect("/");
                 });

@@ -705,7 +705,7 @@
                   notes: <%=theHomeworkGiven[1][i].notes%>
                   <br>
                   <% if (permissions === "admin") { %>
-                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=i%>" onclick = "removeFunction(this)">
+                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]$>_<%=i%>" onclick = "removeFunction(this)">
                       remove
                     </div>
                   <% } %>
@@ -718,7 +718,7 @@
                   notes: <%=theHomeworkGiven[1][i].notes%>
                   <br>
                   <% if (permissions === "admin") { %>
-                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=i%>" onclick = "removeFunction(this)">
+                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]$>_<%=i%>" onclick = "removeFunction(this)">
                       remove
                     </div>
                   <% } %>
@@ -1001,7 +1001,7 @@
     function removeFunction(element) {
       if (confirm("Are you sure you would like to remove this homework?")) {
         element = element.id.split("_");
-        let length = element.length-4;
+        let length = element.length-5;
         let finalString = [];
         for (var i = 0; i < element.length; i++) {
 
