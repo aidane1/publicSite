@@ -66,6 +66,9 @@ function lcSchedule(day) {
 function profanityFilter(string) {
   return string.replace(/c+\s*h+\s*o+\s*d+\s*e+|c+\s*o+\s*c+\s*k+|p+\s*u+\s*s+\s*s+\s*y+|d+\s*i+\s*c+\s*k+|f+\s*u+\s*c+\s*k+\s*i+\s*n+\s*g+|f+\s*a\s*g\s*g\s*o\s*t|j\s*i\s*v\s*e|n\s*i\s*g\s*g\s*e\s*r|n\s*i\s*g\s*g\s*a|c\s*o\s*o\s*n|j\s*a\s*p|f\s*u\s*c\s*k|s\s*h\s*i\s*t|b\s*i\s*t\s*c\s*h|c\s*u\s*n\s*t|w\s*h\s*o\s*r\s*e/gi, "****");
 }
+function stringTest(string) {
+  return !(string.match(("^[A-z0-9]+$")) == null);
+}
 let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 
@@ -280,16 +283,21 @@ app.get("/login", function(req, res) {
   res.render("login", {error: ""});
 })
 app.post("/login", urlencodedParser, async (req, res, next) => {
-  try {
-    let response = await User.authenticate(req.body.logname, req.body.logword);
-    req.session.userId = response._id;
-    res.cookie("sessionID", response._id);
-    res.redirect(req.cookies.path || "/");
-  } catch(e) {
-    console.log(e);
-    res.render("login", {error : "Username or Password incorrect. Please try again."});
+  if (stringTest(req.body.logname) && stringTest(req.body.logword)) {
+    try {
+      let response = await User.authenticate(req.body.logname, req.body.logword);
+      req.session.userId = response._id;
+      res.cookie("sessionID", response._id);
+      res.redirect(req.cookies.path || "/");
+    } catch(e) {
+      console.log(e);
+      res.render("login", {error : "Username or Password incorrect. Please try again."});
+    }
+  } else {
+    res.render("login", {error: "Please don't enter special characters"});
   }
 });
+
 
 
 
@@ -302,31 +310,37 @@ app.post("/signup", urlencodedParser, function(req, res) {
   if (req.body.password != req.body.passwordConf) {
     res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.firstName, req.body.lastName]});
   } else if (req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
-    var userData = {
-      firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
-      lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.username
-    }
-    try {
-      User.create(userData,function(error, user) {
-        if (error) {
-          console.log(error);
-          res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
-        } else {
-          req.session.userId = user._id;
-          res.cookie("sessionID", req.session.userId);
-          return res.redirect("/courses");
+    if (stringTest(req.body.username) && stringTest(req.body.firstName) && stringTest(req.body.lastName) && stringTest(req.body.password)) {
+      if (req.body.username.length < 40 && req.body.password.length < 40 && req.body.firstName.length < 40 && req.body.lastName.length < 40) {
+        var userData = {
+          firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
+          lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.username
         }
-      });
-    } catch(e) {
-      console.log(e);
+        try {
+          User.create(userData,function(error, user) {
+            if (error) {
+              console.log(error);
+              res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
+            } else {
+              req.session.userId = user._id;
+              res.cookie("sessionID", req.session.userId);
+              return res.redirect("/courses");
+            }
+          });
+        } catch(e) {
+          console.log(e);
+        }
+      } else {
+        res.render("signup", {error: "Please limit input fields length to 40 characters."});
+      }
+    } else {
+      res.render("signup", {error: "Please do not use special characters in your signup information."});
     }
-
-
   } else {
-    res.redirect("/signup");
+    res.redirect("/signup", {"please fill in all the requested fields."});
   }
 });
 
@@ -512,7 +526,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
 
     }
   }
-  if (req.session.userId && !tampered) {
+  if (req.session.userId && !tampered && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
       let homeworkObject = {
         submittedBy: req.body.submittedBy,
         confirmed: req.body.confirmed,
@@ -535,6 +549,8 @@ app.post("/submit", urlencodedParser, function(req, res) {
     User.findOneAndUpdate({_id : req.session.userId}, {banned : true}).then(function() {
         res.redirect("/login?banned=true");
     });
+  } else {
+    res.redirect("/");
   }
 });
 
@@ -747,24 +763,24 @@ app.get("/schedule", function(req, res) {
   res.cookie("path", "/schedule");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-
-      let blockObject = {
-        A: ["LC", ""],
-        B: ["LC", ""],
-        C: ["LC", ""],
-        D: ["LC", ""],
-        E: ["LC", ""]
-      }
-      Course.find({_id : user.courses}, function(err, courses) {
-        courses.forEach(function(course) {
-          blockObject[course.block] = [course.course, course.teacher];
+      if (err) {
+        res.redirect("/");
+      } else {
+        let blockObject = {
+          A: ["LC", ""],
+          B: ["LC", ""],
+          C: ["LC", ""],
+          D: ["LC", ""],
+          E: ["LC", ""]
+        }
+        Course.find({_id : user.courses}, function(err, courses) {
+          courses.forEach(function(course) {
+            blockObject[course.block] = [course.course, course.teacher];
+          });
+          res.render("schedule", {courses : blockObject});
         });
-        res.render("schedule", {courses : blockObject});
-      });
-
-
+      }
     });
-
   } else {
     res.redirect("/login");
   }
@@ -775,17 +791,21 @@ app.get("/view-courses", function(req, res) {
   res.cookie("path", "/view-courses");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      let blockObject = {
-        A: ["LC", ""],
-        B: ["LC", ""],
-        C: ["LC", ""],
-        D: ["LC", ""],
-        E: ["LC", ""]
+      if (err) {
+        res.redirect("/");
+      } else {
+        let blockObject = {
+          A: ["LC", ""],
+          B: ["LC", ""],
+          C: ["LC", ""],
+          D: ["LC", ""],
+          E: ["LC", ""]
+        }
+        user.courses.forEach(function(course) {
+          blockObject[course.block] = [course.course, course.teacher];
+        });
+        res.render("viewOther", {courses : blockObject});
       }
-      user.courses.forEach(function(course) {
-        blockObject[course.block] = [course.course, course.teacher];
-      });
-      res.render("viewOther", {courses : blockObject});
     });
   } else {
     res.redirect("/login");
@@ -795,11 +815,7 @@ app.get("/view-courses", function(req, res) {
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
-  console.log("connected!");
-
-
   socket.on("chat", function(data) {
-
     let id = mongoose.Types.ObjectId(data.id);
     User.findOne({_id : id}, function(err, user) {
       if (err) {
@@ -813,9 +829,8 @@ io.on("connection", function(socket) {
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
-        console.log("first log");
-        if (user.permissions != "muted") {
-          console.log("got to here");
+
+        if (user.permissions != "muted" && data.message.length < 256) {
           io.emit("chat", data);
         }
       }
