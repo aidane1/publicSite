@@ -1013,6 +1013,7 @@
             finalString.push("_");
           }
         }
+        console.log(finalString);
         finalString = finalString.join("");
         console.log(finalString);
         let form = document.createElement("form");
@@ -1024,7 +1025,7 @@
         form.method = "POST";
         form.appendChild(input);
         document.body.appendChild(form);
-        // form.submit();
+        form.submit();
       } else {
 
       }

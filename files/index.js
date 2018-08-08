@@ -331,9 +331,9 @@ app.post("/", urlencodedParser, function(req,res) {
         if (user.permissions === "admin") {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
-          let index = parseInt(req.body.removedHomework.split("_")[3]);
+          let index = parseInt(req.body.removedHomework.split("_")[4]);
           console.log(req.body.Homwork);
-          let teacher = (req.body.removedHomework.split("_")[5]);
+          let teacher = (req.body.removedHomework.split("_")[3]);
           console.log(teacher);
           Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
             if (err) {
