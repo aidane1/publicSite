@@ -213,8 +213,9 @@
         if (message.value != "" && message.value != " " && permissions != "muted") {
           message.value  = "";
           socket.emit("chat", info);
-
         }
+        message.focus();
+        message.select();
       });
 
       message.addEventListener("keypress", function() {
