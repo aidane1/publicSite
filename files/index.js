@@ -345,7 +345,7 @@ app.post("/", urlencodedParser, function(req,res) {
                 } else {
                   console.log(theCourse.homework.length-1-index);
                   console.log(theCourse.homework.length-index);
-                  theCourse.homework.slice(theCourse.homework.length-1-index, theCourse.homework.length-index);
+                  theCourse.homework.splice(theCourse.homework.length-1-index, 1);
                 }
 
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
