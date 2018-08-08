@@ -215,11 +215,11 @@ app.get("/", function(req, res) {
               //itterates through all the courses
               courses.forEach(function(course) {
                 //gives all the courses a property 'resources' that is blank
-                course.resources = [];
+                course.resource = [];
                 for (var i = 0; i < resource.length; i++) {
                   //if the resources class matches the courses code, add that resource as one of the resources for the class
                   if (course.code === resource[i].class) {
-                    course.resources.push(resource[i]);
+                    course.resource.push(resource[i]);
                   }
                 }
               });
