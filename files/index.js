@@ -616,7 +616,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         date: new Date()
       }
 
-      Course.findOneAndUpdate({_id : homework.parentCourseId}, {$push:{homework : homeworkObject}}).then(function() {
+      Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
         res.redirect("/");
       });
 
