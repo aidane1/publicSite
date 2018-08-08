@@ -219,7 +219,7 @@ app.get("/", function(req, res) {
                 for (var i = 0; i < resource.length; i++) {
                   //if the resources class matches the courses code, add that resource as one of the resources for the class
                   if (course.code === resource[i].class) {
-                    course.resource.push(resource[i]);
+                    course.resources.push(resource[i]);
                   }
                 }
               });
