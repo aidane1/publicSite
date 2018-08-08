@@ -14,10 +14,8 @@ const CourseSchema = new Schema({
   course: {
     type: String,
   },
-
-  // a two dimensional array containing the date assigned, and the homework itself
   homework: {
-    type: Array
+    type: Array,
   },
   code: {
     type: String

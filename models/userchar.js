@@ -28,7 +28,7 @@ const UserSchema = new Schema({
     required: true,
   },
   courses: {
-    type: Array,
+    type: [Schema.Types.ObjectId],
   },
   reputation: {
     type: Number,
