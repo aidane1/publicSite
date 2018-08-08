@@ -216,14 +216,13 @@ app.get("/", function(req, res) {
               courses.forEach(function(course) {
                 //gives all the courses a property 'resources' that is blank
                 course.resources = [];
-                for (var i = 0; i < resources.length; i++) {
+                for (var i = 0; i < resource.length; i++) {
                   //if the resources class matches the courses code, add that resource as one of the resources for the class
                   if (course.code === resource[i].class) {
                     course.resource.push(resource[i]);
                   }
                 }
               });
-              console.log((lcSchedule((currentDate).getDay() -1)));
               res.render("index", {courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions});
               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
             });
