@@ -755,7 +755,7 @@ app.get("/schedule", function(req, res) {
         D: ["LC", ""],
         E: ["LC", ""]
       }
-      Courses.find({_id : user.courses}, function(err, courses) {
+      Course.find({_id : user.courses}, function(err, courses) {
         courses.forEach(function(course) {
           blockObject[courses.block] = [courses.course, courses.teacher];
         });
