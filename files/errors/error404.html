@@ -3,8 +3,65 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script>
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      .circle1 {
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgb(150, 12, 43, 0.5);
+        top: 50px;
+        text-align: center;
+      }
+      .circle2 {
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgb(100, 128, 4, 0.5);
+        top: 400px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 30px;
+      }
+      .error404 {
+        display: block;
+        position: absolute;
+        top: 475px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 20px;
+      }
+      .explain {
+        font-size: 20px;
+        position: absolute;
+        top: 900px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    </style>
   </head>
   <body>
-    Uh oh! not good.
+    <div class = "circle1"><div class = "text">I messed up</div></div>
+
+    <div class = "circle2"><div class = "text">You messed up</div></div>
+    <div class = "error404">Error: 404</div>
+    <div class = "explain">Looks like the page you're looking for doesn't exist! Try retyping the url of the page you were looking for, or return back to <a href = "/">home</a></div>
   </body>
 </html>
