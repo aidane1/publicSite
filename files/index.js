@@ -332,7 +332,7 @@ app.post("/", urlencodedParser, function(req,res) {
         if (user.permissions === "admin") {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
-          let index = req.body.removedHomework.split("_")[3];
+          let index = parseInt(req.body.removedHomework.split("_")[3]);
           Course.findOne({course: course, block: block}, function(err, theCourse) {
             if (err) {
               res.redirect("/login");
@@ -343,6 +343,8 @@ app.post("/", urlencodedParser, function(req,res) {
                 if (theCourse.homework.length === 1) {
                   homework = [];
                 } else {
+                  console.log(theCourse.homework.length-1-index);
+                  console.log(theCourse.homework.length-index);
                   homework = theCourse.homework.slice(theCourse.homework.length-1-index, theCourse.homework.length-index);
                 }
 
