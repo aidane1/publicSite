@@ -13,9 +13,9 @@
       * {
         font-family: sans-serif;
       }
+
       .circle1 {
-        width: 500px;
-        height: 500px;
+        width: 100%;
         border-radius: 50%;
         position: absolute;
         left: 50%;
@@ -57,13 +57,27 @@
         top: 900px;
         left: 50%;
         transform: translateX(-50%);
+        margin-bottom: 100px;
+      }
+      @media screen and (max-width: 900px) {
+        .circle1 {
+          left: 0;
+          transform: none;
+        }
+        .circle2 {
+          left: 0;
+          transform: none;
+        }
+        .error404 {
+          left: 400px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class = "circle1"><div class = "text">I messed up</div></div>
+    <div class = "circle1"><div class = "text"></div></div>
 
-    <div class = "circle2"><div class = "text">You messed up</div></div>
+    <div class = "circle2"><div class = "text"></div></div>
     <div class = "error404">Error: 404</div>
     <div class = "explain">Looks like the page you're looking for doesn't exist! Try retyping the url of the page you were looking for, or return back to <a href = "/">home</a></div>
   </body>
