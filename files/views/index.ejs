@@ -1014,6 +1014,7 @@
           }
         }
         finalString = finalString.join("");
+        console.log(finalString);
         let form = document.createElement("form");
         let input = document.createElement("input");
         input.type = "hidden";
@@ -1023,7 +1024,7 @@
         form.method = "POST";
         form.appendChild(input);
         document.body.appendChild(form);
-        form.submit();
+        // form.submit();
       } else {
 
       }
