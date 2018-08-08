@@ -343,9 +343,9 @@ app.post("/", urlencodedParser, function(req,res) {
                 if (theCourse.homework.length === 1) {
                   homework = [];
                 } else {
-                  console.log(theCourse.homework.length-1-index);
-                  console.log(theCourse.homework.length-index);
-                  theCourse.homework.splice(theCourse.homework.length-1-index, 1);
+                  console.log(index);
+                  
+                  theCourse.homework.splice(index, 1);
                 }
 
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
