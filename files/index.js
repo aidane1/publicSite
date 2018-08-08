@@ -95,6 +95,8 @@ let Resources = require("../models/resourcechar.js");
 
 let Posts = require("../models/postchar.js")
 
+let Homework = require("../models/homeworkchar.js");
+
 let nodemailer = require("nodemailer");
 
 let transporter = nodemailer.createTransport({
@@ -162,83 +164,68 @@ app.get("/periodic-table", function(req, res) {
 app.get("/", function(req, res) {
   let currentDate = new Date();
   res.cookie("path", "/");
-  if (req.session.userId) {
+  if(req.session.userId) {
+    let homeworkList = [];
+    let todaysOrderedClasses = [];
+    let courseCodes = [];
+    let daysArray = [];
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
         res.redirect("/login");
       } else {
-        var courseCodes = [];
-        user.courses.forEach(function(theCourse) {
-          courseCodes.push(theCourse._id);
-        });
-        Course.find({_id : courseCodes}, function(err, foundCourse) {
-          var homeworkList = [];
-          foundCourse.forEach(function(homeworkCourse) {
-            homeworkList.push([homeworkCourse.course, homeworkCourse.homework, homeworkCourse.block]);
+        Course.find({_id : user.courses}, function(err, courses) {
+          //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
+          courses.forEach(function(course) {
+            courseCodes.push(course.code);
+            homeworkList.push([course.course, course.homework, course.block])
           });
-          // var todaysBlocks = blockToTime((currentDate).getDay() -1);
-          var todaysBlocks = blockToTime(0);
-          var todaysOrderedClasses = [];
-
+          //gets the order of todays blocks from a function
+          let todaysBlocks = blockToTime((currentDate).getDay() -1);
+          //itterates through those blocks and find which course matches the block
           for (var i = 0; i < todaysBlocks.length; i++) {
-            var foundBlock = false;
-            for (var j = 0; j < user.courses.length; j++) {
-              if (user.courses[j].block === todaysBlocks[i]) {
-
-                todaysOrderedClasses.push(user.courses[j].course);
-                foundBlock = true;
-              }
-            }
-            if (!foundBlock) {
-              todaysOrderedClasses.push("LC's");
-            }
+            //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
+            todaysOrderedClasses.push(courses.find(course => {
+              return course.block === todaysBlocks[i];
+            }));
           }
-
+          //the find function returns the whole class, not just the block. aditionally, it may return undefined if you dont have a course during a block in which case it should return LC's
+          //this line turns undefined into LC's and makes it just the course name
+          todaysOrderedClasses = todaysOrderedClasses.map(todayCourse => todayCourse == undefined ? "LC's" : todayCourse.course);
+          //gathers the events from the past month for the calendar
           Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
-            let daysArray = [];
-            let dayEvents = [];
+            //makes a for loop that itterates as many times as their are days in the current month
             for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
               let todayArray = [];
-              let eventToday = false;
-              dayEvents = [];
+              let dayEvents = [];
               for (var j = 0; j < monthEvent.length; j++) {
                 if (monthEvent[j].day === i) {
-                  eventToday = true;
+                  //if one of the month's events happens on this day, add it to the array
                   dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
                 }
               }
-              if (!eventToday) {
-                todayArray.push([]);
-              } else {
-                todayArray.push(dayEvents);
-              }
-
+              //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
+              todayArray.push(dayEvents);
               todayArray.push(i);
               todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
+              //push todays array onto the month array
               daysArray.push(todayArray);
-
             }
-            var courseCodes = [];
-            for (var i = 0; i < user.courses.length; i++) {
-              courseCodes.push(user.courses[i].code);
-            }
-            Resources.find({class : courseCodes}, function(err, resource) {
-              // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
-
-              user.courses.forEach(function(userCourse) {
-                userCourse.resource = [];
-                for (var i = 0; i < resource.length; i++) {
-                  if (userCourse.code === resource[i].class) {
-
-                    userCourse.resource.push(resource[i]);
+            //gathers the resources and assigns them to their induvidual classes
+            Resources.find({class: courseCodes}, function(err, resource) {
+              //itterates through all the courses
+              courses.forEach(function(course) {
+                //gives all the courses a property 'resources' that is blank
+                course.resources = [];
+                for (var i = 0; i < resources.length; i++) {
+                  //if the resources class matches the courses code, add that resource as one of the resources for the class
+                  if (course.code === resource[i].class) {
+                    course.resource.push(resource[i]);
                   }
                 }
-
               });
-
-              res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
+              res.render("/", {courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(blockToTime((currentDate).getDay() -1)), permissions: user.permissions});
+              // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
             });
-
           });
         });
       }
@@ -247,6 +234,96 @@ app.get("/", function(req, res) {
     res.redirect("/login");
   }
 });
+
+// app.get("/", function(req, res) {
+//   let currentDate = new Date();
+//   res.cookie("path", "/");
+//   if (req.session.userId) {
+//     User.findOne({_id : req.session.userId}, function(err, user) {
+//
+//       if (!user) {
+//         res.redirect("/login");
+//       } else {
+//         var courseCodes = [];
+//         user.courses.forEach(function(theCourse) {
+//           courseCodes.push(theCourse._id);
+//         });
+//         Course.find({_id : courseCodes}, function(err, foundCourse) {
+//           var homeworkList = [];
+//           foundCourse.forEach(function(homeworkCourse) {
+//             homeworkList.push([homeworkCourse.course, homeworkCourse.homework, homeworkCourse.block]);
+//           });
+//           // var todaysBlocks = blockToTime((currentDate).getDay() -1);
+//           var todaysBlocks = blockToTime(0);
+//           var todaysOrderedClasses = [];
+//
+//           for (var i = 0; i < todaysBlocks.length; i++) {
+//             var foundBlock = false;
+//             for (var j = 0; j < user.courses.length; j++) {
+//               if (user.courses[j].block === todaysBlocks[i]) {
+//
+//                 todaysOrderedClasses.push(user.courses[j].course);
+//                 foundBlock = true;
+//               }
+//             }
+//             if (!foundBlock) {
+//               todaysOrderedClasses.push("LC's");
+//             }
+//           }
+//
+//           Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
+//             let daysArray = [];
+//             let dayEvents = [];
+//             for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
+//               let todayArray = [];
+//               let eventToday = false;
+//               dayEvents = [];
+//               for (var j = 0; j < monthEvent.length; j++) {
+//                 if (monthEvent[j].day === i) {
+//                   eventToday = true;
+//                   dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
+//                 }
+//               }
+//               if (!eventToday) {
+//                 todayArray.push([]);
+//               } else {
+//                 todayArray.push(dayEvents);
+//               }
+//
+//               todayArray.push(i);
+//               todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
+//               daysArray.push(todayArray);
+//
+//             }
+//             var courseCodes = [];
+//             for (var i = 0; i < user.courses.length; i++) {
+//               courseCodes.push(user.courses[i].code);
+//             }
+//             Resources.find({class : courseCodes}, function(err, resource) {
+//               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
+//
+//               user.courses.forEach(function(userCourse) {
+//                 userCourse.resource = [];
+//                 for (var i = 0; i < resource.length; i++) {
+//                   if (userCourse.code === resource[i].class) {
+//
+//                     userCourse.resource.push(resource[i]);
+//                   }
+//                 }
+//
+//               });
+//
+//               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
+//             });
+//
+//           });
+//         });
+//       }
+//     });
+//   } else {
+//     res.redirect("/login");
+//   }
+// });
 app.post("/", urlencodedParser, function(req,res) {
   console.log(req.body);
   if (req.session.userId) {
@@ -378,9 +455,6 @@ app.post("/courses", urlencodedParser, function(req, res) {
         }
       }
       theCourse = goodCourses;
-
-
-
       if (typeof req.body.coursesCode === "string") {
         if (theCourse === undefined || theCourse.length == 0) {
           badCourses.push(req.body.coursesCode);
@@ -404,13 +478,12 @@ app.post("/courses", urlencodedParser, function(req, res) {
         }
       }
 
+      theCourse = theCourse.map(x => mongoose.Types.ObjectId(x._id));
       User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse}).then(function() {
-
+        res.redirect("/");
       });
     });
 
-
-    res.redirect("/");
   } else {
     res.redirect("/login");
   }
@@ -533,20 +606,21 @@ app.post("/submit", urlencodedParser, function(req, res) {
     }
   }
   if (req.session.userId && !tampered) {
-    Course.findOne({_id : req.body.courseID}, function(err, course) {
-        req.body.date = new Date;
-        req.body.questions = profanityFilter(req.body.questions);
-        req.body.assignment = profanityFilter(req.body.assignment);
-        req.body.notes = profanityFilter(req.body.notes);
-        var newWork = course.homework;
-        newWork.push(req.body);
+      let homeworkObject = {
+        submittedBy: req.body.submittedBy,
+        confirmed: req.body.confirmed,
+        page: req.body.page,
+        assignment: profanityFilter(req.body.assignment),
+        notes: profanityFilter(req.body.notes),
+        questions: profanityFilter(req.body.questions),
+        date: new Date()
+      }
+
+      Course.findOneAndUpdate({_id : homework.parentCourseId}, {$push:{homework : homeworkObject}}).then(function() {
+        res.redirect("/");
+      });
 
 
-        Course.findOneAndUpdate({_id : req.body.courseID}, {homework : newWork}).then(function() {
-
-        });
-    });
-    res.redirect("/");
   } else if (!req.session.userId) {
     res.redirect("/login");
   } else if (tampered) {
