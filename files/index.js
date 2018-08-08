@@ -162,7 +162,9 @@ app.get("/periodic-table", function(req, res) {
 app.get("/", function(req, res) {
   let currentDate = new Date();
   res.cookie("path", "/");
+  //makes sure the user has a session
   if(req.session.userId) {
+    //declares the top level variables that will be used
     let homeworkList = [];
     let todaysOrderedClasses = [];
     let courseCodes = [];
@@ -232,96 +234,6 @@ app.get("/", function(req, res) {
     res.redirect("/login");
   }
 });
-
-// app.get("/", function(req, res) {
-//   let currentDate = new Date();
-//   res.cookie("path", "/");
-//   if (req.session.userId) {
-//     User.findOne({_id : req.session.userId}, function(err, user) {
-//
-//       if (!user) {
-//         res.redirect("/login");
-//       } else {
-//         var courseCodes = [];
-//         user.courses.forEach(function(theCourse) {
-//           courseCodes.push(theCourse._id);
-//         });
-//         Course.find({_id : courseCodes}, function(err, foundCourse) {
-//           var homeworkList = [];
-//           foundCourse.forEach(function(homeworkCourse) {
-//             homeworkList.push([homeworkCourse.course, homeworkCourse.homework, homeworkCourse.block]);
-//           });
-//           // var todaysBlocks = blockToTime((currentDate).getDay() -1);
-//           var todaysBlocks = blockToTime(0);
-//           var todaysOrderedClasses = [];
-//
-//           for (var i = 0; i < todaysBlocks.length; i++) {
-//             var foundBlock = false;
-//             for (var j = 0; j < user.courses.length; j++) {
-//               if (user.courses[j].block === todaysBlocks[i]) {
-//
-//                 todaysOrderedClasses.push(user.courses[j].course);
-//                 foundBlock = true;
-//               }
-//             }
-//             if (!foundBlock) {
-//               todaysOrderedClasses.push("LC's");
-//             }
-//           }
-//
-//           Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
-//             let daysArray = [];
-//             let dayEvents = [];
-//             for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
-//               let todayArray = [];
-//               let eventToday = false;
-//               dayEvents = [];
-//               for (var j = 0; j < monthEvent.length; j++) {
-//                 if (monthEvent[j].day === i) {
-//                   eventToday = true;
-//                   dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
-//                 }
-//               }
-//               if (!eventToday) {
-//                 todayArray.push([]);
-//               } else {
-//                 todayArray.push(dayEvents);
-//               }
-//
-//               todayArray.push(i);
-//               todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
-//               daysArray.push(todayArray);
-//
-//             }
-//             var courseCodes = [];
-//             for (var i = 0; i < user.courses.length; i++) {
-//               courseCodes.push(user.courses[i].code);
-//             }
-//             Resources.find({class : courseCodes}, function(err, resource) {
-//               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
-//
-//               user.courses.forEach(function(userCourse) {
-//                 userCourse.resource = [];
-//                 for (var i = 0; i < resource.length; i++) {
-//                   if (userCourse.code === resource[i].class) {
-//
-//                     userCourse.resource.push(resource[i]);
-//                   }
-//                 }
-//
-//               });
-//
-//               res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
-//             });
-//
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     res.redirect("/login");
-//   }
-// });
 app.post("/", urlencodedParser, function(req,res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
@@ -332,18 +244,15 @@ app.post("/", urlencodedParser, function(req,res) {
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = parseInt(req.body.removedHomework.split("_")[4]);
-          console.log(req.body.Homwork);
           let teacher = (req.body.removedHomework.split("_")[3]);
-          console.log(teacher);
           Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
             if (err) {
-              console.log("yeet");
-              res.redirect("/login");
+              res.redirect("/");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
                 let homework;
                 if (theCourse.homework.length === 1) {
-                  homework = [];
+                  theCourse.homework = [];
                 } else {
                   theCourse.homework.splice(index, 1);
                 }
@@ -351,18 +260,17 @@ app.post("/", urlencodedParser, function(req,res) {
                   res.redirect("/");
                 });
               } else {
-                res.redirect("/login");
+                res.redirect("/");
               }
             }
-
           });
         } else {
-          res.redirect("/login");
+          res.redirect("/");
         }
       }
     })
   } else {
-    res.redirect("/login");
+    res.redirect("/");
   }
 });
 
@@ -847,12 +755,14 @@ app.get("/schedule", function(req, res) {
         D: ["LC", ""],
         E: ["LC", ""]
       }
-      user.courses.forEach(function(course) {
-        blockObject[course.block] = [course.course, course.teacher];
+      Courses.find({_id : user.courses}, function(err, courses) {
+        courses.forEach(function(course) {
+          blockObject[courses.block] = [courses.course, courses.teacher];
+        });
+        res.render("schedule", {courses : blockObject});
       });
 
 
-      res.render("schedule", {courses : blockObject});
     });
 
   } else {

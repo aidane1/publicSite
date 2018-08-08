@@ -1004,7 +1004,6 @@
         let length = element.length-5;
         let finalString = [];
         for (var i = 0; i < element.length; i++) {
-          console.log("yeet");
           finalString.push(element[i]);
           if (length != 0) {
             finalString.push(" ");
@@ -1013,9 +1012,7 @@
             finalString.push("_");
           }
         }
-        console.log(finalString);
         finalString = finalString.join("");
-        console.log(finalString);
         let form = document.createElement("form");
         let input = document.createElement("input");
         input.type = "hidden";
