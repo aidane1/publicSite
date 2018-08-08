@@ -344,7 +344,7 @@ app.post("/", urlencodedParser, function(req,res) {
                 if (theCourse.homework.length === 1) {
                   homework = [];
                 } else {
-                  homework = theCourse.homework.splice(theCourse.homework.length-1-index, 1);
+                  homework = theCourse.homework.slice(theCourse.homework.length-1-index, 1);
                 }
 
                 console.log(homework);
