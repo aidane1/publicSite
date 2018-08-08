@@ -93,9 +93,7 @@ let Texts = require("../models/textchar.js");
 
 let Resources = require("../models/resourcechar.js");
 
-let Posts = require("../models/postchar.js")
-
-let Homework = require("../models/homeworkchar.js");
+let Posts = require("../models/postchar.js");
 
 let nodemailer = require("nodemailer");
 
@@ -591,7 +589,9 @@ app.get("/submit", function(req, res) {
   res.cookie("path", "/submit");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-        res.render("submitWork", {user : user.username, courses : user.courses, error : ""});
+      Course.find({_id : user.courses}, function(err, courses) {
+        res.render("submitWork", {user : user.username, courses : courses, error : ""});
+      });
     });
   } else {
     res.redirect("/login");
