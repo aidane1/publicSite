@@ -340,7 +340,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
       res.render("signup", {error: "Please do not use special characters in your signup information."});
     }
   } else {
-    res.redirect("/signup", {"please fill in all the requested fields."});
+    res.redirect("/signup", {error: "please fill in all the requested fields."});
   }
 });
 
