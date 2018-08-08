@@ -334,7 +334,6 @@ app.post("/", urlencodedParser, function(req,res) {
           let block = req.body.removedHomework.split("_")[2];
           let index = req.body.removedHomework.split("_")[3];
           Course.findOne({course: course, block: block}, function(err, theCourse) {
-            console.log("gotToHere");
             if (err) {
               res.redirect("/login");
             } else {
@@ -344,7 +343,7 @@ app.post("/", urlencodedParser, function(req,res) {
                 if (theCourse.homework.length === 1) {
                   homework = [];
                 } else {
-                  homework = theCourse.homework.slice(theCourse.homework.length-1-index, 1);
+                  homework = theCourse.homework.slice(theCourse.homework.length-1-index, theCourse.homework.length-index);
                 }
 
                 console.log(homework);
