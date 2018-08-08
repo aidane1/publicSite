@@ -149,7 +149,14 @@ app.use (function (req, res, next) {
     res.redirect('https://' + req.headers.host + req.url);
   }
 });
-
+app.use (function(req, res, next) {
+  res.status(404);
+  // respond with html page
+  if (req.accepts('html')) {
+    res.sendFile(__dirname + '/errors/error404.html', { url: req.url });
+    return;
+  }
+});
 
 let server = app.listen(80, function() {
   console.log("listening for requests");
