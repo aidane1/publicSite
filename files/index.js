@@ -333,8 +333,10 @@ app.post("/", urlencodedParser, function(req,res) {
           let block = req.body.removedHomework.split("_")[2];
           let index = parseInt(req.body.removedHomework.split("_")[3]);
           let teacher = (req.body.removedHomework.split("_")[5]);
+          console.log(teacher);
           Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
             if (err) {
+              console.log("yeet");
               res.redirect("/login");
             } else {
               if(theCourse != null && theCourse != "" && theCourse.course) {
