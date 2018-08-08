@@ -223,7 +223,7 @@ app.get("/", function(req, res) {
                   }
                 }
               });
-              console.log(lcSchedule(blockToTime((currentDate).getDay() -1)));
+              console.log((blockToTime((currentDate).getDay() -1)));
               res.render("index", {courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(blockToTime((currentDate).getDay() -1)), permissions: user.permissions});
               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
             });
