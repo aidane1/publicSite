@@ -859,7 +859,9 @@ io.on("connection", function(socket) {
 
 
 
-
+app.get("/test", function(req, res) {
+  res.sendFile(__dirname + "/serviceTest/home.html");
+});
 
 
 
