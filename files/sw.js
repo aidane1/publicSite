@@ -24,7 +24,7 @@ self.addEventListener("activate", e => {
           cacheNames.map(cache => {
             if (cache !== cacheName) {
               console.log("deleting old cache");
-              // return caches.delete(cache);
+              return caches.delete(cache);
             }
           })
         );
