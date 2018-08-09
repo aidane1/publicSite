@@ -12,7 +12,7 @@ self.addEventListener('install', e => {
     caches.open(cacheName).then(function(cache) {
       console.log("service worker: caching files");
       cache.addAll(cacheAssets);
-    }).then(() => self.skipWaiting());
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -26,7 +26,7 @@ self.addEventListener("activate", e => {
               console.log("deleting old cache");
               return caches.delete(cache);
             }
-          });
+          })
         );
     });
   );
