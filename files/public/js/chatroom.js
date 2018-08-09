@@ -55,8 +55,10 @@ message.addEventListener("keypress", function() {
 
 
   if (message.value != "" && message.value != " " && permissions != "muted") {
+    console.log(document.cookie);
     socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
   } else if (permissions != "muted"){
+    console.log(document.cookie);
     socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
   }
 });
