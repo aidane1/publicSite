@@ -22,6 +22,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   console.log("service worker: activated");
+  console.log(caches.open("v1"));
   e.waitUntil(
     caches.keys().then(cacheNames => {
       console.log(cacheNames);
