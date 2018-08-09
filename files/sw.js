@@ -13,6 +13,7 @@ self.addEventListener("install", e => {
       .then(cache => {
         console.log("service worker: Caching files");
         cache.addAll(cacheAssets);
+        console.log(caches);
       })
       .then(() => self.skipWaiting())
   );
@@ -22,6 +23,7 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   console.log("service worker: activated");
   e.waitUntil(
+    console.log(caches);
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
