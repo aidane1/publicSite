@@ -104,7 +104,7 @@
 const cacheName = "v1";
 const cacheAssets = [
   "serviceTest/home.html"
-]
+];
 
 
 self.addEventListener("install", e => {
