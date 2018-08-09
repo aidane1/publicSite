@@ -112,7 +112,7 @@
         left: 25%;
         min-width: 600px;
         outline: none;
-        font-size: 23px;
+        font-size: 18px;
       }
       #send {
         width: 50%;
@@ -216,8 +216,7 @@
           message.value  = "";
           socket.emit("chat", info);
         }
-        message.focus();
-        message.select();
+        
       });
 
       message.addEventListener("keypress", function() {
