@@ -1,19 +1,3 @@
-window.onload = function() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
-      });
-    });
-  });
-  document.getElementById("holder").addEventListener("transitionend", function() {
-
-  });
-
-
-}
-
 var currentShown = "none"
 function showFunction(id, element) {
   var rsBlocks = document.getElementsByClassName("resourceBox");
@@ -38,8 +22,6 @@ function showFunction(id, element) {
 function modalDisplay(course) {
   var modal = document.getElementById("allHomework");
   var backModal = document.getElementById("modal");
-  console.log(backModal);
-  // document.getElementById(course).className = "modalBox display";
   backModal.style.visibility = "visible";
   modal.style.display = "block";
 }
@@ -59,4 +41,44 @@ function minutesToTime(min) {
   let hour = min/60;
   let minute = min%60;
   return [hour, minute];
+}
+function changeFunction(x) {
+  x.classList.toggle("change");
+  document.getElementById("holder").classList.toggle("expanded");
+  document.getElementById("menu").classList.toggle("expand");
+}
+function confineFunction() {
+  menuIcon.classList.toggle("change");
+  document.getElementById("holder").classList.toggle("expanded");
+  document.getElementById("menu").classList.toggle("expand");
+}
+
+function removeFunction(element) {
+  if (confirm("Are you sure you would like to remove this homework?")) {
+    element = element.id.split("_");
+    let length = element.length-5;
+    let finalString = [];
+    for (var i = 0; i < element.length; i++) {
+      finalString.push(element[i]);
+      if (length != 0) {
+        finalString.push(" ");
+        length--;
+      } else if (i != element.length-1) {
+        finalString.push("_");
+      }
+    }
+    finalString = finalString.join("");
+    let form = document.createElement("form");
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.value = finalString;
+    input.name = "removedHomework";
+    form.action = "/";
+    form.method = "POST";
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+  } else {
+
+  }
 }
