@@ -290,6 +290,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
   if (stringTest(req.body.logname) && stringTest(req.body.logword)) {
     try {
       let response = await User.authenticate(req.body.logname, req.body.logword);
+      console.log(response);
       req.session.userId = response._id;
       res.cookie("sessionID", response._id);
       res.redirect(req.cookies.path || "/");
