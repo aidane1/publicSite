@@ -1,4 +1,4 @@
-const cacheName = "v2";
+const cacheName = "v1";
 
 const cacheAssets = [
   "public/html/offline.html"
@@ -38,7 +38,7 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
-  console.log(cache.match(e.request));
+  console.log(caches.match(e.request));
   // console.log(e.request);
   // e.respondWith(
   //   caches.match(e.request)
