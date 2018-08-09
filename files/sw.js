@@ -33,7 +33,7 @@ self.addEventListener("activate", e => {
       );
     })
   );
-  console.log(caches);
+  console.log(caches.match({method: "GET", url: "https://www.pvstudents.ca/"}));
 });
 
 // self.addEventListener("fetch", e => {
