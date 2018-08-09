@@ -207,7 +207,9 @@
       var message = document.getElementById("message");
       var btn = document.getElementById("send");
       var output = document.getElementById("outPut");
-      console.log(output.children);
+      if (output.children.length > 3) {
+        output.lastChild.scrollIntoView();
+      }
       // let back = document.getElementById("back");
       var feedbackTest = document.getElementById("feedback");
       // output.lastChild.scrollIntoView();
