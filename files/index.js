@@ -797,10 +797,13 @@ app.get("/view-courses", function(req, res) {
           D: ["LC", ""],
           E: ["LC", ""]
         }
-        user.courses.forEach(function(course) {
-          blockObject[course.block] = [course.course, course.teacher];
+        Course.find({_id : user.courses}, function(err, courses) {
+          courses.forEach(function(course) {
+            blockObject[course.block] = [course.course, course.teacher];
+          });
+          res.render("viewOther", {courses : blockObject});
         });
-        res.render("viewOther", {courses : blockObject});
+
       }
     });
   } else {
