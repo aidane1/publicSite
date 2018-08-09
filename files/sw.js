@@ -23,8 +23,8 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   console.log("service worker: activated");
   e.waitUntil(
-    console.log(caches);
     caches.keys().then(cacheNames => {
+      console.log(caches);
       return Promise.all(
         cacheNames.map(cache => {
           if (cache !== cacheName) {
