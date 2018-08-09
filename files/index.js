@@ -98,13 +98,17 @@ let Resources = require("../models/resourcechar.js");
 
 let Posts = require("../models/postchar.js");
 
+let contents = fs.readFileSync("../eVariables/variables.json");
+contents = JSON.parse(contents);
+
 let nodemailer = require("nodemailer");
+
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "pvsstudents@gmail.com",
-    pass: "AidanEglin2002pvstudents"
+    pass: contents.emailPassword
   }
 });
 
@@ -127,7 +131,7 @@ let app = express();
 app.set("view engine", "ejs");
 
 app.use(session({
-  secret: 'a1q2T5-8#1+59',
+  secret: contents.secret,
   resave: true,
   saveUninitialized: false,
   cookie: {
@@ -697,7 +701,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
             });
         });
       })
-    });   
+    });
   }
 });
 
