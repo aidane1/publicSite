@@ -33,12 +33,13 @@ self.addEventListener("activate", e => {
       );
     })
   );
+  console.log(caches);
 });
 
-self.addEventListener("fetch", e => {
-  console.log("service worker: fetching");
-  console.log(e.request);
-  e.respondWith(
-    caches.match(e.request)
-  )
-});
+// self.addEventListener("fetch", e => {
+//   // console.log("service worker: fetching");
+//   // console.log(e.request);
+//   // e.respondWith(
+//   //   caches.match(e.request)
+//   // )
+// });
