@@ -34,3 +34,10 @@ self.addEventListener("activate", e => {
     })
   );
 });
+
+self.addEventListener("fetch", e => {
+  console.log("service worker: fetching");
+  e.respondWith(
+    caches.match(e.request);
+  )
+});
