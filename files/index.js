@@ -683,8 +683,6 @@ app.get("/questions/:id", function(req, res) {
 
 });
 app.post("/questions/:id", urlencodedParser, function(req, res) {
-  console.log(req.body);
-  console.log(req.params);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let params = {
@@ -693,19 +691,13 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
         submittedBy: user.username
       }
       Posts.Comment.create(params, function(err, comment) {
-        console.log(comment);
         Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-          console.log(post)
             Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
-              console.log(post);
               res.redirect("/questions/" + req.params.id);
             });
         });
-
-
       })
-    });
-
+    }); 
   }
 });
 
