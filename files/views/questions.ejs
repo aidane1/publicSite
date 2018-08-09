@@ -305,7 +305,7 @@
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
-        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required />
+        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required style = "font-size: 18px"/>
         <div class = "header">Submit As: </div>
         <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
         <br>
@@ -313,7 +313,7 @@
         <label for "user">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User: </label><input type = "radio" value = "<%=user.username%>" name = "anon" id = "user" class = "radio" required/>
         <br>
         <hr>
-        <h3 style = "display: inline">Body: </h3><br>
+        <h3 style = "display: inline; font-size: 18px">Body: </h3><br>
         <textarea placeholder="Enter your body here" name = "body" id = "textarea" maxlength="512"></textarea>
         <center><input type = "submit" class = "submit"/></center>
         <br>
