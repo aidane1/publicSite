@@ -798,7 +798,7 @@ app.get("/view-courses", function(req, res) {
           E: ["LC", ""]
         }
         Course.find({_id : user.courses}, function(err, courses) {
-          courses.forEach(function(course) {
+            courses.forEach(function(course) {
             blockObject[course.block] = [course.course, course.teacher];
           });
           res.render("viewOther", {courses : blockObject});
