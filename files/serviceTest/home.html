@@ -16,9 +16,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       console.log("fuckin' yeet lmao");
-      navigator.serviceWorker.register('sw.js').then(function(reg) {
-        
-      }).catch(function(error) {
+      navigator.serviceWorker.register('sw.js').then().catch(function(error) {
         console.log('Registration failed with ' + error);
       });
     }
