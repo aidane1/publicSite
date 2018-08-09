@@ -1,4 +1,4 @@
-const cacheName = "v1";
+const cacheName = "v2";
 
 const cacheAssets = [
   "public/html/offline.html"
@@ -21,4 +21,16 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   console.log("service worker: activated");
+  e.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== cacheName) {
+            console.log("deleting old cache");
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
 });
