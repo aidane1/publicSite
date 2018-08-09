@@ -37,5 +37,5 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
-  e.respondWith(caches.match(e.request));
+  e.respondWith(fetch(e.request).catch(() => caches.match("public/html/offline.html")));
 });
