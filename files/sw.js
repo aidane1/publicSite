@@ -6,7 +6,6 @@ const cacheAssets = [
 
 self.addEventListener("install", e => {
   console.log("service worker: installed");
-
   e.waitUntil(
     caches
       .open(cacheName)
@@ -38,5 +37,5 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
-  e.respondWith(fetch(e.request));
+  e.respondWith(cache.match(e.request));
 });
