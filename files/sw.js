@@ -18,23 +18,24 @@ self.addEventListener('install', e => {
 
 self.addEventListener("activate", e => {
   console.log("service  worker: Activated");
-//   e.waitUntil(
-//     caches.keys().then(cacheNames => {
-//         return Promise.all(
-//           cacheNames.map(cache => {
-//             if (cache !== cacheName) {
-//               console.log("deleting old cache");
-//               // return caches.delete(cache);
-//             }
-//           })
-//         );
-//     })
-//   );
+  e.waitUntil(
+    caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cache => {
+            if (cache !== cacheName) {
+              console.log("deleting old cache");
+              // return caches.delete(cache);
+            }
+          })
+        );
+    })
+  );
 });
 
 self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
   console.log(caches);
+  console.log(caches.match(e.request));
   e.respondWith(fetch(e.request).catch(() => {
       console.log(e.request);
       console.log(caches);
