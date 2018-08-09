@@ -710,7 +710,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
   if (req.session.userId) {
-
+    console.log(req.session.userId);
     let currentDate = new Date();
     Texts.find({date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, function(err, texts) {
       texts.sort(function(a, b) {
