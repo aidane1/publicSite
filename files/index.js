@@ -714,7 +714,7 @@ app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
   if (req.session.userId) {
     let currentDate = new Date();
-    Texts.find({date: {$gt:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), (currentDate.getHours()-1) < 0 ? 23 : currentDate.getHours()-1)}}, function(err, texts) {
+    Texts.find({date: {$gt: new Date(ISODate().getTime() - 1000*60*120)}} function(err, texts) {
       texts.sort(function(a, b) {
         return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
       });
