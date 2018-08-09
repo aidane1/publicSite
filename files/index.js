@@ -710,7 +710,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
   if (req.session.userId) {
-    res.cookie("sessionID", req.session.userId);
+
     let currentDate = new Date();
     Texts.find({date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, function(err, texts) {
       texts.sort(function(a, b) {
@@ -720,6 +720,7 @@ app.get("/chatroom", function(req,res) {
         texts[i].body = profanityFilter(texts[i].body);
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
+        res.cookie("sessionID", user._id);
         res.render("roomchat", {texts: texts, permissions : user.permissions});
       });
 
