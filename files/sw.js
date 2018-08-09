@@ -36,10 +36,10 @@ self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
   e.respondWith(fetch(e.request).catch(() => {
       console.log(e.request);
-      
+
       caches.match(e.request);
     })
-  )
+  );
 });
 
 
