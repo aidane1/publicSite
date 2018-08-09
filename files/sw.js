@@ -101,20 +101,13 @@
 //     return this.addAll([request]);
 //   };
 // }());
-const cacheName = "v1";
-const cacheAssets = [
-  "serviceTest/home.html"
-];
+console.log("test");
+const cacheName = "v2";
+
 
 
 self.addEventListener("install", e => {
   console.log("service worker: installed");
-  e.waitUntil(
-    caches.open(cacheName).then(cache => {
-      console.log("service worker: caching files");
-      cache.addAll(cacheAssets);
-    }).then(() => self.skipWaiting());
-  )
 });
 
 self.addEventListener("activate", e => {
