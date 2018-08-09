@@ -160,11 +160,18 @@
     <div class = "schoolChat" id = "schoolChat">
       <div class = "chatWindow" id = "chatWindow">
         <div class = "<%=permissions%>" id = "outPut">
-          <% texts.forEach(function(text) { %>
+          <% if (texts.length === 0) { %>
             <div class = "messageHolder">
-              <p><strong><%=text.submittedBy%></strong>: <%=text.body%></p><div class = "name"><%=text.firstName%> <%=text.lastName%></div>
+              <p><strong>Computer: </strong>It's very empty here!</p>
             </div>
-          <% }); %>
+          <% } else { %>
+            <% texts.forEach(function(text) { %>
+              <div class = "messageHolder">
+                <p><strong><%=text.submittedBy%></strong>: <%=text.body%></p><div class = "name"><%=text.firstName%> <%=text.lastName%></div>
+              </div>
+            <% }); %>
+          <% } %>
+
         </div>
         <div class = "feedback" id = "feedback">
 
