@@ -336,7 +336,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 
 
 app.get("/signup", function(req, res) {
-  res.cookie("path", "/signup");
+  res.cookie("path", "/");
   res.render("signup", {error : "", data : ["", "", "", ""]});
 });
 app.post("/signup", urlencodedParser, function(req, res) {
