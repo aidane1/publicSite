@@ -15,10 +15,12 @@
           let currentElement;
           let startValue;
           let finished = false;
+          let currentVertical = [0, 0];
+          let allowed = false;
           document.addEventListener("touchstart", function(event) {
             let xVal = (event.touches["0"].clientX);
             startValue = xVal;
-
+            currentVertical = [event.touches["0"].clientX, event.touches["0"].clientY];
 
             let selectedElement = (event.target.parentNode.classList.contains("question") ? event.target.parentNode : event.target);
             if (selectedElement.classList.contains("question")) {
@@ -28,8 +30,16 @@
             }
           });
           document.addEventListener("touchmove", function(event) {
+            currentV = currentVertical[1] - event.touches["0"].clientY;
+            currentH = currentVertical[0] - event.touches["0"].clientX;
+            console.log(currentV);
+            console.log(currentH);
+            if (Math.abs(currentV/currentH) < 1 && Math.abs(currentV) > 15 && Math.abs(currentH) > 15) {
+              allowed = true;
+            }
             if (!currentElement) {
-            } else {
+
+            } else if (allowed) {
               let xVal = event.touches["0"].clientX;
               currentElement.style.right = (startValue - xVal).toString() + "px";
 
@@ -82,6 +92,7 @@
                   currentElement = "";
                   startValue = 0;
                   finished = false;
+                  allowed = false;
                 }
 
               }, 1);
