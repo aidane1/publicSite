@@ -34,7 +34,7 @@
             currentH = currentVertical[0] - event.touches["0"].clientX;
             console.log(currentV);
             console.log(currentH);
-            if (Math.abs(currentV/currentH) < 1 && Math.abs(currentV) > 15 && Math.abs(currentH) > 15) {
+            if (Math.abs(currentV/currentH) < 1 && Math.abs(currentH) > 15) {
               allowed = true;
             }
             if (!currentElement) {
