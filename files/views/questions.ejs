@@ -156,8 +156,8 @@
         overflow-y: auto;
         overflow-x: hidden;
         position: fixed;
-        top: 40px;
-        bottom: 40px;
+        top: 32px;
+        bottom: 32px;
         left: 50%;
         transform: translateX(-50%);
         background: linear-gradient(#f28e37, #f77d13, #f9e66b);
@@ -207,6 +207,7 @@
         position: fixed;
         bottom: 0px;
         left: 50%;
+        z-index: 5;
         transform: translateX(-50%);
         background-color: #353538;
         text-align: center;
@@ -313,7 +314,7 @@
         <a id = "back" href = "/" style = "text-decoration:none; color: white;">&#8592;</a>
       </div>
     </div>
-    <div class = "bar" style = "border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;">
+    <div class = "bar" style = "border-top-right-radius: 8px; border-top-left-radius: 8px;">
       <%if (page > 0) { %>
         <a href = "/questions?page=<%=page-1%>" style = "text-decoration: none">&larr;</a>
       <% } %>
