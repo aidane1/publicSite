@@ -241,42 +241,63 @@ app.get("/", function(req, res) {
     res.redirect("/login");
   }
 });
+
+//the only purpose of this function as of right now is to delete user submitted homework
 app.post("/", urlencodedParser, function(req,res) {
+  //makes sure the user has a session
   if (req.session.userId) {
+
+    //finds the corrosponding user
     User.findOne({_id : req.session.userId}, function(err, user) {
+      //redirects to login if there is a database error... will change this later.
       if (err) {
         res.redirect('/login');
       } else {
+        //makes sure the user is an admin before doing anything else... I'm going to turn this into an asyncronous promise funtion later
         if (user.permissions === "admin") {
+
+          //the next four lines just parse the data that was sent in the form of a string seperated by underscores
           let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
           let block = req.body.removedHomework.split("_")[2];
           let index = parseInt(req.body.removedHomework.split("_")[4]);
           let teacher = (req.body.removedHomework.split("_")[3]);
+
+          //finds the corrosponding course
           Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
             if (err) {
+              //if an error occurs at this point, redirect to home
               res.redirect("/");
             } else {
+              //makes sure the course exists, and isn't empty
               if(theCourse != null && theCourse != "" && theCourse.course) {
+                //declares homework variable for later use
                 let homework;
+                //homework is stored as an array of objects in the string. If that array length is one, then there's only one course that could be being removed
+                //therefore, we just set the homework array to empty.
                 if (theCourse.homework.length === 1) {
                   theCourse.homework = [];
                 } else {
+                  //if the array isn't empty, we splice it at the index of the homework that is being removed. we remove one item at that index, which is the removed homework.
                   theCourse.homework.splice(index, 1);
                 }
+                //finds and updates the courses homework, and then redirects to home
                 Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
                   res.redirect("/");
                 });
               } else {
+                //if the course doesn't exist, which could only happen if some tampered with it client side, just redirect to home.
                 res.redirect("/");
               }
             }
           });
         } else {
+          //if the user isn't an admin, redirect to home.
           res.redirect("/");
         }
       }
     })
   } else {
+    //if the user doesn't have a session, redirect to home.
     res.redirect("/");
   }
 });
@@ -287,18 +308,25 @@ app.get("/login", function(req, res) {
   res.render("login", {error: ""});
 })
 app.post("/login", urlencodedParser, async (req, res, next) => {
+
+  //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
   if (stringTest(req.body.logname) && stringTest(req.body.logword)) {
+    //try to find the user in the database. if that doesn't work, tell them their information was incorrect.
     try {
+      // asyncronous function. returns the user if the info was correct, throws an error if it wasn't.
       let response = await User.authenticate(req.body.logname, req.body.logword);
-      console.log(response);
+      //sets the session and cookie to the current user ID
       req.session.userId = response._id;
       res.cookie("sessionID", response._id);
+      //redirects to the cookie path, or to home if the user doesn't have path cookies
       res.redirect(req.cookies.path || "/");
     } catch(e) {
       console.log(e);
+      // tells the user their info was incorrect
       res.render("login", {error : "Username or Password incorrect. Please try again."});
     }
   } else {
+    //asks the user not to enter special characters.
     res.render("login", {error: "Please don't enter special characters"});
   }
 });
@@ -312,11 +340,18 @@ app.get("/signup", function(req, res) {
   res.render("signup", {error : "", data : ["", "", "", ""]});
 });
 app.post("/signup", urlencodedParser, function(req, res) {
+
+  //makes sure the two entered passwords match.
   if (req.body.password != req.body.passwordConf) {
+    //if they don't, tell the user
     res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.firstName, req.body.lastName]});
+  //makes sure all fields were entered
   } else if (req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
+    //makes sure they didn't use special characters.
     if (stringTest(req.body.username) && stringTest(req.body.firstName) && stringTest(req.body.lastName) && stringTest(req.body.password)) {
+      //makes sure they're all under 40 characters long
       if (req.body.username.length < 40 && req.body.password.length < 40 && req.body.firstName.length < 40 && req.body.lastName.length < 40) {
+        //sets up the user data
         var userData = {
           firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
           lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
@@ -324,12 +359,14 @@ app.post("/signup", urlencodedParser, function(req, res) {
           password: req.body.password,
           email: req.body.username
         }
+        //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
         try {
           User.create(userData,function(error, user) {
             if (error) {
               console.log(error);
               res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
             } else {
+              //sets the session and cookie to current user ID
               req.session.userId = user._id;
               res.cookie("sessionID", req.session.userId);
               return res.redirect("/courses");
@@ -362,23 +399,37 @@ app.get("/courses", function(req, res) {
 });
 app.post("/courses", urlencodedParser, function(req, res) {
   console.log(req.body);
-  if (req.session.userId && req.body.coursesCode) {
+  //makes sure they have a session ID and that the body object is a course.
+  if (req.session.userId && req.body.coursesCode && req.body.coursesBlock && req.body.coursesTeacher) {
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
       let badCourses = [];
       let goodCourses = [];
+
+      //due to how mongoDB works and how the user submitted input works, sometimes the Course.find may return a course that matches all the
+      //credentials but wasn't selected. To avoid passing the user the wrong info, we must confirm everything first.
+
+
+      //only returns true if there was only one selected course
       if (typeof req.body.coursesCode === "string") {
 
       } else {
+
+        //goes through every course that was returned by courses.find, and makes sure it matches one of the credentials list
         for (var i = 0; i < req.body.coursesBlock.length; i++) {
           var currentCheck = req.body;
           theCourse.forEach(function(course) {
-            if (course.code === currentCheck.coursesCode[i] && course.block === currentCheck.coursesBlock[i]) {
+            if (course.code === currentCheck.coursesCode[i] && course.block === currentCheck.coursesBlock[i] && course.teacher === currentCheck.coursesTeacher[i]) {
               goodCourses.push(course);
             }
           });
         }
       }
+
+
       theCourse = goodCourses;
+
+      //this block of code may seem reduntant, but It felt neater to to make it two if statements than to stuff them both in to one.
+      //this finds all the courses, if any, that the user selected that don't exist. would only occur if the user tampered with ID's client side.
       if (typeof req.body.coursesCode === "string") {
         if (theCourse === undefined || theCourse.length == 0) {
           badCourses.push(req.body.coursesCode);
@@ -402,7 +453,10 @@ app.post("/courses", urlencodedParser, function(req, res) {
         }
       }
 
+      //makes theCourse variable a list of all the ID's of the good courses
       theCourse = theCourse.map(x => mongoose.Types.ObjectId(x._id));
+
+      //adds that list to the User's courses property
       User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse}).then(function() {
         res.redirect("/");
       });
@@ -426,11 +480,18 @@ app.get("/add", function(req, res) {
 
 });
 app.post("/add", urlencodedParser, function(req, res) {
+
+  //there are three types of adds supported right now. event, course, and resource.
+
+
+  //makes sure the user has a session
   User.findOne({_id : req.session.userId}, function(err, user) {
     if (err) {
       res.redirect("/");
     } else {
+      //makes sure the user is an admin
       if (user != undefined && user.permissions === "admin") {
+        //makes courses
         if (req.body.teacher && req.body.course && req.body.block && req.body.code) {
           var courseData = {
             teacher : req.body.teacher,
@@ -441,6 +502,7 @@ app.post("/add", urlencodedParser, function(req, res) {
           Course.create(courseData, function() {
             res.redirect("/add");
           });
+        //makes events
         } else if (req.body.year) {
           if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
             var eventData = {
@@ -454,6 +516,7 @@ app.post("/add", urlencodedParser, function(req, res) {
               res.redirect("/add");
             })
           }
+        //makes resources
         } else if (req.body.url) {
           if (req.body.url && req.body.class && req.body.type && req.body.description) {
             var resourceData = {
@@ -478,32 +541,48 @@ app.post("/add", urlencodedParser, function(req, res) {
 
 app.get("/calendar", function(req, res) {
   res.cookie("path", "/calendar");
+
+  //user doesn't need a session to visit calendar, because there is no user specific data
+
+  //declares a currentDate, monthArray, and monthName for later use
   let currentDate = new Date();
   let monthsArray = [];
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
+  //finds ALL events. will fix later.
+  //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
   Events.find({}, function(err, yearEvent) {
+
+    // starts the first day of the calendar on september first of that year
     let theDay = new Date("september 1" + currentDate.getFullYear().toString()).getDay();
+    // declares an array that will be filled with the info for every day of the year
     let daysArray = [];
-    let sumDays = 0;
     let foundEvent = false;
+    //cycles through the 10 school months
     for (var i = 0; i < 10; i++) {
+      //declares a currentMonth variable for later use
       let currentMonth = [];
+      //get the amount of days in that month using the getDays function i defined.
       for (var j = 0; j < getDays((i+8)%12); j++) {
+        //the days event array
         let dayEvents = [];
         foundEvent = false;
+
+        //i know this is terribly ineffiecient (O(n^2)) but for a low n it isn't too bad. cycles through every event called by events.find and checks if it lies on the current day
         for (var k = 0; k < yearEvent.length; k++) {
+          //if there is an event today, add it to the array and confirm an event was found
           if (yearEvent[k].month === (i+8)%12 && yearEvent[k].day === j) {
             foundEvent = true;
             dayEvents.push(yearEvent[k].time + ": " + yearEvent[k].info);
           }
         }
+        //pushes today on to the currentMonth array
         currentMonth.push([dayEvents, j, (theDay%7)]);
+        //adds one to the day of the week
         theDay++;
       }
+      //pushes this month to the array
       monthsArray.push(currentMonth);
     }
-
-
     res.render("calendar", {calendar : monthsArray, months : monthsNames});
   });
 
@@ -513,6 +592,8 @@ app.get("/calendar", function(req, res) {
 
 app.get("/submit", function(req, res) {
   res.cookie("path", "/submit");
+
+  //renders the page with the user's courses
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       Course.find({_id : user.courses}, function(err, courses) {
@@ -525,13 +606,18 @@ app.get("/submit", function(req, res) {
 });
 app.post("/submit", urlencodedParser, function(req, res) {
   var tampered = false;
+
+  //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
   for (var key in req.body) {
     if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed") {
       tampered = true;
 
     }
   }
+
+  //makes sure all fields exist, and are of the proper length
   if (req.session.userId && !tampered && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
+      //makes a homework object
       let homeworkObject = {
         submittedBy: req.body.submittedBy,
         confirmed: req.body.confirmed,
@@ -541,7 +627,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         questions: profanityFilter(req.body.questions),
         date: new Date()
       }
-
+      //adds the homework to the course
       Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
         res.redirect("/");
       });
@@ -560,11 +646,13 @@ app.post("/submit", urlencodedParser, function(req, res) {
 });
 
 
-
+//self explanitory. logs the user out.
 app.get("/logout", function(req, res) {
   req.session.destroy();
   res.redirect("/login");
 });
+
+
 
 app.get("/suggestions", function(req, res) {
   res.cookie("path", "/suggestions");
@@ -574,18 +662,16 @@ app.get("/suggestions", function(req, res) {
     res.redirect("/login");
   }
 });
+//sends the suggestions to me.
 app.post("/suggestions", urlencodedParser, function(req, res) {
 
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
+      //makes sure they aren't spamming me
       if (((new Date()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
-
-
-
-
         res.redirect("/");
       } else {
-
+        //sends the email
         let mailOptions = {
           from: "pvsstudents@gmail.com",
           to: "aidaneglin@gmail.com",
@@ -599,6 +685,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
           } else {
             let suggestions = user.suggestions;
             suggestions.push([req.body.body, new Date()]);
+            //adds it to their list of sent suggestiona
             User.findOneAndUpdate({_id : req.session.userId}, {suggestions: suggestions}).then(function() {
               res.redirect("/");
             });
