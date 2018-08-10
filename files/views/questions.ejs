@@ -67,6 +67,10 @@
             }
           });
           document.addEventListener("touchend", function(event) {
+            console.log("touch ended");
+            allowed = false;
+            pastAllowed = false;
+            console.log(pastAllowed);
             if (!currentElement || !allowed || currentElement === undefined) {
 
             } else {
@@ -94,9 +98,7 @@
                   currentElement = "";
                   startValue = 0;
                   finished = false;
-                  allowed = false;
-                  pastAllowed = false;
-                  console.log(pastAllowed);
+
                 }
 
               }, 1);
