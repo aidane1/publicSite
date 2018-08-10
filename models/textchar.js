@@ -19,6 +19,14 @@ const TextSchema = new Schema({
   },
   lastName: {
     type: String
+  },
+  expires_at: {
+    type: Number,
+    default: 1
+  },
+  expiresAfterSeconds: {
+    type: Number,
+    default: 60
   }
 });
 

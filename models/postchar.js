@@ -15,6 +15,9 @@ const postSchema = new Schema({
   submittedBy: {
     type: String
   },
+  anonymous: {
+    type: Boolean
+  },
   body: {
     type: String
   },
