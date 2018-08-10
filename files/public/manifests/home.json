@@ -3,7 +3,6 @@
   "short_name": "PVSS",
   "start_url": "/",
   "display": "standalone",
-  "background": "linear-gradient(#f28e37, #f77d13, #f9e66b)",
   "background_color": "#f28e37",
   "description": "A website for PVSS students.",
   "display": "standalone",
@@ -20,15 +19,25 @@
       "src": "public/images/apple-icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png"
-    }
+    },
     {
       "src": "public/images/apple-icon-114x114.png",
       "sizes": "114x114",
       "type": "image/png"
-    }
+    },
     {
       "src": "public/images/apple-icon-144x144.png",
       "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "public/images/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "public/images/icon-192x192.png",
+      "sizes": "192x192",
       "type": "image/png"
     }
   ]
