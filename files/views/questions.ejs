@@ -272,7 +272,13 @@
       <% posts.forEach(function(post) { %>
         <div class = "question" id = "<%=post._id%>">
           <div class = "questionTitle"><%=post.title%></div>
-          <div class = "submittedBy"><%=post.submittedBy%></div>
+          <div class = "submittedBy">
+            <% if (post.anonymous) { %>
+              anon
+            <% } else { %>
+              <%=post.submittedBy%>
+            <% } %>
+          </div>
           <% if (user.permissions === "admin") { %>
 
             <div class = "delete" onclick = "deleteFunction('<%=post._id%>')">
@@ -307,10 +313,10 @@
       <form method = "POST" action = "/questions">
         <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required style = "font-size: 18px"/>
         <div class = "header">Submit As: </div>
-        <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "anon" required/>
+        <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "true" required/>
         <br>
 
-        <label for "user">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User: </label><input type = "radio" value = "<%=user.username%>" name = "anon" id = "user" class = "radio" required/>
+        <label for "user">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User: </label><input type = "radio" value = "false" name = "anon" id = "user" class = "radio" required/>
         <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
