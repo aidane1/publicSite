@@ -34,9 +34,9 @@
             currentV = currentVertical[1] - event.touches["0"].clientY;
             currentH = currentVertical[0] - event.touches["0"].clientX;
             console.log(pastAllowed);
-            if (Math.abs(currentV/currentH) < 0.6 && (Math.abs(currentH) > 20 || math.abs(currentV) > 20) && !pastAllowed) {
+            if (Math.abs(currentV/currentH) < 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20) && !pastAllowed) {
               allowed = true;
-            } else if (Math.abs(currentV/currentH) > 0.6 && (Math.abs(currentH) > 20 || math.abs(currentV) > 20)) {
+            } else if (Math.abs(currentV/currentH) > 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20)) {
               pastAllowed = true;
             }
             if (!currentElement) {
