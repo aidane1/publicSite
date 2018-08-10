@@ -17,6 +17,7 @@
           let finished = false;
           let currentVertical = [0, 0];
           let allowed = false;
+          let pastAllowed = false;
           document.addEventListener("touchstart", function(event) {
             let xVal = (event.touches["0"].clientX);
             startValue = xVal;
@@ -35,9 +36,10 @@
             console.log(currentV);
             console.log(currentH);
             console.log(Math.abs(currentV/currentH));
-            if (Math.abs(currentV/currentH) < 0.6 && Math.abs(currentH) > 20 && !allowed) {
+            if (Math.abs(currentV/currentH) < 0.6 && Math.abs(currentH) > 20 && !pastAllowed) {
               allowed = true;
-              document.getElem
+            } else if (Math.abs(currentV/currentH) > 0.6 && Math.abs(currentH) > 20) {
+              pastAllowed = true;
             }
             if (!currentElement) {
 
@@ -95,6 +97,7 @@
                   startValue = 0;
                   finished = false;
                   allowed = false;
+                  pastAllowed = false;
                 }
 
               }, 1);
