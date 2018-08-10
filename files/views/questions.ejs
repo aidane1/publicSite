@@ -37,6 +37,7 @@
             console.log(Math.abs(currentV/currentH));
             if (Math.abs(currentV/currentH) < 0.6 && Math.abs(currentH) > 20) {
               allowed = true;
+              document.getElementById("questionHolder").style.overflowY = "none";
             }
             if (!currentElement) {
 
@@ -55,7 +56,7 @@
               }
               if (finished && (startValue - xVal < 100)) {
                 finished = false;
-
+                document.getElementById("questionHolder").style.overflowY = "auto";
                 for (var i = 0; i < currentElement.children.length; i++) {
                   if (currentElement.children[i].classList.contains("replyBox")) {
                     currentElement.children[i].classList.remove("boxFull");
@@ -94,6 +95,7 @@
                   startValue = 0;
                   finished = false;
                   allowed = false;
+                  document.getElementById("questionHolder").style.overflowY = "auto";
                 }
 
               }, 1);
@@ -280,7 +282,7 @@
   </head>
   <body>
 
-    <div class = "questionHolder">
+    <div class = "questionHolder" id = "questionHolder">
       <% posts.forEach(function(post) { %>
         <div class = "question" id = "<%=post._id%>">
           <div class = "questionTitle"><%=post.title%></div>
