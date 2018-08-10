@@ -67,10 +67,7 @@
             }
           });
           document.addEventListener("touchend", function(event) {
-            console.log("touch ended");
-
             pastAllowed = false;
-            console.log(pastAllowed);
             if (!currentElement || !allowed || currentElement === undefined) {
 
             } else {
@@ -211,7 +208,7 @@
         bottom: 0px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #165dce;
+        background-color: #353538;
         text-align: center;
         font-size: 30px;
       }
@@ -310,13 +307,13 @@
 
     </div>
 
-    <div class = "bar" style = "top: 0px">
+    <div class = "bar" style = "top: 0px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;">
       Questions
-      <div class = "back" style = "font-size: 40px; position: absolute; top: 0px; left: 10px;">
+      <div class = "back" style = "font-size: 40px; position: absolute; top: -10px; left: 10px;">
         <a id = "back" href = "/" style = "text-decoration:none; color: white;">&#8592;</a>
       </div>
     </div>
-    <div class = "bar">
+    <div class = "bar" style = "border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;">
       <%if (page > 0) { %>
         <a href = "/questions?page=<%=page-1%>" style = "text-decoration: none">&larr;</a>
       <% } %>
