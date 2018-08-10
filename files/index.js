@@ -616,7 +616,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
   }
 
   //makes sure all fields exist, and are of the proper length
-  if (req.session.userId && !tampered && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
+  if (req.session.userId && !tampered && && req.body.submittedBy && req.body.assignment && req.body.notes && req.body.questions && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
       //makes a homework object
       let homeworkObject = {
         submittedBy: req.body.submittedBy,
