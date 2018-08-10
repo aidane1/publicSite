@@ -745,7 +745,7 @@ app.post("/questions", urlencodedParser, function(req, res) {
           body: req.body.body,
           title: req.body.title,
           submittedBy: user.username,
-          anonymous: req.body.anon===true,
+          anonymous: req.body.anon==="true",
           date: new Date()
         }
         Posts.Post.create(info, function(err, post) {
