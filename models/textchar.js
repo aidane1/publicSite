@@ -20,7 +20,7 @@ const TextSchema = new Schema({
   lastName: {
     type: String
   },
-  expires_at: {
+  createdAt {
     type: Number,
     default: 1
   },
