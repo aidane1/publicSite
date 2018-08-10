@@ -68,7 +68,7 @@
           });
           document.addEventListener("touchend", function(event) {
             console.log("touch ended");
-            allowed = false;
+
             pastAllowed = false;
             console.log(pastAllowed);
             if (!currentElement || !allowed || currentElement === undefined) {
@@ -98,7 +98,7 @@
                   currentElement = "";
                   startValue = 0;
                   finished = false;
-
+                  allowed = false;
                 }
 
               }, 1);
