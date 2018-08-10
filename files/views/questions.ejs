@@ -66,7 +66,7 @@
             }
           });
           document.addEventListener("touchend", function(event) {
-            if (!currentElement) {
+            if (!currentElement && !allowed) {
 
             } else {
               let acceleration = 100;
