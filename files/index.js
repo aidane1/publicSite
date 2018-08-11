@@ -641,7 +641,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         assignment: profanityFilter(req.body.assignment),
         notes: profanityFilter(req.body.notes),
         questions: profanityFilter(req.body.questions),
-        due: profanityFilter(req.body.due);
+        due: profanityFilter(req.body.due),
         date: (new Date()).local()
       }
       //adds the homework to the course
