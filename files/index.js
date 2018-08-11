@@ -14,17 +14,13 @@ Date.prototype.local = function() {
     return this;
 }
 
-console.log((new Date()).local());
-console.log((new Date()).addMinutes(60));
-console.log((new Date()).getTimezoneOffset());
-
 function getDays(month) {
   switch (month) {
     case 0:
       return 31;
       break;
     case 1:
-      var currentYear = ((new Date())).getFullYear();
+      var currentYear = (((new Date()).local())).getFullYear();
       if (currentYear % 4 === 0 && ((currentYear % 100 != 0) || (currentYear % 400 === 0))) {
         return 29;
       } else {
@@ -187,7 +183,7 @@ app.get("/periodic-table", function(req, res) {
 
 
 app.get("/", function(req, res) {
-  let currentDate = new Date();
+  let currentDate = (new Date()).local();
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
@@ -565,7 +561,7 @@ app.get("/calendar", function(req, res) {
   //user doesn't need a session to visit calendar, because there is no user specific data
 
   //declares a currentDate, monthArray, and monthName for later use
-  let currentDate = new Date();
+  let currentDate = (new Date()).local();
   let monthsArray = [];
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
   //finds ALL events. will fix later.
@@ -644,7 +640,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         assignment: profanityFilter(req.body.assignment),
         notes: profanityFilter(req.body.notes),
         questions: profanityFilter(req.body.questions),
-        date: new Date()
+        date: (new Date()).local()
       }
       //adds the homework to the course
       Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
@@ -687,7 +683,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       //makes sure they aren't spamming me
-      if (((new Date()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
+      if ((((new Date()).local()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
         res.redirect("/");
       } else {
         //sends the email
@@ -703,7 +699,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
             res.redirect("/")
           } else {
             let suggestions = user.suggestions;
-            suggestions.push([req.body.body, new Date()]);
+            suggestions.push([req.body.body, (new Date()).local()]);
             //adds it to their list of sent suggestiona
             User.findOneAndUpdate({_id : req.session.userId}, {suggestions: suggestions}).then(function() {
               res.redirect("/");
@@ -765,7 +761,7 @@ app.post("/questions", urlencodedParser, function(req, res) {
           title: req.body.title,
           submittedBy: user.username,
           anonymous: req.body.anon==="true",
-          date: new Date()
+          date: (new Date()).local()
         }
         Posts.Post.create(info, function(err, post) {
           res.redirect("/questions");
@@ -820,7 +816,7 @@ app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
   if (req.session.userId) {
     console.log(req.session.userId);
-    let currentDate = new Date();
+    let currentDate = (new Date()).local();
     Texts.find({date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, function(err, texts) {
       texts.sort(function(a, b) {
         return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
@@ -932,7 +928,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else {
-        Texts.create({date : new Date(), body: data.message, submittedBy : user.username, firstName: user.firstName, lastName:user.lastName}, function(error, text) {
+        Texts.create({date : (new Date()).local(), body: data.message, submittedBy : user.username, firstName: user.firstName, lastName:user.lastName}, function(error, text) {
           if (error) {
 
           } else {
