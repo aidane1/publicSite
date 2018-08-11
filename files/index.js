@@ -187,8 +187,7 @@ app.get("/periodic-table", function(req, res) {
 
 
 app.get("/", function(req, res) {
-  let currentDate = (new Date()).addMinutes(-);
-  let offset = currentDate.getTimezoneOffset();
+  
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
