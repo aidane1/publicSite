@@ -10,7 +10,7 @@ Date.prototype.addMinutes = function(h) {
 
 //sets a date to local time
 Date.prototype.local = function() {
-    this.setTime(this.addMinutes(-420);
+    this.setTime(this.addMinutes(-420));
     return this;
 }
 
