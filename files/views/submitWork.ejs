@@ -22,13 +22,10 @@
         input.name = "page";
         secondInput.name = "questions";
 
-        var label = document.createElement("label");
-        var secondLabel = document.createElement("label");
 
 
         var textarea = document.createElement("textarea");
         textarea.name = "assignment";
-        var thirdLabel = document.createElement("label");
         let due = document.createElement("input");
         due.type = "text";
         due.name = "due";
@@ -36,9 +33,7 @@
         due.id = "due"
         if (type === 1) {
           textarea.style.display = "none";
-          thirdLabel.style.display = "none";
-          label.innerHTML = "Page number: &nbsp;&nbsp;&nbsp;&nbsp; pg.";
-          secondLabel.innerHTML = "Question numbers:   #";
+
           input.type = "number";
           secondInput.className = "questions";
           input.className = "page";
@@ -46,9 +41,7 @@
         } else if (type === 2) {
           input.type = "hidden";
           secondInput.type = "hidden";
-          label.style.display = "none";
-          secondLabel.style.display = "none";
-          thirdLabel.className = "textareaLabel";
+        
           textarea.className = "assignment";
           textarea.setAttribute("placeholder", "Assignment (please specify)...");
           input.value = "";
@@ -57,11 +50,11 @@
         input.setAttribute("placeholder", "Page #...");
         secondInput.setAttribute("placeholder", "Question #'s ...");
         submitBox.appendChild(input);
-        submitBox.appendChild(document.createElement("br"));
+
         submitBox.appendChild(document.createElement("br"));
         submitBox.appendChild(secondInput);
         submitBox.appendChild(textarea);
-        submitBox.appendChild(document.createElement("br"));
+
         submitBox.appendChild(document.createElement("br"));
         submitBox.appendChild(due);
 
