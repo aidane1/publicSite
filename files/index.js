@@ -10,7 +10,7 @@ Date.prototype.addMinutes = function(h) {
 
 //sets a date to local time
 Date.prototype.local = function() {
-    this.setTime(this.addMinutes(-1 * this.getTimezoneOffset()));
+    this.setTime(this.addMinutes(-420);
     return this;
 }
 
@@ -187,7 +187,7 @@ app.get("/periodic-table", function(req, res) {
 
 
 app.get("/", function(req, res) {
-
+  let currentDate = new Date();
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
