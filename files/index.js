@@ -606,7 +606,6 @@ app.get("/submit", function(req, res) {
 });
 app.post("/submit", urlencodedParser, function(req, res) {
   var tampered = false;
-
   //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
   for (var key in req.body) {
     if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed") {

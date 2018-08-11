@@ -805,10 +805,15 @@
       <div id = "LC" class = "LC box" name = "LC">
         <div class = "header">LC's that are open</div>
         <div class = "openRooms">
-          <% lcSchedule.forEach(function(LC) { %>
-            <div class = "LCRoom"><%=LC%></div>
-            <br>
-          <% }); %>
+          <% if (lcSchedule !== false) { %>
+            <% lcSchedule.forEach(function(LC) { %>
+              <div class = "LCRoom"><%=LC%></div>
+              <br>
+            <% }); %>
+          <% } else { %>
+            <div class = "LCRoom">It's the weekend!</div>
+          <% } %>
+
 
         </div>
       </div>
