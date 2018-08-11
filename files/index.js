@@ -1,3 +1,23 @@
+
+
+
+//i use this to convert from UTC to local time
+Date.prototype.addMinutes = function(h) {
+   this.setTime(this.getTime() + (h*60*1000));
+   return this;
+}
+
+
+//sets a date to local time
+Date.prototype.local = function() {
+    this.setTime(this.addMinutes(-1 * this.getTimezoneOffset()));
+    return this;
+}
+
+console.log((new Date()).local);
+
+
+
 function getDays(month) {
   switch (month) {
     case 0:
@@ -167,7 +187,8 @@ app.get("/periodic-table", function(req, res) {
 
 
 app.get("/", function(req, res) {
-  let currentDate = new Date();
+  let currentDate = (new Date()).addMinutes(-);
+  let offset = currentDate.getTimezoneOffset();
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
