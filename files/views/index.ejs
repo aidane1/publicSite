@@ -321,6 +321,7 @@
           border-radius: 10px;
           display: none;
           overflow: auto;
+          z-index: 5000;
         }
         #x {
           position: absolute;
@@ -614,15 +615,7 @@
         .classHolder {
           width: 340px;
         }
-        .allHomework {
-          width: 30%;
-          height: 70%;
-          left: 35%;
-          min-width: 500px;
-          top: 15%;
-          z-index: 50;
-          position: absolute;
-        }
+ 
         .featured {
           width: 50%;
           height: 1000px;
@@ -644,6 +637,7 @@
           border-radius: 10px;
           display: none;
           overflow: auto;
+          min-width: 500px;
         }
       }
 
@@ -685,7 +679,7 @@
       <div class = "modal" onclick="removeModal()" id = "modal">
 
       </div>
-      <div id = "allHomework" class = "allHomework" style = "z-index: 5000">
+      <div id = "allHomework" class = "allHomework">
 
         <div class = "modalHolder">
           <ul class = "courseModalHolder">
