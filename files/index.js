@@ -15,7 +15,7 @@ Date.prototype.local = function() {
 }
 
 console.log((new Date()).local());
-
+console.log((new Date()).addMinutes(60));
 
 
 function getDays(month) {
