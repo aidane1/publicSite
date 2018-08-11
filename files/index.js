@@ -625,16 +625,15 @@ app.post("/submit", urlencodedParser, function(req, res) {
   var tampered = false;
   //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
   for (var key in req.body) {
-    if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed") {
+    if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed" && key != "due") {
       tampered = true;
       console.log("yeet");
     }
   }
 
   //makes sure all fields exist, and are of the proper length
-  if (req.session.userId && !tampered && (req.body.questions || req.body.assignment) && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
+  if (req.session.userId && !tampered && (req.body.questions || req.body.assignment) && req.body.due.length < 60 && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
       //makes a homework object
-      console.log("fucking humans.");
       let homeworkObject = {
         submittedBy: req.body.submittedBy,
         confirmed: req.body.confirmed,
@@ -642,6 +641,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         assignment: profanityFilter(req.body.assignment),
         notes: profanityFilter(req.body.notes),
         questions: profanityFilter(req.body.questions),
+        due: profanityFilter(req.body.due);
         date: (new Date()).local()
       }
       //adds the homework to the course
