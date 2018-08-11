@@ -151,11 +151,14 @@
       .page {
         outline: none;
         font-size: 18px;
+        display: block;
+        margin: auto;
       }
       .questions {
         outline: none;
         font-size: 18px;
-
+        display: block;
+        margin: auto;
       }
       #submitTypes {
         width: 100%;
@@ -282,8 +285,9 @@
       <div id = "submitTypes">
         <button class = "option" onclick = "submitType(1)">Textbook</button>
         <button class = "option" onclick = "submitType(2)">Assignment</button>
+        <div style = "display: block; margin: auto; margin-top: 20px;"><input type = "text" name = "due" id = "due"  /></div>
       </div>
-      <div style = "height: 30px; display: block; margin: auto; margin-top: 20px;"><input type = "text" name = "due" id = "due"  /></div>
+
       <br>
       <div class = "text">notes: </text>
       <textarea class = "notes" name = "notes" maxlength="256" style = "font-size: 18px">
