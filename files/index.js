@@ -14,7 +14,7 @@ Date.prototype.local = function() {
     return this;
 }
 
-console.log((new Date()).local);
+console.log((new Date()).local());
 
 
 
@@ -187,7 +187,7 @@ app.get("/periodic-table", function(req, res) {
 
 
 app.get("/", function(req, res) {
-  
+
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
