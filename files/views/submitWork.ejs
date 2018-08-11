@@ -29,7 +29,11 @@
         var textarea = document.createElement("textarea");
         textarea.name = "assignment";
         var thirdLabel = document.createElement("label");
-
+        let due = document.createElement("input");
+        due.type = "text";
+        due.name = "due";
+        due.placeholder = "due..."
+        due.id = "due"
         if (type === 1) {
           textarea.style.display = "none";
           thirdLabel.style.display = "none";
@@ -50,14 +54,15 @@
           input.value = "";
           secondInput.value = "";
         }
-        submitBox.appendChild(label);
+        input.setAttribute("placeholder", "Page #...");
+        secondInput.setAttribute("placeholder", "Question #'s ...");
+        
         submitBox.appendChild(input);
         submitBox.appendChild(document.createElement("br"));
         submitBox.appendChild(document.createElement("br"));
-        submitBox.appendChild(secondLabel);
         submitBox.appendChild(secondInput);
-        submitBox.appendChild(thirdLabel);
         submitBox.appendChild(textarea);
+        submitBox.appendChild(due);
 
       }
 
@@ -218,7 +223,9 @@
       }
       #due {
         font-size: 18px;
-        position: relative;
+        display: block;
+        margin: auto;
+        margin-top: 20px;
       }
       @media screen and (max-width: 320px) {
 
@@ -285,7 +292,7 @@
       <div id = "submitTypes">
         <button class = "option" onclick = "submitType(1)">Textbook</button>
         <button class = "option" onclick = "submitType(2)">Assignment</button>
-        <div style = "display: block; margin: auto; margin-top: 20px;"><input type = "text" name = "due" id = "due"  /></div>
+
       </div>
 
       <br>
