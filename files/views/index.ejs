@@ -675,7 +675,7 @@
       xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           let alerts = this.responseText;
-          if (confirm(alerts)) {
+          if (alerts && confirm(alerts)) {
             postAlerts(true);
           }
         }
