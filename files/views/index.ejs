@@ -657,6 +657,7 @@
       xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           let alerts = this.responseText;
+          console.log(alerts);
           alerts.forEach(function(alert) {
             confirm(alert);
           });
