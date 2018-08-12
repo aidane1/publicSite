@@ -674,7 +674,7 @@
         if (this.readyState == 4 && this.status == 200) {
           let alerts = this.responseText;
           if (confirm(alerts)) {
-            postAlerts("true");
+            postAlerts(true);
           }
         }
       }
