@@ -654,6 +654,7 @@
         // code for old IE browsers
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
       }
+      xmlhttp.open("POST", "/alerts");
       xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
       xmlhttp.onreadystatechange = function() {
 
