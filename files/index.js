@@ -931,7 +931,13 @@ app.get("/alerts", function(req, res) {
   }
 });
 app.post("/alerts", urlencodedParser, function(req, res) {
-  console.log(req.body);
+  if (req.session.userId && req.body.delete === "true") {
+    User.findOneAndUpdate({_id : req.session.userId}, {$pop: {alerts: 1}}).then(function() {
+      res.send("removed alert successfully!");
+    });
+  } else {
+    res.send("failed to remove alert.");
+  }
 });
 
 let io = socket(server);
