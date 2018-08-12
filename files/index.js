@@ -804,9 +804,10 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
       }
       Posts.Comment.create(params, function(err, comment) {
         Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-            Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
-              res.redirect("/questions/" + req.params.id);
-            });
+          User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: ["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]}});
+          Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+            res.redirect("/questions/" + req.params.id);
+          });
         });
       })
     });
@@ -924,7 +925,8 @@ app.get("/view-courses", function(req, res) {
 app.get("/alerts", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      res.send(user.alerts[user.alerts.length-1]);
+      let alert = user.alerts[user.alerts.length-1];
+      res.send(alert);
     });
   } else {
     res.send([]);
