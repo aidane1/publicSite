@@ -923,7 +923,7 @@ app.get("/view-courses", function(req, res) {
 
 app.get("/alerts", function(req, res) {
   if (req.session.userId) {
-    User.find({_id : req.session.userId}, function(err, user) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
       console.log(user.alerts);
       res.send(user.alerts);
     });
