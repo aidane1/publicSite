@@ -657,10 +657,7 @@
       xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           let alerts = this.responseText;
-          console.log(alerts);
-          for (var i = 0; i < alerts.length; i++) {
-            confirm(alerts[i]);
-          }
+          confirm(alerts);
         }
       }
       xmlhttp.open("GET", "/alerts", true);
