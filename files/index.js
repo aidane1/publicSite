@@ -801,8 +801,8 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
     if (req.body.deleteComment) {
       User.findOne({_id : req.session.userId}, function(err, user) {
         if (user.permissions == "admin") {
-          Posts.Posts.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
-            Posts.Comments.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
+          Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
+            Posts.Comment.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
               res.redirect("/questions/" + req.params.id);
             });
           });
