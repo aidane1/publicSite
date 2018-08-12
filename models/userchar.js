@@ -48,6 +48,10 @@ const UserSchema = new Schema({
   permissions: {
     type: String,
     default: "user"
+  },
+  alerts: {
+    type: Array,
+    default: []
   }
 });
 
