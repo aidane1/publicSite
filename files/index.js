@@ -785,7 +785,9 @@ app.get("/questions/:id", function(req, res) {
         res.redirect("/questions")
       } else {
         Posts.Comment.find({_id : post.comments}, function(error, comments) {
-          res.render("comment", {post: post, comments: comments, id : req.params.id});
+          User.findOne({_id :req.session.userId}, function(err_or, user) {
+            res.render("comment", {post: post, comments: comments, id : req.params.id, user: user});
+          });
         });
       }
     });
