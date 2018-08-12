@@ -921,6 +921,10 @@ app.get("/view-courses", function(req, res) {
   }
 });
 
+app.get("alerts", function(req, res) {
+  res.send("hey you did it!");
+});
+
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {

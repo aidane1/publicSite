@@ -615,7 +615,7 @@
         .classHolder {
           width: 340px;
         }
- 
+
         .featured {
           width: 50%;
           height: 1000px;
@@ -644,6 +644,27 @@
 
 
     </style>
+    <script>
+    function loadAlerts() {
+      let xmlhttp;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }
+      }
+      xmlhttp.open("GET", "alerts", true);
+      xmlhttp.send();
+    }
+    loadAlerts();
+
+    </script>
   </head>
   <body>
 
