@@ -796,22 +796,37 @@ app.get("/questions/:id", function(req, res) {
 });
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      let params = {
-        parentPost: mongoose.Types.ObjectId(req.params.id),
-        body: req.body.comment,
-        submittedBy: user.username
-      }
-      Posts.Comment.create(params, function(err, comment) {
-        Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-          User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}}).then(function(err, user) {
-            Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+    if (req.body.deleteComment) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        if (req.body.permissions == "admin") {
+          Posts.Posts.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
+            Posts.Comments.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
               res.redirect("/questions/" + req.params.id);
             });
-          })
-        });
-      })
-    });
+          });
+        } else {
+
+        }
+      });
+
+    } else {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        let params = {
+          parentPost: mongoose.Types.ObjectId(req.params.id),
+          body: req.body.comment,
+          submittedBy: user.username
+        }
+        Posts.Comment.create(params, function(err, comment) {
+          Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
+            User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}}).then(function(err, user) {
+              Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+                res.redirect("/questions/" + req.params.id);
+              });
+            })
+          });
+        })
+      });
+    }
   }
 });
 
@@ -927,7 +942,6 @@ app.get("/alerts", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let alert = user.alerts[user.alerts.length-1];
-      console.log(alert);
       res.send(alert);
     });
   } else {

@@ -10,6 +10,23 @@
         var comment = document.getElementById("submitComment");
         comment.classList.toggle("commentDown");
       }
+      function deleteFunction(parentPost, id) {
+        if (confirm("Are you sure you would like to delete this comment?")) {
+
+          var form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/questions/" + parentPost;
+          var input = document.createElement("input");
+          input.type = "hidden";
+          input.value = id;
+          input.name = "deleteComment";
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        } else {
+
+        }
+      }
     </script>
     <style>
       * {
@@ -114,6 +131,12 @@
         margin: auto;
         outline: none;
       }
+      .delete {
+        width: 75px;
+        height: 30px;
+        background-color: red;
+        text-align: center;
+      }
       @media screen and (max-width: 400px) {
         .textarea {
           height: 200px;
@@ -149,6 +172,12 @@
               <div class = "submittedBy">
                 <%= comment.submittedBy %>
               </div>
+              <% if (user.permissions === "admin") { %>
+
+                <div class = "delete" onclick = "deleteFunction('<%=id%>, <%=comment._id%>')">
+                  delete
+                </div>
+              <% }%>
             </div>
           <% }); %>
         <% } else { %>
