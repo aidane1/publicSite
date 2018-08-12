@@ -804,10 +804,13 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
       }
       Posts.Comment.create(params, function(err, comment) {
         Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-          User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: ["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]}});
-          Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
-            res.redirect("/questions/" + req.params.id);
-          });
+          console.log(post.submittedBy);
+          User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: ["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]}}).then(function(err, user) {
+            console.log(user);
+            Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+              res.redirect("/questions/" + req.params.id);
+            });
+          })
         });
       })
     });
