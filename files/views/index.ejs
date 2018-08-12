@@ -658,9 +658,9 @@
         if (this.readyState == 4 && this.status == 200) {
           let alerts = this.responseText;
           console.log(alerts);
-          alerts.forEach(function(alert) {
-            confirm(alert);
-          });
+          for (var i = 0; i < alerts.length; i++) {
+            confirm(alerts[i]);
+          }
         }
       }
       xmlhttp.open("GET", "/alerts", true);
