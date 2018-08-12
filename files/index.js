@@ -922,7 +922,13 @@ app.get("/view-courses", function(req, res) {
 });
 
 app.get("/alerts", function(req, res) {
-  res.send("hey you did it!");
+  if (req.session.userId) {
+    User.find({_id : req.session.userId}, function(err, user) {
+      res.send(user.alerts);
+    });
+  } else {
+    res.send([]);
+  }
 });
 
 let io = socket(server);
