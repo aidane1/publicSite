@@ -927,6 +927,7 @@ app.get("/alerts", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let alert = user.alerts[user.alerts.length-1];
+      console.log(alert);
       res.send(alert);
     });
   } else {
