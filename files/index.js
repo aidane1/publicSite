@@ -799,6 +799,7 @@ app.get("/questions/:id", function(req, res) {
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.body.deleteComment) {
+      console.log(req.body.deleteComment);
       User.findOne({_id : req.session.userId}, function(err, user) {
         if (user.permissions == "admin") {
           Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
