@@ -924,7 +924,7 @@ app.get("/view-courses", function(req, res) {
 app.get("/alerts", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      res.send(user.alerts);
+      res.send(user.alerts[user.alerts.length-1]);
     });
   } else {
     res.send([]);
