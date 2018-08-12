@@ -479,7 +479,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
     });
 
   } else {
-    res.redirect("/login");
+    res.redirect("/");
   }
 });
 
