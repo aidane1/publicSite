@@ -921,7 +921,7 @@ app.get("/view-courses", function(req, res) {
   }
 });
 
-app.get("alerts", function(req, res) {
+app.get("/alerts", function(req, res) {
   res.send("hey you did it!");
 });
 
