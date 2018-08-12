@@ -645,6 +645,21 @@
 
     </style>
     <script>
+    function postAlerts(deleteMessage) {
+      let xmlhttp;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+      xmlhttp.onreadystatechange = function() {
+
+      }
+      xmlhttp.send(encodeURI("delete=" + deleteMessage));
+    }
     function loadAlerts() {
       let xmlhttp;
       if (window.XMLHttpRequest) {
