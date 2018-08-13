@@ -249,7 +249,7 @@
         }
 
         .classHolder {
-          width: 95%;
+          width: 100%;
           position: absolute;
           height: 70px;
           display: block;
@@ -959,11 +959,21 @@
 
       <div id = "resources" class = "resources box" name = "resources">
         <div class = "header" style = "margin-bottom: 15px;"><h1>Resources</h1></div>
+      <% if (courses.length === 5) { %>
+        <div class = "classHolder" style = "font-size: 15px;">
+      <% } else { %>
         <div class = "classHolder">
+      <% } %>
+
           <ul class = "helperHolder">
 
             <% courses.forEach(function(course) { %>
-              <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
+              <% if (courses.length === 5) { %>
+                <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer; padding: 9px;"><%=course.course%></li>
+              <% } else { %>
+                <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
+              <% } %>
+
             <% }); %>
 
           </ul>
