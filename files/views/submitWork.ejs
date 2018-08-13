@@ -41,7 +41,7 @@
         } else if (type === 2) {
           input.type = "hidden";
           secondInput.type = "hidden";
-        
+
           textarea.className = "assignment";
           textarea.setAttribute("placeholder", "Assignment (please specify)...");
           input.value = "";
@@ -221,7 +221,12 @@
         margin: auto;
       }
       @media screen and (max-width: 320px) {
-
+        .submit {
+          position: relative;
+          display: block;
+          top: 15px;
+          margin: auto;
+        }
       }
       @media screen and (min-width: 768px) {
         .submit {
