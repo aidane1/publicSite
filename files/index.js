@@ -570,7 +570,7 @@ app.get("/calendar", function(req, res) {
   Events.find({$and: [{date: {$gte: new Date(2018, 8, 0, 0, 0, 0, 0)}}, {date: {$lte: new Date(2019, 5, 29, 0, 0, 0, 0)}}]}, function(err, yearEvent) {
 
     // starts the first day of the calendar on september first of that year
-    let theDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0, 0, 0, 0, 0).getDay();
+    let theDay = new Date(2018, 8, 0, 0, 0, 0, 0).getDay();
     // declares an array that will be filled with the info for every day of the year
     let daysArray = [];
     let foundEvent = false;
