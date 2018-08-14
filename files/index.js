@@ -546,6 +546,13 @@ app.post("/add", urlencodedParser, function(req, res) {
               res.redirect("/add");
             });
           }
+        } else if (req.body.alert) {
+          if (req.body.alert) {
+            User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}})
+            User.update({}, {$push:{alerts: [[req.body.alert]]}}).then(function() {
+
+            });
+          }
         }
       } else {
         res.redirect("/login");
