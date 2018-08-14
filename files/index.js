@@ -548,9 +548,9 @@ app.post("/add", urlencodedParser, function(req, res) {
           }
         } else if (req.body.alert) {
           if (req.body.alert) {
-            
-            User.update({}, {$push:{alerts: [[req.body.alert]]}}).then(function() {
 
+            User.update({}, {$push:{alerts: [[req.body.alert]]}}).then(function() {
+              res.redirect("/add");
             });
           }
         }
