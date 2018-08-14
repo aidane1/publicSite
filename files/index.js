@@ -526,7 +526,8 @@ app.post("/add", urlencodedParser, function(req, res) {
               month: req.body.month-1,
               day: req.body.day-1,
               time: req.body.time,
-              info: req.body.info
+              info: req.body.info,
+              date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0);
             }
             Events.create(eventData, function() {
               res.redirect("/add");
@@ -569,7 +570,7 @@ app.get("/calendar", function(req, res) {
   Events.find({}, function(err, yearEvent) {
 
     // starts the first day of the calendar on september first of that year
-    let theDay = new Date("september 1" + currentDate.getFullYear().toString()).getDay();
+    let theDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0, 0, 0, 0, 0).getDay();
     // declares an array that will be filled with the info for every day of the year
     let daysArray = [];
     let foundEvent = false;
