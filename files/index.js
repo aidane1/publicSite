@@ -527,7 +527,7 @@ app.post("/add", urlencodedParser, function(req, res) {
               day: req.body.day-1,
               time: req.body.time,
               info: req.body.info,
-              date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0);
+              date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0)
             }
             Events.create(eventData, function() {
               res.redirect("/add");
