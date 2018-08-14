@@ -567,7 +567,7 @@ app.get("/calendar", function(req, res) {
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
   //finds ALL events. will fix later.
   //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
-  Events.find({}, function(err, yearEvent) {
+  Events.find({$and: [{date: {$gte: new Date(2018, 8, 0, 0, 0, 0, 0)}}, {date: {$lte: new Date(2019, 5, 29, 0, 0, 0, 0)}}]}, function(err, yearEvent) {
 
     // starts the first day of the calendar on september first of that year
     let theDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0, 0, 0, 0, 0).getDay();
