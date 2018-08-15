@@ -750,6 +750,14 @@
         <div class = "block">P V S S</div>
         <div class = "displayEvents">
           <center><h2 style = "color: white">Upcoming Events: </h2></center>
+          <%soonEvents.forEach(function(event) { %>
+            <div class = "soonEvent">
+              <%=event.dateDescription%>
+              <br>
+              <%=event.info%>
+            </div>
+            <br>
+          <% }) %>
         </div>
         <!-- <div class = "displayTweets">
 
