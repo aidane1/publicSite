@@ -2,6 +2,8 @@
 
 
 //i use this to convert from UTC to local time
+
+//
 Date.prototype.addMinutes = function(h) {
    this.setTime(this.getTime() + (h*60*1000));
    return this;
