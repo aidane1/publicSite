@@ -546,6 +546,8 @@
         }
         .displayEvents {
           width: 85%;
+          max-height: 100px;
+          overflow: auto;
           display: block;
           margin: auto;
           margin-top: 50px;
@@ -761,6 +763,11 @@
             </div>
             <br>
           <% }) %>
+          <% if (soonEvents.length == 0) { %>
+            <div class = "soonEvent">
+              No upcoming events!
+            </div>
+          <% } %>
         </div>
         <!-- <div class = "displayTweets">
 

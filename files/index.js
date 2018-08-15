@@ -1,4 +1,5 @@
-
+// Note for the future: i messed up the ISO date format. i assumed it did the same thing with days that it did
+//with months. That is, subtract one from the actual day. it does not. please change in the future
 
 
 //i use this to convert from UTC to local time
