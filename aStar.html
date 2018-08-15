@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script>
+      function calcH(node, end) {
+        let xDif = end[0] - node[0];
+        let yDif = end[1] - node[1];
+        return Math.sqrt(xDif**2 + yDif**2);
+      }
+      function nodeInList (node, list) {
+        let found = false;
+        list.forEach(function(currentNode) {
+          if (currentNode[0] === node[0] && currentNode[1] === node[1]) {
+            found = true;
+          }
+        });
+        return found;
+      }
+      function nodeWithValue(node, list) {
+
+        //found[2] should be infinity
+        let found = [node[0], node[1], 100000];
+        list.forEach(function(currentNode) {
+          if (currentNode[0] == node[0] && currentNode[1] == node[1]) {
+            found = currentNode;
+          }
+        });
+        return found;
+      }
+      function updateNodeList(node, list) {
+        let found = false;
+        for (var i = 0; i < list.length; i++) {
+          if (list[i][0] == node[0] && list[i][1] == node[1]) {
+            found = true;
+            list[i] = node;
+          }
+        }
+        if (!found) {
+          list.push(node);
+        }
+        return list;
+      }
+      function removeNodeFromList(node, list) {
+        let newList = [];
+        for (var i  = 0; i < list.length; i++) {
+          if (list[i][0] == node[0] && list[i][1] == node[1]) {
+
+          } else {
+            newList.push(list[i]);
+          }
+        }
+        return newList;
+      }
+      // console.log(nodeWithValue([2,2], [[3,3, 5], [2,3, 7], [2,2,7]]));
+      // console.log(calcH([0, 0], [1, 1]));
+      function aStar(nodes, start, end, width, height) {
+        let nodesWithValues = [];
+        //node format is [x, y, gCost (weight from start), hCost (distance from end)]
+        start = [start[0], start[1], 0, calcH(start, end)];
+        let openList = [start];
+        let closedList = [];
+
+        let counter = 0;
+        while (openList.length != 0 && counter < 200) {
+          counter++;
+          openList.sort(function(a,b) {
+
+            return (a[2]+a[3]) - (b[2]+b[3]);
+          });
+          let currentNode = openList[0];
+
+          if (currentNode[0] === end[0] && currentNode[1] === end[1]) {
+            console.log(currentNode);
+            return true;
+          }
+          let successorNodes = [];
+          if (currentNode[0] === 0) {
+            if (currentNode[1] === 0) {
+              successorNodes.push([1, 0]);
+              successorNodes.push([0, 1]);
+            } else if (currentNode[1] === height) {
+              successorNodes.push([1, currentNode[1]]);
+              successorNodes.push([0, currentNode[1]-1]);
+            } else {
+              successorNodes.push([0, currentNode[0]-1]);
+              successorNodes.push([0, currentNode[0]+1]);
+              successorNodes.push([1, currentNode[0]]);
+            }
+          } else if (currentNode[0] === width) {
+            if (currentNode[1] === 0) {
+              successorNodes.push([currentNode[0]-1, 0]);
+              successorNodes.push([currentNode[0], 1]);
+            } else if (currentNode[1] === height) {
+              successorNodes.push([currentNode[0]-1, currentNode[1]]);
+              successorNodes.push([currentNode[0], currentNode[1]-1]);
+            } else {
+              successorNodes.push([currentNode[0]-1, currentNode[1]]);
+              successorNodes.push([currentNode[0], currentNode[1]-1]);
+              successorNodes.push([currentNode[0], currentNode[1]+1]);
+            }
+          } else if (currentNode[1] === 0) {
+            successorNodes.push([currentNode[0], 1]);
+            successorNodes.push([currentNode[0]-1, 0]);
+            successorNodes.push([currentNode[0]+1, 0]);
+          } else if (currentNode[1] === height) {
+            successorNodes.push([currentNode[0], currentNode[1]-1]);
+            successorNodes.push([currentNode[0]-1, currentNode[1]]);
+            successorNodes.push([currentNode[0]+1, currentNode[1]]);
+          } else {
+            successorNodes.push([currentNode[0]-1, currentNode[1]]);
+            successorNodes.push([currentNode[0]+1, currentNode[1]]);
+            successorNodes.push([currentNode[0], currentNode[1]+1]);
+            successorNodes.push([currentNode[0], currentNode[1]-1]);
+          }
+
+
+          openList = removeNodeFromList(currentNode, openList);
+          closedList.push(currentNode);
+          for (var i  = 0; i < successorNodes.length; i++) {
+            if (nodeInList(successorNodes[i], closedList)) {
+              //stahp
+
+              continue;
+            }
+            let successorCost = currentNode[2]+1;
+            if (!nodeInList(successorNodes[i], openList)) {
+              // if (successorNodes[i][3] <=)
+            } else if (successorCost >= nodeWithValue(successorNodes[i], nodesWithValues)[2]) {
+              //not good path
+
+              continue;
+            }
+            successorNodes[i] = [successorNodes[i][0], successorNodes[i][1], successorCost, calcH(successorNodes[i], end)];
+            console.log(successorNodes[i]);
+            openList.push(successorNodes[i]);
+            nodesWithValues = updateNodeList(successorNodes[i], nodesWithValues);
+          }
+
+        }
+      }
+
+      aStar([], [5,5], [10,20], 30, 30);
+    </script>
+    <style>
+
+    </style>
+  </head>
+  <body>
+
+  </body>
+</html>
