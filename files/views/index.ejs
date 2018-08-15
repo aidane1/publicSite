@@ -786,7 +786,7 @@
             <% for (var i = theHomeworkGiven[1].length-1; i >= 0; i--) { %>
               <br>
               <% if (theHomeworkGiven[1][i].assignment != "") { %>
-                  <%=theHomeworkGiven[1][i].date%>
+                  <%=theHomeworkGiven[1][i].date.toDateString()%>
                   <br>
                   <%=theHomeworkGiven[1][i].assignment%>
                   <br>
