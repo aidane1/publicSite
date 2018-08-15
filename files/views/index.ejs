@@ -553,6 +553,10 @@
           margin: auto;
           margin-top: 50px;
         }
+        .soonEvents {
+          color: white;
+          font-size: 17px;
+        }
 
 
         @media screen and (max-width: 320px) {
@@ -752,9 +756,7 @@
           <center><h2 style = "color: white">Upcoming Events: </h2></center>
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
-              <%=event.dateDescription%>
-              <br>
-              <%=event.info%>
+              <%=event.dateDescription%> : <%=event.info%>
             </div>
             <br>
           <% }) %>
