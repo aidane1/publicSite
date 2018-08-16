@@ -60,23 +60,40 @@ function reconstructPath(cameFrom, current, start) {
 
   }
   return totalPath;
-
 }
-function removeBad(badList, nodes) {
+function lengthOfPath(cameFrom, current, start) {
+  let length = 0;
+  let found = false;
+  while (!found) {
+    if (current[0] == start[0] && current[1] == start[1]) {
+      found = true;
+    } else {
+      current = cameFrom[current[0].toString() + "," + current[1].toString()];
+      length++;
+    }
+  } return length;
+}
+function removeBad(badList, nodes, extraLength) {
   let newList = [];
-  nodes.forEach(function(node) {
-    let good = true;
-    badList.forEach(function(bad) {
-      if (bad[0] == node[0] && bad[1] == node[1]) {
-        good = false;
+  if (extraLength >= badList.length) {
+    return nodes;
+  } else {
+    badList = badList.slice(extraLength, badList.length);
+    nodes.forEach(function(node) {
+      let good = true;
+      badList.forEach(function(bad) {
+        if (bad[0] == node[0] && bad[1] == node[1]) {
+          good = false;
+        }
+      });
+      if (good) {
+        newList.push(node);
       }
     });
-    if (good) {
-      newList.push(node);
-    }
-  });
-  return newList;
+    return newList;
+  }
 }
+
 function aStar(nodes, start, end, width, height) {
   let nodesWithValues = [];
   //node format is [x, y, gCost (weight from start), hCost (distance from end)]
@@ -134,7 +151,7 @@ function aStar(nodes, start, end, width, height) {
       successorNodes.push([currentNode[0], currentNode[1]+1]);
       successorNodes.push([currentNode[0], currentNode[1]-1]);
     }
-    successorNodes = removeBad(nodes, successorNodes);
+    successorNodes = removeBad(nodes, successorNodes, lengthOfPath(cameFrom, currentNode, start));
     openList = removeNodeFromList(currentNode, openList);
     closedList.push(currentNode);
 
@@ -156,5 +173,6 @@ function aStar(nodes, start, end, width, height) {
   }
   return false;
 }
+
 
 //aStar format is aStar(badNodes, start, end, width of graph, height of graph)
