@@ -759,7 +759,12 @@
           <center><h2 style = "color: white">Upcoming Events: </h2></center>
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
-              <%=event.dateDescription%> : <%=event.info%>
+              <% if (event.longForm) { %>
+                <%=event.dateDescription%> : <%=event.longForm%>
+              <% } else { %>
+                <%=event.dataDescription%> : <%=event.info%>
+              <% } %>
+
             </div>
             <br>
           <% }) %>

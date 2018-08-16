@@ -527,13 +527,14 @@ app.post("/add", urlencodedParser, function(req, res) {
           });
         //makes events
         } else if (req.body.year) {
-          if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
+          if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info && req.body.longInfo) {
             var eventData = {
               year: req.body.year,
               month: req.body.month-1,
               day: req.body.day-1,
               time: req.body.time,
               info: req.body.info,
+              longForm: req.body.longInfo,
               date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0)
             }
             Events.create(eventData, function() {
