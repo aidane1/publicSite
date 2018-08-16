@@ -1039,5 +1039,5 @@ io.on("connection", function(socket) {
 
 
 app.get("*", function(req, res) {
-  res.sendFile(__dirname + "/errors/error404.html");
+  res.sendFile(__dirname + "/errors/aStar.html");
 });
