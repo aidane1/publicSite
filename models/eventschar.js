@@ -25,6 +25,9 @@ const EventSchema = new Schema({
   },
   date: {
     type: Date
+  },
+  longForm: {
+    type: String
   }
 });
 
