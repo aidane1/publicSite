@@ -628,6 +628,7 @@
           list-style-type: none;
           padding: 0;
           display: flex;
+          flex-wrap: nowrap;
         }
         nav a {
           flex-grow: 1;
@@ -641,7 +642,18 @@
         nav .item {
           background-color: black;
           border: 1px solid white;
+          display: none;
         }
+        #logout {
+          display: list-item;
+        }
+        #questions {
+          display: list-item;
+        }
+        #chatroom {
+          display: list-item;
+        }
+
         .backdrop {
 
           display: flex;
@@ -772,7 +784,7 @@
           <!-- <li class = "item"><a href = "#money">Ways to get money</a></li> -->
           <li class = "item"><a href = "#schedule">Schedule and other</a></li>
           <li class = "item"><a href = "#resources">Resources</a></li>
-          <li class = "item"><a href = "/logout">Logout</a></li>
+          <li class = "item" id = "logout"><a href = "/logout">Logout</a></li>
           <li class = "item" id = "chatroom"><a href = "/chatroom">Chatroom</a></li>
           <li class = "item" id = "questions"><a href = "/questions?page=0">Questions</a></li>
 
