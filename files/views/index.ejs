@@ -614,6 +614,34 @@
 
       /* for computers */
       @media screen and (min-width: 768px) {
+        .menuIcon {
+          display: none;
+        }
+        nav {
+          position: fixed;
+          top:-10px;
+          width: 100%;
+          z-index: 15;
+          /* transition: top 0.8s; */
+        }
+        .holder {
+          list-style-type: none;
+          padding: 0;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+        }
+        nav a {
+          text-decoration: none;
+          text-align: center;
+          color: #fff;
+          display: inline;
+          float: left;
+          padding: 10px;
+          font-size: 20px;
+        }
+        .expand {
+          top: -20px;
+        }
         .backdrop {
 
           display: flex;
