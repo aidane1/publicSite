@@ -618,7 +618,7 @@
           display: none;
         }
         nav {
-          position: fixed;
+          position: absolute;
           top:-10px;
           width: 100%;
           z-index: 15;
@@ -628,24 +628,25 @@
           list-style-type: none;
           padding: 0;
           justify-content: flex-start;
-          flex-wrap: wrap;
+          display: flex;
         }
         nav a {
+          flex-grow: 1;
           text-decoration: none;
           text-align: center;
           color: #fff;
           display: inline;
-          float: left;
+          /* float: left; */
           padding: 10px;
           font-size: 20px;
         }
-        .expand {
-          top: -20px;
+        nav .item {
+          background-color: #353538;
+          border: 1px solid white;
         }
         .backdrop {
 
           display: flex;
-
           flex-wrap: wrap;
           justify-content:center;
         }
