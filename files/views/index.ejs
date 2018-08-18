@@ -6,6 +6,8 @@
     <meta name = "description" content = "The PVSS student home page. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
     <meta name = "theme-color" content = "#f77d13" />
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name = "apple-mobile-web-app-status-bar-style" content = "#FC7753">
+    <meta name = "apple-mobile-web-app-title" content = "PVSS">
     <link rel = "manifest" href = "public/manifests/home.json  " />
     <link rel="apple-touch-icon" sizes="57x57" href="public/images/apple-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="public/images/apple-icon-72x72.png" />
@@ -13,6 +15,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="public/images/apple-icon-144x144.png" />
     <link rel = "icon" sizes = "128x128" href = "public/images/icon-128x128.png" />
     <link rel = "icon" sizes = "192x192" href = "public/images/icon-192x192.png" />
+    <link rel = "apple-touch-startup-image" href = "public/images/icon-512x512.png" />
     <title>PVSS student website | Home</title>
     <script>
       window.onload = function() {
@@ -486,8 +489,8 @@
             display:block;
         }
         .menuIcon {
-          width: 35px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
           position: fixed;
           top: 10px;
           right: 15px;
