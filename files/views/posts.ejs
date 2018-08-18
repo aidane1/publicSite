@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script>
+    window.onload  = function() {
+
+
+
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        let currentElement;
+        let startValue;
+        let finished = false;
+        let currentVertical = [0, 0];
+        let allowed = false;
+        let pastAllowed = false;
+        document.addEventListener("touchstart", function(event) {
+          let xVal = (event.touches["0"].clientX);
+          startValue = xVal;
+          currentVertical = [event.touches["0"].clientX, event.touches["0"].clientY];
+
+          let selectedElement = (event.target.parentNode.classList.contains("question") ? event.target.parentNode : event.target);
+          if (selectedElement.classList.contains("question")) {
+            currentElement = selectedElement;
+          } else {
+            currentElement = false;
+          }
+        });
+        document.addEventListener("touchmove", function(event) {
+          currentV = currentVertical[1] - event.touches["0"].clientY;
+          currentH = currentVertical[0] - event.touches["0"].clientX;
+          if (Math.abs(currentV/currentH) < 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20) && !pastAllowed) {
+            allowed = true;
+          } else if (Math.abs(currentV/currentH) > 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20)) {
+            pastAllowed = true;
+          }
+          if (!currentElement) {
+
+          } else if (allowed) {
+            let xVal = event.touches["0"].clientX;
+            currentElement.style.right = (startValue - xVal).toString() + "px";
+
+            if (startValue - xVal > 100 && !finished) {
+              finished = true;
+
+              for (var i = 0; i < currentElement.children.length; i++) {
+                if (currentElement.children[i].classList.contains("replyBox")) {
+                  currentElement.children[i].classList.add("boxFull");
+                }
+              }
+            }
+            if (finished && (startValue - xVal < 100)) {
+              finished = false;
+
+              for (var i = 0; i < currentElement.children.length; i++) {
+                if (currentElement.children[i].classList.contains("replyBox")) {
+                  currentElement.children[i].classList.remove("boxFull");
+                }
+              }
+
+            }
+          }
+        });
+        document.addEventListener("touchend", function(event) {
+          pastAllowed = false;
+          if (!currentElement || !allowed || currentElement === undefined) {
+
+          } else {
+            let acceleration = 100;
+            let preVelocity = 0;
+            let velocity = 0;
+            var ourInterval = setInterval(function() {
+              preVelocity += acceleration;
+              velocity = (Math.sqrt(preVelocity));
+              if (velocity > 10) {
+                velocity = 10;
+              }
+              var interval = (parseInt(currentElement.style.right) > 0 ? 1 : -1);
+              currentElement.style.right = (parseInt(currentElement.style.right) - interval*velocity*2).toString() + "px";
+              if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 21) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -21)) {
+                var replyBoxes = document.getElementsByClassName("replyBox");
+                for (var i = 0; i < replyBoxes.length; i++) {
+                  replyBoxes[i].classList.remove("boxFull");
+                }
+                currentElement.style.right = "0px";
+                clearInterval(ourInterval);
+                if (finished) {
+                  window.location.replace("https://www.pvstudents.ca/questions/" + currentElement.id);
+                }
+                currentElement = "";
+                startValue = 0;
+                finished = false;
+                allowed = false;
+              }
+
+            }, 1);
+          }
+        });
+      } else {
+        document.addEventListener("click", function(event) {
+          let target = event.target.parentNode;
+
+          if (target.classList.contains("question")) {
+            window.location.replace("https://www.pvstudents.ca/questions/" + target.id);
+          }
+        });
+      }
+    }
+    </script>
+    <style>
+      :root {
+        --bg-color: #FC7753;
+        --info-color: #403D58;
+        --button-color: #66D7D1;
+        --border-color: #DBD56E;
+        --text-color: #F2EFEA;
+      }
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      html {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        -webkit-text-size-adjust: 100%
+      }
+      body {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        background-color: var(--bg-color);
+      }
+      .questionHolder {
+        width: 100%;
+        max-width: 700px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: fixed;
+        top: 50px;
+        bottom: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+
+      }
+      .question {
+        color: #eee;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid grey;
+        border-top: 1px solid grey;
+        margin-top: 30px;
+        margin-bottom: 5px;
+        position: relative;
+        right: 0px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: black;
+
+      }
+      .replyBox {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        right: -100%;
+        top: 0px;
+        background-color: #004720;
+      }
+      .boxFull {
+        background-color: #28bf41;
+      }
+      .submittedBy {
+        font-size: 10px;
+      }
+      .reply {
+        font-size: 15px;
+        height: 15px;
+        position: absolute;
+        top: 30%;
+      }
+      .header {
+        width: 100%;
+        height: 40px;
+        text-align: center;
+        border-bottom: 1px solid black;
+        color: var(--text-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class = 'header'><h1><%=user%></h1></div>
+    <div class = "questionHolder">
+      <% posts.forEach(function(post) { %>
+        <div class = "question" id = "<%=post._id%>">
+          <div class = "questionTitle"><%=post.title%></div>
+          <div class = "submittedBy">
+            <% if (post.anonymous) { %>
+              anon
+            <% } else { %>
+              <%=post.submittedBy%>
+            <% } %>
+          </div>
+          <div class = "replyBox">
+            <div class = "reply">OPEN</div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </body>
+</html>

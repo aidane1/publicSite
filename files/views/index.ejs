@@ -38,11 +38,11 @@
     </script>
     <style>
       :root {
-        --bg-color: #FC7753;
-        --info-color: #403D58;
-        --button-color: #66D7D1;
-        --border-color: #DBD56E;
-        --text-color: #F2EFEA;
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
       }
       html {
         -webkit-text-size-adjust: 100%;
@@ -172,7 +172,7 @@
         border-radius: 8px;
         margin-top: 5px;
         padding: 1px;
-        color : white;
+        color : var(--text-color);
       }
       .header2 {
         width: 90%;
@@ -411,6 +411,7 @@
           table-layout: fixed;
           text-align: center;
           border-collapse: collapse;
+          color: var(--text-color);
         }
         .shownCalendar tr td {
           border: 2px solid black;
@@ -428,6 +429,7 @@
           text-align: center;
           font-size: 35px;
           margin-bottom: 5px;
+          color: var(--text-color);
         }
         .event {
           position: absolute;
@@ -1055,8 +1057,8 @@
       <div id = "schedule" class = "schedule box" name = "schedule">
         <div class = "header"><h1>Schedule and other</h1></div>
         <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule">My Schedule</a></div>
-
         <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">Other Courses</a></div>
+        <div class = "scheduleHref" style = "margin-top: 50px"><a href=  "/users/<%=username%>">Personalize Account</a></div>
       </div>
 
 

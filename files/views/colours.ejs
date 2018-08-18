@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      :root {
+        --bg-color: #FC7753;
+        --info-color: #403D58;
+        --button-color: #66D7D1;
+        --border-color: #DBD56E;
+        --text-color: #F2EFEA;
+      }
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+        color: var(--text-color);
+      }
+      body {
+        margin: 0px;
+        background-color: var(--bg-color);
+        /* background-color: black; */
+      }
+      #pallet {
+        width: 50%;
+
+        display: inline-block;
+        border: 2px solid black;
+      }
+      #pallet div {
+        width: 100%;
+        height: 50px;
+        text-align: center;
+      }
+      .matches {
+        width: 50%;
+        float: left;
+        display: inline;
+        /* color: white; */
+
+      }
+      .matches div {
+        width: 100%;
+        height: 50px;
+        text-align: right;
+        font-size: 18px;
+      }
+      .save {
+        display: block;
+        width: 95%;
+        background-color: var(--button-color);
+        text-align: center;
+        margin: auto;
+        margin-top: 50px;
+        border-radius: 10px;
+      }
+      .save div {
+        padding: 25px;
+        color: var(--text-color);
+        font-size: 25px;
+      }
+
+      .secondary {
+        display: none;
+      }
+
+      .first {
+
+
+      }
+      .pallet {
+        width: 100%;
+        height: 60px;
+        background-color: black;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        border: 3px solid black;
+      }
+      .colour {
+        width: 14%;
+        height: 100%;
+        display: inline-block;
+        color:white;
+      }
+      .select {
+        width: 24%;
+        height: 100%;
+        float: right;
+        text-align: center;
+        border-left: 5px solid black;
+        background-color: var(--button-color);
+        font-size: 40px;
+        color: var(--text-color);
+      }
+      .cancel {
+        display: block;
+        width: 95%;
+        text-align: center;
+        margin-top: 50px;
+        border-radius: 10px;
+      }
+      .cancel a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 15px;
+        background-color: var(--button-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "first" id = "first">
+      <!-- <div class = "pallet" id = "pallet0">
+        <div class = "colour" style = "background-color: #FC7753"></div>
+        <div class = "colour" style = "background-color: #403D58"></div>
+        <div class = "colour" style = "background-color: #66D7D1"></div>
+        <div class = "colour" style = "background-color: #DBD56E"></div>
+        <div class = "colour" style = "background-color: #F2EFEA"></div>
+        <div class = "select">&#10003;</div>
+      </div> -->
+      <%for (var key in colour) {%>
+        <div class = "pallet">
+          <div class = "colour" style = "background-color: <%=colour[key].colour1%>"></div>
+          <div class = "colour" style = "background-color: <%=colour[key].colour2%>"></div>
+          <div class = "colour" style = "background-color: <%=colour[key].colour3%>"></div>
+          <div class = "colour" style = "background-color: <%=colour[key].colour4%>"></div>
+          <div class = "colour" style = "background-color: <%=colour[key].colour5%>"></div>
+          <div class = "select" onclick  ="selectFunction(this)">&#10003;</div>
+        </div>
+      <% } %>
+    </div>
+    <div class = "secondary" id  = "secondary">
+      Drag and drop the colours in to the place you'd like!
+      <br>
+      <br>
+      <div class = "matches">
+        <div>Background color: </div>
+        <div>Infobox color: </div>
+        <div>Button color: </div>
+        <div>Border color: </div>
+        <div>Text color: </div>
+      </div>
+      <div id = "pallet">
+        <div style = "background-color: #FC7753"></div>
+        <div style = "background-color: #403D58"></div>
+        <div style = "background-color: #66D7D1"></div>
+        <div style = "background-color: #DBD56E"></div>
+        <div style = "background-color: #F2EFEA"></div>
+      </div>
+      <div class = "save" onclick = "saveFunction()"><div>Save!</div></div>
+      <div class = "cancel"><a href = "/users/<%=user%>">Cancel</a></div>
+    </div>
+
+  </body>
+  <script src = "/public/js/Sortable.min.js"></script>
+  <script>
+    var el  = document.getElementById("pallet");
+    var sortable = Sortable.create(el, {animation: 150});
+    function selectFunction(element) {
+      let colourList = [];
+      let colours = (element.parentNode.children);
+      let pallet = document.getElementById("pallet").children;
+      console.log(pallet);
+      for (var i = 0; i < pallet.length; i++) {
+        pallet[i].style.backgroundColor = colours[i].style.backgroundColor;
+      }
+      document.getElementById("first").style.display = "none";
+      document.getElementById("secondary").style.display = "block";
+    }
+    function saveFunction() {
+      let colours = document.getElementById("pallet").children;
+      let colourArray = [];
+      for (var i = 0; i < colours.length; i++) {
+        colourArray.push(colours[i].style.backgroundColor);
+      }
+      console.log(colourArray);
+      let xmlhttp;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.open("POST", "/users/<%=user%>/colours");
+      xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          window.location.href = "/users/<%=user%>";
+        }
+      }
+      let string = "";
+      for (var i = 0; i < colourArray.length; i++) {
+        string += ("colour" + (i+1).toString() + "=" + colourArray[i]);
+        if (i != colourArray.length -1) {
+          string += "&";
+        }
+      }
+      console.log(string);
+      xmlhttp.send(encodeURI(string));
+    }
+  </script>
+</html>

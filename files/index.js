@@ -118,6 +118,8 @@ let Posts = require("../models/postchar.js");
 let contents = fs.readFileSync("../eVariables/variables.json");
 contents = JSON.parse(contents);
 
+
+
 let nodemailer = require("nodemailer");
 
 
@@ -161,13 +163,13 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 
 app.enable('trust proxy');
-
-
+//
+//
 app.use (function (req, res, next) {
   if (req.secure) {
     next();
   } else {
-    res.redirect('https://' + req.headers.host + req.url);
+    res.redirect('http://' + req.headers.host + req.url);
   }
 });
 
@@ -252,7 +254,7 @@ app.get("/", function(req, res) {
                   soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
                 }
 
-                res.render("index", {courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
+                res.render("index", {colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
               });
               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
             });
@@ -627,7 +629,13 @@ app.get("/calendar", function(req, res) {
       //pushes this month to the array
       monthsArray.push(currentMonth);
     }
-    res.render("calendar", {calendar : monthsArray, months : monthsNames});
+    if (req.session.userId) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors});
+      });
+    } else {
+      res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: ""}});
+    }
   });
 
 });
@@ -641,7 +649,7 @@ app.get("/submit", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       Course.find({_id : user.courses}, function(err, courses) {
-        res.render("submitWork", {user : user.username, courses : courses, error : ""});
+        res.render("submitWork", {user : user.username, courses : courses, error : "", colours: user.colors});
       });
     });
   } else {
@@ -649,13 +657,12 @@ app.get("/submit", function(req, res) {
   }
 });
 app.post("/submit", urlencodedParser, function(req, res) {
-  console.log(req.body);
   var tampered = false;
   //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
   for (var key in req.body) {
     if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed" && key != "due") {
       tampered = true;
-      console.log("yeet");
+
     }
   }
 
@@ -702,7 +709,9 @@ app.get("/logout", function(req, res) {
 app.get("/suggestions", function(req, res) {
   res.cookie("path", "/suggestions");
   if (req.session.userId) {
-    res.render("suggestions");
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      res.render("suggestions", {colours: user.colors});
+    });
   } else {
     res.redirect("/login");
   }
@@ -757,7 +766,7 @@ app.get("/questions", function(req, res) {
         posts = posts.slice((parseInt(req.query.page))*20);
         User.findOne({_id : req.session.userId}, function(error, user) {
           Posts.Post.countDocuments({}, function(err, count) {
-            res.render("questions", {posts: posts, user: user, page: parseInt(req.query.page), max: Math.ceil(count/20)});
+            res.render("questions", {posts: posts, user: user, colours: user.colors, page: parseInt(req.query.page), max: Math.ceil(count/20)});
           });
         })
       });
@@ -814,7 +823,7 @@ app.get("/questions/:id", function(req, res) {
       } else {
         Posts.Comment.find({_id : post.comments}, function(error, comments) {
           User.findOne({_id :req.session.userId}, function(err_or, user) {
-            res.render("comment", {post: post, comments: comments, id : req.params.id, user: user});
+            res.render("comment", {post: post, comments: comments, id : req.params.id, user: user, colours: user.colors});
           });
         });
       }
@@ -876,7 +885,7 @@ app.get("/chatroom", function(req,res) {
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
         res.cookie("sessionID", user._id);
-        res.render("roomchat", {texts: texts, permissions : user.permissions});
+        res.render("roomchat", {texts: texts, permissions : user.permissions, colours: user.colors});
       });
 
     });
@@ -959,7 +968,7 @@ app.get("/view-courses", function(req, res) {
             courses.forEach(function(course) {
             blockObject[course.block] = [course.course, course.teacher];
           });
-          res.render("viewOther", {courses : blockObject});
+          res.render("viewOther", {courses : blockObject, colours: user.colors});
         });
 
       }
@@ -988,6 +997,75 @@ app.post("/alerts", urlencodedParser, function(req, res) {
     res.send("failed to remove alert.");
   }
 });
+
+app.get("/users/:user", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({username: req.params.user}, function(err, user) {
+      if (!user) {
+        res.redirect("/users");
+      } else {
+        res.render("account", {username: user.username, colours: user.colors});
+      }
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.get("/users/:user/posts", function(req, res) {
+  if (req.session.userId) {
+    Posts.Post.find({submittedBy: req.params.user}, function(err, posts) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("posts", {posts: posts, user: req.params.user, colours: user.colors});
+      });
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/users/:user/comments", function(req, res) {
+  if (req.session.userId) {
+    Posts.Comment.find({submittedBy: req.params.user}, function(err, comments) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("userComments", {comments: comments, user: req.params.user, colours: user.colors});
+      });
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/users/:user/colours", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      let colours = fs.readFileSync("../pallets.json");
+      colours = JSON.parse(colours);
+      res.render("colours", {user: req.params.user, colour: colours, colours: user.colors});
+    });
+
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/users/:user/colours", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    let newObject = {
+      bgColor: req.body.colour1,
+      textColor: req.body.colour5,
+      infoColor: req.body.colour2,
+      buttonColor: req.body.colour3,
+      borderColor: req.body.colour4
+    }
+    console.log(newObject);
+    User.findOneAndUpdate({_id : req.session.userId}, {$set: {colors: newObject}}).then(function() {
+      console.log("fuckin' YEET");
+      // res.redirect("/users/" + req.params.user);
+      res.send(true);
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
 
 let io = socket(server);
 io.set('match origin protocol', true);

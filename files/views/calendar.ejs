@@ -16,11 +16,11 @@
     </script>
     <style>
       :root {
-        --bg-color: #FC7753;
-        --info-color: #403D58;
-        --button-color: #66D7D1;
-        --border-color: #DBD56E;
-        --text-color: #F2EFEA;
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
       }
       * {
         font-family: sans-serif;
@@ -66,7 +66,9 @@
         border: 2px solid black;
         width: 14.2857%;
         height: 65px;
+        color: var(--text-color);
       }
+
       .shownCalendar tr th {
         background-color: var(--info-color);
         height: 40px;
@@ -79,6 +81,7 @@
         text-align: center;
         margin: auto;
         font-size: 30px;
+        color: var(--text-color);
       }
       .proD {
         background-color: blue;
@@ -92,6 +95,7 @@
         height: 50px;
         text-align: center;
         font-size: 50px;
+        color: var(--text-color);
       }
       .event {
         position: absolute;

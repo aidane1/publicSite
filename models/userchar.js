@@ -52,7 +52,22 @@ const UserSchema = new Schema({
   alerts: {
     type: Array,
     default: []
+  },
+  colors: {
+    bgColor: {type: String, default: "#FC7753"},
+    textColor: {type: String, default: "#F2EFEA"},
+    infoColor: {type: String, defualt: '#403D58'},
+    buttonColor: {type: String, default: "#66D7D1"},
+    borderColor: {type: String, default: ""}
+  },
+  order: {
+    block1: {type: String, default: "Courses"},
+    block2: {type: String, default: "LC"},
+    block3: {type: String, default: "Calendar"},
+    block4: {type: String, default: "Schedule"},
+    block5: {type: String, default: "Resources"}
   }
+
 });
 
 
