@@ -15,6 +15,13 @@
       }
     </script>
     <style>
+      :root {
+        --bg-color: #FC7753;
+        --info-color: #403D58;
+        --button-color: #66D7D1;
+        --border-color: #DBD56E;
+        --text-color: #F2EFEA;
+      }
       * {
         font-family: sans-serif;
       }
@@ -33,7 +40,7 @@
         position: fixed;
         top: 0px;
         left: 0px;
-        background: linear-gradient(#f28e37, #f77d13, #f9e66b);
+        background: var(--bg-color);
         overflow: auto;
 
       }
@@ -61,10 +68,10 @@
         height: 65px;
       }
       .shownCalendar tr th {
-        background-color: #353538;
+        background-color: var(--info-color);
         height: 40px;
         border: 2px solid black;
-        color: white;
+        color: var(--text-color);
       }
       .monthHeader{
 

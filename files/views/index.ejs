@@ -39,6 +39,7 @@
         --info-color: #403D58;
         --button-color: #66D7D1;
         --border-color: #DBD56E;
+        --text-color: #F2EFEA;
       }
       html {
         -webkit-text-size-adjust: 100%;
@@ -77,7 +78,7 @@
         width: 100%;
         text-align: center;
         text-decoration: none;
-        color: white;
+        color: var(--text-color);
         font-size: 22px;
         padding: 30px;
         display: block;
@@ -136,7 +137,7 @@
         /* background-color: blue; */
         text-align: center;
         /* font-size: 28px; */
-        color: white;
+        color: var(--text-color);
         display: block;
 
         vertical-align: middle;
@@ -162,7 +163,7 @@
         width: 85%;
         /* height: 20%; */
         background-color: var(--info-color);
-        
+
         display: block;
         margin: auto;
         border-radius: 8px;
@@ -175,7 +176,7 @@
         height: 25px;
         /* background-color: orange; */
         font-size: 100%;
-        color: white;
+        color: var(--text-color);
         display: block;
         margin: auto;
         vertical-align: middle;
@@ -209,7 +210,7 @@
           border: 1px solid black;
           background-color: var(--info-color);
           border-radius: 8px;
-          color: white;
+          color: var(--text-color);
 
         }
         .newsBox {
@@ -242,7 +243,7 @@
           display: block;
           margin: auto;
           font-size: 25px;
-          color: white;
+          color: var(--text-color);
           text-align: center;
           border-radius: 20px;
           margin-top: 25px;
@@ -275,7 +276,7 @@
 
           border-bottom: 2px solid black;
           padding: 12px;
-          color: white;
+          color: var(--text-color);
         }
         .classHolder .liHover {
 
@@ -289,7 +290,7 @@
           width: 100%;
           height: 60%;
 
-          background-color: white;
+          background-color: var(--text-color);
           border-radius: 5px;
           position: relative;
           top: 70px;
@@ -304,7 +305,7 @@
           display: block;
           margin: auto;
           font-size: 16px;
-          color: white;
+          color: var(--text-color);
           text-align: center;
           border-radius: 20px;
           margin-top: 15px;
@@ -322,7 +323,7 @@
           position: fixed;
           left: 9%;
           top: 10%;
-          background-color: white;
+          background-color: var(--text-color);
           border-radius: 10px;
           display: none;
           overflow: auto;
@@ -352,7 +353,7 @@
 
           border-bottom: 2px solid black;
           padding: 12px;
-          color: white;
+          color: var(--text-color);
         }
         .modalHolder .liHover {
           background: linear-gradient(#555, #bbb);
@@ -417,7 +418,7 @@
           background-color: var(--info-color);
           height: 40px;
           border: 2px solid black;
-          color: white;
+          color: var(--text-color);
         }
         .currentMonth {
           width: 100%;
@@ -498,7 +499,7 @@
         .line1, .line2, .line3 {
           width: 28px;
           height: 2px;
-          background-color: white;
+          background-color: var(--text-color);
           display: block;
           margin: auto;
           margin-top: 5px;
@@ -558,7 +559,7 @@
           margin-top: 10px;
         }
         .soonEvent {
-          color: white;
+          color: var(--text-color);
           font-size: 17px;
           border-radius: 10px;
           background-color: var(--info-color);
@@ -708,7 +709,7 @@
           left: 50%;
           top: 10%;
           transform: translateX(-50%);
-          background-color: white;
+          background-color: var(--text-color);
           border-radius: 10px;
           display: none;
           overflow: auto;
@@ -809,7 +810,7 @@
       <div id = "initDisplay" class = "box initDisplay">
         <div class = "block">P V S S</div>
         <div class = "displayEvents">
-          <center><h2 style = "color: white">Upcoming Events: </h2></center>
+          <center><h2 style = "color: var(--text-color)">Upcoming Events: </h2></center>
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
               <% if (event.longForm) { %>
@@ -1037,7 +1038,7 @@
         </div>
 
         <button class = "newsMore">
-          <a href = "/calendar" style = "text-decoration: none; color: white;">Click to see more...</a>
+          <a href = "/calendar" style = "text-decoration: none; color: var(--text-color);">Click to see more...</a>
         </button>
 
       </div>
@@ -1075,7 +1076,7 @@
 
           </ul>
         </div>
-        <div class = "resourceBox" style = "display: block; background-color: white" id = "baseBox"></div>
+        <div class = "resourceBox" style = "display: block; background-color: var(--text-color)" id = "baseBox"></div>
 
 
         <%for (var i = 0; i < courses.length; i++) {%>

@@ -12,6 +12,13 @@
 
     </script>
     <style>
+      :root {
+        --bg-color: #FC7753;
+        --info-color: #403D58;
+        --button-color: #66D7D1;
+        --border-color: #DBD56E;
+        --text-color: #F2EFEA;
+      }
       html {
         -webkit-text-size-adjust: 100%
       }
@@ -26,14 +33,14 @@
       }
       body {
         margin: 0;
-        background-color: #67ac5b;
+        background-color: var(--border-color);
         font-family: sans-serif;
       }
       .submit {
         position: absolute;
         bottom: 50px;
         width: 80%;
-        background-color: #26a4ff;
+        background-color: var(--button-color);
         left: 10%;
         height: 60px;
         border-radius: 10px;
