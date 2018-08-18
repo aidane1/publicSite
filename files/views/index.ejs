@@ -34,6 +34,12 @@
       }
     </script>
     <style>
+      :root {
+        --bg-color: #FC7753;
+        --info-color: #403D58;
+        --button-color: #66D7D1;
+        --border-color: #DBD56E;
+      }
       html {
         -webkit-text-size-adjust: 100%;
       }
@@ -62,7 +68,7 @@
         height: 90px;
         display: block;
         margin: auto;
-        background-color: #165dce;
+        background-color: var(--button-color);
         border-radius: 10px;
         position: relative;
         border: 1px solid white;
@@ -158,7 +164,7 @@
       .infoBox {
         width: 85%;
         /* height: 20%; */
-        background-color: #353538;
+        background-color: var(--info-color);
         display: block;
         margin: auto;
         border-radius: 8px;
@@ -203,7 +209,7 @@
           text-align: center;
           padding: 12px;
           border: 1px solid black;
-          background-color: #353538;
+          background-color: var(--info-color);
           border-radius: 8px;
           color: white;
 
@@ -234,7 +240,7 @@
         .newsMore {
           width: 90%;
           height: 10%;
-          background-color: #165dce;
+          background-color: var(--button-color);
           display: block;
           margin: auto;
           font-size: 25px;
@@ -267,7 +273,7 @@
           flex: 1 1 0;
           text-align: center;
           /* height: 100px; */
-          background-color  : #353538;
+          background-color  : var(--info-color);
 
           border-bottom: 2px solid black;
           padding: 12px;
@@ -295,7 +301,7 @@
         .submitAssigned {
           width: 80%;
           height: 7%;
-          background-color: #165dce;
+          background-color: var(--button-color);
           cursor: pointer;
           display: block;
           margin: auto;
@@ -344,7 +350,7 @@
           flex: 1 1 0;
           text-align: center;
           /* height: 100px; */
-          background-color: #353538;
+          background-color: var(--info-color);
 
           border-bottom: 2px solid black;
           padding: 12px;
@@ -382,7 +388,8 @@
           position: fixed;
           top: 0;
           left: 0;
-          background: linear-gradient(#f28e37, #f77d13, #f9e66b);
+          /* background: linear-gradient(#f28e37, #f77d13, #f9e66b); */
+          background-color: var(--bg-color);
           z-index: -1;
         }
 
@@ -393,7 +400,7 @@
 
           display: block;
           margin: auto;
-          margin-top: 30px;
+          margin-top: 5px;
         }
         .shownCalendar {
 
@@ -409,7 +416,7 @@
           height: 60px;
         }
         .shownCalendar tr th {
-          background-color: #353538;
+          background-color: var(--info-color);
           height: 40px;
           border: 2px solid black;
           color: white;
@@ -556,7 +563,7 @@
           color: white;
           font-size: 17px;
           border-radius: 10px;
-          background-color: #353538;
+          background-color: var(--info-color);
           width: 100%;
           padding: 15px;
         }
@@ -596,7 +603,7 @@
             font-size: 14px;
           }
           .calendar {
-            margin-top: 10px;
+            margin-top: 0px;
           }
           .lCroom {
             padding: 8px;
@@ -637,6 +644,7 @@
           text-align: center;
           color: #fff;
           /* float: left; */
+          background-color: var(--info-color);
           padding: 10px;
           font-size: 20px;
         }
@@ -690,6 +698,10 @@
         } */
         .classHolder {
           width: 340px;
+          overflow: auto;
+        }
+        .classHolder li {
+          font-size: 13px;
         }
         .allHomework {
           width: 600px;
