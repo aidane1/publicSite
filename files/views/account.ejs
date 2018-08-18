@@ -9,11 +9,11 @@
     </script>
     <style>
       :root {
-        --bg-color: #FC7753;
-        --info-color: #403D58;
-        --button-color: #66D7D1;
-        --border-color: #DBD56E;
-        --text-color: #F2EFEA;
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
       }
       * {
         font-family: sans-serif;
@@ -62,6 +62,9 @@
     </style>
   </head>
   <body>
+    <div class = "back" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20">
+      <a href = "/" style = "text-decoration:none; color:blue">&#8592;</a>
+    </div>
     <div class = "header"><h1><%=username%></h1></div>
     <div class = "flexHolder">
       <div class = "button">

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      :root {
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
+      }
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      body {
+        padding: 0px;
+        background-color: var(--bg-color);
+      }
+      .displayOrder {
+        width: 100%;
+      }
+      .display {
+        width: 95%;
+        margin: auto;
+        margin-top: 5%;
+        margin-bottom: 10px;
+        text-align: center;
+        display: block;
+
+      }
+      .text {
+        padding: 5%;
+        border-radius: 10px;
+        background-color: var(--info-color);
+        font-size: 22px;
+        color: var(--text-color);
+      }
+      .save {
+        width: 95%;
+        display: block;
+        margin: auto;
+        text-align: center;
+      }
+      .save div {
+        font-size: 22px;
+        margin-top: 25px;
+        background-color: var(--button-color);
+        padding: 15px;
+        border-radius: 10px;
+        color: var(--text-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "displayOrder" id  ="displayOrder">
+      <div class = "display"><div class = "text" id = "<%=courseOrder.block1%>"><%=courseOrder.block1%></div></div>
+      <div class = "display"><div class = "text" id = "<%=courseOrder.block2%>"><%=courseOrder.block2%></div></div>
+      <div class = "display"><div class = "text" id = "<%=courseOrder.block3%>"><%=courseOrder.block3%></div></div>
+      <div class = "display"><div class = "text" id = "<%=courseOrder.block4%>"><%=courseOrder.block4%></div></div>
+      <div class = "display"><div class = "text" id = "<%=courseOrder.block5%>"><%=courseOrder.block5%></div></div>
+    </div>
+    <div class = "save"><div onclick = "saveFunction()">Save!</div></div>
+  </body>
+  <script src = "/public/js/Sortable.min.js"></script>
+  <script>
+    var el  = document.getElementById("displayOrder");
+    var sortable = Sortable.create(el, {animation: 150});
+    function saveFunction() {
+      let displays = document.getElementById("displayOrder").children;
+
+      let displayArray = [];
+      for (var i = 0; i < displays.length; i++) {
+
+        displayArray.push(displays[i].children[0].id);
+      }
+      let xmlhttp;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.open("POST", "/users/<%=user%>/order");
+      xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          window.location.href = "/users/<%=user%>";
+        }
+      }
+      let string = "";
+      for (var i = 0; i < displayArray.length; i++) {
+        string += ("block" + (i+1).toString() + "=" + displayArray[i]);
+        if (i != displayArray.length -1) {
+          string += "&";
+        }
+      }
+      console.log(string);
+      xmlhttp.send(encodeURI(string));
+    }
+  </script>
+</html>

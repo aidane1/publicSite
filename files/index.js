@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 //
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -254,7 +254,7 @@ app.get("/", function(req, res) {
                   soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
                 }
 
-                res.render("index", {colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
+                res.render("index", {order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
               });
               // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
             });
@@ -1065,7 +1065,26 @@ app.post("/users/:user/colours", urlencodedParser, function(req, res) {
     res.redirect("/login");
   }
 });
+app.get("/users/:user/order", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      res.render("courseOrder", {user: user.username, courseOrder: user.order, colours: user.colors});
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/users/:user/order", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    console.log(req.body);
+    User.findOneAndUpdate({_id : req.session.userId}, {$set: {order: req.body}}).then(function() {
+      res.send(true);
+    });
+  } else {
+    res.send(true);
+  }
 
+});
 
 let io = socket(server);
 io.set('match origin protocol', true);

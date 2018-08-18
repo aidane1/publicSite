@@ -175,7 +175,7 @@
 
       }
       .question {
-        color: #eee;
+        color: var(--text-color);
         padding-top: 5px;
         padding-bottom: 5px;
         border-bottom: 1px solid grey;
@@ -222,7 +222,7 @@
         background-color: var(--info-color);
         text-align: center;
         font-size: 40px;
-        color: white;
+        color: var(--text-color);
 
       }
       .submitPost {
@@ -246,6 +246,9 @@
         height: 50px;
         font-size: 15px;
         outline: none;
+      }
+      .textColour {
+        color: var(--text-color);
       }
       .radio {
           width: 25px;
@@ -324,14 +327,14 @@
 
     <div class = "bar" style = "">
       <div class = "back" style = "font-size: 40px; position: absolute; top: 5px; left: 10px;">
-        <a id = "back" href = "/" style = "text-decoration:none; color: white;">&#8592;</a>
+        <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
       </div>
       <%if (page > 0) { %>
-        <a href = "/questions?page=<%=page-1%>" style = "text-decoration: none; color: white">&larr;</a>
+        <a href = "/questions?page=<%=page-1%>" className = "textColour" style = "text-decoration: none;">&larr;</a>
       <% } %>
-       &nbsp;&nbsp;&nbsp; <div id = "submit" style = "display: inline;" onclick = "submitPost()">&#9998;</div> &nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp; <div id = "submit" style = "display: inline;" className = "textColour" onclick = "submitPost()">&#9998;</div> &nbsp;&nbsp;&nbsp;
       <%if (page < max-1) { %>
-        <a href = "/questions?page=<%=page+1%>" style = "text-decoration: none; color: white">&rarr;</a>
+        <a href = "/questions?page=<%=page+1%>" className = "textColour" style = "text-decoration: none;">&rarr;</a>
       <% } %>
 
     </div>

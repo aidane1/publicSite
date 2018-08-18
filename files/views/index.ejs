@@ -130,6 +130,7 @@
         margin-top: 0px;
         width: 100%;
         height: 100%;
+        position: static;
         /* border: 5px solid black; */
 
 
@@ -287,7 +288,7 @@
           border-left: 2px solid black;
           border-top: 2px solid black;
           border-right: 2px solid black;
-          color: #ddd;
+
         }
         .resourceBox {
           width: 100%;
@@ -378,7 +379,7 @@
           display: block;
         }
         .block {
-          color: black;
+          color: var(--text-color);
           font-size: 90px;
           width: 100%;
           text-align: center;
@@ -572,6 +573,12 @@
           background-color: var(--info-color);
           width: 100%;
           padding: 15px;
+        }
+        .aColor {
+          color: var(--text-color);
+        }
+        .bColor {
+          color: var(--button-color);
         }
 
 
@@ -800,17 +807,22 @@
       </div>
       <nav class = "menu" id = "menu">
         <ul class = "holder" id = "holder" onclick = "confineFunction()">
-          <li class = "item"><a href = "#courses">Courses</a></li>
-          <li class = "item"><a href = "#LC">LC's that are open</a></li>
-          <li class = "item"><a href = "#news">News & Calendar</a></li>
-          <!-- <li class = "item"><a href = "#money">Ways to get money</a></li> -->
-          <li class = "item"><a href = "#schedule">Schedule and other</a></li>
-          <li class = "item"><a href = "#resources">Resources</a></li>
+        <% for (var key in order) { %>
+          <% if (order[key] == "Courses") { %>
+            <li class = "item"><a href = "#courses">Courses</a></li>
+          <% } else if (order[key] == "LC") { %>
+            <li class = "item"><a href = "#LC">LC's that are open</a></li>
+          <% } else if (order[key] == "Calendar") { %>
+            <li class = "item"><a href = "#news">News & Calendar</a></li>
+          <% } else if (order[key] == "Schedule") { %>
+            <li class = "item"><a href = "#schedule">Schedule and other</a></li>
+          <% } else if (order[key] == "Resources") { %>
+            <li class = "item"><a href = "#resources">Resources</a></li>
+          <% } %>
+        <% } %>
           <li class = "item" id = "logout"><a href = "/logout">Logout</a></li>
           <li class = "item" id = "chatroom"><a href = "/chatroom">Chatroom</a></li>
           <li class = "item" id = "questions"><a href = "/questions?page=0">Questions</a></li>
-
-
         </ul>
       </nav>
 
@@ -894,228 +906,239 @@
 
 
       </div>
-      <div id = "courses" class = "courses box" name = "courses">
-        <div class = "header"><h1>Courses</h1></div>
+      <% for (var key in order) { %>
+        <% if (order[key] == "Courses") { %>
+          <div id = "courses" class = "courses box" name = "courses">
+            <div class = "header"><h1>Courses</h1></div>
 
 
-        <div class = "infoBox large">
-          <div class = "header2">My courses today&nbsp; <a href = "courses" style = "font-size: 12px; color: #38c450">edit</a></div>
-          <div id = "todayCourses" class = "todayCourses">
-            <ul style = "list-style-type: none">
+            <div class = "infoBox large">
+              <div class = "header2">My courses today&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
+              <div id = "todayCourses" class = "todayCourses">
+                <ul style = "list-style-type: none">
 
 
 
-              <% for (var i = 0; i < todaysCourses.length; i++) { %>
-                <% if (i == 0 ) { %>
-                  <li>9:10-10:12 : <%=blockOrder[i]%></li>
-                <% }  else if (i == 1) { %>
-                  <li>10:15-11:17 : <%=blockOrder[i]%></li>
-                  <li>11:19-11:29 : TA</li>
-                <% } else if (i == 2) { %>
-                  <li>11:29-12:31 : <%=blockOrder[i]%></li>
-                  <li>12:32-1:15 : Lunch</li>
-                <% } else if (i == 3) { %>
-                  <li>1:16-2:18 : <%=blockOrder[i]%></li>
+                  <% for (var i = 0; i < todaysCourses.length; i++) { %>
+                    <% if (i == 0 ) { %>
+                      <li>9:10-10:12 : <%=blockOrder[i]%></li>
+                    <% }  else if (i == 1) { %>
+                      <li>10:15-11:17 : <%=blockOrder[i]%></li>
+                      <li>11:19-11:29 : TA</li>
+                    <% } else if (i == 2) { %>
+                      <li>11:29-12:31 : <%=blockOrder[i]%></li>
+                      <li>12:32-1:15 : Lunch</li>
+                    <% } else if (i == 3) { %>
+                      <li>1:16-2:18 : <%=blockOrder[i]%></li>
 
-                <% } else if (i == 4) { %>
-                  <li>2:21-3:23 : <%=blockOrder[i]%></li>
-                <% }%>
-              <% } %>
-              <% if (todaysCourses === false) { %>
-                <li> it's the weekend! </li>
-              <% } %>
-            </ul>
+                    <% } else if (i == 4) { %>
+                      <li>2:21-3:23 : <%=blockOrder[i]%></li>
+                    <% }%>
+                  <% } %>
+                  <% if (todaysCourses === false) { %>
+                    <li> it's the weekend! </li>
+                  <% } %>
+                </ul>
+              </div>
+            </div>
+            <div class = "infoBox">
+              <div class = "header2">Today's homework</div>
+              <div id = "possibleCourses" class = "possibleCourses">
+                <table class = "switchTable">
+
+
+                  <% homework.forEach(function(theHomeworkCourse) { %>
+                    <tr>
+                      <td>
+                        <!-- <a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a> -->
+                        &nbsp;&nbsp;<%=theHomeworkCourse[0]%></td>
+                      <td>
+
+                        <% if (theHomeworkCourse[1].length != 0) { %>
+                          <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
+                                Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%><br>
+                          <% } else { %>
+                                <a style = "text-decoration: underline; color: #38c450" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')">view assignment</a><br>
+                          <% } %>
+                        <% } %>
+
+
+
+
+                      </td>
+                    </tr>
+                  <% }); %>
+
+                </table>
+              </div>
+              <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" class = "bColor" style = "text-decoration: underline; cursor: pointer;"> view all</a></i>
+            </div>
+            <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned">
+              Submit assigned homework
+            </button></a>
           </div>
-        </div>
-        <div class = "infoBox">
-          <div class = "header2">Today's homework</div>
-          <div id = "possibleCourses" class = "possibleCourses">
-            <table class = "switchTable">
+        <% } else if (order[key] == "LC") { %>
+          <div id = "LC" class = "LC box" name = "LC">
+            <div class = "header"><h1>Open LC's</h1></div>
+            <div class = "openRooms">
+              <% if (lcSchedule !== false) { %>
+                <% lcSchedule.forEach(function(LC) { %>
+                  <div class = "LCRoom"><%=LC%></div>
+                  <br>
+                <% }); %>
+              <% } else { %>
+                <div class = "LCRoom">It's the weekend!</div>
+              <% } %>
 
 
-              <% homework.forEach(function(theHomeworkCourse) { %>
+            </div>
+          </div>
+        <% } else if (order[key] == "Calendar") { %>
+          <div id = "news" class = "news box" name = "news">
+            <div class = "header"><h1>News & Calendar</h1></div>
+            <div class = "calendar">
+              <div class = "currentMonth">
+                <%=month%>
+              </div>
+              <table class = "shownCalendar" id = "calendar">
+
                 <tr>
-                  <td>
-                    <!-- <a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a> -->
-                    &nbsp;&nbsp;<%=theHomeworkCourse[0]%></td>
-                  <td>
+                  <th>S</th>
+                  <th>M</th>
+                  <th>T</th>
+                  <th>W</th>
+                  <th>T</th>
+                  <th>F</th>
+                  <th>S</th>
+                </tr>
+                <tr>
+                  <% for (var i = 0; i < calendar.length; i++) { %>
+                      <% if (i >= calendar[0][2]) { %>
 
-                    <% if (theHomeworkCourse[1].length != 0) { %>
-                      <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
-                            Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%><br>
+
+                        <td><%=calendar[i-calendar[0][2]][1]+1%>
+
+                          <br>
+
+
+
+                          <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
+                            <% if (calendar[i-calendar[0][2]][2] === 0) { %>
+                              <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                            <% } else if (calendar[i-calendar[0][2]][2] === 6) { %>
+                              <div class = "event">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                            <% } else { %>
+                              <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                            <% } %>
+
+                            <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
+                              <%=calendar[i-calendar[0][2]][0][k]%>
+                              <hr>
+                            <% } %>
+                            <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
+                            </span>
+                            </div>
+
+
+
+                          <% } %>
+                        </td>
                       <% } else { %>
-                            <a style = "text-decoration: underline; color: #38c450" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')">view assignment</a><br>
+                        <td></td>
                       <% } %>
+                      <%if((i+1) % 7 === 0) { %>
+                        </tr>
+                        <tr>
+                      <%}%>
+                  <% } %>
+                </tr>
+
+              </table>
+            </div>
+
+            <button class = "newsMore">
+              <a href = "/calendar" style = "text-decoration: none; color: var(--text-color);">Click to see more...</a>
+            </button>
+
+          </div>
+
+        <% } else if (order[key] == "Schedule") { %>
+          <!-- will be added back in later -->
+          <!-- <div id = "money" class = "money box" name = "money">
+            <div class = "header">Ways to get money</div>
+          </div> -->
+          <div id = "schedule" class = "schedule box" name = "schedule">
+            <div class = "header"><h1>Schedule and other</h1></div>
+            <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule">My Schedule</a></div>
+            <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">Other Courses</a></div>
+            <div class = "scheduleHref" style = "margin-top: 50px"><a href=  "/users/<%=username%>">Personalize Account</a></div>
+          </div>
+        <% } else if (order[key] == "Resources") { %>
+          <div id = "resources" class = "resources box" name = "resources">
+            <div class = "header" style = "margin-bottom: 15px"><h1>Resources</h1></div>
+            <% if (courses.length === 5) { %>
+              <div class = 'classHolder' style = "font-size: 15px">
+            <% } else { %>
+              <div class = "classHolder">
+            <% } %>
+                <ul class = "helperHolder">
+                  <% courses.forEach(function(course) { %>
+                    <% if (courses.length === 5) { %>
+                      <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer; padding: 9px;"><%=course.course%></li>
+                    <% } else { %>
+                      <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
                     <% } %>
 
+                  <% }); %>
 
+                </ul>
+              </div>
+              <div class = "resourceBox" style = "display: block; background-color: var(--text-color)" id = "baseBox"></div>
+              <%for (var i = 0; i < courses.length; i++) {%>
+                <div class = "resourceBox" id = "rsb<%=courses[i].course.split(' ').join('')%>">
+                  Videos:
+                  <br>
 
-
-                  </td>
-                </tr>
-              <% }); %>
-
-            </table>
-          </div>
-          <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" style = "text-decoration: underline; color: #38c450; cursor: pointer;"> view all</a></i>
-        </div>
-        <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned">
-          Submit assigned homework
-        </button></a>
-      </div>
-
-
-      <div id = "LC" class = "LC box" name = "LC">
-        <div class = "header"><h1>Open LC's</h1></div>
-        <div class = "openRooms">
-          <% if (lcSchedule !== false) { %>
-            <% lcSchedule.forEach(function(LC) { %>
-              <div class = "LCRoom"><%=LC%></div>
-              <br>
-            <% }); %>
-          <% } else { %>
-            <div class = "LCRoom">It's the weekend!</div>
-          <% } %>
-
-
-        </div>
-      </div>
-
-
-      <div id = "news" class = "news box" name = "news">
-        <div class = "header"><h1>News & Calendar</h1></div>
-        <div class = "calendar">
-          <div class = "currentMonth">
-            <%=month%>
-          </div>
-          <table class = "shownCalendar" id = "calendar">
-
-            <tr>
-              <th>S</th>
-              <th>M</th>
-              <th>T</th>
-              <th>W</th>
-              <th>T</th>
-              <th>F</th>
-              <th>S</th>
-            </tr>
-            <tr>
-              <% for (var i = 0; i < calendar.length; i++) { %>
-                  <% if (i >= calendar[0][2]) { %>
-
-
-                    <td><%=calendar[i-calendar[0][2]][1]+1%>
-
+                  <br>
+                  <% if (courses[i].resource.length != 0) { %>
+                    <% for (var j = 0; j < courses[i].resource.length; j++) { %>
+                      <a href = "<%=courses[i].resource[j].url%>"><%=courses[i].resource[j].description%></a>
                       <br>
+                      <br>
+                    <% } %>
 
-
-
-                      <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
-                        <% if (calendar[i-calendar[0][2]][2] === 0) { %>
-                          <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
-                        <% } else if (calendar[i-calendar[0][2]][2] === 6) { %>
-                          <div class = "event">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
-                        <% } else { %>
-                          <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
-                        <% } %>
-
-                        <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
-                          <%=calendar[i-calendar[0][2]][0][k]%>
-                          <hr>
-                        <% } %>
-                        <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
-                        </span>
-                        </div>
-
-
-
-                      <% } %>
-                    </td>
-                  <% } else { %>
-                    <td></td>
-                  <% } %>
-                  <%if((i+1) % 7 === 0) { %>
-                    </tr>
-                    <tr>
-                  <%}%>
-              <% } %>
-            </tr>
-
-          </table>
-        </div>
-
-        <button class = "newsMore">
-          <a href = "/calendar" style = "text-decoration: none; color: var(--text-color);">Click to see more...</a>
-        </button>
-
-      </div>
-
-      <!-- will be added back in later -->
-      <!-- <div id = "money" class = "money box" name = "money">
-        <div class = "header">Ways to get money</div>
-      </div> -->
-      <div id = "schedule" class = "schedule box" name = "schedule">
-        <div class = "header"><h1>Schedule and other</h1></div>
-        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule">My Schedule</a></div>
-        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">Other Courses</a></div>
-        <div class = "scheduleHref" style = "margin-top: 50px"><a href=  "/users/<%=username%>">Personalize Account</a></div>
-      </div>
-
-
-      <div id = "resources" class = "resources box" name = "resources">
-        <div class = "header" style = "margin-bottom: 15px;"><h1>Resources</h1></div>
-      <% if (courses.length === 5) { %>
-        <div class = "classHolder" style = "font-size: 15px;">
-      <% } else { %>
-        <div class = "classHolder">
+                  <% }%>
+                  <br>
+                  websites:
+                  <br>
+                  <br>
+                  <br>
+                  textbooks:
+                </div>
+              <%}%>
+              <div class = "addMore">
+                <i><a href = "/suggestions" class = "aColor" style = "text-decoration: none; margin-top: 20px;">Think we're missing something? submit it here</a>...</i>
+              </div>
+          </div>
+        <% } %>
       <% } %>
 
-          <ul class = "helperHolder">
-
-            <% courses.forEach(function(course) { %>
-              <% if (courses.length === 5) { %>
-                <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer; padding: 9px;"><%=course.course%></li>
-              <% } else { %>
-                <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
-              <% } %>
-
-            <% }); %>
-
-          </ul>
-        </div>
-        <div class = "resourceBox" style = "display: block; background-color: var(--text-color)" id = "baseBox"></div>
 
 
-        <%for (var i = 0; i < courses.length; i++) {%>
-          <div class = "resourceBox" id = "rsb<%=courses[i].course.split(' ').join('')%>">
-            Videos:
-            <br>
 
-            <br>
-            <% if (courses[i].resource.length != 0) { %>
-              <% for (var j = 0; j < courses[i].resource.length; j++) { %>
-                <a href = "<%=courses[i].resource[j].url%>"><%=courses[i].resource[j].description%></a>
-                <br>
-                <br>
-              <% } %>
 
-            <% }%>
-            <br>
-            websites:
-            <br>
-            <br>
-            <br>
-            textbooks:
-          </div>
-        <%}%>
 
-        <div class = "addMore">
-          <i><a href = "/suggestions" style = "text-decoration: none; color: blue; margin-top: 20px;">Think we're missing something? submit it here</a>...</i>
-        </div>
 
-      </div>
 
-    </div>
+
+
+
+
+
+
+
+
+
     <div class = "colors" id = 'colors'>
 
     </div>
