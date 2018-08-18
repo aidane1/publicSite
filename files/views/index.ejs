@@ -81,7 +81,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        font-size: 18px;
+        font-size: 22px;
         transform: translate(-50%, -50%);
 
       }
@@ -893,7 +893,7 @@
 
 
         <div class = "infoBox large">
-          <div class = "header2">Your courses today&nbsp; <a href = "courses" style = "font-size: 12px; color: #38c450">edit</a></div>
+          <div class = "header2">My courses today&nbsp; <a href = "courses" style = "font-size: 12px; color: #38c450">edit</a></div>
           <div id = "todayCourses" class = "todayCourses">
             <ul style = "list-style-type: none">
 
@@ -954,13 +954,13 @@
           <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" style = "text-decoration: underline; color: #38c450; cursor: pointer;"> view all</a></i>
         </div>
         <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned">
-          Click to submit assigned homework
+          Submit assigned homework
         </button></a>
       </div>
 
 
       <div id = "LC" class = "LC box" name = "LC">
-        <div class = "header"><h1>LC's that are open</h1></div>
+        <div class = "header"><h1>Open LC's</h1></div>
         <div class = "openRooms">
           <% if (lcSchedule !== false) { %>
             <% lcSchedule.forEach(function(LC) { %>
@@ -1050,9 +1050,9 @@
       </div> -->
       <div id = "schedule" class = "schedule box" name = "schedule">
         <div class = "header"><h1>Schedule and other</h1></div>
-        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule">View Schedule</a></div>
+        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule;">My Schedule</a></div>
 
-        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">View other courses you could take</a></div>
+        <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">Other Courses</a></div>
       </div>
 
 
