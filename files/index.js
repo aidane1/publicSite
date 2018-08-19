@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 //
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -999,6 +999,7 @@ app.post("/alerts", urlencodedParser, function(req, res) {
 });
 
 app.get("/users/:user", function(req, res) {
+  res.cookie("path", "/users/" + req.params.user);
   if (req.session.userId) {
     User.findOne({username: req.params.user}, function(err, user) {
       if (!user) {
@@ -1013,6 +1014,7 @@ app.get("/users/:user", function(req, res) {
 });
 
 app.get("/users/:user/posts", function(req, res) {
+  res.cookie("path", "/users/" + req.params.user + "/posts");
   if (req.session.userId) {
     Posts.Post.find({submittedBy: req.params.user}, function(err, posts) {
       User.findOne({_id : req.session.userId}, function(err, user) {
@@ -1024,6 +1026,7 @@ app.get("/users/:user/posts", function(req, res) {
   }
 });
 app.get("/users/:user/comments", function(req, res) {
+  res.cookie("path", "/users/" + req.params.user + "/comments");
   if (req.session.userId) {
     Posts.Comment.find({submittedBy: req.params.user}, function(err, comments) {
       User.findOne({_id : req.session.userId}, function(err, user) {
@@ -1035,10 +1038,12 @@ app.get("/users/:user/comments", function(req, res) {
   }
 });
 app.get("/users/:user/colours", function(req, res) {
+  res.cookie("path", "/users/" + req.params.user + "/colours");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let colours = fs.readFileSync("../pallets.json");
       colours = JSON.parse(colours);
+      console.log(colours);
       res.render("colours", {user: req.params.user, colour: colours, colours: user.colors});
     });
 
@@ -1066,6 +1071,7 @@ app.post("/users/:user/colours", urlencodedParser, function(req, res) {
   }
 });
 app.get("/users/:user/order", function(req, res) {
+  res.cookie("path", "/users/" + req.params.user + "/order");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       res.render("courseOrder", {user: user.username, courseOrder: user.order, colours: user.colors});
