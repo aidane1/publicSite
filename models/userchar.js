@@ -58,7 +58,7 @@ const UserSchema = new Schema({
     textColor: {type: String, default: "#F2EFEA"},
     infoColor: {type: String, defualt: "#403D58"},
     buttonColor: {type: String, default: "#66D7D1"},
-    borderColor: {type: String, default: ""}
+    borderColor: {type: String, default: "000000"}
   },
   order: {
     block1: {type: String, default: "Courses"},
