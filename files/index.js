@@ -388,7 +388,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
             infoColor: "#403D58",
             buttonColor: "#66D7D1",
             borderColor:"000000"
-          }
+          },
           email: req.body.username
         }
         //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
