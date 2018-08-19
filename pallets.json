@@ -425,5 +425,145 @@
     "colour3": "#73C2BE",
     "colour4": "#776885",
     "colour5": "#5F1A37"
+  },
+  "pallet61": {
+    "colour1": "#87806E",
+    "colour2": "#404D2F",
+    "colour3": "#FFFDFF",
+    "colour4": "#132332",
+    "colour5": "#546A5D"
+  },
+  "pallet62": {
+    "colour1": "#247BA0",
+    "colour2": "#70C1B3",
+    "colour3": "#B2DBBF",
+    "colour4": "#F3FFBD",
+    "colour5": "#FF1654"
+  },
+  "pallet63": {
+    "colour1": "#05668D",
+    "colour2": "#028090",
+    "colour3": "#00A896",
+    "colour4": "#02C39A",
+    "colour5": "#F0F3BD"
+  },
+  "pallet64": {
+    "colour1": "#003459",
+    "colour2": "#FFFFFF",
+    "colour3": "#00171F",
+    "colour4": "#007EA7",
+    "colour5": "#00A8E8"
+  },
+  "pallet65": {
+    "colour1": "#131515",
+    "colour2": "#2B2C28",
+    "colour3": "#339989",
+    "colour4": "#7DE2D1",
+    "colour5": "#FFFAFB"
+  },
+  "pallet66": {
+    "colour1": "#E26D5A",
+    "colour2": "#EFA8B8",
+    "colour3": "#D7BBA8",
+    "colour4": "#BBB09B",
+    "colour5": "#3E2A35"
+  },
+  "pallet67": {
+    "colour1": "#5CA4A9",
+    "colour2": "#9BC1BC",
+    "colour3": "#F4F1BB",
+    "colour4": "#E6EBE0",
+    "colour5": "#ED6A5A"
+  },
+  "pallet68": {
+    "colour1": "#114B5F",
+    "colour2": "#028090",
+    "colour3": "#E4FDE1",
+    "colour4": "#456990",
+    "colour5": "#F45B69"
+  },
+  "pallet69": {
+    "colour1": "#BA8C74",
+    "colour2": "#79ADDC",
+    "colour3": "#FFEE93",
+    "colour4": "#FCF5C7",
+    "colour5": "#ADF7B6"
+  },
+  "pallet70": {
+    "colour1": "#242038",
+    "colour2": "#9067C6",
+    "colour3": "#8D86C9",
+    "colour4": "#CAC4CE",
+    "colour5": "#F7ECE1"
+  },
+  "pallet71": {
+    "colour1": "#798071",
+    "colour2": "#999AC6",
+    "colour3": "#B8BACF",
+    "colour4": "#D2D5DD",
+    "colour5": "#E8EBE4"
+  },
+  "pallet72": {
+    "colour1": "#210203",
+    "colour2": "#C17767",
+    "colour3": "#D3B99F",
+    "colour4": "#6D98BA",
+    "colour5": "#9AADBF"
+  },
+  "pallet73": {
+    "colour1": "#D8E2DC",
+    "colour2": "#FFFFFF",
+    "colour3": "#FFCAD4",
+    "colour4": "#F4ACB7",
+    "colour5": "#9D8189"
+  },
+  "pallet74": {
+    "colour1": "#2B193D",
+    "colour2": "#2C365E",
+    "colour3": "#484D6D",
+    "colour4": "#4B8F8C",
+    "colour5": "#C5979D"
+  },
+  "pallet75": {
+    "colour1": "#37392E",
+    "colour2": "#19647E",
+    "colour3": "#28AFB0",
+    "colour4": "#DDCECD",
+    "colour5": "#EEE5E5"
+  },
+  "pallet76": {
+    "colour1": "#4F3130",
+    "colour2": "#753742",
+    "colour3": "#AA5042",
+    "colour4": "#D8BD8A",
+    "colour5": "#D8D78F"
+  },
+  "pallet77": {
+    "colour1": "#A30B37",
+    "colour2": "#BD6B73",
+    "colour3": "#BBB6DF",
+    "colour4": "#C6C8EE",
+    "colour5": "#FCFCFF"
+  },
+  "pallet78": {
+    "colour1": "#736372",
+    "colour2": "#AAC0AA",
+    "colour3": "#DCEED1",
+    "colour4": "#A18276",
+    "colour5": "#7A918D"
+  },
+  "pallet79": {
+    "colour1": "#3A4454",
+    "colour2": "#6B4E71",
+    "colour3": "#C2B2B4",
+    "colour4": "#53687E",
+    "colour5": "#F5DDDD"
+  },
+  "pallet80": {
+    "colour1": "#BD4F6C",
+    "colour2": "#D7816A",
+    "colour3": "#F0CF65",
+    "colour4": "#DDEDAA",
+    "colour5": "#93B5C6"
   }
 }
