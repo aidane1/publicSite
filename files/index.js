@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -438,7 +438,9 @@ app.post("/signup", urlencodedParser, function(req, res) {
 app.get("/courses", function(req, res) {
     res.cookie("path", "/courses");
     if (req.session.userId) {
-      res.render("addCourses");
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        res.render("addCourses", {colours: user.colors});
+      });
     } else {
       res.redirect("/login");
     }
@@ -655,7 +657,7 @@ app.get("/calendar", function(req, res) {
         res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors});
       });
     } else {
-      res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: ""}});
+      res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}});
     }
   });
 
@@ -895,7 +897,6 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
   if (req.session.userId) {
-    console.log(req.session.userId);
     let currentDate = (new Date()).local();
     Texts.find({date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, function(err, texts) {
       texts.sort(function(a, b) {
@@ -961,7 +962,7 @@ app.get("/schedule", function(req, res) {
           courses.forEach(function(course) {
             blockObject[course.block] = [course.course, course.teacher];
           });
-          res.render("schedule", {courses : blockObject});
+          res.render("schedule", {courses : blockObject, colours: user.colors});
         });
       }
     });
@@ -1019,14 +1020,22 @@ app.post("/alerts", urlencodedParser, function(req, res) {
   }
 });
 
+
+app.get("/users", function(req, res) {
+  res.redirect("/");
+});
 app.get("/users/:user", function(req, res) {
   res.cookie("path", "/users/" + req.params.user);
   if (req.session.userId) {
-    User.findOne({username: req.params.user}, function(err, user) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
         res.redirect("/users");
       } else {
-        res.render("account", {username: user.username, colours: user.colors});
+        if (user.username != req.params.user) {
+          res.redirect("/users/" + user.username);
+        } else {
+          res.render("account", {username: user.username, colours: user.colors});
+        }
       }
     });
   } else {
@@ -1039,7 +1048,11 @@ app.get("/users/:user/posts", function(req, res) {
   if (req.session.userId) {
     Posts.Post.find({submittedBy: req.params.user}, function(err, posts) {
       User.findOne({_id : req.session.userId}, function(err, user) {
-        res.render("posts", {posts: posts, user: req.params.user, colours: user.colors});
+        if (user.username != req.params.user) {
+          res.redirect("/users/" + user.username + "/posts");
+        } else {
+          res.render("posts", {posts: posts, user: req.params.user, colours: user.colors});
+        }
       });
     });
   } else {
@@ -1051,7 +1064,11 @@ app.get("/users/:user/comments", function(req, res) {
   if (req.session.userId) {
     Posts.Comment.find({submittedBy: req.params.user}, function(err, comments) {
       User.findOne({_id : req.session.userId}, function(err, user) {
-        res.render("userComments", {comments: comments, user: req.params.user, colours: user.colors});
+        if (user.username != req.params.user) {
+          res.redirect("/users/" + user.username + "/comments");
+        } else {
+          res.render("userComments", {comments: comments, user: req.params.user, colours: user.colors});
+        }
       });
     });
   } else {
@@ -1062,9 +1079,13 @@ app.get("/users/:user/colours", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/colours");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      let colours = fs.readFileSync("../pallets.json");
-      colours = JSON.parse(colours);
-      res.render("colours", {user: req.params.user, colour: colours, colours: user.colors});
+      if (user.username != req.params.user) {
+        res.redirect("/users/" + user.username + "/colours");
+      } else {
+        let colours = fs.readFileSync("../pallets.json");
+        colours = JSON.parse(colours);
+        res.render("colours", {user: req.params.user, colour: colours, colours: user.colors});
+      }
     });
 
   } else {
@@ -1094,7 +1115,11 @@ app.get("/users/:user/order", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/order");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      res.render("courseOrder", {user: user.username, courseOrder: user.order, colours: user.colors});
+      if (user.username != req.params.user) {
+        res.redirect("/users/" + user.username + "/order");
+      } else {
+        res.render("courseOrder", {user: user.username, courseOrder: user.order, colours: user.colors});
+      }
     });
   } else {
     res.redirect("/login");
