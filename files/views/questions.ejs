@@ -147,6 +147,7 @@
       * {
         font-family: sans-serif;
         box-sizing: border-box;
+        color: var(--text-color);
       }
       html {
         width: 100%;
@@ -247,6 +248,9 @@
         font-size: 15px;
         outline: none;
       }
+      #backUp {
+        color: var(--text-color);
+      }
       .textColour {
         color: var(--text-color);
       }
@@ -256,13 +260,15 @@
 
       }
       .submit {
-        width: 100px;
-        height: 30px;
-        background-color: white;
+        width: 150px;
+        height: 50px;
+        background-color: var(--info-color);
         margin-top: 10px;
+        font-size: 18px;
+        border-radius: 10px;
       }
       .header {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: bold;
         display: block;
         margin-top: 10px;
@@ -340,7 +346,7 @@
     </div>
     <div class = "submitPost" id = "submitPost">
       <form method = "POST" action = "/questions">
-        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required style = "font-size: 18px"/>
+        <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required style = "font-size: 18px; color: black"/>
         <div class = "header">Submit As: </div>
         <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "true" required/>
         <br>
@@ -349,7 +355,7 @@
         <br>
         <hr>
         <h3 style = "display: inline">Body: </h3><br>
-        <textarea placeholder="Enter your body here" name = "body" id = "textarea" maxlength="512" style = "font-size: 18px"></textarea>
+        <textarea placeholder="Enter your body here" name = "body" id = "textarea" maxlength="512" style = "font-size: 18px; color: black"></textarea>
         <center><input type = "submit" class = "submit"/></center>
         <br>
         <center><div id = "backUp" style = "font-size: 40px; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;" onclick = "submitPost()">&#x21e7;</div>

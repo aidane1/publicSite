@@ -49,6 +49,7 @@
       }
 
 
+
       .modal {
         width: 100%;
         height: 100%;
@@ -89,6 +90,7 @@
       * {
         font-family: sans-serif;
         box-sizing: border-box;
+        color: var(--text-color);
       }
 
       body {
@@ -311,7 +313,7 @@
           margin-top: 15px;
           outline: none;
         }
-        
+
         .addMore {
           margin-top: 80px;
         }
@@ -321,7 +323,7 @@
           position: fixed;
           left: 9%;
           top: 10%;
-          background-color: var(--text-color);
+          background-color: var(--info-color);
           border-radius: 10px;
           display: none;
           overflow: auto;
@@ -332,7 +334,7 @@
           width: 100%;
           position: absolute;
           top: 35px;
-          height: 40px;
+          height: 60px;
           display: block;
         }
         .modalHolder ul {
@@ -340,21 +342,20 @@
           margin: 0px;
           height: 100%;
           display: flex;
-          font-size: 9.5px;
+          font-size: 12px;
           padding: 0;
         }
         .modalHolder li {
           flex: 1 1 0;
           text-align: center;
           /* height: 100px; */
-          background-color: var(--info-color);
+          background-color: var(--button-color);
 
-          border-bottom: 2px solid black;
+          border-bottom: 2px solid var(--border-color);
           padding: 12px;
           color: var(--text-color);
         }
         .modalHolder .liHover {
-          background: linear-gradient(#555, #bbb);
           border-bottom:0px;
           border-left: 2px solid black;
           border-top: 2px solid black;
@@ -535,7 +536,7 @@
         nav a {
           text-decoration: none;
           text-align: center;
-          color: #fff;
+          color: var(--text-color);
           display: block;
           padding: 10px;
           font-size: 20px;
@@ -544,7 +545,7 @@
         nav .item {
           width: 100%;
           background-color: var(--button-color);
-          border: 1px solid var(--text-color);
+          border: 1px solid var(--border-color);
           /* background: linear-gradient(#333, #444); */
         }
         .expand {
@@ -572,7 +573,11 @@
         .bColor {
           color: var(--button-color);
         }
-
+        .boxBorder {
+          border-left: 2px solid var(--border-color);
+          border-right: 2px solid var(--border-color);
+          border-top: 2px solid var(--border-color);
+        }
 
         @media screen and (max-width: 320px) {
           .infoBox {
@@ -853,7 +858,7 @@
           <ul class = "courseModalHolder">
 
             <% homework.forEach(function(homeworkGiven) { %>
-              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock"><%=homeworkGiven[0]%></li>
+              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
             <% }); %>
 
           </ul>
@@ -948,9 +953,9 @@
 
                         <% if (theHomeworkCourse[1].length != 0) { %>
                           <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
-                                Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%><br>
+                                <div class = "aColor">Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%></div><br>
                           <% } else { %>
-                                <a style = "text-decoration: underline; color: #38c450" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')">view assignment</a><br>
+                                <a style = "text-decoration: underline;" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')" class = "aColor">view assignment</a><br>
                           <% } %>
                         <% } %>
 
