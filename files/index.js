@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 //
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -382,6 +382,13 @@ app.post("/signup", urlencodedParser, function(req, res) {
           lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
           username: req.body.username,
           password: req.body.password,
+          colors: {
+            bgColor: "#FC7753",
+            textColor: "#F2EFEA",
+            infoColor: "#403D58",
+            buttonColor: "#66D7D1",
+            borderColor:"000000"
+          }
           email: req.body.username
         }
         //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
