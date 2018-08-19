@@ -1043,7 +1043,6 @@ app.get("/users/:user/colours", function(req, res) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       let colours = fs.readFileSync("../pallets.json");
       colours = JSON.parse(colours);
-      console.log(colours);
       res.render("colours", {user: req.params.user, colour: colours, colours: user.colors});
     });
 
