@@ -1,4 +1,4 @@
-let periodicTable = [
+var periodicTable = [
 { atomicNumber: 1,
   symbol: 'H',
   name: 'Hydrogen',
