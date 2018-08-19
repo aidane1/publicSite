@@ -30,10 +30,19 @@ function removeModal() {
   document.getElementById("modal").style.visibility = "hidden";
 }
 function displayHomework(course) {
+  var blocks = document.getElementsByClassName("modalBlock");
+  for (var i = 0; i < blocks.length; i++) {
+    blocks[i].className = "modalBlock";
+  }
   var boxes = document.getElementsByClassName("modalBox");
   for (var i = 0; i < boxes.length; i++) {
     boxes[i].className = "modalBox";
   }
+  var specialBoxes = document.getElementsByClassName("boxBorder");
+  for (var i = 0; i < specialBoxes.length; i++) {
+    specialBoxes[i].className = "modalBlock";
+  }
+  document.getElementById(course + "CourseBox").className = "boxBorder";
   document.getElementById(course).className = "modalBox display";
 }
 
