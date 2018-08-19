@@ -403,7 +403,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
                 from: "pvsstudents@gmail.com",
                 to: "aidaneglin@gmail.com",
                 subject: "user signup",
-                text: "User " + user.username " has signed up! (" + user.firstName + " " + user.lastName + ")"
+                text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
               }
               transporter.sendMail(mailOptions, function(error, info) {
                 if (error) {
