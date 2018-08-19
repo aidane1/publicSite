@@ -56,7 +56,7 @@ const UserSchema = new Schema({
   colors: {
     bgColor: {type: String, default: "#FC7753"},
     textColor: {type: String, default: "#F2EFEA"},
-    infoColor: {type: String, defualt: '#403D58'},
+    infoColor: {type: String, defualt: "#403D58"},
     buttonColor: {type: String, default: "#66D7D1"},
     borderColor: {type: String, default: ""}
   },
