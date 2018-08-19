@@ -399,6 +399,20 @@ app.post("/signup", urlencodedParser, function(req, res) {
               res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
             } else {
               //sets the session and cookie to current user ID
+              let mailOptions = {
+                from: "pvsstudents@gmail.com",
+                to: "aidaneglin@gmail.com",
+                subject: "user signup",
+                text: "User " + user.username " has signed up! (" + user.firstName + " " + user.lastName + ")"
+              }
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    console.log(error)
+                  res.redirect("/")
+                } else {
+
+                }
+              });
               req.session.userId = user._id;
               res.cookie("sessionID", req.session.userId);
               return res.redirect("/courses");
