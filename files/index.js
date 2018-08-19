@@ -164,17 +164,17 @@ app.use(cookieParser());
 
 app.enable('trust proxy');
 //
-//
-// app.use (function (req, res, next) {
-//   if (req.secure) {
-//     next();
-//   } else {
-//     res.redirect('http://' + req.headers.host + req.url);
-//   }
-// });
+
+app.use (function (req, res, next) {
+  if (req.secure) {
+    next();
+  } else {
+    res.redirect('http://' + req.headers.host + req.url);
+  }
+});
 
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
