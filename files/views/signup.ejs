@@ -45,7 +45,7 @@
       #login {
         display: block;
         margin: auto;
-        margin-top: 5px;
+        margin-top: 0px;
         width: 90%;
 
       }
@@ -83,7 +83,7 @@
         text-align: center;
         font-size: 10px;
         position: absolute;
-        top: 50px;
+        top: 30px;
 
       }
       .login {
@@ -138,7 +138,6 @@
       <div class = "error">
         <%=error%>
       </div>
-
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/signup">
           <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
