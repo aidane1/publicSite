@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -199,7 +199,7 @@ app.get("/", async (req, res, next) => {
       let monthEvent = Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
       let soonEvents = Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
       let final = await Promise.all([courses, monthEvent, soonEvents]);
-      courses = final[0], monthEvent = courses[1], soonEvents = final[2];
+      courses = final[0], monthEvent = final[1], soonEvents = final[2];
       //declares the top level variables that will be used
       let homeworkList = [];
       let todaysOrderedClasses = [];
@@ -730,6 +730,7 @@ app.get("/suggestions", async (req, res, next) => {
     try {
       let user = await User.findOne({_id : req.session.userId});
       res.render("suggestions", {colours: user.colors});
+
     } catch(e) {
       console.log(e);
       res.redirect("/");
