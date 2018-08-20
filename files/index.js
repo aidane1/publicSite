@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -185,83 +185,79 @@ app.get("/periodic-table", function(req, res) {
 
 
 
-app.get("/", function(req, res) {
+app.get("/", async (req, res, next) => {
   let currentDate = (new Date()).local();
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
-    //declares the top level variables that will be used
-    let homeworkList = [];
-    let todaysOrderedClasses = [];
-    let courseCodes = [];
-    let daysArray = [];
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      if (!user) {
-        res.redirect("/login");
-      } else {
-        Course.find({_id : user.courses}, function(err, courses) {
-          //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
-          courses.forEach(function(course) {
-            courseCodes.push(course.code);
-            homeworkList.push([course.course, course.homework, course.block, course.teacher])
-          });
-          //gets the order of todays blocks from a function
-          let todaysBlocks = blockToTime((currentDate).getDay() -1);
-          //itterates through those blocks and find which course matches the block
-          for (var i = 0; i < todaysBlocks.length; i++) {
-            //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
-            todaysOrderedClasses.push(courses.find(course => {
-              return course.block === todaysBlocks[i];
-            }));
-          }
-          //the find function returns the whole class, not just the block. aditionally, it may return undefined if you dont have a course during a block in which case it should return LC's
-          //this line turns undefined into LC's and makes it just the course name
-          todaysOrderedClasses = todaysOrderedClasses.map(todayCourse => todayCourse == undefined ? "LC's" : todayCourse.course);
-          //gathers the events from the past month for the calendar
-          Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
-            //makes a for loop that itterates as many times as their are days in the current month
-            for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
-              let todayArray = [];
-              let dayEvents = [];
-              for (var j = 0; j < monthEvent.length; j++) {
-                if (monthEvent[j].day === i) {
-                  //if one of the month's events happens on this day, add it to the array
-                  dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
-                }
-              }
-              //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
-              todayArray.push(dayEvents);
-              todayArray.push(i);
-              todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
-              //push todays array onto the month array
-              daysArray.push(todayArray);
-            }
-            //gathers the resources and assigns them to their induvidual classes
-            Resources.find({class: courseCodes}, function(err, resource) {
-              //itterates through all the courses
-              courses.forEach(function(course) {
-                //gives all the courses a property 'resources' that is blank
-                course.resource = [];
-                for (var i = 0; i < resource.length; i++) {
-                  //if the resources class matches the courses code, add that resource as one of the resources for the class
-                  if (course.code === resource[i].class) {
-                    course.resource.push(resource[i]);
-                  }
-                }
-              });
-              Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]}, function(err, soonEvents) {
-                for (var i = 0; i < soonEvents.length; i++) {
-                  soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
-                }
-
-                res.render("index", {order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
-              });
-              // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3), permissions: user.permissions});
-            });
-          });
-        });
+    let user = await User.findOne({_id : req.session.userId});
+    if (!user) {
+      res.redirect("/login");
+    } else {
+      let courses = Course.find({_id : user.courses});
+      //gathers the events from the past month for the calendar
+      let monthEvent = Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
+      let soonEvents = Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
+      let final = await Promise.all([courses, monthEvent, soonEvents]);
+      courses = final[0], monthEvent = courses[1], soonEvents = final[2];
+      //declares the top level variables that will be used
+      let homeworkList = [];
+      let todaysOrderedClasses = [];
+      let courseCodes = [];
+      let daysArray = [];
+      //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
+      courses.forEach(function(course) {
+        courseCodes.push(course.code);
+        homeworkList.push([course.course, course.homework, course.block, course.teacher])
+      });
+      //gets the order of todays blocks from a function
+      let todaysBlocks = blockToTime((currentDate).getDay() -1);
+      //itterates through those blocks and find which course matches the block
+      for (var i = 0; i < todaysBlocks.length; i++) {
+        //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
+        todaysOrderedClasses.push(courses.find(course => {
+          return course.block === todaysBlocks[i];
+        }));
       }
-    });
+      //the find function returns the whole class, not just the block. aditionally, it may return undefined if you dont have a course during a block in which case it should return LC's
+      //this line turns undefined into LC's and makes it just the course name
+      todaysOrderedClasses = todaysOrderedClasses.map(todayCourse => todayCourse == undefined ? "LC's" : todayCourse.course);
+      //makes a for loop that itterates as many times as their are days in the current month
+      for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
+        let todayArray = [];
+        let dayEvents = [];
+        for (var j = 0; j < monthEvent.length; j++) {
+          if (monthEvent[j].day === i) {
+            //if one of the month's events happens on this day, add it to the array
+            dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
+          }
+        }
+        //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
+        todayArray.push(dayEvents);
+        todayArray.push(i);
+        todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
+        //push todays array onto the month array
+        daysArray.push(todayArray);
+      }
+      //gathers the resources and assigns them to their induvidual classes
+      Resources.find({class: courseCodes}, function(err, resource) {
+        //itterates through all the courses
+        courses.forEach(function(course) {
+          //gives all the courses a property 'resources' that is blank
+          course.resource = [];
+          for (var i = 0; i < resource.length; i++) {
+            //if the resources class matches the courses code, add that resource as one of the resources for the class
+            if (course.code === resource[i].class) {
+              course.resource.push(resource[i]);
+            }
+          }
+        });
+        for (var i = 0; i < soonEvents.length; i++) {
+          soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
+        }
+        res.render("index", {order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
+      });
+    }
   } else {
     res.redirect("/login");
   }
@@ -608,7 +604,7 @@ app.post("/add", urlencodedParser, function(req, res) {
 
 
 
-app.get("/calendar", function(req, res) {
+app.get("/calendar", async (req, res, next) => {
   res.cookie("path", "/calendar");
 
   //user doesn't need a session to visit calendar, because there is no user specific data
@@ -619,47 +615,46 @@ app.get("/calendar", function(req, res) {
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
   //finds ALL events. will fix later.
   //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
-  Events.find({$and: [{date: {$gte: new Date(2018, 8, 0, 0, 0, 0, 0)}}, {date: {$lte: new Date(2019, 5, 29, 0, 0, 0, 0)}}]}, function(err, yearEvent) {
+  let yearEvent = await Events.find({$and: [{date: {$gte: new Date(2018, 8, 0, 0, 0, 0, 0)}}, {date: {$lte: new Date(2019, 5, 29, 0, 0, 0, 0)}}]});
+  // starts the first day of the calendar on september first of that year
+  let theDay = new Date(2018, 8, 1, 0, 0, 0, 0).getDay();
+  // declares an array that will be filled with the info for every day of the year
+  let daysArray = [];
+  let foundEvent = false;
+  //cycles through the 10 school months
+  for (var i = 0; i < 10; i++) {
+    //declares a currentMonth variable for later use
+    let currentMonth = [];
+    //get the amount of days in that month using the getDays function i defined.
+    for (var j = 0; j < getDays((i+8)%12); j++) {
+      //the days event array
+      let dayEvents = [];
+      foundEvent = false;
 
-    // starts the first day of the calendar on september first of that year
-    let theDay = new Date(2018, 8, 1, 0, 0, 0, 0).getDay();
-    // declares an array that will be filled with the info for every day of the year
-    let daysArray = [];
-    let foundEvent = false;
-    //cycles through the 10 school months
-    for (var i = 0; i < 10; i++) {
-      //declares a currentMonth variable for later use
-      let currentMonth = [];
-      //get the amount of days in that month using the getDays function i defined.
-      for (var j = 0; j < getDays((i+8)%12); j++) {
-        //the days event array
-        let dayEvents = [];
-        foundEvent = false;
-
-        //i know this is terribly ineffiecient (O(n^2)) but for a low n it isn't too bad. cycles through every event called by events.find and checks if it lies on the current day
-        for (var k = 0; k < yearEvent.length; k++) {
-          //if there is an event today, add it to the array and confirm an event was found
-          if (yearEvent[k].month === (i+8)%12 && yearEvent[k].day === j) {
-            foundEvent = true;
-            dayEvents.push(yearEvent[k].time + ": " + yearEvent[k].info);
-          }
+      //i know this is terribly ineffiecient (O(n^2)) but for a low n it isn't too bad. cycles through every event called by events.find and checks if it lies on the current day
+      for (var k = 0; k < yearEvent.length; k++) {
+        //if there is an event today, add it to the array and confirm an event was found
+        if (yearEvent[k].month === (i+8)%12 && yearEvent[k].day === j) {
+          foundEvent = true;
+          dayEvents.push(yearEvent[k].time + ": " + yearEvent[k].info);
         }
-        //pushes today on to the currentMonth array
-        currentMonth.push([dayEvents, j, (theDay%7)]);
-        //adds one to the day of the week
-        theDay++;
       }
-      //pushes this month to the array
-      monthsArray.push(currentMonth);
+      //pushes today on to the currentMonth array
+      currentMonth.push([dayEvents, j, (theDay%7)]);
+      //adds one to the day of the week
+      theDay++;
     }
-    if (req.session.userId) {
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors});
-      });
-    } else {
-      res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}});
-    }
-  });
+    //pushes this month to the array
+    monthsArray.push(currentMonth);
+  }
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors});
+  } else {
+    res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}});
+  }
+
+
 
 });
 
@@ -729,12 +724,16 @@ app.get("/logout", function(req, res) {
 
 
 
-app.get("/suggestions", function(req, res) {
+app.get("/suggestions", async (req, res, next) => {
   res.cookie("path", "/suggestions");
   if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
       res.render("suggestions", {colours: user.colors});
-    });
+    } catch(e) {
+      console.log(e);
+      res.redirect("/");
+    }
   } else {
     res.redirect("/login");
   }
@@ -779,20 +778,19 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
 });
 
 
-app.get("/questions", function(req, res) {
+app.get("/questions", async (req, res) => {
   res.cookie("path", "/questions?page=" + req.query.page);
   if (req.session.userId) {
     if (req.query.page == undefined) {
       res.redirect("/questions?page=0");
     } else {
-      Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20+20).exec(function(err, posts) {
-        posts = posts.slice((parseInt(req.query.page))*20);
-        User.findOne({_id : req.session.userId}, function(error, user) {
-          Posts.Post.countDocuments({}, function(err, count) {
-            res.render("questions", {posts: posts, user: user, colours: user.colors, page: parseInt(req.query.page), max: Math.ceil(count/20)});
-          });
-        })
-      });
+      let posts = Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20+20);
+      let user = User.findOne({_id : req.session.userId});
+      let count = Posts.Post.countDocuments({});
+      let final = await Promise.all([posts, user, count]);
+      posts = final[0], user = final[1], count = final[2];
+      posts = posts.slice((parseInt(req.query.page))*20);
+      res.render("questions", {posts: posts, user: user, colours: user.colors, page: parseInt(req.query.page), max: Math.ceil(count/20)});
     }
 
   } else {
