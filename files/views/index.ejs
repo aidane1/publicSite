@@ -955,6 +955,7 @@
                   <% } %>
                   <% if (todaysCourses === false) { %>
                     <li> it's the weekend! </li>
+
                   <% } %>
                 </ul>
               </div>
@@ -1089,7 +1090,7 @@
             <div class = "header"><h1>Schedule and other</h1></div>
             <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/schedule">My Schedule</a></div>
             <div class = "scheduleHref" style = "margin-top: 50px"><a href = "/view-courses">Other Courses</a></div>
-            <div class = "scheduleHref" style = "margin-top: 50px"><a href=  "/users/<%=username%>">Personalize Account</a></div>
+            <div class = "scheduleHref" style = "margin-top: 50px"><a href=  "/users/<%=username%>">Account</a></div>
           </div>
         <% } else if (order[key] == "Resources") { %>
           <div id = "resources" class = "resources box" name = "resources">
