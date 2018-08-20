@@ -383,11 +383,11 @@ app.post("/signup", urlencodedParser, function(req, res) {
           username: req.body.username,
           password: req.body.password,
           colors: {
-            bgColor: "#FC7753",
-            textColor: "#F2EFEA",
-            infoColor: "#403D58",
-            buttonColor: "#66D7D1",
-            borderColor:"000000"
+            bgColor: "rgb(79, 49, 48)",
+            textColor: "rgb(216, 215, 143)",
+            infoColor: "rgb(117, 55, 66)",
+            buttonColor: "rgb(170, 80, 66)",
+            borderColor:"rgb(216, 189, 138)"
           },
           email: req.body.username
         }
