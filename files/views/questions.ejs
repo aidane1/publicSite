@@ -168,43 +168,47 @@
         max-width: 700px;
         overflow-y: auto;
         overflow-x: hidden;
-        position: fixed;
-        top: 0px;
-        bottom: 60px;
-        left: 50%;
-        transform: translateX(-50%);
+        display: block;
+        margin: auto;
         background: var(--bg-color);
-        
+
       }
       .question {
         color: var(--text-color);
         padding-top: 5px;
         padding-bottom: 5px;
-        border-bottom: 1px solid grey;
-        border-top: 1px solid grey;
+        border-bottom: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         margin-top: 10px;
         margin-bottom: 10px;
         position: relative;
+        border-radius: 10px;
         right: 0px;
         font-size: 20px;
         font-weight: bold;
         cursor: pointer;
         background-color: var(--info-color);
-
+        z-index: 4;
+      }
+      .questionTitle {
+        margin-left: 10px;
       }
       .replyBox {
+
         width: 100%;
         height: 100%;
         position: absolute;
         right: -100%;
         top: 0px;
         background-color: #004720;
+        z-index: 1;
       }
       .boxFull {
         background-color: #28bf41;
       }
       .submittedBy {
         font-size: 10px;
+        margin-left: 10px;
       }
       .reply {
         font-size: 15px;
