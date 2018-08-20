@@ -69,10 +69,19 @@
 
     </script>
     <style>
+      :root {
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
+      }
       * {
         font-family: sans-serif;
         box-sizing: border-box;
+        color: var(--text-color);
       }
+
       html {
         height: 100%;
         -webkit-text-size-adjust: 100%
@@ -81,7 +90,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        background-color: #1f3a68;
+        background-color: var(--bg-color);
       }
       .coursesDisplay {
         height: 100%;
@@ -92,16 +101,17 @@
         flex: 1;
         display: flex;
         justify-content: center;
-        background: linear-gradient(#75a7ff, #4971b7);
+        background-color: var(--button-color);
+        border: 2px solid var(--border-color);
         padding: 0;
-        border: none;
+        border-radius: 10px;
+        margin-top: 8px;
+        margin-bottom: 8px;
         outline: none;
         font-size: 35px;
-        color: white;
+        color: var(--text-color);
       }
-      .course:active {
-        background: linear-gradient(#0f6abf, #0b3a66);
-      }
+
       /* .submit {
         display: none;
 
@@ -115,7 +125,8 @@
         height: 200px;
         outline: none;
         display: block;
-
+        background-color: var(--info-color);
+        border: 1px solid var(--border-color);
 
       }
       .option {
@@ -125,8 +136,10 @@
         display: block;
         margin: auto;
         margin-top: 20px;
-        background-color: #75a7ff;
-        color: white;
+        background-color: var(--button-color);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-color);
         font-size: 18px;
       }
       .text {
@@ -135,7 +148,7 @@
         display: block;
         margin: auto;
         margin-top: 15px;
-        color: white;
+
       }
       .header {
         width: 100%;
@@ -143,7 +156,7 @@
         text-align: center;
         /* margin-top: 10px; */
         font-size: 25px;
-        color: white;
+
       }
 
       label {
@@ -155,12 +168,18 @@
         font-size: 18px;
         display: block;
         margin: auto;
+        background-color: var(--info-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
       }
       .questions {
         outline: none;
         font-size: 18px;
         display: block;
         margin: auto;
+        background-color: var(--info-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
       }
       #submitTypes {
         width: 100%;
@@ -169,12 +188,14 @@
       }
       .submitButton {
         width: 45%;
-        height: 30px;
+        height: 50px;
         border-radius: 5px;
-        background-color: #26a4ff;
+        background-color: var(--button-color);
+        font-size: 20px;
         display: block;
         position: absolute;
         left: 27.5%;
+        color: var(--text-color);
         bottom: 10px;
         outline: none;
       }
@@ -193,6 +214,9 @@
         margin-bottom: 15px;
         margin-top: -30px;
         font-size: 18px;
+        background-color: var(--info-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
       }
       .submit {
         display: none;
@@ -222,6 +246,10 @@
         font-size: 18px;
         display: block;
         margin: auto;
+        background-color: var(--info-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        outline: none;
       }
       @media screen and (max-width: 320px) {
         .submit {
@@ -253,7 +281,8 @@
           margin-top: 50px;
         }
         .notes {
-          height: 500px;
+          margin-top: 20px;
+          height: 300px;
 
         }
         .submitButton {
