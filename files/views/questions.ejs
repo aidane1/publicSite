@@ -241,7 +241,7 @@
         top: -100%;
         left: 50%;
         transform: translateX(-50%);
-        background: var(--button-color);
+        background: var(--bg-color);
         transition: top 1.2s;
         z-index: 10;
       }
@@ -269,10 +269,11 @@
       .submit {
         width: 150px;
         height: 50px;
-        background-color: var(--info-color);
+        background-color: var(--button-color);
         margin-top: 10px;
         font-size: 18px;
         border-radius: 10px;
+        -webkit-appearance: none;
       }
       .header {
         font-size: 20px;
@@ -286,6 +287,12 @@
         display: block;
         margin: auto;
         outline: none;
+        background-color: var(--info-color);
+        color: var(--text-color);
+      }
+      #title {
+        background-color: var(--info-color);
+        color: var(--text-color);
       }
       .delete {
         width: 75px;
