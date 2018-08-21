@@ -69,6 +69,10 @@ const UserSchema = new Schema({
   },
   addedEvents: {
     type: Array
+  },
+  font: {
+    type: String,
+    default: "/public/fonts/LANENAR_.ttf"
   }
 
 });

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script>
+
+
+    </script>
+    <style>
+      @font-face {
+        font-family: LANENAR;
+        src: url("/public/fonts/LANENAR_.ttf")
+      }
+      @font-face {
+        font-family: ADAM;
+        src: url("/public/fonts/Adam.otf")
+      }
+      @font-face {
+        font-family: EVOGRIA;
+        src: url("/public/fonts/Evogria.otf")
+      }
+      @font-face {
+        font-family: LANECANE;
+        src: url("/public/fonts/LANECANE.ttf")
+      }
+      @font-face {
+        font-family: NEOUB;
+        src: url("/public/fonts/Neou-Bold.ttf")
+      }
+      @font-face {
+        font-family: NEOUT;
+        src: url("/public/fonts/Neou-Thin.ttf")
+      }
+      @font-face {
+        font-family: SANSBOLD;
+        src: url("/public/fonts/theboldfont.ttf")
+      }
+      @font-face {
+        font-family: CHAMPB;
+        src: url("/public/fonts/Champagne & Limousines Bold.ttf")
+      }
+      @font-face {
+        font-family: CHAMPI;
+        src: url("/public/fonts/Champagne & Limousines Italic.ttf")
+      }
+      @font-face {
+        font-family: CHAMPBI;
+        src: url("/public/fonts/Champagne & Limousines Bold Italic.ttf")
+      }
+      :root {
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+      }
+      .font {
+        width: 100%;
+        text-align: left;
+        font-size: 18px;
+        background-color: var(--info-color);
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .display {
+        padding: 20px;
+        color: var(--text-color);
+        width: 95%;
+
+      }
+      .select {
+        padding: 20px;
+        width: 5%;
+        text-align: right;
+        color: var(--text-color);
+        border-left: 2px solid var(--border-color)
+      }
+      @media screen and (max-width: 320px) {
+        .font {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "font" style = "font-family: LANENAR"><div class = "display">PVSS students (Lane)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: ADAM"><div div class = "display">PVSS students (Adam)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: EVOGRIA"><div div class = "display">PVSS students (Evogria)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: LANECANE"><div div class = "display">PVSS students (Cane)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: NEOUB"><div div class = "display">PVSS students (Neou-Bold)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: NEOUT"><div div class = "display">PVSS students (Neou-Thin)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: SANSBOLD"><div div class = "display">PVSS students (Sans-Bold)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: CHAMPB"><div div class = "display">PVSS students (Champagne-Bold)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: CHAMPI"><div div class = "display">PVSS students (Champagne-Italic)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: CHAMPBI"><div div class = "display">PVSS students (Champagne-BI)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+  </body>
+  <script>
+    var fontObject = {
+      LANENAR: "/public/fonts/LANENAR_.ttf",
+      ADAM: "/public/fonts/Adam.otf",
+      EVOGRIA: "/public/fonts/Evogria.otf",
+      LANECANE: "/public/fonts/LANECANE.ttf",
+      NEOUB: "/public/fonts/Neou-Bold.ttf",
+      NEOUT: "/public/fonts/Neou-Thin.ttf",
+      SANSBOLD: "/public/fonts/theboldfont.ttf",
+      CHAMPB:"/public/fonts/Champagne & Limousines Bold.ttf",
+      CHAMPI:"/public/fonts/Champagne & Limousines Italic.ttf",
+      CHAMPBI:"/public/fonts/Champagne & Limousines Bold Italic.ttf"
+    }
+    function fontFunction(element) {
+      console.log(fontObject[element.parentNode.style.fontFamily]);
+
+
+      let xmlhttp;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.open("POST", "/users/<%=user%>/fonts");
+      xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          window.location.href = "/users/<%=user%>";
+        }
+      }
+
+      xmlhttp.send(encodeURI("font="+fontObject[element.parentNode.style.fontFamily]));
+
+    }
+
+  </script>
+</html>
