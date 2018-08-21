@@ -768,55 +768,7 @@
 
 
     </style>
-    <script>
-    function postAlerts(deleteMessage) {
-      let xmlhttp;
-      if (window.XMLHttpRequest) {
-        // code for modern browsers
-        xmlhttp = new XMLHttpRequest();
-      } else {
-        // code for old IE browsers
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xmlhttp.open("POST", "/alerts");
-      xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-      // xmlhttp.onreadystatechange = function() {
-      //   if (this.readyState == 4 && this.status == 200) {
-      //
-      //   }
-      // }
-      xmlhttp.send(encodeURI("delete=" + deleteMessage));
-    }
-    function loadAlerts() {
-      let xmlhttp;
-      if (window.XMLHttpRequest) {
-        // code for modern browsers
-        xmlhttp = new XMLHttpRequest();
-      } else {
-        // code for old IE browsers
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          let alerts = this.responseText.split('"').join("").split("[").join("").split("]").join("");
-          alerts = alerts.split(",");
-          if (alerts != "") {
-            if (alerts[0] === "postComment") {
-              if (confirm(alerts[1] + " Click okay to go view the comment.")) {
-                window.location.href = alerts[2];
-              }
-            } else {
-              confirm(alerts);
-            }
-            postAlerts(true);
-          }
-        }
-      }
-      xmlhttp.open("GET", "/alerts", true);
-      xmlhttp.send();
-    }
-    loadAlerts();
-    </script>
+
   </head>
   <body>
 
@@ -1177,6 +1129,55 @@
 
   </body>
   <script src = "public/js/home.js"></script>
+  <script>
+  function postAlerts(deleteMessage) {
+    let xmlhttp;
+    if (window.XMLHttpRequest) {
+      // code for modern browsers
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      // code for old IE browsers
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("POST", "/alerts");
+    xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+    // xmlhttp.onreadystatechange = function() {
+    //   if (this.readyState == 4 && this.status == 200) {
+    //
+    //   }
+    // }
+    xmlhttp.send(encodeURI("delete=" + deleteMessage));
+  }
+  function loadAlerts() {
+    let xmlhttp;
+    if (window.XMLHttpRequest) {
+      // code for modern browsers
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      // code for old IE browsers
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let alerts = this.responseText.split('"').join("").split("[").join("").split("]").join("");
+        alerts = alerts.split(",");
+        if (alerts != "") {
+          if (alerts[0] === "postComment") {
+            if (confirm(alerts[1] + " Click okay to go view the comment.")) {
+              window.location.href = alerts[2];
+            }
+          } else {
+            confirm(alerts);
+          }
+          postAlerts(true);
+        }
+      }
+    }
+    xmlhttp.open("GET", "/alerts", true);
+    xmlhttp.send();
+  }
+  loadAlerts();
+  </script>
 
   <!-- This shit is SUPER fucky. leave it for the time being -->
   <script>
