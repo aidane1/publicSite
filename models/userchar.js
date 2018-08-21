@@ -68,13 +68,7 @@ const UserSchema = new Schema({
     block5: {type: String, default: "Resources"}
   },
   addedEvents: {
-    year: {type: Number, required: true},
-    month: {type: Number, required: true},
-    day: {type: Number, required: true},
-    time: {type: String, required: true, default: "9:20"},
-    info: {type: "String"},
-    date: {type: Date},
-    longForm: {type: String}
+    type: Array
   }
 
 });
