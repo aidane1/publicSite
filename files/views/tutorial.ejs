@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .bodyHolder {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgb(79, 49, 48);
+        overflow: auto;
+      }
+      .imageHolder {
+        position: relative;
+        width: 100%;
+        margin: auto;
+
+      }
+      .imageHolder img {
+
+        width: 60%;
+        display: block;
+        margin: auto;
+        border: 2px solid white;
+        border-top: none;
+      }
+      .textHolder {
+        color: rgb(216, 215, 143);
+        margin-top: 10px;
+        text-align: center;
+        font-size: 18px;
+        padding: 15px;
+      }
+      .leftArrow {
+
+        width: 20%;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        background-color: rgb(117, 55, 66);
+        border-right: 2px solid white;
+      }
+      .rightArrow {
+        width: 20%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgb(117, 55, 66);
+        border-left: 2px solid white;
+      }
+      .innerText {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+        color: rgb(216, 215, 143);
+        transform: translateY(-50%);
+      }
+      a {
+        position: fixed;
+        bottom: 5px;
+        right: 15px;
+        color: red;
+        
+        font-size: 18px;
+        color: rgb(216, 215, 143);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "bodyHolder">
+      <div class = "imageHolder" id = "imageHolder">
+        <div class = "leftArrow" onclick = "changeImage(-1)">
+          <div class = "innerText">
+            <<
+          </div>
+
+        </div>
+        <img id = "image"/>
+        <div class = "rightArrow" onclick = "changeImage(1)">
+          <div class = "innerText">
+            >>
+          </div>
+        </div>
+      </div>
+      <div class = "textHolder" id = "textHolder">
+        This is the signup page
+      </div>
+      <a href = "/courses">skip</a>
+    </div>
+  </body>
+  <script>
+    var currentImageNum = 0;
+    let maxNum = 0;
+    var firstImage = new Image();
+    firstImage.src = "/public/images/courseSelect1.PNG";
+    firstImage.id = "image";
+    firstImage.onload = function() {
+      loadedArray.push(this);
+      changeImage(0);
+    }
+    var loadedArray = [];
+    var sources = ["/public/images/courseSelect1.PNG", "/public/images/courseSelect2.PNG", "/public/images/courseSelect3.PNG", "/public/images/homescreen.PNG", "/public/images/add1.PNG", "/public/images/add2.PNG", "/public/images/account.PNG", "/public/images/colourPick.PNG", "/public/images/displayOrder.PNG", "/public/images/chatroom.PNG", "/public/images/calendar.PNG", "/public/images/questionsPage.PNG", "/public/images/submitPost.PNG", "/public/images/open1.PNG", "/public/images/open2.PNG", "/public/images/viewHomework.PNG", "/public/images/resources.PNG"];
+    var descriptions = ["this is the course select page. Here, you select the courses you have this semester for the app to display to you.", "To select a course, simply tap on the correct catagory and click your course from the list.", "Once you've selected all your courses and confirmed they're correct, you're done!",
+    "this is the home page. Any upcoming events will be displayed here. You can also use the navigator in the top right corner to direct yourself to different parts of the app.", "On IOS devices, you can add the app to your home screen to improve user experience. To do this, make sure you're on the home screen and just click share (the middle button on the bottom), and scroll over to 'add to home screen'. Click on this! on IOS 11.1+ this will make it a native app.", "Enter the name as 'PVSS', and click add", "This is your account page. View all your posts and comments, edit your theme colours, and change the display order of information on the home page here!",
+    "This is your theme colour picker. scroll down the list until you find a pallet you like, and then drag and drop the colours in to place!", "Here, you can change the order information is displayed on the home screen. Just drag and drop in to the place you'd like, and click save!", "This is the chatroom. Type a message in the input bar, then click send to broadcast it to everyone!", "This is the events calendar. Every event of the year is listed here! Simply click on word 'event' to get an event popup. You can add your own personal events", "This is the questions page. Help others with their questions, and submit your own here! To submit a post, click the pencil on the bottom bar. <br><h6><i>note: you don't actually have to post just school related questions here.</i></h6>", "This is how you submit a post. Enter the title, and choose if you'd like others to be able to see who made the post. The title and user choice are mandatory, body is optional!", "To open a post, swipe from right to left, and then release. The 'post' marker will turn a bright green.", "A primed post!", "This popup, on the home screen, under courses, displays all the homework from all of your classes. Just click on the class name to view its homework!", "This box on the home page provides you with resources to assist in your classes. Just click the class name you'd like and view!"
+  ];
+    function changeImage(dir) {
+      currentImageNum += dir;
+      if (currentImageNum < 0) {
+        currentImageNum = 0;
+      } else if (currentImageNum >= sources.length) {
+        currentImageNum = sources.length-1;
+      }
+      maxNum += Math.abs(dir);
+      if (maxNum < sources.length-1) {
+        var downloadedImage = new Image();
+        downloadedImage.src = sources[maxNum+1];
+        downloadedImage.id = "image";
+        downloadedImage.onload = function() {
+          loadedArray.push(this);
+        }
+      }
+      var currentImage = document.getElementById("image");
+      document.getElementById("textHolder").innerHTML = descriptions[currentImageNum];
+      currentImage.parentNode.replaceChild(loadedArray[currentImageNum], currentImage);
+
+
+    }
+
+
+
+  </script>
+</html>

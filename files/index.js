@@ -165,16 +165,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -941,6 +941,11 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
      }
   });
 });
+
+
+app.get("/tutorial", function(req, res) {
+  res.render("tutorial");
+})
 
 
 app.get("/schedule", function(req, res) {
