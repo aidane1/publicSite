@@ -410,9 +410,9 @@ app.post("/signup", urlencodedParser, function(req, res) {
                 }
               });
               req.session.userId = user._id;
-              console.log(req.session.userId);
+              console.log(req.session.userId)
               res.cookie("sessionID", req.session.userId);
-              return res.redirect("/tutorial");
+              res.redirect("/tutorial");
             }
           });
         } catch(e) {
