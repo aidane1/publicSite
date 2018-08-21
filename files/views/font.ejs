@@ -57,6 +57,10 @@
         font-family: ASGALT;
         src: url("/public/fonts/Asgalt-Regular.ttf")
       }
+      @font-face {
+        font-family: FLORENCE;
+        src: url("/public/fonts/Florsn01.ttf")
+      }
       :root {
         --bg-color: <%=colours.bgColor%>;
         --info-color: <%=colours.infoColor%>;
@@ -111,6 +115,7 @@
     <div class = "font" style = "font-family: CHAMPBI"><div div class = "display">PVSS students (Champagne-BI)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
     <div class = "font" style = "font-family: LEIXO"><div div class = "display">PVSS students (Leixo)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
     <div class = "font" style = "font-family: ASGALT"><div div class = "display">PVSS students (Asgalt)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: FLORENCE"><div div class = "display">PVSS students (Florence)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
   </body>
   <script>
     var fontObject = {
@@ -125,7 +130,8 @@
       CHAMPI:"/public/fonts/ChampagneI.ttf",
       CHAMPBI:"/public/fonts/ChampagneBI.ttf",
       LEIXO: "/public/fonts/leixo.ttf",
-      ASGALT: "/public/fonts/Asgalt-Regular.ttf"
+      ASGALT: "/public/fonts/Asgalt-Regular.ttf",
+      FLORENCE: "/public/fonts/Florsn01.ttf"
     }
     function fontFunction(element) {
       console.log(fontObject[element.parentNode.style.fontFamily]);
