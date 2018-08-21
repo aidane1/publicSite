@@ -66,30 +66,22 @@ const UserSchema = new Schema({
     block3: {type: String, default: "Calendar"},
     block4: {type: String, default: "Schedule"},
     block5: {type: String, default: "Resources"}
+  },
+  addedEvents: {
+    year: {type: Number; required: true},
+    month: {type: Number; required: true},
+    day: {type: Number; required: true},
+    time: {type: String; required: true; default: "9:20"},
+    info: {type: "String"},
+    date: {type: Date},
+    longForm: {type: String}
   }
 
 });
 
 
 
-// UserSchema.statics.authenticate = function(name, password, callback) {
-//   User.findOne({ username: name }).exec(function(err, user) {
-//     if (err) {
-//       return callback(err, "unknown error");
-//     } else if (!user) {
-//       var err = new Error('User not found.');
-//       callback(err, "this is a test");
-//     }
-//     bcrypt.compare(password, user.password, function (err, result) {
-//       if (result === true) {
-//         return callback(null, user);
-//       } else {
-//         var err = new Error("username or password incorrect");
-//         return callback(err, "not found");
-//       }
-//     });
-//   });
-// }
+
 
 UserSchema.statics.authenticate = (name, password) => {
 
@@ -104,7 +96,6 @@ UserSchema.statics.authenticate = (name, password) => {
           if (result) {
             resolve(user);
           } else {
-            console.log("dicks");
             reject("password incorrect");
           }
         });
