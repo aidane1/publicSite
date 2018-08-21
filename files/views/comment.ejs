@@ -39,9 +39,13 @@
         --border-color: <%=colours.borderColor%>;
         --text-color: <%=colours.textColor%>;
       }
+      @font-face {
+        font-family: sansFont;
+        src: url("/public/fonts/LANENAR_.ttf")
+      }
       * {
         box-sizing: border-box;
-        font-family: sans-serif;
+        font-family: sansFont, sans-serif;
         color: var(--text-color);
       }
       html {

@@ -117,6 +117,10 @@
 
     </script>
     <style>
+      @font-face {
+        font-family: sansFont;
+        src: url("/public/fonts/LANENAR_.ttf")
+      }
       :root {
         --bg-color: <%=colours.bgColor%>;
         --info-color: <%=colours.infoColor%>;
@@ -126,7 +130,7 @@
       }
 
       * {
-        font-family: sans-serif;
+        font-family: sansFont, sans-serif;
         box-sizing: border-box;
         color: var(--text-color);
       }
