@@ -127,7 +127,8 @@
       if (currentImageNum < 0) {
         currentImageNum = 0;
       } else if (currentImageNum >= sources.length) {
-        window.location.Href = "https://www.pvstudents.ca/courses";
+        currentImageNum = sources.length-1;
+        window.location = "https://www.pvstudents.ca/courses";
       }
       maxNum += Math.abs(dir);
       if (maxNum < sources.length-1) {
