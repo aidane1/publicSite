@@ -411,7 +411,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
               });
               req.session.userId = user._id;
               res.cookie("sessionID", req.session.userId);
-              return res.redirect("/courses");
+              return res.redirect("/tutorial");
             }
           });
         } catch(e) {
