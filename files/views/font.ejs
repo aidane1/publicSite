@@ -49,6 +49,14 @@
         font-family: CHAMPBI;
         src: url("/public/fonts/ChampagneBI.ttf")
       }
+      @font-face {
+        font-family: LEIXO;
+        src: url("/public/fonts/leixo.ttf")
+      }
+      @font-face {
+        font-family: ASGALT;
+        src: url("/public/fonts/Asgalt-Regular.ttf")
+      }
       :root {
         --bg-color: <%=colours.bgColor%>;
         --info-color: <%=colours.infoColor%>;
@@ -101,6 +109,8 @@
     <div class = "font" style = "font-family: CHAMPB"><div div class = "display">PVSS students (Champagne-Bold)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
     <div class = "font" style = "font-family: CHAMPI"><div div class = "display">PVSS students (Champagne-Italic)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
     <div class = "font" style = "font-family: CHAMPBI"><div div class = "display">PVSS students (Champagne-BI)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: LEIXO"><div div class = "display">PVSS students (Leixo)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
+    <div class = "font" style = "font-family: ASGALT"><div div class = "display">PVSS students (Asgalt)</div><div class = "select" onclick = "fontFunction(this)">&#10003;</div></div>
   </body>
   <script>
     var fontObject = {
@@ -113,7 +123,9 @@
       SANSBOLD: "/public/fonts/theboldfont.ttf",
       CHAMPB:"/public/fonts/ChampagneB.ttf",
       CHAMPI:"/public/fonts/ChampagneI.ttf",
-      CHAMPBI:"/public/fonts/ChampagneBI.ttf"
+      CHAMPBI:"/public/fonts/ChampagneBI.ttf",
+      LEIXO: "/public/fonts/leixo.ttf",
+      ASGALT: "/public/fonts/Asgalt-Regular.ttf"
     }
     function fontFunction(element) {
       console.log(fontObject[element.parentNode.style.fontFamily]);
