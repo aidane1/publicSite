@@ -71,7 +71,7 @@ const UserSchema = new Schema({
     year: {type: Number, required: true},
     month: {type: Number, required: true},
     day: {type: Number, required: true},
-    time: {type: String, required: true; default: "9:20"},
+    time: {type: String, required: true, default: "9:20"},
     info: {type: "String"},
     date: {type: Date},
     longForm: {type: String}
