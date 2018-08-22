@@ -17,12 +17,14 @@ Date.prototype.local = function() {
 
 
 function holidayFont(font) {
-  let date = new Date(2018, 9, 31);
+  let date = new Date();
   if (date.getDate() == 31 && date.getMonth() == 9) {
-    // return "/public/fonts/halloween.ttf";
-    return font;
+    return "/public/fonts/HallowenInline.ttf";
+    // return font;
   } else if (date.getDate() == 25 && date.getMonth() == 11) {
-    return Math.random()*2 > 1 ? "/public/fonts/christmas1.ttf" : "/public/fonts/christmas2.ttf";
+    return "/public/fonts/christmas.ttf";
+  } else if (date.getDate() == 14 && date.getMonth() == 1) {
+    return "/public/fonts/Filxgirl.TTF";
   }
   return font;
 }
