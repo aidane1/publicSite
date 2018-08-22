@@ -1,4 +1,4 @@
-const cacheName = "v4";
+const cacheName = "v5";
 
 const cacheAssets = [
   "public/html/offline.html",
@@ -46,6 +46,7 @@ self.addEventListener("fetch", event => {
       return resp || fetch(event.request).then(function(response) {
         return caches.open(cacheName).then(function(cache) {
           cache.put(event.request, response.clone());
+          console.log(response.clone());
           return response;
         });
       });
