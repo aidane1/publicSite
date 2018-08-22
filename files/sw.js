@@ -1,7 +1,8 @@
-const cacheName = "v3";
+const cacheName = "v4";
 
 const cacheAssets = [
-  "public/html/offline.html"
+  "public/html/offline.html",
+  "public/fonts/Evogria.otf"
 ]
 
 self.addEventListener("install", e => {
@@ -16,8 +17,6 @@ self.addEventListener("install", e => {
       .then(() => self.skipWaiting())
   );
 });
-
-
 self.addEventListener("activate", e => {
   console.log("service worker: activated");;
   e.waitUntil(
@@ -34,8 +33,38 @@ self.addEventListener("activate", e => {
   );
 
 });
+self.addEventListener("fetch", event => {
 
-self.addEventListener("fetch", e => {
   console.log("service worker: fetching");
-  e.respondWith(fetch(e.request).catch(() => caches.match("public/html/offline.html")));
+  if (event.request.destination == "font" && event.request.referrer.split("/")[event.request.referrer.split("/").length-1] != "fonts") {
+    // e.respondWith(caches.match(e.request).catch(() => {
+    //   return fetch(e.request);
+    // }))
+    // e.respondWith(caches.match(e.request).catch(() => fetch(e.request)))
+    // e.respondWith(fetch(e.request));
+    caches.match(event.request).then(function(resp) {
+      return resp || fetch(event.request).then(function(response) {
+        return caches.open(cacheName).then(function(cache) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+    })
+    // e.respondWith(
+    //   caches.match(e.request).then(function(response) {
+    //     console.log(response);
+    //     return caches.open(cacheName).then(function(cache) {
+    //       if (e.request.url.indexOf('test') < 0) {
+    //         cache.put(e.request.url, response.clone());
+    //       }
+    //       return response;
+    //     });
+    //   })
+    // );
+
+  } else {
+    event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
+  }
+
+
 });
