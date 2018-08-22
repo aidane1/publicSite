@@ -747,7 +747,6 @@
           left: 50%;
           top: 10%;
           transform: translateX(-50%);
-          background-color: var(--text-color);
           border-radius: 10px;
           display: none;
           overflow: auto;
@@ -845,6 +844,7 @@
         <% homework.forEach(function(theHomeworkGiven) { %>
           <div class = "modalBox" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>">
             <% for (var i = theHomeworkGiven[1].length-1; i >= 0; i--) { %>
+              <br>
               <br>
               <% if (theHomeworkGiven[1][i].assignment != "") { %>
                   <%=theHomeworkGiven[1][i].date.toDateString()%>
