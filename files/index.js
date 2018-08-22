@@ -289,25 +289,28 @@ app.post("/", urlencodedParser, function(req,res) {
       if (err) {
         res.redirect('/login');
       } else {
-        //makes sure the user is an admin before doing anything else... I'm going to turn this into an asyncronous promise funtion later
-        if (user.permissions === "admin") {
 
-          //the next four lines just parse the data that was sent in the form of a string seperated by underscores
-          let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
-          let block = req.body.removedHomework.split("_")[2];
-          let index = parseInt(req.body.removedHomework.split("_")[4]);
-          let teacher = (req.body.removedHomework.split("_")[3]);
 
-          //finds the corrosponding course
-          Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
-            if (err) {
-              //if an error occurs at this point, redirect to home
-              res.redirect("/");
-            } else {
-              //makes sure the course exists, and isn't empty
-              if(theCourse != null && theCourse != "" && theCourse.course) {
-                //declares homework variable for later use
-                let homework;
+        //the next four lines just parse the data that was sent in the form of a string seperated by underscores
+        let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
+        let block = req.body.removedHomework.split("_")[2];
+        let index = parseInt(req.body.removedHomework.split("_")[4]);
+        let teacher = (req.body.removedHomework.split("_")[3]);
+
+        //finds the corrosponding course
+        Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
+          if (err) {
+            //if an error occurs at this point, redirect to home
+            res.redirect("/");
+          } else {
+            //makes sure the course exists, and isn't empty
+            if(theCourse != null && theCourse != "" && theCourse.course) {
+              //declares homework variable for later use
+              let homework;
+
+              //if the homework was submitted by the person who clicked remove, or the person who clicked remove is an admin,
+              //continue with the delete process
+              if (theCourse.homework[index].submittedBy == user.username || user.permissions === "admin") {
                 //homework is stored as an array of objects in the string. If that array length is one, then there's only one course that could be being removed
                 //therefore, we just set the homework array to empty.
                 if (theCourse.homework.length === 1) {
@@ -317,19 +320,19 @@ app.post("/", urlencodedParser, function(req,res) {
                   theCourse.homework.splice(index, 1);
                 }
                 //finds and updates the courses homework, and then redirects to home
-                Course.findOneAndUpdate({_id : theCourse.id}, {homework : theCourse.homework}).then(function() {
+                Course.findOneAndUpdate({_id : theCourse.id}, {$set: {homework : theCourse.homework}}).then(function() {
                   res.redirect("/");
                 });
               } else {
-                //if the course doesn't exist, which could only happen if some tampered with it client side, just redirect to home.
                 res.redirect("/");
               }
+
+            } else {
+              //if the course doesn't exist, which could only happen if some tampered with it client side, just redirect to home.
+              res.redirect("/");
             }
-          });
-        } else {
-          //if the user isn't an admin, redirect to home.
-          res.redirect("/");
-        }
+          }
+        });
       }
     })
   } else {
@@ -400,7 +403,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
             buttonColor: "rgb(170, 80, 66)",
             borderColor:"rgb(216, 189, 138)"
           },
-          font: "/public/fonts/Evogria.ttf",
+          font: "/public/fonts/Evogria.otf",
           email: req.body.username
         }
         //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
