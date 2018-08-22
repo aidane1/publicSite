@@ -36,6 +36,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", event => {
 
   console.log("service worker: fetching");
+  console.log(event.request);
   if (event.request.destination == "font" && event.request.referrer.split("/")[event.request.referrer.split("/").length-1] != "fonts") {
     // e.respondWith(caches.match(e.request).catch(() => {
     //   return fetch(e.request);
