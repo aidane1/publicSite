@@ -42,6 +42,7 @@ self.addEventListener("fetch", event => {
     // }))
     // e.respondWith(caches.match(e.request).catch(() => fetch(e.request)))
     // e.respondWith(fetch(e.request));
+    console.log('yeet test 1');
     caches.match(event.request).then(function(resp) {
       return resp || fetch(event.request).then(function(response) {
         console.log("fuckin yeet.");
