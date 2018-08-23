@@ -6,26 +6,27 @@
     "colour4": "#DBD56E",
     "colour5": "#F2EFEA"
   },
+
   "pallet1": {
-    "colour1": "#5DFDCB",
-    "colour2": "#FC7753",
-    "colour3": "#66D7D1",
-    "colour4": "#E6FCFF",
-    "colour5": "#90D7FF"
+    "colour1": "#F8B195",
+    "colour2": "#F67280",
+    "colour3": "#C06C84",
+    "colour4": "#6C5B7B",
+    "colour5": "#355C7D"
   },
   "pallet2": {
-    "colour1": "#F1FFE7",
-    "colour2": "#A9FDAC",
-    "colour3": "#44CF6C",
-    "colour4": "#32A287",
-    "colour5": "#6C464E"
+    "colour1": "#2A363B",
+    "colour2": "#E84A5F",
+    "colour3": "#FF847C",
+    "colour4": "#FECEA8",
+    "colour5": "#99B898"
   },
   "pallet3": {
-    "colour1": "#44AF69",
-    "colour2": "#F8333C",
-    "colour3": "#FCAB10",
-    "colour4": "#2B9EB3",
-    "colour5": "#DBD5B5"
+    "colour1": "#5A5050",
+    "colour2": "#547A82",
+    "colour3": "#3EACA8",
+    "colour4": "#A2D4AB",
+    "colour5": "#E5EEC1"
   },
   "pallet4": {
     "colour1": "#08415C",
@@ -705,5 +706,26 @@
     "colour3": "#80C2AF",
     "colour4": "#A0DDE6",
     "colour5": "#30C5FF"
+  },
+  "pallet101": {
+    "colour1": "#5DFDCB",
+    "colour2": "#FC7753",
+    "colour3": "#66D7D1",
+    "colour4": "#E6FCFF",
+    "colour5": "#90D7FF"
+  },
+  "pallet102": {
+    "colour1": "#F1FFE7",
+    "colour2": "#A9FDAC",
+    "colour3": "#44CF6C",
+    "colour4": "#32A287",
+    "colour5": "#6C464E"
+  },
+  "pallet103": {
+    "colour1": "#44AF69",
+    "colour2": "#F8333C",
+    "colour3": "#FCAB10",
+    "colour4": "#2B9EB3",
+    "colour5": "#DBD5B5"
   }
 }
