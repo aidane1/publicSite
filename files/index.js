@@ -180,16 +180,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -270,7 +270,37 @@ app.get("/", async (req, res, next) => {
         for (var i = 0; i < soonEvents.length; i++) {
           soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
         }
-        res.render("index", {font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
+
+
+        let timeInMinutes = (currentDate.getHours()+7)*60 + currentDate.getMinutes();
+
+        timeInMinutes -= (9*60 + 10);
+        let blockForTime = [];
+
+        if (timeInMinutes < 0) {
+          blockForTime = [0.5, 0];
+        } else if (timeInMinutes < 72) {
+          blockForTime = [0, 1];
+        } else if (timeInMinutes < 137) {
+          blockForTime = [1, 1.5];
+        } else if (timeInMinutes < 149) {
+          blockForTime = [1.5, 2];
+        } else if (timeInMinutes < 211) {
+          blockForTime = [2, 2.5];
+        } else if (timeInMinutes < 255) {
+          blockForTime = [2.5, 3];
+        } else if (timeInMinutes < 318) {
+          blockForTime = [3, 4];
+        } else if (timeInMinutes < 383) {
+          blockForTime = [4, 3.5];
+        } else {
+          blockForTime = [3.5, 3.5];
+        }
+
+
+
+
+        res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
       });
     }
   } else {

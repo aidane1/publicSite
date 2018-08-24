@@ -35,6 +35,7 @@
 
 
       }
+
     </script>
     <style>
       @font-face {
@@ -201,8 +202,9 @@
         vertical-align: middle;
         text-align: center;
       }
-      .large {
-        /* height: 25%; */
+
+      .large div {
+
       }
       .switchTable {
         width: 100%;
@@ -569,6 +571,16 @@
           display: block;
           margin: auto;
           margin-top: 10px;
+          text-align: center;
+        }
+        .displayClasses {
+          width: 85%;
+          max-height: 150px;
+          overflow: auto;
+          display: block;
+          margin: auto;
+          margin-top: 10px;
+          text-align: center;
         }
         .soonEvent {
           color: var(--text-color);
@@ -642,6 +654,20 @@
           nav a {
             padding: 10px;
           }
+          .displayEvents {
+            margin-top: 0px;
+          }
+          .displayClasses {
+            margin-top: 0px;
+          }
+          .soonEvent {
+            color: var(--text-color);
+            font-size: 15px;
+            border-radius: 10px;
+            background-color: var(--info-color);
+            width: 100%;
+            padding: 10px;
+          }
 
 
 
@@ -707,7 +733,7 @@
         }
         .box {
 
-          width: 350px;
+          width: 390px;
           height: 600px;
           border: 5px solid black;
           margin: 15px;
@@ -730,7 +756,7 @@
           background-color: red;
         } */
         .classHolder {
-          width: 340px;
+          width: 380px;
           overflow: auto;
         }
         .classHolder li {
@@ -818,6 +844,14 @@
             </div>
           <% } %>
         </div>
+        <div class = "displayClasses">
+          <center><h2>Current Class: </h2></center>
+          <div class = "soonEvent"><%=currentBlock[0]%1 == 0 ? blockOrder[currentBlock[0]] : ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[0]-0.5]%></div>
+        </div>
+        <div class = "displayClasses">
+          <center><h2>Next Class: </h2></center>
+          <div class = "soonEvent"><%=currentBlock[1]%1 == 0 ? blockOrder[currentBlock[1]] : ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[1]-0.5]%></div>
+        </div>
         <!-- <div class = "displayTweets">
 
         </div> -->
@@ -887,31 +921,31 @@
             <div class = "infoBox large">
               <div class = "header2">My courses today&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
               <div id = "todayCourses" class = "todayCourses">
-                <ul style = "list-style-type: none">
+                <div style = "padding-bottom: 5px; padding-left: 5px">
 
 
 
                   <% for (var i = 0; i < todaysCourses.length; i++) { %>
                     <% if (i == 0 ) { %>
-                      <li>9:10-10:12 : <%=blockOrder[i]%></li>
+                      <div>9:10-10:12 : <%=blockOrder[i]%></div>
                     <% }  else if (i == 1) { %>
-                      <li>10:15-11:17 : <%=blockOrder[i]%></li>
-                      <li>11:19-11:29 : TA</li>
+                      <div>10:15-11:17 : <%=blockOrder[i]%></div>
+                      <div>11:19-11:29 : TA</div>
                     <% } else if (i == 2) { %>
-                      <li>11:29-12:31 : <%=blockOrder[i]%></li>
-                      <li>12:32-1:15 : Lunch</li>
+                      <div>11:29-12:31 : <%=blockOrder[i]%></div>
+                      <div>12:32-1:15 : Lunch</div>
                     <% } else if (i == 3) { %>
-                      <li>1:16-2:18 : <%=blockOrder[i]%></li>
+                      <div>1:16-2:18 : <%=blockOrder[i]%></div>
 
                     <% } else if (i == 4) { %>
-                      <li>2:21-3:23 : <%=blockOrder[i]%></li>
+                      <div>2:21-3:23 : <%=blockOrder[i]%></div>
                     <% }%>
                   <% } %>
                   <% if (todaysCourses === false) { %>
-                    <li> it's the weekend! </li>
+                    <div> it's the weekend! </div>
 
                   <% } %>
-                </ul>
+                </div>
               </div>
             </div>
             <div class = "infoBox">
