@@ -1274,7 +1274,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else if (user.permissions != "muted"){
-        socket.broadcast.emit("typing" + "_" + currentChatRoom, {username: user.username, typing: data.typing});
+        socket.broadcast.emit("typing" + "_" + data.chatroom, {username: user.username, typing: data.typing});
       }
     });
   });
