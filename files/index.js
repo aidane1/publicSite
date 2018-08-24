@@ -191,16 +191,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -961,26 +961,30 @@ app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom?chatroom=" + req.query.chatroom);
   // (guessGrade(courses.map(x => x.course), user.schoolUsername));
 
-  if (req.session.userId && req.params.chatroom) {
-    let currentDate = (new Date()).local();
-    Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
-      texts.sort(function(a, b) {
-        return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
-      });
-      for (var i = 0; i < texts.length; i++) {
-        texts[i].body = profanityFilter(texts[i].body);
-      }
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        res.cookie("sessionID", user._id);
-
-
-        if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom.match(/\d+/))) {
-          res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade, confirmed: !(user.grade === undefined)});
-        } else {
-          res.redirect("/chatroom?chatroom=all");
+  if (req.session.userId) {
+    if (req.query.chatroom) {
+      let currentDate = (new Date()).local();
+      Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
+        texts.sort(function(a, b) {
+          return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
+        });
+        for (var i = 0; i < texts.length; i++) {
+          texts[i].body = profanityFilter(texts[i].body);
         }
+        User.findOne({_id : req.session.userId}, function(err, user) {
+          res.cookie("sessionID", user._id);
+
+
+          if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom.match(/\d+/))) {
+            res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade, confirmed: !(user.grade === undefined)});
+          } else {
+            res.redirect("/chatroom?chatroom=all");
+          }
+        });
       });
-    });
+    } else {
+      res.redirect("/chatroom?chatroom=all");
+    }
 
   } else {
     res.redirect("/login");
