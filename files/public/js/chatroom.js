@@ -93,7 +93,7 @@ function addTypeFunction() {
 }
 
 
-
+console.log("chat_" + currentChatRoom);
 socket.on("chat" + "_" + currentChatRoom, function(data) {
   if (currentTypers.indexOf(data.username) > -1) {
     currentTypers.splice(currentTypers.indexOf(data.username), 1);

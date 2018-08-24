@@ -1264,6 +1264,7 @@ io.on("connection", function(socket) {
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
 
         if (user.permissions != "muted" && data.message.length < 256) {
+          console.log("chat_" + data.chatroom);
           io.emit("chat" + "_" + data.chatroom, data);
         }
       }
