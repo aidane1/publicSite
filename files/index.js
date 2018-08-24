@@ -972,11 +972,10 @@ app.get("/chatroom", function(req,res) {
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
         res.cookie("sessionID", user._id);
-        console.log(req.query.chatroom);
-        console.log(parseInt(req.query.chatroom));
-        console.log(user.grade);
+
+
         if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom.match(/\d+/))) {
-          res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade});
+          res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade, confirmed: !(user.grade === undefined)});
         } else {
           res.redirect("/chatroom?chatroom=all");
         }
@@ -988,30 +987,49 @@ app.get("/chatroom", function(req,res) {
   }
 });
 app.post("/chatroom", urlencodedParser, function(req, res) {
-  User.findOne({_id : req.session.userId}, function(err, user) {
-    if (err) {
-      res.redirect("/chatroom");
-    }
-     else {
-       if (user.permissions === "admin") {
-         User.findOne({username : req.body.mutedUser}, function(error, mute) {
-           if (error) {
-             res.redirect("/chatroom");
-           } else {
-             if (mute.permissions != "admin") {
-               User.findOneAndUpdate({_id : mute._id}, {permissions: "muted"}).then(function() {
+  if (req.session.userId) {
+    if (req.body.mutedUser) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        if (err) {
+          res.redirect("/chatroom");
+        }
+         else {
+           if (user.permissions === "admin") {
+             User.findOne({username : req.body.mutedUser}, function(error, mute) {
+               if (error) {
+                 res.redirect("/chatroom");
+               } else {
+                 if (mute.permissions != "admin") {
+                   User.findOneAndUpdate({_id : mute._id}, {permissions: "muted"}).then(function() {
+                       res.redirect("/chatroom");
+                   });
+                 } else {
                    res.redirect("/chatroom");
-               });
-             } else {
-               res.redirect("/chatroom");
-             }
+                 }
+               }
+             });
+           } else {
+             res.redirect("/chatroom");
            }
-         });
-       } else {
-         res.redirect("/chatroom");
-       }
-     }
-  });
+         }
+      });
+    } else if (req.body.userSchoolTag) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        if (err) {
+          res.redirect("/login");
+        } else {
+          Course.find({_id : user.courses}, function(err, courses) {
+            User.findOneAndUpdate({_id : req.session.userId}, {$set: {schoolUsername: req.body.userSchoolTag.toLowerCase(), grade: guessGrade(courses.map(x => x.course), req.body.userSchoolTag)}}).then(function() {
+              res.redirect("/chatroom?chatroom=all");
+            });
+          });
+        }
+      })
+    }
+  } else {
+    res.redirect("/login");
+  }
+
 });
 
 
