@@ -1265,6 +1265,7 @@ io.on("connection", function(socket) {
 
         if (user.permissions != "muted" && data.message.length < 256) {
           console.log("chat_" + data.chatroom);
+          console.log(data);
           io.emit("chat" + "_" + data.chatroom, data);
         }
       }

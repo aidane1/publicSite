@@ -60,7 +60,7 @@ message.addEventListener("keypress", function() {
     socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true, chatroom: currentChatRoom});
   } else if (permissions != "muted"){
 
-    socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
+    socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false, chatroom: currentChatRoom});
   }
 });
 
