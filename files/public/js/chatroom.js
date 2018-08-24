@@ -1,5 +1,5 @@
 function muteFunction(text) {
-  console.log(text.parentNode.childNodes[0].childNodes[0].innerHTML);
+
   var form = document.createElement("form");
   form.method = "POST";
   form.action = "/chatroom";
@@ -23,7 +23,7 @@ var output = document.getElementById("outPut");
 var feedbackTest = document.getElementById("feedback");
 // output.lastChild.scrollIntoView();
 let permissions = output.className;
-console.log(permissions);
+
 
 
 
@@ -31,9 +31,10 @@ console.log(permissions);
 
 btn.addEventListener("click", function() {
 
-  let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
+  let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], chatroom: currentChatRoom};
   if (message.value != "" && message.value != " " && permissions != "muted") {
     message.value  = "";
+
     socket.emit("chat", info);
   }
 
@@ -55,16 +56,16 @@ message.addEventListener("keypress", function() {
 
 
   if (message.value != "" && message.value != " " && permissions != "muted") {
-    console.log(document.cookie);
-    socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true});
+
+    socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: true, chatroom: currentChatRoom});
   } else if (permissions != "muted"){
-    console.log(document.cookie);
+
     socket.emit("typing", {id: document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], typing: false});
   }
 });
 
 let currentTypers = [];
-socket.on("typing", function(data) {
+socket.on("typing" + "_" + currentChatRoom, function(data) {
   if (currentTypers.indexOf(data.username) > -1) {
     if (!data.typing) {
 
@@ -93,7 +94,7 @@ function addTypeFunction() {
 
 
 
-socket.on("chat", function(data) {
+socket.on("chat" + "_" + currentChatRoom, function(data) {
   if (currentTypers.indexOf(data.username) > -1) {
     currentTypers.splice(currentTypers.indexOf(data.username), 1);
     addTypeFunction();
