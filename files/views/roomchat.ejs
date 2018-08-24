@@ -236,15 +236,16 @@
   <script>
     var currentChatRoom = "all";
     function changeRoom(room, element) {
-      var rooms = document.getElementsByClassName("room");
-      for (var i = 0; i < rooms.length; i++) {
-        rooms[i].className = "room";
-        rooms[i].innerHTML = rooms[i].innerHTML.split(":")[rooms[i].innerHTML.split(":").length-1]
-      }
-      element.className = "room current";
-      element.innerHTML = "current:" + element.innerHTML
-      currentChatRoom  = room;
-      // console.log(room);
+      // var rooms = document.getElementsByClassName("room");
+      // for (var i = 0; i < rooms.length; i++) {
+      //   rooms[i].className = "room";
+      //   rooms[i].innerHTML = rooms[i].innerHTML.split(":")[rooms[i].innerHTML.split(":").length-1]
+      // }
+      // element.className = "room current";
+      // element.innerHTML = "current room:" + element.innerHTML
+      // currentChatRoom  = room;
+      // // console.log(room);
+      window.location.href = "https://www.pvstudents.ca/chatroom?chatroom=" + room;
     }
 
   </script>
