@@ -972,7 +972,7 @@ app.get("/chatroom", function(req,res) {
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
         res.cookie("sessionID", user._id);
-        res.render("roomchat", {texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font)});
+        res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font)});
       });
 
     });
