@@ -286,7 +286,7 @@ app.get("/", async (req, res, next) => {
         }
 
 
-        let timeInMinutes = (currentDate.getHours()+7)*60 + currentDate.getMinutes();
+        let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
         console.log(timeInMinutes);
         timeInMinutes -= (9*60 + 10);
         let blockForTime = [];
