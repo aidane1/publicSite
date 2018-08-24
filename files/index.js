@@ -961,7 +961,7 @@ app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom?chatroom=" + req.query.chatroom);
   // (guessGrade(courses.map(x => x.course), user.schoolUsername));
 
-  if (req.session.userId) {
+  if (req.session.userId && req.params.chatroom) {
     let currentDate = (new Date()).local();
     Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
       texts.sort(function(a, b) {
