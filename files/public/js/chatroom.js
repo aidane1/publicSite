@@ -45,7 +45,7 @@ message.addEventListener("keypress", function() {
   const key = event.keyCode;
 
   if (key === 13) {
-    let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1]};
+    let info = {message:message.value, id:document.cookie.match(/sessionID=j%3A%22(.+?)%22/)[1], chatroom: currentChatRoom};
     message.value  = "";
     if (permissions != "muted") {
       socket.emit("chat", info);
