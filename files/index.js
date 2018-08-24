@@ -975,7 +975,7 @@ app.get("/chatroom", function(req,res) {
         console.log(req.query.chatroom);
         console.log(parseInt(req.query.chatroom));
         console.log(user.grade);
-        if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom)) {
+        if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom.match(/\d+/))) {
           res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade});
         } else {
           res.redirect("/chatroom?chatroom=all");
