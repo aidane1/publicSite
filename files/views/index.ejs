@@ -239,12 +239,14 @@
         .openRooms {
           /* background-color: red; */
           width: 100%;
-          display:block;
-          margin-top: 25px;
+          height: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: column;
         }
         .LCRoom {
           text-align: center;
-          padding: 12px;
+          padding: 15px;
           border: 1px solid black;
           background-color: var(--info-color);
           border-radius: 8px;
@@ -1031,12 +1033,14 @@
             <div class = "openRooms">
               <% if (lcSchedule !== false) { %>
                 <% lcSchedule.forEach(function(LC) { %>
+                  <div class = "spacer"></div>
                   <div class = "LCRoom"><%=LC%></div>
                   <br>
                 <% }); %>
               <% } else { %>
                 <div class = "LCRoom">It's the weekend!</div>
               <% } %>
+              <div class = "spacer"></div>
 
 
             </div>
