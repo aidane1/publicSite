@@ -958,7 +958,7 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 
 
 app.get("/chatroom", function(req,res) {
-  res.cookie("path", "/chatroom");
+  res.cookie("path", "/chatroom?chatroom=" + req.query.chatroom);
   // (guessGrade(courses.map(x => x.course), user.schoolUsername));
 
   if (req.session.userId) {
@@ -972,9 +972,12 @@ app.get("/chatroom", function(req,res) {
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
         res.cookie("sessionID", user._id);
-        res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font)});
+        if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom)) {
+          res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade});
+        } else {
+          res.redirect("/chatroom?chatroom=all");
+        }
       });
-
     });
 
   } else {
