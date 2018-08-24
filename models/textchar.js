@@ -27,6 +27,9 @@ const TextSchema = new Schema({
   expiresAfterSeconds: {
     type: Number,
     default: 60
+  },
+  chatroom: {
+    type: String
   }
 });
 

@@ -73,6 +73,12 @@ const UserSchema = new Schema({
   font: {
     type: String,
     default: "/public/fonts/LANENAR_.ttf"
+  },
+  schoolUsername: {
+    type: String
+  },
+  grade: {
+    type: Number
   }
 
 });

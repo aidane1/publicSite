@@ -15,6 +15,17 @@ Date.prototype.local = function() {
     return this;
 }
 
+function guessGrade(classes, schoolUser) {
+  let schoolNum = "20" + (schoolUser.match(/\d+/));
+  schoolNum = parseInt(schoolNum);
+  let sumClassYears = 0;
+  for (var i = 0; i < classes.length; i++) {
+    sumClassYears += parseInt((classes[i].split(" ")[classes[i].split(" ").length-1]));
+  }
+  sumClassYears += (2001 - schoolNum + 12);
+  return Math.round(sumClassYears/(classes.length + 1));
+}
+
 
 function holidayFont(font) {
   let date = new Date();
@@ -180,16 +191,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -215,6 +226,9 @@ app.get("/", async (req, res, next) => {
       let soonEvents = Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
       let final = await Promise.all([courses, monthEvent, soonEvents]);
       courses = final[0], monthEvent = final[1], soonEvents = final[2];
+
+
+
       //declares the top level variables that will be used
       let homeworkList = [];
       let todaysOrderedClasses = [];
@@ -945,9 +959,11 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
 
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom");
+  // (guessGrade(courses.map(x => x.course), user.schoolUsername));
+
   if (req.session.userId) {
     let currentDate = (new Date()).local();
-    Texts.find({date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, function(err, texts) {
+    Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
       texts.sort(function(a, b) {
         return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
       });
@@ -1238,7 +1254,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else {
-        Texts.create({date : (new Date()).local(), body: data.message, submittedBy : user.username, firstName: user.firstName, lastName:user.lastName}, function(error, text) {
+        Texts.create({date : (new Date()).local(), body: data.message, submittedBy : user.username, firstName: user.firstName, lastName:user.lastName, chatroom: data.chatroom}, function(error, text) {
           if (error) {
 
           } else {
@@ -1248,7 +1264,7 @@ io.on("connection", function(socket) {
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName};
 
         if (user.permissions != "muted" && data.message.length < 256) {
-          io.emit("chat", data);
+          io.emit("chat" + "_" + data.chatroom, data);
         }
       }
     });
@@ -1258,7 +1274,7 @@ io.on("connection", function(socket) {
       if (err) {
 
       } else if (user.permissions != "muted"){
-        socket.broadcast.emit("typing", {username: user.username, typing: data.typing});
+        socket.broadcast.emit("typing" + "_" + currentChatRoom, {username: user.username, typing: data.typing});
       }
     });
   });
