@@ -180,16 +180,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -278,23 +278,23 @@ app.get("/", async (req, res, next) => {
         let blockForTime = [];
 
         if (timeInMinutes < 0) {
-          blockForTime = [0.5, 0];
+          blockForTime = [[0.5, ""], [0, "9:10-10:12 : "]];
         } else if (timeInMinutes < 72) {
-          blockForTime = [0, 1];
+          blockForTime = [[0, "9:10-10:12 : "], [1, "10:15-11:17 : "]];
         } else if (timeInMinutes < 137) {
-          blockForTime = [1, 1.5];
+          blockForTime = [[1, "10:15-11:17 : "], [1.5, "11:19-11:29 : "]];
         } else if (timeInMinutes < 149) {
-          blockForTime = [1.5, 2];
+          blockForTime = [[1.5, "11:19-11:29 : "], [2, "11:29-12:31 : "]];
         } else if (timeInMinutes < 211) {
-          blockForTime = [2, 2.5];
+          blockForTime = [[2, "11:29-12:31 : "], [2.5, "12:32-1:15 : "]];
         } else if (timeInMinutes < 255) {
-          blockForTime = [2.5, 3];
+          blockForTime = [[2.5, "12:32-1:15 : "], [3, "1:16-2:18 : "]];
         } else if (timeInMinutes < 318) {
-          blockForTime = [3, 4];
+          blockForTime = [[3, "1:16-2:18 : "], [4, "2:21-3:23 : "]];
         } else if (timeInMinutes < 383) {
-          blockForTime = [4, 3.5];
+          blockForTime = [[4, "2:21-3:23 : "], [3.5, ""]];
         } else {
-          blockForTime = [3.5, 3.5];
+          blockForTime = [[3.5, ""], [3.5, ""]];
         }
 
 
