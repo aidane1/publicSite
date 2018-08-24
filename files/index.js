@@ -972,6 +972,9 @@ app.get("/chatroom", function(req,res) {
       }
       User.findOne({_id : req.session.userId}, function(err, user) {
         res.cookie("sessionID", user._id);
+        console.log(req.query.chatroom);
+        console.log(parseInt(req.query.chatroom));
+        console.log(user.grade);
         if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom)) {
           res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade});
         } else {
