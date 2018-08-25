@@ -264,11 +264,11 @@
             </div>
           </div>
         </div>
-        <input type = "text" id = "message" name = "message" placeholder="message..."maxlength="128"/>
+        <input type = "text" id = "message" name = "message" placeholder="message..."maxlength="128" onfocus = "focusFunction()" onblur = "lostFunction()"/>
         <button id  = "send" name = "send">Send</button>
 
         <div class = "spacer"></div>
-        <div class = "otherRooms">
+        <div class = "otherRooms" id = "otherRooms">
           <% if (room == "all") { %>
             <div class = "room current" onclick = "changeRoom('all', this)">
               Current room: all
@@ -286,8 +286,8 @@
           <% } %>
 
         </div>
-        <div class = "back" style = "font-size: 40px; position: fixed; top: 5px; left: 10px;">
-          <a id = "back" href = "/" style = "text-decoration:none; color: var(--button-color)">&#8592;</a>
+        <div class = "back" id = "back" style = "font-size: 40px; position: fixed; bottom: 15px; left: 10px;">
+          <a href = "/" style = "text-decoration:none; color: var(--button-color)">&#8592;</a>
         </div>
       <% } else { %>
         <form action = "/chatroom" method = "POST" class = "tagForm">
@@ -309,7 +309,14 @@
     function changeRoom(room, element) {
       window.location.href = "https://www.pvstudents.ca/chatroom?chatroom=" + room;
     }
-
+    function focusFunction() {
+      document.getElementById("otherRooms").style.display = "none";
+      document.getElementById("back").style.display = "none";
+    }
+    function lostFunction() {
+      document.getElementById("otherRooms").style.display = "initial";
+      document.getElementById("back").style.display = "initial";
+    }
   </script>
   <script src = "public/js/chatroom.js"></script>
 </html>
