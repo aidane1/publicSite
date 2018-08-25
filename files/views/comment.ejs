@@ -136,6 +136,15 @@
         transform: translateX(-50%);
         transition: top 1.2s;
       }
+      .submitComment form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
+      .spacer {
+        flex-grow: 1;
+      }
       .commentDown {
         top: 0%;
       }
@@ -209,14 +218,13 @@
     </div>
     <div class = "submitComment" id = "submitComment">
       <form action = "/questions/<%=id%>" method = "POST">
-        <h3>Enter your comment below</h3>
+        <h3 style  = "width: 80%; margin: auto">Enter your comment below</h3>
         <textarea placeholder="Enter comment here..." name = "comment" class = "textarea" maxlength="512" style = "font-size: 18px">
 
         </textarea>
         <input type = "submit" style = "display: block; width: 100px; height: 30px; background-color: var(--button-color);-webkit-appearance: none; margin: auto; margin-top: 10px"/>
-        <br>
-        <br>
-        <center><div id = "backUp" style = "font-size: 40px; position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); text-align: center;" onclick = "commentFunction()">&#x21e7;</div>
+        <div class = "spacer"></div>
+        <center><div id = "backUp" style = "font-size: 40px; text-align: center;" onclick = "commentFunction()">&#x21e7;</div>
       </form>
     </div>
   </body>
