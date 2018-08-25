@@ -16,56 +16,24 @@
         document.getElementById("courseID").value = id;
       }
       function submitType(type) {
-        var submitBox = document.getElementById("submitTypes");
-        submitBox.innerHTML = "";
+        document.getElementById("submitBox").innerHTML = "";
 
 
-        var input = document.createElement("input");
-        var secondInput = document.createElement("input");
-        input.name = "page";
-        secondInput.name = "questions";
-
-
-
-        var textarea = document.createElement("textarea");
-        textarea.name = "assignment";
-        let due = document.createElement("input");
-        due.type = "text";
-        due.name = "due";
-        due.placeholder = "due..."
-        due.id = "due"
         if (type === 1) {
-          textarea.style.display = "none";
-
-          input.type = "number";
-          secondInput.className = "questions";
-          input.className = "page";
-          textarea.value = "";
+          document.getElementById("page").classList.toggle("hidden");
+          document.getElementById("questions").classList.toggle("hidden");
+          document.getElementById("page").classList.toggle("shown");
+          document.getElementById("questions").classList.toggle("shown");
         } else if (type === 2) {
-          input.type = "hidden";
-          secondInput.type = "hidden";
-
-          textarea.className = "assignment";
-          textarea.setAttribute("placeholder", "Assignment (please specify)...");
-          input.value = "";
-          secondInput.value = "";
+          document.getElementById("assignment").classList.toggle("hidden");
+          document.getElementById("assignment").classList.toggle("shown");
         }
-        input.setAttribute("placeholder", "Page #...");
-        secondInput.setAttribute("placeholder", "Question #'s ...");
-        submitBox.appendChild(input);
+        document.getElementById("due").classList.toggle("shown");
 
-        submitBox.appendChild(document.createElement("br"));
-        submitBox.appendChild(secondInput);
-        submitBox.appendChild(textarea);
-
-        submitBox.appendChild(document.createElement("br"));
-        submitBox.appendChild(due);
 
       }
 
-      // #4971b7
-      // #315491
-      // #1f3a68
+
 
     </script>
     <style>
@@ -126,10 +94,10 @@
       .notes {
 
         width: 80%;
-        margin: auto;
         height: 200px;
         outline: none;
         display: block;
+        margin: auto;
         background-color: var(--info-color);
         border: 1px solid var(--border-color);
 
@@ -161,6 +129,7 @@
         text-align: center;
         /* margin-top: 10px; */
         font-size: 25px;
+        display: block;
 
       }
 
@@ -171,8 +140,8 @@
       .page {
         outline: none;
         font-size: 18px;
-        display: block;
         margin: auto;
+        margin-top: 20px;
         background-color: var(--info-color);
         color: var(--text-color);
         border: 1px solid var(--border-color);
@@ -180,8 +149,8 @@
       .questions {
         outline: none;
         font-size: 18px;
-        display: block;
         margin: auto;
+        margin-top: 20px;
         background-color: var(--info-color);
         color: var(--text-color);
         border: 1px solid var(--border-color);
@@ -198,10 +167,8 @@
         background-color: var(--button-color);
         font-size: 20px;
         display: block;
-        position: absolute;
-        left: 27.5%;
+        margin: auto;
         color: var(--text-color);
-        bottom: 10px;
         outline: none;
         -webkit-appearance: none;
       }
@@ -214,7 +181,6 @@
       .assignment {
         width: 80%;
         height: 100px;
-        display: block;
         outline: none;
         margin: auto;
         margin-bottom: 15px;
@@ -246,16 +212,32 @@
         display: none;
       }
       .blockDisplay {
-        display: block;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
+      .spacer {
+        flex-grow: 1;
       }
       #due {
         font-size: 18px;
-        display: block;
         margin: auto;
+        margin-top: 20px;
         background-color: var(--info-color);
         color: var(--text-color);
         border: 1px solid var(--border-color);
         outline: none;
+      }
+      .hidden {
+        display: none;
+      }
+      .shown {
+        display: block;
+      }
+      .hiddenInputs input {
+        margin-top: 20px;
       }
       @media screen and (max-width: 320px) {
         .submit {
@@ -322,23 +304,47 @@
       <% }); %>
     </div>
     <form id = "submit" class = "submit" method = "POST" action = "/submit">
+
+
       <input type = "hidden" name = "courseID" id = "courseID" />
-      <input type = "hidden" name = "submittedBy" id = "submittedBy" value = "<%=user%>"/>
-      <input type = "hidden" name = "confirmed" id = "confirmed" value = "false"/>
+      <input type = "hidden" name = "submittedBy" id = "submittedBy" value = "<%=user%>" />
+      <input type = "hidden" name = "confirmed" id = "confirmed" value = "false" />
+
+
       <div class = "header" id = "header"></div>
-      <div id = "submitTypes">
+
+
+      <div class = "submitBox" id = "submitBox">
         <button class = "option" onclick = "submitType(1)">Textbook</button>
         <button class = "option" onclick = "submitType(2)">Assignment</button>
+      </div>
+      <div class = "spacer"></div>
+      <div class = "hiddenInputs" id = "hiddenInputs">
+        <input type = "number" name = "page" id = "page" class = "hidden page" placeholder = "Page #..."/>
+        <input type = "text" name = "questions" id = "questions" class = "hidden questions" placeholder="Question #'s..."/>
+        <input type = "text" name = "assignment" id = "assignment" class = "hidden assignment" placeholder="Assignment (please specify)..."/>
+        <input type = "text" name = "due" id = "due" class = "hidden" placeholder="Due by..."/>
 
       </div>
 
       <br>
-      <div class = "text">notes: </text>
-      <textarea class = "notes" name = "notes" maxlength="256" style = "font-size: 18px">
+      <div style = "display: block; margin: auto; width: 80%;">Notes...</div>
+      <textarea class = "notes" placeholder="Notes..." name = "notes" maxlength="256" style = "font-size: 18px">
 
       </textarea>
+      <div class = "spacer"></div>
+      <input type = "submit" class = "submitButton" />
+      <div class = "spacer"></div>
 
-      <input type = "submit" class = "submitButton">
+      <div class = "spacer"></div>
     </form>
   </body>
+  <script>
+    function hideFunction() {
+
+    }
+
+  </script>
 </html>
+
+<!-- input names: notes, due,page, questions, assignment, hidden: courseID, submittedBy -->
