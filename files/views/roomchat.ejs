@@ -39,10 +39,17 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
+
+
+
       background-color: var(--bg-color);
+    }
+    .bodyHolder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
     }
     .schoolChat {
       width: 100%;
@@ -65,7 +72,6 @@
       background-color: var(--button-color);
       margin-top: 15px;
       font-size: 18px;
-
     }
     #back {
       color: var(--info-color);
@@ -106,10 +112,9 @@
       background-color: grey;
     }
     .otherRooms {
+
       width: 50%;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
+      margin-left: 25%;
       background-color: var(--button-color);
     }
     .room {
@@ -119,6 +124,9 @@
     }
     .current {
       background-color: var(--info-color);
+    }
+    .spacer {
+      flex-grow: 1;
     }
     @media screen and (min-width: 768px) {
       .schoolChat {
@@ -231,61 +239,65 @@
     </style>
   </head>
   <body>
-    <% if (confirmed) { %>
-      <div class = "schoolChat" id = "schoolChat">
-        <div class = "chatWindow" id = "chatWindow">
-          <div class = "<%=permissions%>" id = "outPut">
-            <% if (texts.length === 0) { %>
-              <div class = "messageHolder">
-                <p><strong>Computer: </strong>It's very empty here!</p>
-              </div>
-            <% } else { %>
-              <% texts.forEach(function(text) { %>
+    <div class = "bodyHolder">
+      <% if (confirmed) { %>
+        <div class = "schoolChat" id = "schoolChat">
+          <div class = "chatWindow" id = "chatWindow">
+            <div class = "<%=permissions%>" id = "outPut">
+              <% if (texts.length === 0) { %>
                 <div class = "messageHolder">
-                  <p><strong><%=text.submittedBy%></strong>: <%=text.body%></p><div class = "name"><%=text.firstName%> <%=text.lastName%></div>
+                  <p><strong>Computer: </strong>It's very empty here!</p>
                 </div>
-              <% }); %>
-            <% } %>
-          </div>
-          <div class = "feedback" id = "feedback">
+              <% } else { %>
+                <% texts.forEach(function(text) { %>
+                  <div class = "messageHolder">
+                    <p><strong><%=text.submittedBy%></strong>: <%=text.body%></p><div class = "name"><%=text.firstName%> <%=text.lastName%></div>
+                  </div>
+                <% }); %>
+              <% } %>
+            </div>
+            <div class = "feedback" id = "feedback">
 
+            </div>
           </div>
         </div>
         <input type = "text" id = "message" name = "message" placeholder="message..."maxlength="128"/>
         <button id  = "send" name = "send">Send</button>
-        <br>
-        <br>
-      </div>
-      <div class = "otherRooms">
-        <% if (room == "all") { %>
-          <div class = "room current" onclick = "changeRoom('all', this)">
-            Current room: all
-          </div>
-          <div class = "room" onclick = "changeRoom('grade<%=grade%>', this)">
-            Grade <%=grade%>
-          </div>
-        <% } else { %>
-          <div class = "room" onclick = "changeRoom('all', this)">
-            all
-          </div>
-          <div class = "room current" onclick = "changeRoom('grade<%=grade%>', this)">
-            Current room: Grade <%=grade%>
-          </div>
-        <% } %>
 
-      </div>
-      <div class = "back" style = "font-size: 40px; position: fixed; bottom: 15px; left: 10px;">
-        <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
-      </div>
-    <% } else { %>
-      <form action = "/chatroom" method = "POST" class = "tagForm">
-        Please enter your school username (ex. eglia02)
-        <br>
-        <input name = "userSchoolTag" class = "schoolTag" id = "schoolTag" required/>
-        <br>
-        <input type = "submit" class = "submitTag">
-      </form>
-    <% } %>
+        <div class = "spacer"></div>
+        <div class = "otherRooms">
+          <% if (room == "all") { %>
+            <div class = "room current" onclick = "changeRoom('all', this)">
+              Current room: all
+            </div>
+            <div class = "room" onclick = "changeRoom('grade<%=grade%>', this)">
+              Grade <%=grade%>
+            </div>
+          <% } else { %>
+            <div class = "room" onclick = "changeRoom('all', this)">
+              all
+            </div>
+            <div class = "room current" onclick = "changeRoom('grade<%=grade%>', this)">
+              Current room: Grade <%=grade%>
+            </div>
+          <% } %>
+
+        </div>
+        <div class = "back" style = "font-size: 40px; position: fixed; bottom: 15px; left: 10px;">
+          <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
+        </div>
+      <% } else { %>
+        <form action = "/chatroom" method = "POST" class = "tagForm">
+          Please enter your school username (ex. eglia02)
+          <br>
+          <input name = "userSchoolTag" class = "schoolTag" id = "schoolTag" required/>
+          <br>
+          <input type = "submit" class = "submitTag">
+        </form>
+      <% } %>
+
+    </div>
+
 
   </body>
   <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
