@@ -258,6 +258,15 @@
         transition: top 1.2s;
         z-index: 10;
       }
+      .submitPost form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
+      .spacer {
+        flex-grow: 1;
+      }
       .submitPostSee {
         top: 0%;
       }
@@ -283,7 +292,7 @@
         width: 150px;
         height: 50px;
         background-color: var(--button-color);
-        margin-top: 10px;
+        margin-top: 5px;
         font-size: 18px;
         border-radius: 10px;
         -webkit-appearance: none;
@@ -375,17 +384,15 @@
       <form method = "POST" action = "/questions">
         <label for "title"><div class = "header">Title: </div></label><input type = "text" name = "title" id = "title" placeholder = "Input here... if homework, please specify" maxlength="128" required style = "font-size: 18px;"/>
         <div class = "header">Submit As: </div>
-        <label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" value = "true" required/>
-        <br>
+        <div><label for "anon">Anonymous: </label><input type = "radio" name = "anon" id = "anon" class = "radio" style = "position: relative; top: 5px" value = "true" required/></div>
 
-        <label for "user">User: </label><input type = "radio" value = "false" name = "anon" id = "user" class = "radio" required/>
-        <br>
-        <hr>
-        <h3 style = "display: inline">Body: </h3><br>
+
+        <div><label for "user">User: </label><input type = "radio" value = "false" name = "anon" id = "user" class = "radio" style = "position: relative; top: 5px" required/></div>
+        <h3 style = "display: inline">Body: </h3>
         <textarea placeholder="Enter your body here" name = "body" id = "textarea" maxlength="512" style = "font-size: 18px; "></textarea>
         <center><input type = "submit" class = "submit"/></center>
-        <br>
-        <center><div id = "backUp" style = "font-size: 40px; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;" onclick = "submitPost()">&#x21e7;</div>
+        <div class = "spacer"></div>
+        <div id = "backUp" style = "font-size: 40px; text-align: center;" onclick = "submitPost()">&#x21e7;</div>
       </form>
     </div>
 
