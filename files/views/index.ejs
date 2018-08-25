@@ -882,12 +882,24 @@
           <% } %>
         </div>
         <div class = "displayClasses">
-          <center><h2>Current Class: </h2></center>
-          <div class = "soonEvent"><%=currentBlock[0][0]%1 == 0 ? currentBlock[0][1] + blockOrder[currentBlock[0][0]] : currentBlock[0][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[0][0]-0.5]%></div>
+          <% if (blockOrder[currentBlock[0][0]] != undefined) { %>
+            <center><h2>Current Class: </h2></center>
+            <div class = "soonEvent"><%=currentBlock[0][0]%1 === 0 ? currentBlock[0][1] + blockOrder[currentBlock[0][0]] : currentBlock[0][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[0][0]-0.5]%></div>
+          <% } else { %>
+            <center><h2>Current Class: </h2></center>
+            <div class = "soonEvent">Nothing!</div>
+          <% } %>
+
         </div>
         <div class = "displayClasses">
-          <center><h2>Next Class: </h2></center>
-          <div class = "soonEvent"><%=currentBlock[1][0]%1 == 0 ? currentBlock[1][1] + blockOrder[currentBlock[1][0]] : currentBlock[1][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[1][0]-0.5]%></div>
+          <% if (blockOrder[currentBlock[1][0]] != undefined) { %>
+            <center><h2>Next Class: </h2></center>
+            <div class = "soonEvent"><%=currentBlock[1][0]%1 === 0 ? currentBlock[1][1] + blockOrder[currentBlock[1][0]] : currentBlock[1][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[1][0]-0.5]%></div>
+          <% } else { %>
+            <center><h2>Next Class: </h2></center>
+            <div class = "soonEvent">Nothing!</div>
+          <% } %>
+
         </div>
         <!-- <div class = "displayTweets">
 
