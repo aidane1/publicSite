@@ -287,10 +287,8 @@ app.get("/", async (req, res, next) => {
 
 
         let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
-        console.log(timeInMinutes);
         timeInMinutes -= (9*60 + 10);
         let blockForTime = [];
-        console.log(timeInMinutes);
 
         if (timeInMinutes < 0) {
           blockForTime = [[0.5, ""], [0, "9:10-10:12 : "]];
@@ -311,8 +309,6 @@ app.get("/", async (req, res, next) => {
         } else {
           blockForTime = [[3.5, ""], [3.5, ""]];
         }
-
-        console.log(blockForTime);
 
 
         res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
@@ -716,7 +712,7 @@ app.get("/calendar", async (req, res, next) => {
     let user = await User.findOne({_id : req.session.userId});
     res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
   } else {
-    res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}});
+    res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}, font: "/public/files/Evogria.otf"});
   }
 
 
