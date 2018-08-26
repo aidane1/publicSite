@@ -32,40 +32,57 @@
       .tab {
         margin-left: 40px;
       }
+      @media screen and (min-width: 768px) {
+        .holder {
+          width: 600px;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
     </style>
   </head>
   <body>
+    <div class = "holder">
+      <div class = "back" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20">
+        <a href = "/" style = "text-decoration:none; color:rgb(170, 80, 66)">&#8592;</a>
+      </div>
+      <div class = "header"><h1>About the PVSS student website</h1></div>
+      <h2>Who: </h2>
+      <span class = "tab"></span>You all ready know who it is.
+      <br>
+      <h2>What: </h2>
+      <span class = "tab"></span>As the title of the website suggests, this is the PVSS student website. The main function of this site
+      is to quickly view upcoming events, and the courses you have on a given day - However, there are many more extraneous functions to
+      provide a better user experience. You can ask your classmates questions (<i>preferably</i> pertaining to school), chat with the entire school,
+      and view the days homework just to name a few.
+      <br>
+      <h2>Where: </h2>
+      <span class = "tab"></span>Armstrong, BC. for PVSS.
+      <br>
+      <h2>Why: </h2>
+      <span class = "tab"></span>I originally decided to make this site because I was unable
+      to view my schedule on the SD83 webite, on account of the terrible loading time. This is an issue faced not just by me, but by the majority of the rural community
+      of armstrong. In a day an age where the internet is the main source of information and connection between people, this is unacceptable. So, to fix this issue,
+      I made pvstudents.ca - the PVSS student website. This website was designed to have incredibly fast loading times (0.896 seconds vs 22.430 seconds on 3g). Additionally,
+      It was tailor made to be used on mobile - both as an app and a website (apologies to android users - im working on it).
+      <br>
+      <h2>How: </h2>
+      <span class = "tab"></span>This website is run on a digitalocean server, running ubuntu. The server is run on nodejs, connecting to
+      a mongoDB database. On of the contributing factors to the speed of the front end is the lack of external libraries. everything
+      run on this website was written by me, explicitely for use here. If you'd like to view the code, it can be found
+      <a href = "https://github.com/aidane1/publicSite?files=1" style = "color: rgb(216, 215, 143)">here</a>
+      <br>
+      <h2>Other: </h2>
+      <span class = "tab"></span>One of the many benefits of this website is the accessabilty. Users can change both the font and colour scheme to fit personal preferances
+      or needs (colourblindness, for instance - there is a colour pallet made specifically for each type of colourblindness). Along with this comes the constant updating. Have a suggestion, or something you'd like
+      to see added? Send it as a suggestion (under resources on the home page), or just tell it to me directly (for those that haven't already guessed, Aidan. E) and I'll
+      be sure to fit it in somewhere in the next update.
+      <br>
+      <br>
+      <br><br>
+      <center><h5><i>The PVSS student website - Made by a PVSS student, for PVSS students.</i></h5></center>
+    </div>
 
-    <div class = "header"><h1>About the PVSS student website</h1></div>
-    <h2>Who: </h2>
-    <span class = "tab"></span>You all ready know who it is.
-    <br>
-    <h2>What: </h2>
-    <span class = "tab"></span>As the title of the website suggests, this is the PVSS student website. The main function of this site
-    is to quickly view upcoming events, and the courses you have on a given day - However, there are many more extraneous functions to
-    provide a better user experience. You can ask your classmates questions (<i>preferably</i> pertaining to school), chat with the entire school,
-    and view the days homework just to name a few.
-    <br>
-    <h2>Where: </h2>
-    <span class = "tab"></span>Armstrong, BC. for PVSS.
-    <br>
-    <h2>Why: </h2>
-    <span class = "tab"></span>I originally decided to make this site because I was unable
-    to view my schedule on the SD83 webite, on account of the terrible loading time. This is an issue faced not just by me, but by the majority of the rural community
-    of armstrong. In a day an age where the internet is the main source of information and connection between people, this is unacceptable. So, to fix this issue,
-    I made pvstudents.ca - the PVSS student website. This website was designed to have incredibly fast loading times (0.896 seconds vs 22.430 seconds on 3g). Additionally,
-    It was tailor made to be used on mobile - both as an app and a website (apologies to android users - im working on it).
-    <br>
-    <h2>How: </h2>
-    <span class = "tab"></span>This website is run on a digitalocean server, running ubuntu. The server is run on nodejs, connecting to
-    a mongoDB database. On of the contributing factors to the speed of the front end is the lack of external libraries. everything
-    run on this website was written by me, explicitely for use here. If you'd like to view the code, it can be found
-    <a href = "https://github.com/aidane1/publicSite?files=1" style = "color: rgb(216, 215, 143)">here</a>
-    <br>
-    <h2>Other: </h2>
-    <span class = "tab"></span>One of the many benefits of this website is the accessabilty. Users can change both the font and colour scheme to fit personal preferances
-    or needs (colourblindness, for instance - there is a colour pallet made specifically for each type of colourblindness). Along with this comes the constant updating. Have a suggestion, or something you'd like
-    to see added? Send it as a suggestion (under resources on the home page), or just tell it to me directly (for those that haven't already guessed, Aidan. E) and I'll
-    be sure to fit it in somewhere in the next update.
   </body>
 </html>
