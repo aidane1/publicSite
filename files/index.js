@@ -1270,6 +1270,10 @@ app.post("/users/:user/order", urlencodedParser, function(req, res) {
 
 });
 
+app.get("/about", function(req, res) {
+  res.render("about");
+});
+
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
