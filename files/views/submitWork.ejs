@@ -32,14 +32,17 @@
 
 
       }
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        var windowHeight = 0;
+        window.onload = function() {
+          windowHeight = window.innerHeight;
+        }
+        window.onresize = function() {
+          document.body.style.height = windowHeight.toString() + "px";
+        }
 
-      var windowHeight = 0;
-      window.onload = function() {
-        windowHeight = window.innerHeight;
       }
-      window.onresize = function() {
-        document.body.style.height = windowHeight.toString() + "px";
-      }
+
 
 
 
