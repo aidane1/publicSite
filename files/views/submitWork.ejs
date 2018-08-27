@@ -33,6 +33,14 @@
 
       }
 
+      var windowHeight = 0;
+      window.onload = function() {
+        windowHeight = window.innerHeight;
+      }
+      window.onresize = function() {
+        document.body.style.height = windowHeight.toString() + "px";
+      }
+
 
 
     </script>
@@ -94,7 +102,7 @@
       .notes {
 
         width: 80%;
-        height: 300px;
+        height: 200px;
         outline: none;
 
         margin: auto;
@@ -246,6 +254,9 @@
 
 
         }
+        .course {
+          font-size: 25px;
+        }
         .notes {
           top: -20px;
           height: 100px;
@@ -256,6 +267,7 @@
 
 
         }
+
         .noDisplay {
           display: flex;
         }
@@ -335,7 +347,7 @@
       <textarea class = "notes" placeholder="Notes..." name = "notes" maxlength="256" style = "font-size: 18px">
 
       </textarea>
-      <div class = "spacer"></div>
+      <div class = "spacer" style = "min-height: 20px"></div>
       <input type = "submit" class = "submitButton" />
       <div class = "spacer"></div>
 
