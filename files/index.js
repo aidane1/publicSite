@@ -220,12 +220,17 @@ app.get("/", async (req, res, next) => {
     if (!user) {
       res.redirect("/login");
     } else {
-      let courses = Course.find({_id : user.courses});
+
+      // try {
+      //
+      // } catch(e) {
+      //
+      // }
+      let courses = await Course.find({_id : user.courses});
       //gathers the events from the past month for the calendar
-      let monthEvent = Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
-      let soonEvents = Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
-      let final = await Promise.all([courses, monthEvent, soonEvents]);
-      courses = final[0], monthEvent = final[1], soonEvents = final[2];
+      let monthEvent = await Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
+      let soonEvents = await Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
+
 
 
 
