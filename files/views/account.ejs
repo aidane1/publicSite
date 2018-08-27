@@ -53,7 +53,7 @@
         background-color: var(--button-color);
         border-radius: 10px;
         font-size: 22px;
-        margin-top: 5%;
+
       }
       .button a {
         display: block;
@@ -64,7 +64,11 @@
       .flexHolder {
         width: 100%;
         display: flex;
+        flex-direction: column;
         flex-wrap: wrap;
+      }
+      .spacer {
+        flex-grow: 1;
       }
       @media screen and (min-width: 768px) {
         .flexHolder {
@@ -83,19 +87,23 @@
     </div>
     <div class = "header"><h1><%=username%></h1></div>
     <div class = "flexHolder">
+      <div class = "spacer"></div>
       <div class = "button">
         <a href = "/users/<%=username%>/posts">Posts</a>
       </div>
+      <div class = "spacer"></div>
       <div class = "button">
         <a href = "/users/<%=username%>/comments">Comments</a>
       </div>
+      <div class = "spacer"></div>
       <div class = "button">
         <a href = "/users/<%=username%>/colours">Colours</a>
       </div>
+      <div class = "spacer"></div>
       <div class = "button">
         <a href = "/users/<%=username%>/order">Info Display Order</a>
       </div>
-
+      <div class = "spacer"></div>
     </div>
 
 
