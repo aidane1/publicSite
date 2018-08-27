@@ -195,7 +195,7 @@ app.use (function (req, res, next) {
   if (req.secure) {
     next();
   } else {
-    res.redirect('http://' + req.headers.host + req.url);
+    res.redirect('https://' + req.headers.host + req.url);
   }
 });
 
@@ -774,7 +774,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
     res.redirect("/login");
   } else if (tampered) {
     //gonna add a ban function
-    User.findOneAndUpdate({_id : req.session.userId}, {banned : true}).then(function() {
+    User.findOneAndUpdate({_id : req.session.userId}, {$set:{banned : true}}).then(function() {
         res.redirect("/login?banned=true");
     });
   } else {
