@@ -158,7 +158,7 @@ let transporter = nodemailer.createTransport({
 });
 
 
-mongoose.connect("mongodb://127.0.0.1/users", {useNewUrlParser: true});
+mongoose.connect("mongodb://127.0.0.1:27017/users", {useNewUrlParser: true});
 
 mongoose.connection.once("open", function() {
   console.log("connection has been made");
