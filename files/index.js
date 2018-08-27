@@ -191,16 +191,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 //
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('http://' + req.headers.host + req.url);
-  }
-});
+// app.use (function (req, res, next) {
+//   if (req.secure) {
+//     next();
+//   } else {
+//     res.redirect('http://' + req.headers.host + req.url);
+//   }
+// });
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -322,7 +322,7 @@ app.get("/", async (req, res, next) => {
 //the only purpose of this function as of right now is to delete user submitted homework
 app.post("/", urlencodedParser, function(req,res) {
   //makes sure the user has a session
-  if (req.session.userId) {
+  if (req.session.userId && req.body.removedHomework) {
 
     //finds the corrosponding user
     User.findOne({_id : req.session.userId}, function(err, user) {
@@ -390,7 +390,7 @@ app.get("/login", function(req, res) {
 app.post("/login", urlencodedParser, async (req, res, next) => {
 
   //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
-  if (stringTest(req.body.logname) && stringTest(req.body.logword)) {
+  if (stringTest(req.body.logname) && stringTest(req.body.logword) && req.body.logname && req.body.logword) {
     //try to find the user in the database. if that doesn't work, tell them their information was incorrect.
     try {
       // asyncronous function. returns the user if the info was correct, throws an error if it wasn't.
@@ -803,7 +803,7 @@ app.get("/suggestions", async (req, res, next) => {
 //sends the suggestions to me.
 app.post("/suggestions", urlencodedParser, function(req, res) {
 
-  if (req.session.userId) {
+  if (req.session.userId && req.body.body) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       //makes sure they aren't spamming me
       if ((((new Date()).local()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
