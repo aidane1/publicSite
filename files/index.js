@@ -764,6 +764,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         date: (new Date()).local()
       }
       //adds the homework to the course
+      console.log("yeet");
       Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
         res.redirect("/");
       });
