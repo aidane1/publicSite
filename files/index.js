@@ -130,7 +130,7 @@ function lcSchedule(day, block) {
   if (block % 1 == 0) {
     return schedule[day.toString()][block];
   } else {
-    return false;
+    return ["None!"];
   }
 
 }
