@@ -60,7 +60,7 @@
         var parsedData = element.id.split("_");
         codes.push(parsedData[2]);
         blocks.push(parsedData[3]);
-        teachers.push((parsedData[0] === "M" ? "Mr." : "Ms") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
+        teachers.push((parsedData[0] === "M" ? "Mr." : "Ms.") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
         var displayData = [];
         displayData.push(parsedData[0] === "M" ? "Mr. " : "Ms. ");
         displayData.push(parsedData[1].charAt(0).toUpperCase() + parsedData[1].toLowerCase().slice(1) + "'s ");
