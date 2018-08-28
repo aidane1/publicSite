@@ -226,9 +226,20 @@ app.use (function (req, res, next) {
     res.redirect('https://' + req.headers.host + req.url);
   }
 });
+app.all("/*", function(req, res, next) {
+  if (req.headers) {
+    if (req.headers.host.match(/^www/) !== null ) {
+      res.redirect('https://' + req.headers.host.replace(/^www\./, '') + req.url);
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
