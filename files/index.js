@@ -2,6 +2,18 @@
 //with months. That is, subtract one from the actual day. it does not. please change in the future
 
 
+//a function to offset the days based on proDdays
+function dayOffset(date) {
+  let offSetArray = [];
+  let offSet = 0;
+  for (var i = 0; i < offSetArray.length; i++) {
+    if (date.getTime() > offSetArray[i].getTime()) {
+      offSet += 1;
+    }
+  }
+  return offSet;
+}
+
 //i use this to convert from UTC to local time
 Date.prototype.addMinutes = function(h) {
    this.setTime(this.getTime() + (h*60*1000));
@@ -90,14 +102,14 @@ function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
-function blockToTime(day) {
+function blockToTime(day, offSet) {
   // let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
   let schedule = [["A", "B", "C", "D", "E"], ["E", "D", "B", "C", "A"], ["D", "A", "C", "B", "E"], ["B", "C", "E", "A", "D"], ["D", "B", "A", "E", "C"]];
 
   if (day === -1 || day === 5) {
     return false;
   }
-  return schedule[day];
+  return schedule[(day+offSet)%5];
 }
 function lcSchedule(day) {
   let schedule = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
@@ -213,6 +225,7 @@ app.get("/periodic-table", function(req, res) {
 
 app.get("/", async (req, res, next) => {
   let currentDate = (new Date()).local();
+  let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
@@ -221,103 +234,106 @@ app.get("/", async (req, res, next) => {
       res.redirect("/login");
     } else {
 
-      // try {
-      //
-      // } catch(e) {
-      //
-      // }
-      let courses = await Course.find({_id : user.courses});
-      //gathers the events from the past month for the calendar
-      let monthEvent = await Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
-      let soonEvents = await Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
+      try {
+        let courses = await Course.find({_id : user.courses});
+        //gathers the events from the past month for the calendar
+        let monthEvent = await Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
+        let soonEvents = await Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
 
 
 
 
-      //declares the top level variables that will be used
-      let homeworkList = [];
-      let todaysOrderedClasses = [];
-      let courseCodes = [];
-      let daysArray = [];
-      //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
-      courses.forEach(function(course) {
-        courseCodes.push(course.code);
-        homeworkList.push([course.course, course.homework, course.block, course.teacher])
-      });
-      //gets the order of todays blocks from a function
-      let todaysBlocks = blockToTime((currentDate).getDay() -1);
-      //itterates through those blocks and find which course matches the block
-      for (var i = 0; i < todaysBlocks.length; i++) {
-        //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
-        todaysOrderedClasses.push(courses.find(course => {
-          return course.block === todaysBlocks[i];
-        }));
-      }
-      //the find function returns the whole class, not just the block. aditionally, it may return undefined if you dont have a course during a block in which case it should return LC's
-      //this line turns undefined into LC's and makes it just the course name
-      todaysOrderedClasses = todaysOrderedClasses.map(todayCourse => todayCourse == undefined ? "LC's" : todayCourse.course);
-      //makes a for loop that itterates as many times as their are days in the current month
-      for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
-        let todayArray = [];
-        let dayEvents = [];
-        for (var j = 0; j < monthEvent.length; j++) {
-          if (monthEvent[j].day === i) {
-            //if one of the month's events happens on this day, add it to the array
-            dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
-          }
-        }
-        //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
-        todayArray.push(dayEvents);
-        todayArray.push(i);
-        todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
-        //push todays array onto the month array
-        daysArray.push(todayArray);
-      }
-      //gathers the resources and assigns them to their induvidual classes
-      Resources.find({class: courseCodes}, function(err, resource) {
-        //itterates through all the courses
+        //declares the top level variables that will be used
+        let homeworkList = [];
+        let todaysOrderedClasses = [];
+        let courseCodes = [];
+        let daysArray = [];
+        //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
         courses.forEach(function(course) {
-          //gives all the courses a property 'resources' that is blank
-          course.resource = [];
-          for (var i = 0; i < resource.length; i++) {
-            //if the resources class matches the courses code, add that resource as one of the resources for the class
-            if (course.code === resource[i].class) {
-              course.resource.push(resource[i]);
+          courseCodes.push(course.code);
+          homeworkList.push([course.course, course.homework, course.block, course.teacher])
+        });
+        //gets the order of todays blocks from a function
+        //also accounts for time offsets due to pro-D days
+        let todaysBlocks = blockToTime((currentDate).getDay() -1, dayOffSetToday);
+        console.log(todaysBlocks);
+        //itterates through those blocks and find which course matches the block
+        for (var i = 0; i < todaysBlocks.length; i++) {
+          //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
+          todaysOrderedClasses.push(courses.find(course => {
+            return course.block === todaysBlocks[i];
+          }));
+        }
+        //the find function returns the whole class, not just the block. aditionally, it may return undefined if you dont have a course during a block in which case it should return LC's
+        //this line turns undefined into LC's and makes it just the course name
+        todaysOrderedClasses = todaysOrderedClasses.map(todayCourse => todayCourse == undefined ? "LC's" : todayCourse.course);
+        //makes a for loop that itterates as many times as their are days in the current month
+        for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
+          let todayArray = [];
+          let dayEvents = [];
+          for (var j = 0; j < monthEvent.length; j++) {
+            if (monthEvent[j].day === i) {
+              //if one of the month's events happens on this day, add it to the array
+              dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
             }
           }
+          //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
+          todayArray.push(dayEvents);
+          todayArray.push(i);
+          todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
+          //push todays array onto the month array
+          daysArray.push(todayArray);
+        }
+        //gathers the resources and assigns them to their induvidual classes
+        Resources.find({class: courseCodes}, function(err, resource) {
+          //itterates through all the courses
+          courses.forEach(function(course) {
+            //gives all the courses a property 'resources' that is blank
+            course.resource = [];
+            for (var i = 0; i < resource.length; i++) {
+              //if the resources class matches the courses code, add that resource as one of the resources for the class
+              if (course.code === resource[i].class) {
+                course.resource.push(resource[i]);
+              }
+            }
+          });
+          for (var i = 0; i < soonEvents.length; i++) {
+            soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
+          }
+
+
+          let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
+          timeInMinutes -= (9*60 + 10);
+          let blockForTime = [];
+
+          if (timeInMinutes < 0) {
+            blockForTime = [[0.5, ""], [0, "9:10-10:12 : "]];
+          } else if (timeInMinutes < 72) {
+            blockForTime = [[0, "9:10-10:12 : "], [1, "10:15-11:17 : "]];
+          } else if (timeInMinutes < 137) {
+            blockForTime = [[1, "10:15-11:17 : "], [1.5, "11:19-11:29 : "]];
+          } else if (timeInMinutes < 149) {
+            blockForTime = [[1.5, "11:19-11:29 : "], [2, "11:29-12:31 : "]];
+          } else if (timeInMinutes < 211) {
+            blockForTime = [[2, "11:29-12:31 : "], [2.5, "12:32-1:15 : "]];
+          } else if (timeInMinutes < 255) {
+            blockForTime = [[2.5, "12:32-1:15 : "], [3, "1:16-2:18 : "]];
+          } else if (timeInMinutes < 318) {
+            blockForTime = [[3, "1:16-2:18 : "], [4, "2:21-3:23 : "]];
+          } else if (timeInMinutes < 383) {
+            blockForTime = [[4, "2:21-3:23 : "], [3.5, ""]];
+          } else {
+            blockForTime = [[3.5, ""], [3.5, ""]];
+          }
+
+
+          res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
         });
-        for (var i = 0; i < soonEvents.length; i++) {
-          soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
-        }
+      } catch(e) {
+        console.log(e);
+        res.redirect("/down");
+      }
 
-
-        let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
-        timeInMinutes -= (9*60 + 10);
-        let blockForTime = [];
-
-        if (timeInMinutes < 0) {
-          blockForTime = [[0.5, ""], [0, "9:10-10:12 : "]];
-        } else if (timeInMinutes < 72) {
-          blockForTime = [[0, "9:10-10:12 : "], [1, "10:15-11:17 : "]];
-        } else if (timeInMinutes < 137) {
-          blockForTime = [[1, "10:15-11:17 : "], [1.5, "11:19-11:29 : "]];
-        } else if (timeInMinutes < 149) {
-          blockForTime = [[1.5, "11:19-11:29 : "], [2, "11:29-12:31 : "]];
-        } else if (timeInMinutes < 211) {
-          blockForTime = [[2, "11:29-12:31 : "], [2.5, "12:32-1:15 : "]];
-        } else if (timeInMinutes < 255) {
-          blockForTime = [[2.5, "12:32-1:15 : "], [3, "1:16-2:18 : "]];
-        } else if (timeInMinutes < 318) {
-          blockForTime = [[3, "1:16-2:18 : "], [4, "2:21-3:23 : "]];
-        } else if (timeInMinutes < 383) {
-          blockForTime = [[4, "2:21-3:23 : "], [3.5, ""]];
-        } else {
-          blockForTime = [[3.5, ""], [3.5, ""]];
-        }
-
-
-        res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1)), permissions: user.permissions, soonEvents: soonEvents});
-      });
     }
   } else {
     res.redirect("/login");
@@ -1329,7 +1345,9 @@ io.on("connection", function(socket) {
 
 
 
-
+app.get("/down", function(req, res) {
+  res.render(__dirname + "/errirs/serverError.html");
+});
 
 app.get("*", function(req, res) {
   res.sendFile(__dirname + "/errors/aStar.html");
