@@ -67,6 +67,8 @@
         displayData.push(parsedData[1].charAt(0).toUpperCase() + parsedData[1].toLowerCase().slice(1) + "'s ");
         for (var i = 0; i < dataArray.length; i++) {
           if (dataArray[i][0] == parsedData[2]) {
+
+            document.getElementById(parsedData[3]).innerHTML = dataArray[i][1] + "<br>" + ((parsedData[0] === "M" ? "Mr." : "Ms.") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
             displayData.push(dataArray[i][1]);
             break;
           }
@@ -77,9 +79,8 @@
         var courseWithBlock = document.getElementsByClassName(parsedData[3]);
         var length = courseWithBlock.length;
 
-        // console.log(courseWithBlock);
-        for (var i = 0; i < length; i++) {
 
+        for (var i = 0; i < length; i++) {
           courseWithBlock[0].remove();
         }
 
@@ -235,6 +236,23 @@
         padding: 10px;
         margin-bottom: 10px;
       }
+      .preview {
+        display: block;
+        width: 100px;
+        margin: auto;
+        border-collapse: collapse;
+      }
+      .previewBox {
+        height: 100px;
+        width: 100px;
+      }
+      .extraBox {
+        height: 50px;
+        width: 100px;
+      }
+      .preview td {
+        border: 2px solid black;
+      }
       @media screen and (min-width: 768px) {
         .courseHolder {
           display: flex;
@@ -327,7 +345,17 @@
 
       </div>
       <div class = "displayCourses" id = "displayCourses" style = "width: 100%; text-align: center; margin-top: 50px; margin-bottom: 100px;">
-
+        Preview of monday (day 1):
+        <table class = "preview">
+          <tr><td class = "previewBox" id = "A">LC's</td></tr>
+          <tr><td class = "previewBox" id = "B">LC's</td></tr>
+          <tr><td class = "extraBox" id = "TA">TA</td></tr>
+          <tr><td class = "previewBox" id = "C">LC's</td></tr>
+          <tr><td class = "extraBox" id = "LUNCH">LUNCH</td></tr>
+          <tr><td class = "previewBox" id = "D">LC's</td></tr>
+          <tr><td class = "previewBox" id = "E">LC's</td></tr>
+        </table>
+        <button onclick = "location.reload()" style = "width: 100px; display: block; margin: auto; height: 40px; background-color: var(--button-color); font-size: 18px; color: var(--text-color)">Reset</button>
       </div>
       <button type = "button" class = "done" onclick = "postFunction()">
         Done!
