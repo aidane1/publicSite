@@ -239,7 +239,7 @@ app.all("/*", function(req, res, next) {
 });
 
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
