@@ -59,6 +59,7 @@
         element.parentNode.parentNode.classList.toggle("displayed");
         var parsedData = element.id.split("_");
         codes.push(parsedData[2]);
+        console.log(codes);
         blocks.push(parsedData[3]);
         teachers.push((parsedData[0] === "M" ? "Mr." : "Ms.") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
         var displayData = [];
