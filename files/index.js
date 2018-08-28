@@ -217,29 +217,29 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 
 app.enable('trust proxy');
-//
 
-app.use (function (req, res, next) {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('https://' + req.headers.host + req.url);
-  }
-});
-app.all("/*", function(req, res, next) {
-  if (req.headers) {
-    if (req.headers.host.match(/^www/) !== null ) {
-      res.redirect('https://' + req.headers.host.replace(/^www\./, '') + req.url);
+function wwwHttpsRedirect(req, res, next) {
+    console.log("yete");
+    if (req.secure) {
+      if (req.headers.host.slice(0, 4) !== 'www.') {
+        console.log(req.protocol + '://www.' + req.headers.host + req.originalUrl)
+        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+      } else {
+        next();
+      }
     } else {
-      next();
+      if (req.headers.host.slice(0, 4) !== 'www.') {
+        console.log('https://www.' + req.headers.host + req.originalUrl)
+        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+      } else {
+        next();
+      }
     }
-  } else {
-    next();
-  }
-});
+};
+app.use(wwwHttpsRedirect);
 
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
