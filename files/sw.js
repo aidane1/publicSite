@@ -1,8 +1,9 @@
-const cacheName = "v5";
+const cacheName = "v2";
 
 const cacheAssets = [
   "public/html/offline.html",
-  "public/fonts/Evogria.otf"
+  "public/fonts/Evogria.otf",
+  "public/js/home.js"
 ]
 
 self.addEventListener("install", e => {
@@ -35,36 +36,23 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", event => {
 
-  console.log("service worker: fetching");
-  console.log(event.request);
+
   if (event.request.destination == "font" && event.request.referrer.split("/")[event.request.referrer.split("/").length-1] != "fonts") {
-    // e.respondWith(caches.match(e.request).catch(() => {
-    //   return fetch(e.request);
-    // }))
-    // e.respondWith(caches.match(e.request).catch(() => fetch(e.request)))
-    // e.respondWith(fetch(e.request));
-    console.log('yeet test 1');
+
+
     caches.match(event.request).then(function(resp) {
       return resp || fetch(event.request).then(function(response) {
-        console.log("fuckin yeet.");
+
         return caches.open(cacheName).then(function(cache) {
           cache.put(event.request, response.clone());
           return response;
         });
       });
     })
-    // e.respondWith(
-    //   caches.match(e.request).then(function(response) {
-    //     console.log(response);
-    //     return caches.open(cacheName).then(function(cache) {
-    //       if (e.request.url.indexOf('test') < 0) {
-    //         cache.put(e.request.url, response.clone());
-    //       }
-    //       return response;
-    //     });
-    //   })
-    // );
 
+
+  } else if(event.request.destination == "script") {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
   } else {
     event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
   }

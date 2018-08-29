@@ -834,7 +834,7 @@
           <% if (order[key] == "Courses") { %>
             <li class = "item"><a href = "#courses">Courses</a></li>
           <% } else if (order[key] == "LC") { %>
-            <li class = "item"><a href = "#LC">LC's that are open</a></li>
+            <li class = "item"><a href = "#LC">Open LCs</a></li>
           <% } else if (order[key] == "Calendar") { %>
             <li class = "item"><a href = "#news">News & Calendar</a></li>
           <% } else if (order[key] == "Schedule") { %>
@@ -1231,6 +1231,8 @@
 
   </body>
   <script src = "public/js/home.js"></script>
+
+  <!-- the script for getting alerts -->
   <script>
   function postAlerts(deleteMessage) {
     let xmlhttp;
@@ -1279,6 +1281,51 @@
     xmlhttp.send();
   }
   loadAlerts();
+  </script>
+
+  <!-- the script for adding to local storage -->
+  <script>
+    if (typeof Storage != "undefined") {
+      let loadRequest;
+      if (window.XMLHttpRequest) {
+        // code for modern browsers
+        loadRequest = new XMLHttpRequest();
+      } else {
+        // code for old IE browsers
+        loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      loadRequest.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          let parsedText = JSON.parse(this.responseText);
+          let userObject = parsedText[0];
+          let courseObject = parsedText[1];
+          let lcObject = parsedText[2];
+          let offSetObject = parsedText[3];
+          let blockTimeObject = parsedText[4];
+          let newObject = {
+            colors: userObject.colors,
+            order: userObject.order,
+            courses: courseObject.map(x => {
+              return {
+                teacher : x.teacher,
+                course : x.course,
+                block : x.block
+              }
+            }),
+            lcSchedule: lcObject,
+            dayOffSet: offSetObject.timeOffset.map(x => new Date(x)),
+            blockTime: blockTimeObject
+          }
+          localStorage.setItem("userData", JSON.stringify(newObject));
+        }
+      }
+      loadRequest.open("GET", "/offLineInfo", true);
+      loadRequest.send();
+
+    } else {
+
+    }
+
   </script>
 
   <!-- This shit is SUPER fucky. leave it for the time being -->

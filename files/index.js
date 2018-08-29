@@ -3,8 +3,17 @@
 
 
 //a function to offset the days based on proDdays
-function dayOffset(date) {
-  let offSetArray = [];
+function dayOffset(date, all = false) {
+  let offSetArray = [
+    new Date(2018, 8, 3, 0, 0, 0, 0), new Date(2018, 8, 17, 0, 0, 0, 0), new Date(2018, 9, 5, 0, 0, 0, 0), new Date(2018, 9, 8, 0, 0, 0, 0),
+    new Date(2018, 9, 19, 0, 0, 0, 0), new Date(2018, 10, 12, 0, 0, 0, 0), new Date(2018, 10, 13, 0, 0, 0, 0), new Date(2018, 11, 24, 0, 0, 0, 0),
+    new Date(2018, 11, 25, 0, 0, 0, 0), new Date(2018, 11, 26, 0, 0, 0, 0), new Date(2019, 0, 28, 0, 0, 0, 0), new Date(2019, 1, 15, 0, 0, 0, 0), new Date(2019, 1, 18, 0, 0, 0, 0),
+    new Date(2019, 3, 19, 0, 0, 0, 0), new Date(2019, 3, 22, 0, 0, 0, 0), new Date(2019, 3, 23, 0, 0, 0, 0), new Date(2019, 4, 17, 0, 0, 0, 0),
+    new Date(2019, 4, 20, 0, 0, 0, 0)
+  ];
+  if (all) {
+    return offSetArray;
+  }
   let offSet = 0;
   for (var i = 0; i < offSetArray.length; i++) {
     if (date.getTime() > offSetArray[i].getTime()) {
@@ -102,16 +111,22 @@ function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
-function blockToTime(day, offSet) {
+function blockToTime(day, offSet, all = false) {
   // let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
   let schedule = [["A", "B", "C", "D", "E"], ["E", "D", "B", "C", "A"], ["D", "A", "C", "B", "E"], ["B", "C", "E", "A", "D"], ["D", "B", "A", "E", "C"]];
-
+  if (all) {
+    return schedule;
+  }
   if (day === -1 || day === 5) {
     return false;
   }
-  return schedule[(day+offSet)%5];
+  return schedule[(day-offSet%5+5)%5];
 }
-function lcSchedule(day, block) {
+let testDate = new Date(2019, 5, 4, 0, 0, 0, 0);
+let testBlock = (testDate.getDay()-1-dayOffset(testDate)%5+5)%5;
+console.log(testBlock);
+
+function lcSchedule(day, block, all = false) {
   let day1 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
   let day2 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
   let day3 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
@@ -123,6 +138,9 @@ function lcSchedule(day, block) {
     "2": day3,
     "3": day4,
     "4": day5
+  }
+  if (all) {
+    return schedule;
   }
   if (day === -1 || day === 5) {
     return false;
@@ -219,17 +237,16 @@ app.use(cookieParser());
 app.enable('trust proxy');
 
 function wwwHttpsRedirect(req, res, next) {
-    console.log("yete");
     if (req.secure) {
       if (req.headers.host.slice(0, 4) !== 'www.') {
-        console.log(req.protocol + '://www.' + req.headers.host + req.originalUrl)
+
         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
       } else {
         next();
       }
     } else {
       if (req.headers.host.slice(0, 4) !== 'www.') {
-        console.log('https://www.' + req.headers.host + req.originalUrl)
+
         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
       } else {
         next();
@@ -248,10 +265,15 @@ app.get("/periodic-table", function(req, res) {
   res.render("periodicTable");
 });
 
+app.get("/french-cards", function(req, res) {
+  res.render("frenchcards");
+});
+
 
 
 app.get("/", async (req, res, next) => {
-  let currentDate = (new Date()).local();
+  // let currentDate = (new Date()).local();
+  currentDate = (new Date(2019, 5, 13, 0, 0, 0, 0));
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
@@ -282,8 +304,8 @@ app.get("/", async (req, res, next) => {
         });
         //gets the order of todays blocks from a function
         //also accounts for time offsets due to pro-D days
+
         let todaysBlocks = blockToTime((currentDate).getDay() -1, dayOffSetToday);
-        console.log(todaysBlocks);
         //itterates through those blocks and find which course matches the block
         for (var i = 0; i < todaysBlocks.length; i++) {
           //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
@@ -465,14 +487,14 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 
 app.get("/signup", function(req, res) {
   res.cookie("path", "/");
-  res.render("signup", {error : "", data : ["", "", "", ""]});
+  res.render("signup", {error : "", data : [ "", "", ""]});
 });
 app.post("/signup", urlencodedParser, function(req, res) {
 
   //makes sure the two entered passwords match.
   if (req.body.password != req.body.passwordConf) {
     //if they don't, tell the user
-    res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.firstName, req.body.lastName]});
+    res.render("signup", {error : "Error : passwords do not match", data : [req.body.username, req.body.firstName, req.body.lastName]});
   //makes sure all fields were entered
   } else if (req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
     //makes sure they didn't use special characters.
@@ -527,13 +549,13 @@ app.post("/signup", urlencodedParser, function(req, res) {
           console.log(e);
         }
       } else {
-        res.render("signup", {error: "Please limit input fields length to 40 characters."});
+        res.render("signup", {error: "Please limit input fields length to 40 characters.", data : ["", "", ""]});
       }
     } else {
-      res.render("signup", {error: "Please do not use special characters in your signup information."});
+      res.render("signup", {error: "Please do not use special characters in your signup information.", data : ["", "", "", ""]});
     }
   } else {
-    res.redirect("/signup", {error: "please fill in all the requested fields."});
+    res.redirect("/signup", {error: "please fill in all the requested fields.", data : ["", "", "", ""]});
   }
 });
 
@@ -1323,6 +1345,36 @@ app.get("/about", function(req, res) {
   res.render("about");
 });
 
+
+app.get("/offLineInfo", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || !user) {
+        res.send("");
+      } else {
+        Course.find({_id : user.courses}, function(err, courses) {
+          if (err || !courses) {
+            res.send("");
+          } else {
+            //object
+            let userLCSchedule = lcSchedule("", "", true);
+            //array
+            let timeOffSet = dayOffset("", true);
+            //array
+            let blockSchedule = blockToTime("", "", true);
+            res.send([user, courses, userLCSchedule, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}]);
+          }
+        });
+
+      }
+    })
+  } else {
+    res.send("");
+  }
+});
+
+
+
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
@@ -1361,7 +1413,6 @@ io.on("connection", function(socket) {
 
 
 });
-
 
 
 
