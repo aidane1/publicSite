@@ -272,8 +272,7 @@ app.get("/french-cards", function(req, res) {
 
 
 app.get("/", async (req, res, next) => {
-  // let currentDate = (new Date()).local();
-  currentDate = (new Date(2019, 5, 13, 0, 0, 0, 0));
+  let currentDate = (new Date()).local();
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
