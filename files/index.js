@@ -373,6 +373,9 @@ app.get("/", async (req, res, next) => {
           } else {
             blockForTime = [[3.5, ""], [3.5, ""]];
           }
+          if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
+            blockForTime = [[3.5, ""], [3.5, ""]];
+          }
 
 
           res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0]), permissions: user.permissions, soonEvents: soonEvents});
@@ -816,22 +819,33 @@ app.post("/submit", urlencodedParser, function(req, res) {
 
   //makes sure all fields exist, and are of the proper length
   if (req.session.userId && !tampered && (req.body.questions || req.body.assignment) && req.body.due.length < 60 && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
-      //makes a homework object
-      let homeworkObject = {
-        submittedBy: req.body.submittedBy,
-        confirmed: req.body.confirmed,
-        page: req.body.page,
-        assignment: profanityFilter(req.body.assignment),
-        notes: profanityFilter(req.body.notes),
-        questions: profanityFilter(req.body.questions),
-        due: profanityFilter(req.body.due),
-        date: (new Date()).local()
-      }
-      //adds the homework to the course
-      console.log("yeet");
-      Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
-        res.redirect("/");
-      });
+
+      User.findOne({username : req.body.submittedBy}, function(err, user) {
+
+        //makes a homework object
+        let homeworkObject = {
+          submittedBy: req.body.submittedBy,
+          confirmed: "F",
+          page: req.body.page,
+          assignment: profanityFilter(req.body.assignment),
+          notes: profanityFilter(req.body.notes),
+          questions: profanityFilter(req.body.questions),
+          due: profanityFilter(req.body.due),
+          date: (new Date()).local()
+        }
+        //if the user is a teacher or an admin, let them submit it as confirmed.
+        if (err || !user) {
+
+        } else if (user.permissions == "teacher" || user.permissions == "admin") {
+          homeworkObject.confirmed = "T";
+        }
+        //adds the homework to the course
+        Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
+          res.redirect("/");
+        });
+      })
+
+
 
 
   } else if (!req.session.userId) {
