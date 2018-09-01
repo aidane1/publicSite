@@ -401,7 +401,9 @@ app.get("/", async (req, res, next) => {
             }
           });
           for (var i = 0; i < soonEvents.length; i++) {
+            console.log("fuck yea");
             soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
+            console.log(soonEvents[i]);
           }
 
 
