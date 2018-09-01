@@ -341,8 +341,8 @@ app.get("/", async (req, res, next) => {
         let courses = await Course.find({_id : user.courses});
         //gathers the events from the past month for the calendar
         let monthEvent = await Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
-        let soonEvents = await Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-2, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
-
+        let soonEvents = await Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
+        soonEvents = soonEvents.reverse();
 
 
 
@@ -401,9 +401,7 @@ app.get("/", async (req, res, next) => {
             }
           });
           for (var i = 0; i < soonEvents.length; i++) {
-            console.log("fuck yea");
             soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
-            console.log(soonEvents[i]);
           }
 
 
