@@ -856,9 +856,9 @@
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
               <% if (event.longForm) { %>
-                <%=event.dateDescription%> : <%=event.longForm%>
+                <%=(event.day+1).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.longForm%>
               <% } else { %>
-                <%=event.dataDescription%> : <%=event.info%>
+                <%=(event.day+1).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.info%>
               <% } %>
 
             </div>
