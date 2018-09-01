@@ -432,7 +432,7 @@ app.get("/", async (req, res, next) => {
             blockForTime = [[3.5, ""], [3.5, ""]];
           }
 
-
+          console.log(soonEvents);
           res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0]), permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
