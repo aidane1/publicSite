@@ -288,11 +288,11 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(error, user) {
       if (error) {
-        res.redirect("/");
+        res.send("false");
       } else {
         Push.create({code: subscription, user: user.username}, function(err, push) {
           if (err) {
-            res.redirect("/");
+            res.send("false");
           } else {
             let payload = JSON.stringify({ title: 'Welcome!', body: "Notifications have been activated. We will remember the important events, so you don't have to!" });
             webpush.sendNotification(push.code, payload).catch(error => {
@@ -303,7 +303,7 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
       }
     })
   } else {
-    res.redirect("/");
+    res.send("false");
   }
 });
 
@@ -779,7 +779,7 @@ app.post("/add", urlencodedParser, function(req, res) {
           if (req.body.alert) {
             User.update({}, {$push:{alerts: [[req.body.alert]]}}, {"multi": true}).then(function() {
               Push.find({}, function(err, pushes) {
-                pushUsers(pushes, {title: "alert", data: req.body.alert});
+                pushUsers(pushes, {title: req.body.alert, data: ""});
               });
               res.redirect("/add");
             });

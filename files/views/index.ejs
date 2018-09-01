@@ -616,6 +616,19 @@
           font-size: 16px;
         }
 
+        .pushNotifications {
+          display: none;
+        }
+        .pushNotifications div {
+          display: block;
+          margin: auto;
+          padding: 15px;
+          border-radius: 8px;
+          font-size: 19px;
+          text-align: center;
+          background-color: var(--button-color);
+        }
+
         /* for small screens iphone 5, SE*/
         @media screen and (max-width: 320px) {
           .infoBox {
@@ -1223,6 +1236,13 @@
     </div>
 
 
+    <div class = "pushNotifications" id = "pushNotifications" onclick = "subscribeUser()">
+      <div class = "pushText">
+        Enable push notifications
+      </div>
+    </div>
+
+
 
 
 
@@ -1335,6 +1355,7 @@
         console.log('Registration succeeded. Scope is ' + reg.scope);
         reg.pushManager.getSubscription().then(function(sub) {
           if (sub === null) {
+            document.getElementById("pushNotifications").style.display = "block";
             console.log("not subscribed to push service!");
           } else {
             console.log("subscription object: " + sub);
@@ -1349,6 +1370,7 @@
     }
 
     function subscribeUser() {
+      document.getElementById("pushNotifications").setAttribute("onclick", "''");
       const publicVapidKey = 'BJOheX5G-E8hh06N7PPi2i1_gCVvUWxwjOUTVaqRBifRpGyi7e7-FYU-WcdmXenmWh-kLZWMFjxjhK37_LvK52M';
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.ready.then(function(reg) {
@@ -1368,10 +1390,11 @@
             xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
             xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-
+              
               }
             }
             xmlhttp.send(encodeURI("post=" + JSON.stringify(sub)));
+            location.reload();
           }).catch(function(e) {
             if (Notification.permission === "denied") {
               console.log("permissions for notifications denied.");
