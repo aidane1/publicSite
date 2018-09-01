@@ -1,6 +1,6 @@
 {
   "name": "publicsite",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "public PVSS site",
   "main": "index.js",
   "scripts": {
