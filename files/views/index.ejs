@@ -1326,14 +1326,98 @@
 
   <!-- This shit is SUPER fucky. leave it for the time being -->
   <script>
-    if ('serviceWorker' in navigator) {
+    if ("Notification" in window && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(function(reg) {
+
         console.log('Registration succeeded. Scope is ' + reg.scope);
+        reg.pushManager.getSubscription().then(function(sub) {
+          if (sub === null) {
+            console.log("not subscribed to push service!");
+          } else {
+            console.log("subscription object: " + sub);
+          }
+        })
       }).catch(function(error) {
         console.log('Registration failed with ' + error);
       });
+
     } else {
       console.log("service workers are not supported by your browser. please consider switching to one that does to get the highest quality content we can offer.");
+    }
+
+    function subscribeUser() {
+      const publicVapidKey = 'BJOheX5G-E8hh06N7PPi2i1_gCVvUWxwjOUTVaqRBifRpGyi7e7-FYU-WcdmXenmWh-kLZWMFjxjhK37_LvK52M';
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+          }).then(function(sub) {
+            let xmlhttp;
+            if (window.XMLHttpRequest) {
+              // code for modern browsers
+              xmlhttp = new XMLHttpRequest();
+            } else {
+              // code for old IE browsers
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.open("POST", "/subscribe");
+            xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+            xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+
+              }
+            }
+            xmlhttp.send(encodeURI("post=" + JSON.stringify(sub)));
+          }).catch(function(e) {
+            if (Notification.permission === "denied") {
+              console.log("permissions for notifications denied.");
+            } else {
+              console.log("unable to subscribe to push: " + e);
+            }
+          });
+        })
+      }
+    }
+
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+
+    async function displayNotification() {
+      if (Notification.permission == 'granted') {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          var options = {
+            body: 'Here is a notification body!',
+            icon: 'images/example.png',
+            vibrate: [100, 50, 100],
+            data: {
+              dateOfArrival: Date.now(),
+              primaryKey: 1
+            },
+            actions: [
+              {action: 'explore', title: 'Explore this new world',
+                icon: 'images/checkmark.png'},
+              {action: 'close', title: 'Close notification',
+                icon: 'images/xmark.png'},
+            ]
+          };
+          reg.showNotification('Hello world!', options);
+        });
+      }
     }
   </script>
 </html>

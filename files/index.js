@@ -124,7 +124,7 @@ function blockToTime(day, offSet, all = false) {
 }
 let testDate = new Date(2019, 5, 4, 0, 0, 0, 0);
 let testBlock = (testDate.getDay()-1-dayOffset(testDate)%5+5)%5;
-console.log(testBlock);
+
 
 function lcSchedule(day, block, all = false) {
   let day1 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
@@ -167,6 +167,10 @@ let mongoose = require("mongoose");
 
 let fs = require("fs");
 
+let http = require("http");
+
+let querystring = require("querystring");
+
 let bodyParser = require("body-parser");
 
 let User = require("../models/userchar");
@@ -187,9 +191,16 @@ let Resources = require("../models/resourcechar.js");
 
 let Posts = require("../models/postchar.js");
 
+let Push = require("../models/pushchar.js");
+
+let webpush = require("web-push");
+
 let contents = fs.readFileSync("../eVariables/variables.json");
 contents = JSON.parse(contents);
 
+const PUBLIC_VAPID_KEY = contents.PUBLIC_VAPID_KEY;
+const PRIVATE_VAPID_KEY = contents.PRIVATE_VAPID_KEY;
+webpush.setVapidDetails('mailto:aidaneglin@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
 
 
 let nodemailer = require("nodemailer");
@@ -261,6 +272,42 @@ let server = app.listen(80, function() {
 });
 
 
+function pushUsers(userList, data) {
+  for (var i = 0; i < userList.length; i++) {
+    let payload = JSON.stringify({ title: data.title, body: data.body });
+    webpush.sendNotification(userList[i].code, payload).catch(error => {
+      console.error(error);
+    });
+  }
+}
+
+
+app.post("/subscribe", urlencodedParser, function(req,res) {
+  let subscription = JSON.parse(req.body.post);
+  res.status(201).json({});
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(error, user) {
+      if (error) {
+        res.redirect("/");
+      } else {
+        Push.create({code: subscription, user: user.username}, function(err, push) {
+          if (err) {
+            res.redirect("/");
+          } else {
+            let payload = JSON.stringify({ title: 'Welcome!', body: "Notifications have been activated. We will remember the important events, so you don't have to!" });
+            webpush.sendNotification(push.code, payload).catch(error => {
+              console.error(error);
+            });
+          }
+        });
+      }
+    })
+  } else {
+    res.redirect("/");
+  }
+});
+
+
 app.get("/periodic-table", function(req, res) {
   res.render("periodicTable");
 });
@@ -269,14 +316,22 @@ app.get("/french-cards", function(req, res) {
   res.render("frenchcards");
 });
 
+app.get("/bradshaw", function(req, res) {
+  res.render("bradshaw");
+})
 
 
 app.get("/", async (req, res, next) => {
+
+
+
+
   let currentDate = (new Date()).local();
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
   if(req.session.userId) {
+
     let user = await User.findOne({_id : req.session.userId});
     if (!user) {
       res.redirect("/login");
@@ -462,7 +517,7 @@ app.get("/login", function(req, res) {
 app.post("/login", urlencodedParser, async (req, res, next) => {
 
   //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
-  if (stringTest(req.body.logname) && stringTest(req.body.logword) && req.body.logname && req.body.logword) {
+  if (req.body.logname && req.body.logword && stringTest(req.body.logname) && stringTest(req.body.logword)) {
     //try to find the user in the database. if that doesn't work, tell them their information was incorrect.
     try {
       // asyncronous function. returns the user if the info was correct, throws an error if it wasn't.
@@ -542,7 +597,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
                 }
               });
               req.session.userId = user._id;
-              console.log(req.session.userId)
+
               res.cookie("sessionID", req.session.userId);
               return res.redirect("/tutorial");
             }
@@ -575,7 +630,7 @@ app.get("/courses", function(req, res) {
     }
 });
 app.post("/courses", urlencodedParser, function(req, res) {
-  console.log(req.body);
+
   //makes sure they have a session ID and that the body object is a course.
   if (req.session.userId && req.body.coursesCode && req.body.coursesBlock && req.body.coursesTeacher) {
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
@@ -722,8 +777,10 @@ app.post("/add", urlencodedParser, function(req, res) {
           }
         } else if (req.body.alert) {
           if (req.body.alert) {
-
             User.update({}, {$push:{alerts: [[req.body.alert]]}}, {"multi": true}).then(function() {
+              Push.find({}, function(err, pushes) {
+                pushUsers(pushes, {title: "alert", data: req.body.alert});
+              });
               res.redirect("/add");
             });
           }
@@ -1003,7 +1060,7 @@ app.get("/questions/:id", function(req, res) {
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.body.deleteComment) {
-      console.log(req.body.deleteComment);
+
       User.findOne({_id : req.session.userId}, function(err, user) {
         if (user.permissions == "admin") {
           Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
@@ -1149,8 +1206,10 @@ app.get("/schedule", function(req, res) {
         }
         Course.find({_id : user.courses}, function(err, courses) {
           courses.forEach(function(course) {
+
             blockObject[course.block] = [course.course, course.teacher];
           });
+
           res.render("schedule", {courses : blockObject, colours: user.colors, font: holidayFont(user.font)});
         });
       }
@@ -1316,7 +1375,7 @@ app.get("/users/:user/fonts", function(req, res) {
 app.post("/users/:user/fonts", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     let fontUrl = req.body.font.split("/");
-    console.log(fontUrl);
+
     if (req.body.font && fontUrl[1] == "public" && fontUrl[2] == "fonts" && fontUrl.length == 4) {
       User.findOneAndUpdate({_id : req.session.userId}, {$set: {font: req.body.font}}).then(function(err, user) {
         res.send(true);
@@ -1407,8 +1466,7 @@ io.on("connection", function(socket) {
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName, chatroom: data.chatroom};
 
         if (user.permissions != "muted" && data.message.length < 256) {
-          console.log("chat_" + data.chatroom);
-          console.log(data);
+
           io.emit("chat" + "_" + data.chatroom, data);
         }
       }
