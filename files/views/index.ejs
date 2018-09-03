@@ -17,10 +17,7 @@
     <link rel = "icon" sizes = "192x192" href = "public/images/icon-192x192.png" />
     <link rel = "apple-touch-startup-image" href = "public/images/icon-512x512.png" />
     <title>PVSS student website | Home</title>
-    <script>
 
-
-    </script>
     <style>
       @font-face {
         font-family: sansFont;
@@ -1272,6 +1269,7 @@
     xmlhttp.send(encodeURI("delete=" + deleteMessage));
   }
   function loadAlerts() {
+    console.log("yeet");
     let xmlhttp;
     if (window.XMLHttpRequest) {
       // code for modern browsers
@@ -1390,7 +1388,7 @@
             xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
             xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-              
+
               }
             }
             xmlhttp.send(encodeURI("post=" + JSON.stringify(sub)));
