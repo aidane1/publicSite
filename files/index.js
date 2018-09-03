@@ -195,6 +195,8 @@ let Push = require("../models/pushchar.js");
 
 let webpush = require("web-push");
 
+let schedule = require("node-schedule");
+
 let contents = fs.readFileSync("../eVariables/variables.json");
 contents = JSON.parse(contents);
 
@@ -273,6 +275,7 @@ let server = app.listen(80, function() {
 
 
 function pushUsers(userList, data) {
+  console.log(data);
   for (var i = 0; i < userList.length; i++) {
     let payload = JSON.stringify({ title: data.title, body: data.body });
     webpush.sendNotification(userList[i].code, payload).catch(error => {
@@ -280,6 +283,29 @@ function pushUsers(userList, data) {
     });
   }
 }
+
+// let j = schedule.scheduleJob('* * 7 * * *', function() {
+//   let currentDate = (new Date()).local();
+//   Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}]}, function(error, events) {
+//     if (events.length == 0 || error) {
+//
+//     } else {
+//
+//       Push.find({}, function(err, pushes) {
+//         if (err) {
+//
+//         } else {
+//           let dataString = "Event today! " + (events[0].longForm ? events[0].longForm : events[0].info);
+//           for (var i = 1; i < events.length; i++) {
+//             dataString += ", ";
+//             dataString += events[i].longForm ? events[i].longForm : events[i].info;
+//           }
+//           pushUsers(pushes, {title: dataString, data: events[0].date});
+//         }
+//       });
+//     }
+//   });
+// });
 
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
@@ -321,7 +347,10 @@ app.get("/bradshaw", function(req, res) {
 })
 
 
-app.get("/", async (req, res, next) => {
+app.get("/", function(req, res) {
+  res.render("loading", {getURL : "home"});
+});
+app.get("/home", async (req, res, next) => {
 
 
 
@@ -432,7 +461,7 @@ app.get("/", async (req, res, next) => {
             blockForTime = [[3.5, ""], [3.5, ""]];
           }
 
-          console.log(soonEvents);
+
           res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0]), permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
@@ -793,8 +822,10 @@ app.post("/add", urlencodedParser, function(req, res) {
 });
 
 
-
-app.get("/calendar", async (req, res, next) => {
+app.get("/calendar", function(req, res) {
+  res.render("loading", {getURL : "calendar-view"});
+});
+app.get("/calendar-view", async (req, res, next) => {
   res.cookie("path", "/calendar");
 
   //user doesn't need a session to visit calendar, because there is no user specific data
@@ -849,8 +880,10 @@ app.get("/calendar", async (req, res, next) => {
 });
 
 
-
-app.get("/submit", function(req, res) {
+app.get("/submit", function(req,res) {
+  res.render("loading", {getURL : "submit-view"});
+});
+app.get("/submit-view", function(req, res) {
   res.cookie("path", "/submit");
 
   //renders the page with the user's courses
