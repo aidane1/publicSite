@@ -248,18 +248,11 @@
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         newDoc = (new DOMParser()).parseFromString(this.responseText, "text/html");
-        console.log(this.responseText);
-        console.log(document.documentElement);
-        console.log(newDoc.documentElement);
-        // document.open("text/html");
-        // document.write(this.responseText);
-        // document.close();
+
+
+
         document.replaceChild(newDoc.documentElement, document.documentElement);
-        // console.log(document);
-
-
-
-        // console.log(this.responseText);
+        
       }
     }
     xmlhttp.open("GET", "/<%=getURL%>", true);
