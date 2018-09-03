@@ -248,9 +248,12 @@
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         // newDoc = (new DOMParser()).parseFromString(this.responseText, "text/html");
-        console.log(this.responseText);
+        // console.log(this.responseText);
+        document.open();
         document.write(this.responseText);
-        console.log(document);
+        document.close();
+        // document.replaceChild(newDoc, document.documentElement);
+        // console.log(document);
 
 
 
