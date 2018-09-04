@@ -250,9 +250,11 @@
         newDoc = (new DOMParser()).parseFromString(this.responseText, "text/html");
 
 
+        document.open("text/html");
+        document.write(this.responseText);
+        document.close();
+        // document.replaceChild(newDoc.documentElement, document.documentElement);
 
-        document.replaceChild(newDoc.documentElement, document.documentElement);
-        
       }
     }
     xmlhttp.open("GET", "/<%=getURL%>", true);
