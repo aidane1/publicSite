@@ -97,14 +97,107 @@
         margin-left: 10px;
 
       }
+      .userInfo {
+        float: right;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 30%;
+        font-size: 20px;
+        padding-top: 20px;
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+      .code {
+        font-size: 75%;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.8;
+        z-index: 2;
+        display: none;
+      }
+      .enterBox {
+        width: 90%;
+        height: 110px;
+        position: absolute;
+        border-radius: 10px;
+        top: 50%;
+        left: -50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        z-index: 3;
+        transition: left 0.8s ease-out;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .out {
+        left: 50%;
+      }
+      .accountName {
+        outline: none;
+        border: 1px solid black;
+        width: 100%;
+        height: 50%;
+        font-size: 18px;
+      }
+      .enterBox .input {
+        display: inline-block;
+        height: 80px;
+        flex: 1;
+        font-size: 20px;
+        padding: 10px;
+        min-width: 50%;
+      }
+      .submit {
+        height: 30px;
+        background-color: #25db2e;
+        flex-grow: 1;
+        display: inline-block;
+        font-size: 28px;
+        min-width: 50%;
+        color: white;
+        text-align: center;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
 
     </style>
   </head>
   <body>
+    <div class = "modal" id = "modal" onclick = "closeModal()">
+
+    </div>
+    <div class = "enterBox" id = "enterBox">
+      <div class = "input">
+        Account for:
+        <br>
+        Linkdin
+      </div>
+      <div class = "input">
+        Username:
+        <input type = "text" class = "accountName" />
+      </div>
+      <div class = "submit" onclick = "closeModal()">
+        Add!
+      </div>
+
+    </div>
     <div class = "bodyHolder">
       <div class = "accountDisplay">
         <div class = "imageHolder">
           <div class="fa fa-camera"></div>
+        </div>
+        <div class = "userInfo">
+          Aidan <span style = "float: right">Eglin</span>
+          <hr>
+          <div class = "code">Code: <span style = "float: right">2j1qsSfk3p2k3sf</span></div>
         </div>
       </div>
       <div class = "userAccounts">
@@ -125,10 +218,29 @@
         </div>
       </div>
       <hr>
-      <div class = "addAccount">
+      <div class = "addAccount" onclick = "addAccount()">
         <div class = "add">+</div><div class = "addAccountText">add account</div>
       </div>
     </div>
 
   </body>
+  <script>
+    function addAccount() {
+      var modal = document.getElementById("modal");
+      modal.style.display = "block";
+
+
+      enterBox.classList.toggle("out");
+    }
+
+    function closeModal() {
+      enterBox = document.getElementById("enterBox");
+      enterBox.classList.toggle("out");
+      enterBox.addEventListener("transitionend", function() {
+        if (!enterBox.classList.contains("out")) {
+          document.getElementById("modal").style.display = "none";
+        }
+      });
+    }
+  </script>
 </html>
