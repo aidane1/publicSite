@@ -122,16 +122,20 @@ function blockToTime(day, offSet, all = false) {
   }
   return schedule[(day-offSet%5+5)%5];
 }
-let testDate = new Date(2019, 5, 4, 0, 0, 0, 0);
-let testBlock = (testDate.getDay()-1-dayOffset(testDate)%5+5)%5;
 
 
-function lcSchedule(day, block, all = false) {
-  let day1 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
-  let day2 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
-  let day3 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
-  let day4 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
-  let day5 = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr.Fox, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
+
+function lcSchedule(day, block, offset,  all = false) {
+  let day1 = [["Mr.Bradshaw, room 20", "Ms.Staley, room 29", "Open Library"], ["Mr. Fraser, room 17", "Mr. Hughes, student center", "Open Foods", "Open Gym"], ["Ms. Seiler, Student Center", "Ms. Arthurson, room 30", "Open Library", "Open Dance"], ["Mr. Austin, Student Center", "Mr. Fox, room 26", "Open Library", "Open Shop"], ["Ms. Threatful, Student Center", "Ms. Staley, room 29"]];
+
+  let day2 = [["Ms. Staley, room 29", "Open Library"], ["Mr. Fraser, Student Center", "Ms. Seiler, room 16", "Open Library"], ["Open Library", "Open Art", "Open Shop", "Open Foods"], ["Ms. Seiler, room 16", "Mr. Bradshaw, Student Center", "Ms. Arthurson, room 30", "Open Library"], ["Open Library", "Open Computer Lab, room 37"]];
+
+  let day3 = [["Mr. Fraser, room 17", "Open Library", "Open Shop"], ["Mr. Bradshaw, room 20", "Open Gym", "Open Library", "Open Foods"], ["Mr. Seiler, room 16", "Ms. Arthurson, room 30", "Open Library", "Open Dance"], ["Ms. Staley, room 29", "Open Library"], ["Ms. Wood, room 10", "Open Art", "Open Shop"]];
+
+  let day4 = [["Ms. Threatful, room 27", "Ms. Staley, Student Center", "Open Library"], ["Ms. Seiler, room 16", "Ms. Cowlin, Student Center", "Open Library", "Open Dance"], ["Mr. Fraser, room 17", "Mr. Hughes, Student Center", "Open Library", "Open Gym"], ["Mr. Bradshaw, room 20", "Open Library", "Open Gym", "Open Foods"], ["Mr. Austin, room 25", "Open Library", "Open Shop"]];
+
+  let day5 = [["Mr. Fraser, room 17", "Mr. Fox, Student Center", "Open Library", "Open Shop"], ["Ms. Staley, room 29", "Open Library", "Open Shop"], ["Mr. Bradshaw, room 20", "Mr. Hughes, Student Center", "Open Foods", "Open Computer Lab, room 37"], ["Mr. Fraser, room 17", "Mr. Hughes, room 9", "Open Library", "Open Foods", "Open Gym"], ["Mr. Bradshaw, room 20", "Ms. Seiler, room 16", "Ms. Cowlin, Student Center", "Open Library"]];
+
   let schedule = {
     "0": day1,
     "1": day2,
@@ -146,7 +150,7 @@ function lcSchedule(day, block, all = false) {
     return false;
   }
   if (block % 1 == 0) {
-    return schedule[day.toString()][block];
+    return schedule[((day-offset%5+5)%5).toString()][block];
   } else {
     return ["None!"];
   }
@@ -357,6 +361,8 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
+  // let currentDate = new Date(2018, 8, 4, 9, 30, 0, 0);
+  // console.log(currentDate.getHours());
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
@@ -461,9 +467,10 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
             blockForTime = [[3.5, ""], [3.5, ""]];
           }
+          console.log(blockForTime);
 
 
-          res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0]), permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0], dayOffSetToday), permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);
