@@ -249,27 +249,27 @@ app.use(cookieParser());
 
 app.enable('trust proxy');
 
-function wwwHttpsRedirect(req, res, next) {
-    if (req.secure) {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
+// function wwwHttpsRedirect(req, res, next) {
+//     if (req.secure) {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     } else {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     }
+// };
+// app.use(wwwHttpsRedirect);
 
-        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    } else {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
 
-        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    }
-};
-app.use(wwwHttpsRedirect);
-
-
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -284,28 +284,28 @@ function pushUsers(userList, data) {
   }
 }
 
-// let j = schedule.scheduleJob('* * 7 * * *', function() {
-//   let currentDate = (new Date()).local();
-//   Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}]}, function(error, events) {
-//     if (events.length == 0 || error) {
-//
-//     } else {
-//
-//       Push.find({}, function(err, pushes) {
-//         if (err) {
-//
-//         } else {
-//           let dataString = "Event today! " + (events[0].longForm ? events[0].longForm : events[0].info);
-//           for (var i = 1; i < events.length; i++) {
-//             dataString += ", ";
-//             dataString += events[i].longForm ? events[i].longForm : events[i].info;
-//           }
-//           pushUsers(pushes, {title: dataString, data: events[0].date});
-//         }
-//       });
-//     }
-//   });
-// });
+let j = schedule.scheduleJob('* * 7 * * *', function() {
+  let currentDate = (new Date()).local();
+  Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}]}, function(error, events) {
+    if (events.length == 0 || error) {
+
+    } else {
+
+      Push.find({}, function(err, pushes) {
+        if (err) {
+
+        } else {
+          let dataString = "Event today! " + (events[0].longForm ? events[0].longForm : events[0].info);
+          for (var i = 1; i < events.length; i++) {
+            dataString += ", ";
+            dataString += events[i].longForm ? events[i].longForm : events[i].info;
+          }
+          pushUsers(pushes, {title: dataString, data: events[0].date});
+        }
+      });
+    }
+  });
+});
 
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
@@ -347,10 +347,10 @@ app.get("/bradshaw", function(req, res) {
 })
 
 
-app.get("/", function(req, res) {
-  res.render("loading", {getURL : "home"});
+app.get("/home", function(req, res) {
+  res.render("loading", {getURL : ""});
 });
-app.get("/home", async (req, res, next) => {
+app.get("/", async (req, res, next) => {
 
 
 
@@ -822,10 +822,10 @@ app.post("/add", urlencodedParser, function(req, res) {
 });
 
 
-app.get("/calendar", function(req, res) {
-  res.render("loading", {getURL : "calendar-view"});
+app.get("/calendar-view", function(req, res) {
+  res.render("loading", {getURL : "calendar"});
 });
-app.get("/calendar-view", async (req, res, next) => {
+app.get("/calendar", async (req, res, next) => {
   res.cookie("path", "/calendar");
 
   //user doesn't need a session to visit calendar, because there is no user specific data
@@ -880,10 +880,10 @@ app.get("/calendar-view", async (req, res, next) => {
 });
 
 
-app.get("/submit", function(req,res) {
-  res.render("loading", {getURL : "submit-view"});
+app.get("/submit-view", function(req,res) {
+  res.render("loading", {getURL : "submit"});
 });
-app.get("/submit-view", function(req, res) {
+app.get("/submit", function(req, res) {
   res.cookie("path", "/submit");
 
   //renders the page with the user's courses
