@@ -8,6 +8,7 @@
     <style>
       * {
         font-family: sans-serif;
+        box-sizing: border-box;
       }
       body {
         position: fixed;
@@ -69,7 +70,7 @@
       }
       .addAccount {
         width: 85%;
-
+        height: 50px;
 
         background-color: white;
         margin: auto;
@@ -80,7 +81,11 @@
       .addAccount .add {
         -webkit-appearance: none;
         font-size: 40px;
+        border-radius: 10px;
         height: 100%;
+        width: 50px;
+        position: absolute;
+
         outline: none;
         color: #555;
         background-color: #aaa;
@@ -91,6 +96,7 @@
         font-size: 25px;
         position: absolute;
         top: 50%;
+        left: 50px;
         transform: translateY(-50%);
         margin-left: 10px;
 
