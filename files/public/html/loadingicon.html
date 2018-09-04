@@ -33,7 +33,6 @@
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      /* background-color: red; */
       position: absolute;
       margin-top: 100px;
       margin-left: 100px;
@@ -49,6 +48,7 @@
       bottom: 0;
       background-color: #7DDFFC;
       animation: sky-color 3s infinite linear;
+      -webkit-animation: sky-color 3s infinite linear;
     }
     .sun {
       position: absolute;
@@ -76,9 +76,13 @@
 
     #side-left {
       fill: #F4F4F4;
+      animation: left-side-shadow 3s infinite linear;
+      -webkit-animation: left-side-shadow 3s infinite linear;
     }
     #side-right {
       fill: #DDDADA;
+      animation: right-side-shadow 3s infinite linear;
+      -webkit-animation: right-side-shadow 3s infinite linear;
     }
     .shadow {
       width: 100%;
@@ -93,6 +97,7 @@
       fill: black;
       opacity: 0.3;
       animation: shadow-opacity 3s infinite linear;
+      -webkit-animation: shadow-opacity 3s infinite linear;
     }
     .ground {
       width: 100%;
@@ -102,21 +107,48 @@
       top: 140px;
       background-color: #F0DE75;
       animation: ground-color 3s infinite linear;
+      -webkit-animation: ground-color 3s infinite linear;
     }
     .star {
       opacity: 0;
       animation: star-opacity 3s infinite linear;
+      -webkit-animation: star-opacity 3s infinite linear;
+    }
+    @keyframes left-side-shadow {
+      0% {
+        fill: #F4F4F4;
+      }
+      40% {
+        fill: #DDDADA;
+      }
+      60% {
+        fill: #828282;
+      }
+      70% {
+        fill: #828282;
+      }
+    }
+    @keyframes right-side-shadow {
+      0% {
+        fill: #DDDADA;
+      }
+      40% {
+        fill: #F4F4F4;
+      }
+      60% {
+        fill: #919191;
+      }
+      70% {
+        fill: #919191;
+      }
     }
     @keyframes sun-rotation {
-
       0% {
         transform: rotate(0deg);
       }
       100% {
-
         transform: rotate(360deg);
       }
-
     }
     @-webkit-keyframes sun-rotation {
       0% {
@@ -140,7 +172,38 @@
         opacity: 1;
       }
     }
+    @-webkit-keyframes star-opacity {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 0;
+      }
+      60% {
+        opacity: 1;
+      }
+      @80% {
+        opacity: 1;
+      }
+    }
     @keyframes sky-color {
+      0% {
+        background-color: #7DDFFC;
+      }
+      40% {
+        background-color: #7DDFFC;
+      }
+      60% {
+        background-color: black;
+      }
+      80% {
+        background-color: black;
+      }
+      100% {
+        background-color: #7DDFFC;
+      }
+    }
+    @-webkit-keyframes sky-color {
       0% {
         background-color: #7DDFFC;
       }
@@ -174,7 +237,44 @@
         background-color: #F0DE75;
       }
     }
+    @-webkit-keyframes ground-color {
+      0% {
+        background-color: #F0DE75;
+      }
+      40% {
+        background-color: #F0DE75;
+      }
+      60% {
+        background-color: #B09E35;
+      }
+      80% {
+        background-color: #B09E35;
+      }
+      100% {
+        background-color: #F0DE75;
+      }
+    }
     @keyframes shadow-opacity {
+      0% {
+        opacity: 0.3;
+      }
+      30% {
+        opacity: 0.5;
+      }
+      50% {
+       opacity: 0.3;
+      }
+      60% {
+        opacity: 0;
+      }
+      80% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 0.3;
+      }
+    }
+    @-webkit-keyframes shadow-opacity {
       0% {
         opacity: 0.3;
       }
@@ -218,12 +318,12 @@
           <polygon points="55,0 70,60 100,60" id = "side-right" />
         </svg>
         <svg class = "shadow">
-          <polygon points = "45,0 145,0 190,40" id = "shadow">
+          <polygon points = "45,0 145,0 190,30" id = "shadow">
             <animate
                id = "shadowRotation"
                attributeName="points"
                dur="2000ms"
-               to="45,0 145,0 0,40"
+               to="45,0 145,0 0,30"
                begin="-0.2;shadowRotation.end+1"
                repeatCount=1
             />
