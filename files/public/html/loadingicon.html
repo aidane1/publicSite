@@ -5,7 +5,35 @@
     <title></title>
   </head>
   <style>
-    body{background-color:#272C34}.circle,.sun{border-radius:50%}.holder{width:400px;height:400px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}.sky,.sun{left:0;position:absolute}.loading{font-size:30px;color:#fff;font-family:sans-serif;text-align:center;position:absolute;top:300px;width:100%}.circle{width:200px;height:200px;position:absolute;margin-top:100px;margin-left:100px;overflow:hidden;z-index:10}.sky{z-index:0;top:0;right:0;bottom:0;background-color:#7DDFFC;animation:sky-color 3s infinite linear;-webkit-animation:sky-color 3s infinite linear}.sun{z-index:1;top:85px;width:30px;height:30px;background-color:#FFEF00;transform-origin:100px 15px 0;-webkit-transform-origin:100px 15px 0;animation:sun-rotation 3s infinite linear;-webkit-animation:sun-rotation 3s infinite linear}.sides{position:absolute;height:60px;width:100px;top:80px;left:45px;z-index:4}.ground,.shadow{width:100%;height:100%;position:absolute;top:140px}#side-left{fill:#F4F4F4;animation:left-side-shadow 3s infinite linear;-webkit-animation:left-side-shadow 3s infinite linear}#side-right{fill:#DDDADA;animation:right-side-shadow 3s infinite linear;-webkit-animation:right-side-shadow 3s infinite linear}.shadow{z-index:3;left:0}#shadow{fill:#000;opacity:.3;animation:shadow-opacity 3s infinite linear;-webkit-animation:shadow-opacity 3s infinite linear}.ground{z-index:2;background-color:#F0DE75;animation:ground-color 3s infinite linear;-webkit-animation:ground-color 3s infinite linear}.star{opacity:0;animation:star-opacity 3s infinite linear;-webkit-animation:star-opacity 3s infinite linear}@keyframes left-side-shadow{0%{fill:#F4F4F4}40%{fill:#DDDADA}60%,70%{fill:#828282}}@keyframes right-side-shadow{0%{fill:#DDDADA}40%{fill:#F4F4F4}60%,70%{fill:#919191}}@keyframes sun-rotation{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@-webkit-keyframes sun-rotation{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes star-opacity{0%,50%{opacity:0}60%{opacity:1}}@-webkit-keyframes star-opacity{0%,50%{opacity:0}60%{opacity:1}}@keyframes sky-color{0%,100%,40%{background-color:#7DDFFC}60%,80%{background-color:#000}}@-webkit-keyframes sky-color{0%,100%,40%{background-color:#7DDFFC}60%,80%{background-color:#000}}@keyframes ground-color{0%,100%,40%{background-color:#F0DE75}60%,80%{background-color:#B09E35}}@-webkit-keyframes ground-color{0%,100%,40%{background-color:#F0DE75}60%,80%{background-color:#B09E35}}@keyframes shadow-opacity{0%,100%,50%{opacity:.3}30%{opacity:.5}60%,80%{opacity:0}}@-webkit-keyframes shadow-opacity{0%,100%,50%{opacity:.3}30%{opacity:.5}60%,80%{opacity:0}}
+    body{background-color:#272C34}.circle,.sun{border-radius:50%}.holder{width:400px;height:400px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}.sky,.sun{left:0;position:absolute}.loading{font-size:30px;color:#fff;font-family:sans-serif;text-align:center;position:absolute;top:300px;width:100%}.circle{width:200px;height:200px;position:absolute;margin-top:100px;margin-left:100px;overflow:hidden;z-index:10}.sky{z-index:0;top:0;right:0;bottom:0;background-color:#7DDFFC;animation:sky-color 3s infinite linear;-webkit-animation:sky-color 3s infinite linear}.sun{z-index:1;top:85px;width:30px;height:30px;background-color:#FFEF00;transform-origin:100px 15px 0;-webkit-transform-origin:100px 15px 0;animation:sun-rotation 3s infinite linear;-webkit-animation:sun-rotation 3s infinite linear}.sides{position:absolute;height:60px;width:100px;top:80px;left:45px;z-index:4}.ground,.shadow{width:100%;height:100%;position:absolute;top:140px}#side-left{fill:#F4F4F4;animation:left-side-shadow 3s infinite linear;-webkit-animation:left-side-shadow 3s infinite linear}#side-right{fill:#DDDADA;animation:right-side-shadow 3s infinite linear;-webkit-animation:right-side-shadow 3s infinite linear}.shadow{z-index:3;left:0}#shadow{fill:#000;opacity:.3;animation:shadow-opacity 3s infinite linear;-webkit-animation:shadow-opacity 3s infinite linear}.ground{z-index:2;background-color:#F0DE75;animation:ground-color 3s infinite linear;-webkit-animation:ground-color 3s infinite linear}.star{opacity:0;animation:star-opacity 3s infinite linear;-webkit-animation:star-opacity 3s infinite linear}@keyframes left-side-shadow{0%{fill:#F4F4F4}40%{fill:#DDDADA}60%,70%{fill:#828282}}@keyframes right-side-shadow{0%{fill:#DDDADA}40%{fill:#F4F4F4}60%,70%{fill:#919191}}
+    @keyframes sun-rotation {
+      0% {
+        transform:rotate(0);
+        background-color:#FFEF00;
+      }
+
+      5% {
+        background-color:#FFEF00;
+      }
+      40% {
+        background-color:#FFEF00;
+      }
+      70% {
+        background-color: #fd5e53;
+      }
+      100% {
+        transform:rotate(360deg);
+        background-color:#FFEF00;
+      }
+    }@-webkit-keyframes sun-rotation{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}
+    @keyframes star-opacity{0%,50%{opacity:0}60%{opacity:1}}
+    @-webkit-keyframes star-opacity{0%,50%{opacity:0}60%{opacity:1}}
+    @keyframes sky-color{0%,100%,40%{background-color:#7DDFFC}60%,80%{background-color:#000}}
+    @-webkit-keyframes sky-color{0%,100%,40%{background-color:#7DDFFC}60%,80%{background-color:#000}}
+    @keyframes ground-color{0%,100%,40%{background-color:#F0DE75}60%,80%{background-color:#B09E35}}
+    @-webkit-keyframes ground-color{0%,100%,40%{background-color:#F0DE75}60%,80%{background-color:#B09E35}}
+    @keyframes shadow-opacity{0%,100%,50%{opacity:.3}30%{opacity:.5}60%,80%{opacity:0}}
+    @-webkit-keyframes shadow-opacity{0%,100%,50%{opacity:.3}30%{opacity:.5}60%,80%{opacity:0}}
   </style>
   <body>
     <div class = "holder">

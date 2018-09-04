@@ -19,818 +19,645 @@
     <title>PVSS student website | Home</title>
 
     <style>
-      @font-face {
-        font-family: sansFont;
-        src: url("<%=font%>")
+      *,.scheduleHref a{
+        color:var(--text-color)
       }
-
-      :root {
-        --bg-color: <%=colours.bgColor%>;
-        --info-color: <%=colours.infoColor%>;
-        --button-color: <%=colours.buttonColor%>;
-        --border-color: <%=colours.borderColor%>;
-        --text-color: <%=colours.textColor%>;
+      .header,.header2{
+        vertical-align:middle
       }
-      html {
-        -webkit-text-size-adjust: 100%;
+      .classHolder ul,.holder,.modalHolder ul{
+        list-style-type:none
+      }@font-face{
+        font-family:sansFont;src:url(<%=font%>)
+      }:root{
+        --bg-color:<%=colours.bgColor%>;
+        --info-color:<%=colours.infoColor%>;
+        --button-color:<%=colours.buttonColor%>;
+        --border-color:<%=colours.borderColor%>;
+        --text-color:<%=colours.textColor%>
       }
-
-
-
-      .modal {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0px;
-        left: 0px;
-        background-color: black;
-        opacity: 0.7;
-        visibility: hidden;
-        z-index: 4999;
+      html{
+        -webkit-text-size-adjust:100%
       }
-      .remove {
-        width: 50px;
-        height: 20px;
-        background-color: red;
-        font-size: 12px;
-        text-align: center;
+      .modal{
+        width:100%;
+        height:100%;
+        position:fixed;
+        top:0;
+        left:0;
+        background-color:#000;
+        opacity:.7;
+        visibility:hidden;
+        z-index:4999
       }
-
-      .scheduleHolder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: column;
+      .remove{
+        width:50px;
+        height:20px;
+        background-color:red;
+        font-size:12px;text-align:center
       }
-      .spacer {
-        flex-grow: 0.5;
-      }
-      .scheduleHref {
-        width: 95%;
-        display: block;
-        margin: auto;
-        background-color: var(--button-color);
-        border-radius: 10px;
-        position: relative;
-        border: 1px solid var(--border-color);
-        text-align: center;
-      }
-      .scheduleHref a {
-        width: 100%;
-        text-align: center;
-        text-decoration: none;
-        color: var(--text-color);
-        font-size: 22px;
-        padding: 30px;
-        display: block;
-      }
-      .courseHolder {
-        width: 100%;
-        height: 100%;
+      .scheduleHolder{
+        width:100%;
+        height:100%;
         display:flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
+        flex-wrap:wrap;
+        flex-direction:column
       }
-      * {
-        font-family: sansFont, sans-serif;
-        box-sizing: border-box;
-        color: var(--text-color);
-        font-weight: 900;
+      .scheduleHref,.scheduleHref a{
+        display:block;
+        text-align:center
+      }.spacer{
+        flex-grow:.5
       }
-
+      .scheduleHref{
+        width:95%;
+        margin:auto;
+        background-color:var(--button-color);
+        border-radius:10px;
+        position:relative;
+        border:1px solid var(--border-color)
+      }
+      .scheduleHref a{width:100%;
+        text-decoration:none;
+        font-size:22px;
+        padding:30px
+      }
+      .backdrop,.menu,body{
+        margin:0;
+        padding:0
+      }
+      .courseHolder{
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-wrap:nowrap;
+        flex-direction:column
+      }
+      *{
+        font-family:sansFont,sans-serif;
+        box-sizing:border-box;
+        font-weight:900
+      }
       body {
-        padding: 0;
-        margin: 0;
-        background-color: var(--bg-color);
-
-
-
+        background-color:var(--bg-color)
+      }
+      .LCRoom,.infoBox {
+        background-color:var(--info-color);
+        color:var(--text-color)
       }
       .backdrop {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        display: block;
-
-        padding: 0px;
-        margin: 0px;
-        overflow: scroll;
+        width:100%;
+        height:100%;
+        position:absolute;
+        display:block;
+        overflow:scroll
       }
       .initDisplay {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        flex-wrap: wrap;
-        /* background: linear-gradient(#f9604f, #db311e, #f28e37); */
+        display:flex;
+        width:100%;
+        height:100%;
+        position:relative;
+        flex-wrap:wrap
       }
-      .menu {
-        /* background-color: #333; */
-        margin: 0;
-        padding: 0;
+      .box,.header,.header2,.infoBox,.newsBox {
+        display:block
       }
-
-
-
-
       .box {
-
-        display: block;
-        margin-top: 0px;
-        width: 100%;
-        height: 100%;
-        position: static;
-        /* border: 5px solid black; */
-
-
+        margin-top:0;
+        width:100%;
+        height:100%;
+        position:static
       }
       .header {
-        width: 100%;
-        height: 50px;
-        /* background-color: blue; */
-        text-align: center;
-        /* font-size: 28px; */
-        color: var(--text-color);
-        display: block;
-
-        vertical-align: middle;
+        width:100%;
+        height:50px;
+        text-align:center;
+        color:var(--text-color)
       }
-
-      /* .courses {
-        background: linear-gradient(#f28e37, #f77d13, #f9e66b);
-      }
-      .LC {
-        background: linear-gradient(#f9e66b, #efd945, #549b4c);
-      }
-      .news {
-        background: linear-gradient(#549b4c, #31a024, #4971b7);
-      }
-      .money {
-        background: linear-gradient(#4971b7, #315491, #6d4bbc);
-      }
-      .resources {
-        background: linear-gradient(#6d4bbc, #3b1f7c, #a635b7);
-      } */
-
       .infoBox {
-        width: 85%;
-        /* height: 20%; */
-        background-color: var(--info-color);
-
-        display: block;
-        margin: auto;
-        border-radius: 8px;
-        margin-top: 5px;
-        padding: 1px;
-        color : var(--text-color);
+        width:85%;
+        margin:5px auto auto;
+        border-radius:8px;
+        padding:1px
       }
       .header2 {
-        width: 90%;
-        height: 25px;
-        /* background-color: orange; */
-        font-size: 100%;
-        color: var(--text-color);
-        display: block;
-        margin: auto;
-        vertical-align: middle;
-        text-align: center;
-      }
-
-      .large div {
-
+        width:90%;
+        height:25px;
+        font-size:100%;
+        color:var(--text-color);
+        margin:auto;
+        text-align:center
       }
       .switchTable {
-        width: 100%;
-
-        text-align: center;
-        border-collapse: collapse;
-        padding: 5px;
-        font-size: 17px;
+        width:100%;
+        text-align:center;
+        border-collapse:collapse;
+        padding:5px;
+        font-size:17px
+      }
+      .switchTable tr td {
+        border:1px solid var(--border-color);
+        max-width:0
+      }
+      .openRooms {
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-wrap:wrap;
+        flex-direction:column;
+        overflow:auto
+      }
+      .LCRoom {
+        text-align:center;
+        padding:10px;
+        border:1px solid #000;
+        border-radius:8px
+      }
+      .classHolder .liHover,.modalHolder .liHover {
+        border-left:2px solid #000;
+        border-top:2px solid #000;
+        border-right:2px solid #000
+      }
+      .newsBox {
+        width:90%;
+        height:60%;
+        background-color:grey;
+        margin:10px auto auto;
+        border-radius:5px;
+        padding:3px
+      }
+      .imgHolder,.textHolder {
+        width:95%;
+        margin:auto;
+        display:block
+      }
+      .imgHolder {
+        height:60%;
+        background-color:#000
+      }
+      .textHolder {
+        font-size:12px
+      }
+      .newsMore {
+        width:90%;
+        height:10%;
+        background-color:var(--button-color);
+        display:block;
+        margin:25px auto auto;
+        font-size:25px;
+        color:var(--text-color);
+        text-align:center;
+        border-radius:20px;
+        outline:0
+      }
+      .classHolder li,.resourceBox {
+        background-color:var(--info-color);
+        color:var(--text-color)
+      }
+      .classHolder {
+        width:100%;
+        position:absolute;
+        height:75px;
+        display:block;
+        overflow:auto
+      }
+      .classHolder ul {
+        margin:0;
+        height:100%;
+        display:flex;
+        font-size:15px;
+        padding:0
+      }
+      .classHolder li {
+        flex:1 1 0;
+        text-align:center;
+        border-bottom:2px solid #000;
+        padding:12px
+      }
+      .classHolder .liHover {
+        border-bottom:0
+      }
+      .resourceBox {
+        width:100%;
+        height:60%;
+        border-radius:5px;
+        position:relative;
+        top:75px;
+        display:none;
+        opacity:.5
+      }
+      .submitAssigned {
+        width:80%;
+        padding:8px;
+        background-color:var(--button-color);
+        cursor:pointer;
+        display:block;
+        margin:15px auto auto;
+        font-size:16px;
+        color:var(--text-color);
+        text-align:center;
+        border-radius:20px;
+        outline:0
+      }
+      .addMore {
+        margin-top:80px
+      }
+      .allHomework {
+        width:82%;
+        height:80%;
+        position:fixed;
+        left:9%;
+        top:10%;
+        background-color:var(--info-color);
+        border-radius:10px;
+        display:none;
+        overflow:auto;
+        z-index:5000
+      }
+      .modalHolder {
+        width:100%;
+        position:sticky;
+        top:0;
+        height:60px;
+        display:block;
+        z-index:5002
+      }
+      .hover,.hover::before,.modalBox {
+        position:absolute
+      }
+      .modalHolder ul {
+        margin:0;
+        height:100%;
+        display:flex;
+        font-size:12px;
+        padding:0;
+        overflow-x:auto;
+        width:100%
+      }
+      .modalHolder li {
+        flex:1 1 0;
+        text-align:center;
+        background-color:var(--button-color);
+        border-bottom:2px solid var(--border-color);
+        padding:12px;
+        color:var(--text-color)
+      }
+      .modalHolder .liHover {
+        border-bottom:0;
+        color:#ddd
+      }
+      .block,.currentMonth,.event,.shownCalendar,.shownCalendar tr th {
+        color:var(--text-color)
+      }
+      .modalBox {
+        width:100%;
+        display:none;
+        top:30px;
+        z-index:5001
+      }
+      .calendar,.display {
+        display:block
+      }
+      .block {
+        font-size:90px;
+        width:100%;
+        text-align:center;
+        margin-top:20px
+      }
+      .calendar {
+        width:95%;
+        height:auto;
+        margin:5px auto auto
+      }
+      .shownCalendar {
+        width:100%;
+        table-layout:fixed;
+        text-align:center;
+        border-collapse:collapse
+      }
+      .shownCalendar tr td {
+        border:2px solid #000;
+        width:14.2857%;
+        height:60px;
+        text-align:center
+      }
+      .shownCalendar tr th {
+        background-color:var(--info-color);
+        height:40px;
+        border:2px solid #000
+      }
+      .currentMonth {
+        width:100%;
+        text-align:center;
+        font-size:35px;
+        margin-bottom:5px
+      }
+      .event {
+        font-size:14px
+      }
+      .hover {
+        background:#F8F8F8;
+        border:5px solid #DFDFDF;
+        color:#717171;
+        font-size:13px;
+        height:60px;
+        letter-spacing:1px;
+        line-height:20px;
+        text-align:center;
+        text-transform:uppercase;
+        left:-60px;
+        display:none;
+        width:150px
+      }
+      .aColor,.soonEvent,nav a {
+        color:var(--text-color)
+      }
+      .event:hover .hover,nav a {
+        display:block
+      }
+      .hover::before {
+        content:'';
+        bottom:-10px;
+        width:10px;
+        height:10px;
+        border-bottom:5px solid #dfdfdf;
+        border-right:5px solid #dfdfdf;
+        background:#f8f8f8;
+        left:50%;
+        margin-left:-10px;
+        -moz-transform:rotate(45deg);
+        -webkit-transform:rotate(45deg);
+        transform:rotate(45deg);
+        z-index:0
+      }
+      .left {
+        left:-10px
+      }
+      .left::before {
+        left:10%
+      }
+      .right {
+        left:-110px
+      }
+      .right::before {
+        left:90%
+      }
+      .event {
+        float:left;
+        position:relative;
+        cursor:pointer
+      }
+      .menuIcon,nav {
+        position:fixed
+      }
+      .menuIcon {
+        width:50px;
+        height:50px;
+        top:10px;
+        right:15px;
+        border-radius:3px;
+        z-index:16
+      }
+      .line1,.line2,.line3 {
+        width:28px;
+        height:2px;
+        background-color:var(--text-color);
+        display:block;
+        margin:5px auto auto;
+        border-radius:2px;
+        transition:.4s
+      }
+      .change .line1 {
+        -webkit-transform:rotate(-45deg) translate(-9px,0);
+        transform:rotate(-45deg) translate(-9px,0)
+      }
+      .change .line2 {
+        opacity:0
+      }
+      .change .line3 {
+        -webkit-transform:rotate(45deg) translate(-10px,0);
+        transform:rotate(45deg) translate(-10px,0)
+      }
+      nav {
+        top:-460px;
+        width:100%;
+        z-index:15;
+        transition:top .8s
+      }
+      .holder {
+        padding:0;
+        justify-content:flex-start;
+        flex-wrap:wrap
+      }
+      nav a {
+        text-decoration:none;
+        text-align:center;
+        padding:12px;
+        font-size:20px
+      }
+      nav .item {
+        width:100%;
+        background-color:var(--button-color);
+        border:1px solid var(--border-color)
+      }
+      .displayClasses,.displayEvents {
+        width:85%;
+        overflow:auto;
+        display:block;
+        text-align:center
+      }
+      .expand {
+        top:-16px
+      }
+      .displayEvents {
+        max-height:125px;
+        margin:auto
+      }
+      .displayClasses {
+        max-height:150px;
+        margin:10px auto auto
+      }
+      .pushNotifications,.wideScreen {
+        display:none
+      }
+      .soonEvent {
+        font-size:15px;
+        border-radius:10px;
+        background-color:var(--info-color);
+        width:100%;
+        padding:15px
+      }
+      .bColor {
+        color:var(--button-color)
+      }
+      .boxBorder {
+        border-left:2px solid var(--border-color);
+        border-right:2px solid var(--border-color);
+        border-top:2px solid var(--border-color);
+        border-bottom:0
+      }
+      .smallHref {
+        font-size:16px
+      }
+      .pushNotifications div {
+        display:block;
+        margin:auto;
+        padding:15px;
+        border-radius:8px;
+        font-size:19px;
+        text-align:center;
+        background-color:var(--button-color)
+      }
+      @media screen and (max-width:320px) {
+        .infoBox {
+          padding:3px;
+          margin-top:8px;
+          width:90%
         }
-        .switchTable tr td {
-          border: 1px solid var(--border-color);
-          max-width: 0px;
-        }
-
-        .openRooms {
-          /* background-color: red; */
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: column;
-          overflow: auto;
-        }
-        .LCRoom {
-          text-align: center;
-          padding: 10px;
-          border: 1px solid black;
-          background-color: var(--info-color);
-          border-radius: 8px;
-          color: var(--text-color);
-
-        }
-        .newsBox {
-          width: 90%;
-          height: 60%;
-          background-color: grey;
-          display: block;
-          margin: auto;
-          border-radius: 5px;
-          margin-top: 10px;
-          padding: 3px;
-        }
-        .imgHolder {
-          width: 95%;
-          height: 60%;
-          background-color: black;
-          display: block;
-          margin: auto;
-        }
-        .textHolder {
-          width: 95%;
-          display: block;
-          margin: auto;
-          font-size: 12px;
-        }
-        .newsMore {
-          width: 90%;
-          height: 10%;
-          background-color: var(--button-color);
-          display: block;
-          margin: auto;
-          font-size: 25px;
-          color: var(--text-color);
-          text-align: center;
-          border-radius: 20px;
-          margin-top: 25px;
-          outline: none;
-        }
-
-
-        .classHolder {
-          width: 100%;
-          position: absolute;
-          height: 75px;
-          display: block;
-          overflow: auto;
-
-        }
-        .classHolder ul {
-          list-style-type: none;
-          margin: 0px;
-          height: 100%;
-          display: flex;
-          font-size: 15px;
-          padding: 0;
-        }
-        .classHolder li {
-          flex: 1 1 0;
-          text-align: center;
-          /* height: 100px; */
-          background-color  : var(--info-color);
-
-          border-bottom: 2px solid black;
-          padding: 12px;
-          color: var(--text-color);
-        }
-        .classHolder .liHover {
-
-          border-bottom:0px;
-          border-left: 2px solid black;
-          border-top: 2px solid black;
-          border-right: 2px solid black;
-
-        }
-        .resourceBox {
-          width: 100%;
-          height: 60%;
-          color: var(--text-color);
-          background-color: var(--info-color);
-          border-radius: 5px;
-          position: relative;
-          top: 75px;
-          display: none;
-          opacity: 0.5;
+        .header {
+          height:30px
         }
         .submitAssigned {
-          width: 80%;
-          padding: 8px;
-          background-color: var(--button-color);
-          cursor: pointer;
-          display: block;
-          margin: auto;
-          font-size: 16px;
-          color: var(--text-color);
-          text-align: center;
-          border-radius: 20px;
-          margin-top: 15px;
-          outline: none;
+          height:8%;
+          margin-top:5px;
+          font-size:15px
         }
-
-        .addMore {
-          margin-top: 80px;
+        .calendar,.displayClasses {
+          margin-top:0
         }
-        .allHomework {
-          width: 82%;
-          height: 80%;
-          position: fixed;
-          left: 9%;
-          top: 10%;
-          background-color: var(--info-color);
-          border-radius: 10px;
-          display: none;
-          overflow: auto;
-          z-index: 5000;
+        .courses,.switchTable {
+          font-size:13px
         }
-
-        .modalHolder {
-          width: 100%;
-          position: sticky;
-          top: 0px;
-          height: 60px;
-          display: block;
-          z-index: 5002;
-        }
-        .modalHolder ul {
-          list-style-type: none;
-          margin: 0px;
-          height: 100%;
-          display: flex;
-          font-size: 12px;
-          padding: 0;
-          overflow-x: auto;
-          width: 100%;
-
-        }
-        .modalHolder li {
-          flex: 1 1 0;
-          text-align: center;
-          /* height: 100px; */
-          background-color: var(--button-color);
-          border-bottom: 2px solid var(--border-color);
-          padding: 12px;
-          color: var(--text-color);
-        }
-        .modalHolder .liHover {
-          border-bottom:0px;
-          border-left: 2px solid black;
-          border-top: 2px solid black;
-          border-right: 2px solid black;
-          color: #ddd;
-        }
-        .modalBox {
-          width: 100%;
-          display: none;
-
-          position: absolute;
-
-          top: 30px;
-          z-index: 5001;
-        }
-        .display {
-          display: block;
+        .header2 {
+          font-size:15px
         }
         .block {
-          color: var(--text-color);
-          font-size: 90px;
-          width: 100%;
-          text-align: center;
-          margin-top: 20px;
-        }
-
-
-        .calendar {
-          width: 95%;
-
-          height: auto;
-
-          display: block;
-          margin: auto;
-          margin-top: 5px;
-        }
-        .shownCalendar {
-
-
-          width: 100%;
-          table-layout: fixed;
-          text-align: center;
-          border-collapse: collapse;
-          color: var(--text-color);
+          font-size:60px
         }
         .shownCalendar tr td {
-          border: 2px solid black;
-          width: 14.2857%;
-          height: 60px;
-          text-align: center;
+          height:50px;
+          font-size:14px
         }
-        .shownCalendar tr th {
-          background-color: var(--info-color);
-          height: 40px;
-          border: 2px solid black;
-          color: var(--text-color);
+        .lCroom {
+          padding:8px
         }
-        .currentMonth {
-          width: 100%;
-          text-align: center;
-          font-size: 35px;
-          margin-bottom: 5px;
-          color: var(--text-color);
+        .soonEvent,nav a {
+          padding:10px
         }
-        .event {
-          position: absolute;
-
-          font-size: 14px;
-          color: var(--text-color);
+        .classHolder {
+          overflow-x:auto
         }
-
-        .hover {
-          background:#F8F8F8;
-          border: 5px solid #DFDFDF;
-          color: #717171;
-          font-size: 13px;
-          height: 60px;
-          letter-spacing: 1px;
-          line-height: 20px;
-          position: absolute;
-          text-align: center;
-          text-transform: uppercase;
-          left:-60px;
-          display:none;
-          width: 150px;
-
-        }
-        .hover::before{
-            content:'';
-            position:absolute;
-            bottom:-10px;
-            width:10px;
-            height:10px;
-            border-bottom:5px solid #dfdfdf;
-            border-right:5px solid #dfdfdf;
-            background:#f8f8f8;
-            left:50%;
-            margin-left:-10px;
-            -moz-transform:rotate(45deg);
-            -webkit-transform:rotate(45deg);
-            transform:rotate(45deg);
-            z-index:0;
-        }
-        .left {
-          left: -10px;
-        }
-        .left::before {
-          left : 10%;
-        }
-        .right {
-          left: -110px;
-        }
-        .right::before {
-          left: 90%;
-        }
-        .event{
-
-            float:left;
-            position:relative;
-            cursor:pointer;
-        }
-
-        .event:hover .hover{
-            display:block;
-        }
-        .menuIcon {
-          width: 50px;
-          height: 50px;
-          position: fixed;
-          top: 10px;
-          right: 15px;
-          /* background-color: black; */
-
-          border-radius: 3px;
-          z-index: 16;
-        }
-        .line1, .line2, .line3 {
-          width: 28px;
-          height: 2px;
-          background-color: var(--text-color);
-          display: block;
-          margin: auto;
-          margin-top: 5px;
-          border-radius: 2px;
-          transition: 0.4s;
-        }
-        .change .line1 {
-          -webkit-transform: rotate(-45deg) translate(-9px, 0px);
-          transform: rotate(-45deg) translate(-9px, 0px);
-        }
-        .change .line2 {
-          opacity: 0;
-        }
-        .change .line3 {
-          -webkit-transform: rotate(45deg) translate(-10px, 0px);
-          transform: rotate(45deg) translate(-10px, 0px);
-        }
-
-
-        nav {
-          position: fixed;
-          top:-460px;
-          width: 100%;
-          z-index: 15;
-          transition: top 0.8s;
-        }
-        .holder {
-          list-style-type: none;
-          padding: 0;
-          justify-content: flex-start;
-          flex-wrap: wrap;
-        }
-        nav a {
-          text-decoration: none;
-          text-align: center;
-          color: var(--text-color);
-          display: block;
-          padding: 12px;
-          font-size: 20px;
-        }
-
-        nav .item {
-          width: 100%;
-          background-color: var(--button-color);
-          border: 1px solid var(--border-color);
-          /* background: linear-gradient(#333, #444); */
-        }
-        .expand {
-          top: -16px;
-        }
-        .displayEvents {
-          width: 85%;
-          max-height: 125px;
-          overflow: auto;
-          display: block;
-          margin: auto;
-
-          text-align: center;
-        }
-        .displayClasses {
-          width: 85%;
-          max-height: 150px;
-          overflow: auto;
-          display: block;
-          margin: auto;
-          margin-top: 10px;
-          text-align: center;
+        .classHolder ul {
+          font-size:13px
         }
         .soonEvent {
-          color: var(--text-color);
-          font-size: 15px;
-          border-radius: 10px;
-          background-color: var(--info-color);
-          width: 100%;
-          padding: 15px;
+          color:var(--text-color);
+          font-size:15px;
+          border-radius:10px;
+          background-color:var(--info-color);
+          width:100%
         }
-        .aColor {
-          color: var(--text-color);
+        .newsMore {
+          font-size:20px
         }
-        .bColor {
-          color: var(--button-color);
-        }
-        .boxBorder {
-          border-left: 2px solid var(--border-color);
-          border-right: 2px solid var(--border-color);
-          border-top: 2px solid var(--border-color);
-          border-bottom: 0px;
-        }
-        .wideScreen {
-          display: none;
+        h1 {
+          font-size:25px
         }
         .smallHref {
-          font-size: 16px;
+          font-size:14px
         }
-
-        .pushNotifications {
-          display: none;
-        }
-        .pushNotifications div {
-          display: block;
-          margin: auto;
-          padding: 15px;
-          border-radius: 8px;
-          font-size: 19px;
-          text-align: center;
-          background-color: var(--button-color);
-        }
-
-        /* for small screens iphone 5, SE*/
-        @media screen and (max-width: 320px) {
-          .infoBox {
-            padding: 3px;
-            margin-top: 8px;
-            width: 90%;
-          }
-          .header {
-            height: 30px;
-            /* font-size: 23px; */
-          }
-          .submitAssigned {
-            height: 8%;
-            margin-top: 5px;
-            font-size: 15px;
-          }
-
-          .courses {
-            font-size: 13px;
-          }
-          .switchTable {
-              font-size: 13px;
-          }
-          .header2 {
-            font-size: 15px;
-          }
-
-          .block {
-            font-size: 60px;
-          }
-          .shownCalendar tr td {
-            height: 50px;
-            font-size: 14px;
-          }
-          .calendar {
-            margin-top: 0px;
-          }
-          .lCroom {
-            padding: 8px;
-          }
-          .classHolder {
-            overflow-x: auto;
-          }
-          .classHolder ul {
-            font-size: 13px;
-          }
-          nav a {
-            padding: 10px;
-          }
-
-          .displayClasses {
-            margin-top: 0px;
-          }
-          .soonEvent {
-            color: var(--text-color);
-            font-size: 15px;
-            border-radius: 10px;
-            background-color: var(--info-color);
-            width: 100%;
-            padding: 10px;
-          }
-          .newsMore {
-            font-size: 20px;
-          }
-          h1 {
-            font-size: 25px;
-          }
-          .smallHref {
-            font-size: 14px;
-          }
-
-
-
-        }
-
-        /* for iphones 6,7,8 */
-        @media screen and (max-width: 375px) {
-
-        }
-        /* for iphones 6,7,8+ */
-        @media screen and (max-width: 414px) {
-
-        }
-
-
-      /* for computers */
-      @media screen and (min-width: 768px) {
-        .wideScreen {
-          display: block;
+      }
+      @media screen and (min-width:768px) {
+        .redirectHref,.wideScreen {
+          display:block
         }
         .redirectHref {
-          width: 95%;
-          display: block;
-          margin: auto;
-          text-align: center;
-
-          margin-top: 15%;
-
+          width:95%;
+          margin:15% auto auto;
+          text-align:center
         }
         .redirectHref a {
-          border-radius: 10px;
-          display: block;
-          padding: 30px;
-          font-size: 22px;
-          text-decoration: none;
-          background-color: var(--button-color);
-          border: 2px solid var(--border-color);
+          border-radius:10px;
+          display:block;
+          padding:30px;
+          font-size:22px;
+          text-decoration:none;
+          background-color:var(--button-color);
+          border:2px solid var(--border-color)
         }
         .menuIcon {
-          display: none;
+          display:none
         }
         nav {
-          display: block;
-          width: 100%;
-          z-index: 15;
-          position: fixed;
-          top: -20px;
-          transition: top 0s;
+          display:block;
+          width:100%;
+          z-index:15;
+          position:fixed;
+          top:-20px;
+          transition:top 0s
         }
         .holder {
-          list-style-type: none;
-          padding: 0;
-          display: flex;
-          flex-wrap: nowrap;
+          list-style-type:none;
+          padding:0;
+          display:flex;
+          flex-wrap:nowrap
         }
-
         nav .item {
-          background-color: black;
-          border-left: 1px solid white;
-          border-right: 1px solid white;
-          border-bottom: 1px solid white;
-          display: none;
+          background-color:#000;
+          border-left:1px solid #fff;
+          border-right:1px solid #fff;
+          border-bottom:1px solid #fff;
+          display:none
         }
-
-
         .backdrop {
-
-          display: flex;
-          flex-wrap: wrap;
+          display:flex;
+          flex-wrap:wrap;
           justify-content:center;
-          padding: 50px;
+          padding:50px
+        }
+        .allHomework,.initDisplay {
+          display:none
         }
         .box {
-
-          width: 390px;
-          height: 600px;
-          border: 5px solid black;
-          margin: 15px;
-          margin-right: 7%;
-          margin-left: 7%;
+          width:390px;
+          height:600px;
+          border:5px solid #000;
+          margin:15px 7%
         }
-        .initDisplay {
-          display: none;
-        }
-
-
-        /* .featured {
-          width: 50%;
-          height: 1000px;
-          position: fixed;
-          left: 25%;
-          z-index: 5000;
-          top: 0;
-          border: 5px solid black;
-          background-color: red;
-        } */
         .classHolder {
-          width: 380px;
-          overflow: auto;
+          width:380px;
+          overflow:auto
         }
         .classHolder li {
-          font-size: 13px;
+          font-size:13px
         }
         .allHomework {
-          width: 600px;
-          height: 80%;
-          position: fixed;
-          left: 50%;
-          top: 10%;
-          transform: translateX(-50%);
-          border-radius: 10px;
-          display: none;
-          overflow: auto;
-          min-width: 500px;
-          min-height: 400px;
+          width:600px;
+          height:80%;
+          position:fixed;
+          left:50%;
+          top:10%;
+          transform:translateX(-50%);
+          border-radius:10px;
+          overflow:auto;
+          min-width:500px;
+          min-height:400px
         }
       }
 
-      /* landscape mode */
-      @media screen and (orientation: landscape) and (max-height: 500px) and (max-width: 768px){
+      @media screen and (orientation:landscape) and (max-height:500px) and (max-width:768px) {
         .box {
-          height: 150%;
+          height:150%
         }
       }
-      @media screen and (orientation: landscape) and (max-height: 320px) and (max-width: 768px) {
+      @media screen and (orientation:landscape) and (max-height:320px) and (max-width:768px) {
         .box {
-          height: 200%;
+          height:200%
         }
       }
-
-
-
     </style>
-
   </head>
   <body>
-
-
-
     <div class = "backdrop" id = "backdrop">
       <div class="menuIcon" onclick = "changeFunction(this)" id = "menuIcon">
         <span class="line1"></span>
@@ -857,7 +684,6 @@
           <li class = "item" id = "logout"><a href = "/logout">Logout</a></li>
         </ul>
       </nav>
-
       <div id = "initDisplay" class = "box initDisplay">
         <div class = "block">P V S S</div>
         <div class = "displayEvents">
@@ -880,41 +706,23 @@
           <% } %>
         </div>
         <div class = "displayClasses">
-
             <center><h2>Current Class: </h2></center>
             <div class = "soonEvent"><%=currentBlock[0][0]%1 === 0 ? currentBlock[0][1] + blockOrder[currentBlock[0][0]] : currentBlock[0][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[0][0]-0.5]%></div>
-
-
-
-
         </div>
         <div class = "displayClasses">
 
             <center><h2>Next Class: </h2></center>
             <div class = "soonEvent"><%=currentBlock[1][0]%1 === 0 ? currentBlock[1][1] + blockOrder[currentBlock[1][0]] : currentBlock[1][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[1][0]-0.5]%></div>
-
-
-
-
         </div>
-
-        <!-- <div class = "displayTweets">
-
-        </div> -->
       </div>
-
       <div class = "modal" onclick="removeModal()" id = "modal">
-
       </div>
       <div id = "allHomework" class = "allHomework">
-
         <div class = "modalHolder">
           <ul class = "courseModalHolder">
-
             <% homework.forEach(function(homeworkGiven) { %>
               <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
             <% }); %>
-
           </ul>
         </div>
         <% homework.forEach(function(theHomeworkGiven) { %>
@@ -933,11 +741,9 @@
                   <br>
                   <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
                     <span style = "color: #21ce4c">confirmed: &#10003;</span>
-
                   <% } else { %>
                     <span style = "color: #f41616">confirmed: &#10006;</span>
                   <% } %>
-
                   <% if (permissions === "admin" || theHomeworkGiven[1][i].submittedBy == username) { %>
                     <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
                       remove
@@ -955,7 +761,6 @@
                   <br>
                   <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
                     <span style = "color: #21ce4c">confirmed: &#10003;</span>
-
                   <% } else { %>
                     <span style = "color: #f41616">confirmed: &#10006;</span>
                   <% } %>
@@ -966,27 +771,20 @@
                   <% } %>
                   <br>
               <% } %>
-
             <% } %>
           </div>
         <% }); %>
-
-
       </div>
       <% for (var key in order) { %>
         <% if (order[key] == "Courses") { %>
           <div id = "courses" class = "courses box" name = "courses">
             <div class = "courseHolder">
-
               <div class = "header"><h1>Courses</h1></div>
               <div class = "spacer"></div>
               <div class = "infoBox large">
                 <div class = "header2">My courses today&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <div id = "todayCourses" class = "todayCourses">
                   <div style = "padding-bottom: 5px; padding-left: 5px">
-
-
-
                     <% for (var i = 0; i < todaysCourses.length; i++) { %>
                       <% if (i == 0 ) { %>
                         <div>9:10-10:12 : <%=blockOrder[i]%></div>
@@ -998,14 +796,12 @@
                         <div>12:32-1:15 : Lunch</div>
                       <% } else if (i == 3) { %>
                         <div>1:16-2:18 : <%=blockOrder[i]%></div>
-
                       <% } else if (i == 4) { %>
                         <div>2:21-3:23 : <%=blockOrder[i]%></div>
                       <% }%>
                     <% } %>
                     <% if (todaysCourses === false) { %>
                       <div> it's the weekend! </div>
-
                     <% } %>
                   </div>
                 </div>
@@ -1015,16 +811,12 @@
                 <div class = "header2">Today's homework</div>
                 <div id = "possibleCourses" class = "possibleCourses">
                   <table class = "switchTable">
-
-
                     <% homework.forEach(function(theHomeworkCourse) { %>
                       <tr>
                         <td>
-                          <!-- <a href = "/" style = "text-decoration: none; color: blue; font-size: 15px">+</a> -->
                           &nbsp;&nbsp;<%=theHomeworkCourse[0]%>
                         </td>
                         <td>
-
                           <% if (theHomeworkCourse[1].length != 0) { %>
                             <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
                                   <div class = "aColor">Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%></div>
@@ -1032,14 +824,9 @@
                                   <a style = "text-decoration: underline" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')" class = "aColor smallHref">view assignment</a><br>
                             <% } %>
                           <% } %>
-
-
-
-
                         </td>
                       </tr>
                     <% }); %>
-
                   </table>
                 </div>
                 <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" class = "bColor" style = "text-decoration: underline; cursor: pointer;"> view all</a></i>
@@ -1050,7 +837,6 @@
               </button></a>
               <div class = "spacer"></div>
             </div>
-
           </div>
         <% } else if (order[key] == "LC") { %>
           <div id = "LC" class = "LC box" name = "LC">
@@ -1068,8 +854,6 @@
               <div class = "spacer"></div>
               <div class = "spacer"></div>
               <div class = "spacer"></div>
-
-
             </div>
           </div>
         <% } else if (order[key] == "Calendar") { %>
@@ -1080,7 +864,6 @@
                 <%=month%>
               </div>
               <table class = "shownCalendar" id = "calendar">
-
                 <tr>
                   <th>S</th>
                   <th>M</th>
@@ -1093,14 +876,8 @@
                 <tr>
                   <% for (var i = 0; i < calendar.length; i++) { %>
                       <% if (i >= calendar[0][2]) { %>
-
-
                         <td><%=calendar[i-calendar[0][2]][1]+1%>
-
                           <br>
-
-
-
                           <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
                             <% if (calendar[i-calendar[0][2]][2] === 0) { %>
                               <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
@@ -1109,7 +886,6 @@
                             <% } else { %>
                               <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
                             <% } %>
-
                             <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
                               <%=calendar[i-calendar[0][2]][0][k]%>
                               <hr>
@@ -1117,9 +893,6 @@
                             <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
                             </span>
                             </div>
-
-
-
                           <% } %>
                         </td>
                       <% } else { %>
@@ -1131,21 +904,13 @@
                       <%}%>
                   <% } %>
                 </tr>
-
               </table>
             </div>
-
             <button class = "newsMore">
               <a href = "/calendar" style = "text-decoration: none; color: var(--text-color);">Click to see more...</a>
             </button>
-
           </div>
-
         <% } else if (order[key] == "Schedule") { %>
-          <!-- will be added back in later -->
-          <!-- <div id = "money" class = "money box" name = "money">
-            <div class = "header">Ways to get money</div>
-          </div> -->
           <div id = "schedule" class = "schedule box" name = "schedule">
             <div class = "scheduleHolder">
               <div class = "header"><h1>Schedule and other</h1></div>
@@ -1157,7 +922,6 @@
               <div class = "scheduleHref"><a href=  "/users/<%=username%>">Account</a></div>
               <div class = "spacer"></div>
             </div>
-
           </div>
         <% } else if (order[key] == "Resources") { %>
           <div id = "resources" class = "resources box" name = "resources">
@@ -1174,17 +938,14 @@
                     <% } else { %>
                       <li onclick = "showFunction('rsb<%=course.course.split(' ').join('')%>', this)" class = "elementBlock" style = "cursor: pointer"><%=course.course%></li>
                     <% } %>
-
                   <% }); %>
-
                 </ul>
               </div>
               <div class = "resourceBox" style = "display: block; background-color: var(--info-color)" id = "baseBox"></div>
               <%for (var i = 0; i < courses.length; i++) {%>
                 <div class = "resourceBox" id = "rsb<%=courses[i].course.split(' ').join('')%>">
-                  Videos:
+                  Websites:
                   <br>
-
                   <br>
                   <% if (courses[i].resource.length != 0) { %>
                     <% for (var j = 0; j < courses[i].resource.length; j++) { %>
@@ -1192,10 +953,9 @@
                       <br>
                       <br>
                     <% } %>
-
                   <% }%>
                   <br>
-                  websites:
+                  Videos:
                   <br>
                   <br>
                   <br>
@@ -1208,42 +968,19 @@
           </div>
         <% } %>
       <% } %>
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class = "box wideScreen" id = "wideScreen">
       <div class = "header"><h1>Redirects</h1></div>
       <div class = "redirectHref"><a href = "/chatroom">Chatroom</a></div>
       <div class = "redirectHref"><a href = "/questions">Questions</a></div>
       <div class = "redirectHref"><a href = "/logout">Logout</a></div>
     </div>
-
-
     <div class = "pushNotifications" id = "pushNotifications" onclick = "subscribeUser()">
       <div class = "pushText">
         Enable push notifications
       </div>
     </div>
-
-
-
-
-
-
-
   </body>
   <script src = "/public/js/home.js"></script>
-
   <!-- the script for getting alerts -->
   <script>
   function postAlerts(deleteMessage) {
