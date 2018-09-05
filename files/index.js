@@ -254,27 +254,27 @@ app.use(cookieParser());
 
 app.enable('trust proxy');
 
-function wwwHttpsRedirect(req, res, next) {
-    if (req.secure) {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
+// function wwwHttpsRedirect(req, res, next) {
+//     if (req.secure) {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     } else {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     }
+// };
+// app.use(wwwHttpsRedirect);
 
-        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    } else {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
 
-        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    }
-};
-app.use(wwwHttpsRedirect);
-
-
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -361,7 +361,7 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
-  // let currentDate = new Date(2018, 8, 4, 9, 30, 0, 0);
+  // let currentDate = new Date(2018, 8, 2, 23, 59, 0, 0);
   // console.log(currentDate.getHours());
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
@@ -396,6 +396,7 @@ app.get("/", async (req, res, next) => {
         //also accounts for time offsets due to pro-D days
 
         let todaysBlocks = blockToTime((currentDate).getDay() -1, dayOffSetToday);
+        console.log((currentDate.getDay() +4 - dayOffSetToday%5)%5);
         //itterates through those blocks and find which course matches the block
         for (var i = 0; i < todaysBlocks.length; i++) {
           //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
@@ -470,7 +471,7 @@ app.get("/", async (req, res, next) => {
 
 
 
-          res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0], dayOffSetToday), permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0], dayOffSetToday), permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);
@@ -842,6 +843,7 @@ app.get("/calendar", async (req, res, next) => {
   let currentDate = (new Date()).local();
   let monthsArray = [];
   let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
+  let offSetDays = dayOffset(false, true);
   //finds ALL events. will fix later.
   //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
   let yearEvent = await Events.find({$and: [{date: {$gte: new Date(2018, 8, 0, 0, 0, 0, 0)}}, {date: {$lte: new Date(2019, 5, 29, 0, 0, 0, 0)}}]});
@@ -878,7 +880,7 @@ app.get("/calendar", async (req, res, next) => {
   }
   if (req.session.userId) {
     let user = await User.findOne({_id : req.session.userId});
-    res.render("calendar", {calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
+    res.render("calendar", {offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
   } else {
     res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}, font: "/public/files/Evogria.otf"});
   }

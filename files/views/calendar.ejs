@@ -154,7 +154,7 @@
       }
       .event{
 
-          
+
           position:relative;
           cursor:pointer;
       }
@@ -195,6 +195,8 @@
         Calendar
       </div>
       <div class = "calendar">
+        <%counter = 0%>
+        <%daysElapsed = 0%>
         <%for (var i = 0; i < calendar.length; i++) {%>
           <div class = "monthHeader">
             <%=months[i]%>
@@ -212,8 +214,24 @@
               <% for (var j = 0; j < calendar[i].length+calendar[i][0][2]; j++) { %>
 
                 <% if (j >= calendar[i][0][2]) { %>
+                  <%daysElapsed++%>
+
 
                   <td><%=calendar[i][j-calendar[i][0][2]][1]+1%>
+
+
+                    <% for (var badDay = 0; badDay < offSetDays.length; badDay++) { %>
+
+                      <% if ((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() == offSetDays[badDay].getTime()) { %>
+                        <%counter++%>
+                      <% } %>
+                    <% } %>
+
+                    <% if (calendar[i][j-calendar[i][0][2]][2] != 0 && calendar[i][j-calendar[i][0][2]][2] != 6) { %>
+                       (<%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)
+                       <!-- (<%=daysElapsed%>) -->
+                    <% } %>
+
 
                     <br>
                     <%if (calendar[i][j-calendar[i][0][2]][0].length != 0) { %>
