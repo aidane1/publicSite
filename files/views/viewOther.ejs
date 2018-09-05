@@ -7,211 +7,89 @@
     <meta name = "theme-color" content = "#f77d13" />
     <meta name="mobile-web-app-capable" content="yes">
     <link rel = "manifest" href = "public/manifests/home.json  " />
-    <title>PVSS student website | Other Courses</title>
+    <title>PVSS student website | LC Schedule</title>
     <script>
-      var dataArray = [["MSC-10", "Science 10"],["MBI-11","Biology 11"],["MBI-12","Biology 12"],["MCH-11","Chemistry 11"],["MCH-12","Chemistry 12"], ["MPH-11", "Physics 11"], ["MPH-12","Physics 12"], ["MSCT-11","Horticulture Science 11"], ["MSS-10","Socials 10"], ["MESC-11","Human Geography 11"], ["MSS-11","Socials 11"], ["MHI-12","History 12"], ["MLAW-12","Law 12"], ["MIDS-2F","Law/Psyc 12"], ["YPSYC2A", "Psyc 12"], ["MPE-10", "PE 10"], ["MPE-11", "PE 11"], ["MPE-12", "PE 12"], ["MEN-12", "English 12"], ["MEN-11", "English 11"], ["MLIT-12", "English Literature 12"], ["MFMP-10", "Math 10"], ["MWPM-10", "Workplace Math 10"], ["MAWM-11", "A&W Math 11"], ["MFOM-11", "Foundation of Math 11"], ["MPREC-11", "Precalculus 11"], ["MAWM-12", "A&W Math 12"], ["MCALC-12", "Calculus 12"], ["MFOM-12", "Foundations of Math 12"], ["MPREC-12", "Precalculus 12"], ["XBA-9", "Conc. band 9"], ["MPE-9", "PE-9"]];
 
-
-      let aArray = [["Mr.Austin", "MPH-12"], "A"];
-      let bArray = [["Mr.Majerech", "XBA-9"], "B"];
-      let cArray = [["Mr.Austin", "MBI-11"], "C"];
-      let dArray = [["Mr.Hughes", "MESC-11"], ["Mr.Landry", "MPE-9"], "D"];
-      let eArray = ["E"];
-      let coursesArray = [aArray, bArray, cArray, dArray, eArray];
-      function makeCourses() {
-        coursesArray.forEach(function(course) {
-          for (var i = 0; i < course.length-1; i++) {
-            let div = document.createElement("div");
-            div.setAttribute("class", "courseName");
-            for (var j = 0; j < dataArray.length; j++) {
-              if (dataArray[j][0] == course[i][1]) {
-                div.innerHTML = course[i][0] + "'s " + dataArray[j][1];
-              }
-            }
-            document.getElementById("courseContent" + course[course.length-1]).appendChild(div);
-          }
-        });
-      }
-      function expandFunction(element) {
-        element.classList.toggle("displayed");
-      }
-      window.onload = function() {
-        makeCourses();
-      }
     </script>
     <style>
-      @font-face {
-        font-family: sansFont;
-        src: url("<%=font%>")
+      * {
+        font-family: sans-serif;
       }
-      :root {
-        --bg-color: <%=colours.bgColor%>;
-        --info-color: <%=colours.infoColor%>;
-        --button-color: <%=colours.buttonColor%>;
-        --border-color: <%=colours.borderColor%>;
-        --text-color: <%=colours.textColor%>;
-      }
-    * {
-      font-family: sansFont, sans-serif;
-      box-sizing: border-box;
-      color: var(--text-color);
-    }
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
-    body {
-      padding: 0px;
-      margin: 0px;
-      background-color: var(--bg-color);
-    }
 
-    .courseHolder {
-      width: 100%;
-      height: 100%;
-      display: block;
-      margin: auto;
-      margin-top: 10px;
-    }
-
-    .display {
-      padding: 10px;
-      font-size: 15px;
-      color: white;
-    }
-    .done {
-      width: 100%;
-      height: 60px;
-      display: block;
-      font-size: 25px;
-      background-color: var(--button-color);
-      border: 2px solid var(--border-color);
-      border-radius: 9px;
-      outline: none;
-      position: fixed;
-      bottom: 0px;
-    }
-    .later {
-      width:60px;
-      height: 30px;
-      background-color: var(--button-color);
-      color: var(--text-color);
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      border-radius: 10px;
-    }
-    .later a {
-      text-decoration: none;
-      font-size: 15px;
-      color: var(--text-color);
-
-    }
-
-    .course {
-      padding: 5%;
-      background-color: var(--info-color);
-      border: 1px solid var(--border-color);
-      text-align: center;
-      font-size: 18px;
-      border-radius: 5px;
-
-    }
-    .courseContent {
-      display: none;
-      font-size: 13px;
-      text-align: center;
-
-
-    }
-    .displayed .courseContent {
-      display: block;
-    }
-    .courseName {
-      width: 100%;
-      padding: 7px;
-      border: 1px solid var(--border-color);
-      font-size: 14px;
-    }
-    .courseHolder {
-      overflow: auto;
-    }
-    .displayCourses {
-      font-size: 15px;
-    }
-    @media screen and (min-width: 768px) {
-      .courseHolder {
-        display: flex;
-      }
-      .course {
-        flex-grow: 1;
-        padding: 0px;
-        padding-top: 5%;
-        padding-bottom: 5%;
-
-      }
-      .courseContent {
-
-
-      }
-      .courseName {
-
-        width: 80%;
-        display: block;
+      .lcSchedule {
+        width: 100%;
+        height: 100%;
+        min-width: 900px;
+        min-height: 500px;
+        border-collapse: collapse;
+        display: table-block;
         margin: auto;
       }
-    }
-    </style>
+      .lcSchedule td {
+        border: 2px solid black;
+        text-align: center;
+      }
+      .lcSchedule th {
+        height: 60px;
+        vertical-align: bottom;
+        font-size: 20px;
+      }
+     </style>
   </head>
   <body>
-    <div class = "back" style = "font-size: 40px;color: white; position: absolute; top: 0px; left: 10px;">
+    <div style = "position: fixed; top: 3px; left: 15px; font-size: 40px; color: black; display: inline; z-index: 5000">
       <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
     </div>
-    <div style = "margin-top: 40px">
-      Note: the blocks are determined by their position from school start on monday <br>
-      (A: 9:10AM-10:12AM)
-      <br>
-      (B: 10:15AM-11:17AM)
-      <br>
-      (C: 11:29AM-12:31PM)
-      <br>
-      (D: 1:16PM-2:18PM)
-      <br>
-      (E: 2:21PM-3:23PM)
-      <br>
-    </div>
-    <div id = "courses" class = "courses" style = "overflow: auto">
-      <div class = "courseHolder" id = "courseHolder">
-        <div class = "course" id = "A" onclick = "expandFunction(this)">
-          (current: <%=courses.A[0]%>)&nbsp; A
-          <div class = "courseContent" id = "courseContentA">
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "B" onclick = "expandFunction(this)">
-          (current: <%=courses.B[0]%>)&nbsp; B
-          <div class = "courseContent" id = "courseContentB">
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "C" onclick = "expandFunction(this)">
-          (current: <%=courses.C[0]%>)&nbsp; C
-          <div class = "courseContent" id = "courseContentC">
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "D" onclick = "expandFunction(this)">
-          (current: <%=courses.D[0]%>)&nbsp; D
-          <div class = "courseContent" id = "courseContentD">
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "E" onclick = "expandFunction(this)">
-          (current: <%=courses.E[0]%>)&nbsp; E
-          <div class = "courseContent" id = "courseContentE">
-            Click on the header to close
-          </div>
-        </div>
-      </div>
+    <table class = "lcSchedule" id = "LCSchedule">
+      <tr>
+        <th></th>
+        <th>Day 1</th>
+        <th>Day 2</th>
+        <th>Day 3</th>
+        <th>Day 4</th>
+        <th>Day 5</th>
+      </tr>
+      <tr>
+        <td>9:10<br>-<br>10:12</td>
+        <td><%-schedule["0"][0].join("<br>")%></td>
+        <td><%-schedule["1"][0].join("<br>")%></td>
+        <td><%-schedule["2"][0].join("<br>")%></td>
+        <td><%-schedule["3"][0].join("<br>")%></td>
+        <td><%-schedule["4"][0].join("<br>")%></td>
+      </tr>
+      <tr>
+        <td>10:15 <br>-<br>11:17</td>
+        <td><%-schedule["0"][1].join("<br>")%></td>
+        <td><%-schedule["1"][1].join("<br>")%></td>
+        <td><%-schedule["2"][1].join("<br>")%></td>
+        <td><%-schedule["3"][1].join("<br>")%></td>
+        <td><%-schedule["4"][1].join("<br>")%></td>
+      </tr>
+      <tr>
+        <td>11:29<br>-<br>12:31</td>
+        <td><%-schedule["0"][2].join("<br>")%></td>
+        <td><%-schedule["1"][2].join("<br>")%></td>
+        <td><%-schedule["2"][2].join("<br>")%></td>
+        <td><%-schedule["3"][2].join("<br>")%></td>
+        <td><%-schedule["4"][2].join("<br>")%></td>
+      </tr>
+      <tr>
+        <td>1:16<br>-<br>2:18</td>
+        <td><%-schedule["0"][3].join("<br>")%></td>
+        <td><%-schedule["1"][3].join("<br>")%></td>
+        <td><%-schedule["2"][3].join("<br>")%></td>
+        <td><%-schedule["3"][3].join("<br>")%></td>
+        <td><%-schedule["4"][3].join("<br>")%></td>
+      </tr>
+      <tr>
+        <td>2:21<br>-<br>3:23</td>
+        <td><%-schedule["0"][4].join("<br>")%></td>
+        <td><%-schedule["1"][4].join("<br>")%></td>
+        <td><%-schedule["2"][4].join("<br>")%></td>
+        <td><%-schedule["3"][4].join("<br>")%></td>
+        <td><%-schedule["4"][4].join("<br>")%></td>
+      </tr>
 
+    </table>
   </body>
 </html>

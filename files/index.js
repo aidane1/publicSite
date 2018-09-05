@@ -366,7 +366,7 @@ app.get("/", async (req, res, next) => {
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
   //makes sure the user has a session
-  if(req.session.userId) {
+  if (req.session.userId) {
 
     let user = await User.findOne({_id : req.session.userId});
     if (!user) {
@@ -467,7 +467,7 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
             blockForTime = [[3.5, ""], [3.5, ""]];
           }
-          console.log(blockForTime);
+
 
 
           res.render("index", {currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, todaysCourses: blockToTime((currentDate).getDay() -1, dayOffSetToday), blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: lcSchedule(((currentDate).getDay() -1), blockForTime[0][0], dayOffSetToday), permissions: user.permissions, soonEvents: soonEvents});
@@ -1261,32 +1261,8 @@ app.get("/schedule", function(req, res) {
 
 });
 
-app.get("/view-courses", function(req, res) {
-  res.cookie("path", "/view-courses");
-  if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      if (err) {
-        res.redirect("/");
-      } else {
-        let blockObject = {
-          A: ["LC", ""],
-          B: ["LC", ""],
-          C: ["LC", ""],
-          D: ["LC", ""],
-          E: ["LC", ""]
-        }
-        Course.find({_id : user.courses}, function(err, courses) {
-            courses.forEach(function(course) {
-            blockObject[course.block] = [course.course, course.teacher];
-          });
-          res.render("viewOther", {courses : blockObject, colours: user.colors, font: holidayFont(user.font)});
-        });
-
-      }
-    });
-  } else {
-    res.redirect("/login");
-  }
+app.get("/view-LC", function(req, res) {
+  res.render("viewOther", {schedule: lcSchedule(false, false, false, true)});
 });
 
 app.get("/alerts", function(req, res) {
