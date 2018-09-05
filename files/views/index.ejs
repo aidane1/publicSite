@@ -20,7 +20,7 @@
 
     <style>
       *,.scheduleHref a{
-        color:var(--text-color)
+        color:<%=colours.textColor%>
       }
       .header,.header2{
         vertical-align:middle
@@ -72,10 +72,10 @@
       .scheduleHref{
         width:95%;
         margin:auto;
-        background-color:var(--button-color);
+        background-color:<%=colours.buttonColor%>;
         border-radius:10px;
         position:relative;
-        border:1px solid var(--border-color)
+        border:1px solid <%=colours.borderColor%>
       }
       .scheduleHref a{width:100%;
         text-decoration:none;
@@ -99,11 +99,11 @@
         font-weight:900
       }
       body {
-        background-color:var(--bg-color)
+        background-color:<%=colours.bgColor%>;
       }
       .LCRoom,.infoBox {
-        background-color:var(--info-color);
-        color:var(--text-color)
+        background-color:<%=colours.infoColor%>;
+        color:<%=colours.textColor%>
       }
       .backdrop {
         width:100%;
@@ -132,7 +132,7 @@
         width:100%;
         height:50px;
         text-align:center;
-        color:var(--text-color)
+        color:<%=colours.textColor%>
       }
       .infoBox {
         width:85%;
@@ -144,7 +144,7 @@
         width:90%;
         height:25px;
         font-size:100%;
-        color:var(--text-color);
+        color:<%=colours.textColor%>;
         margin:auto;
         text-align:center
       }
@@ -156,7 +156,7 @@
         font-size:17px
       }
       .switchTable tr td {
-        border:1px solid var(--border-color);
+        border:1px solid <%=colours.borderColor%>;
         max-width:0
       }
       .openRooms {
@@ -201,18 +201,18 @@
       .newsMore {
         width:90%;
         height:10%;
-        background-color:var(--button-color);
+        background-color:<%=colours.buttonColor%>;
         display:block;
         margin:25px auto auto;
         font-size:25px;
-        color:var(--text-color);
+        color:<%=colours.textColor%>;
         text-align:center;
         border-radius:20px;
         outline:0
       }
       .classHolder li,.resourceBox {
-        background-color:var(--info-color);
-        color:var(--text-color)
+        background-color:<%=colours.infoColor%>;
+        color:<%=colours.textColor%>
       }
       .classHolder {
         width:100%;
@@ -249,12 +249,12 @@
       .submitAssigned {
         width:80%;
         padding:8px;
-        background-color:var(--button-color);
+        background-color:<%=colours.buttonColor%>;
         cursor:pointer;
         display:block;
         margin:15px auto auto;
         font-size:16px;
-        color:var(--text-color);
+        color:<%=colours.textColor%>;
         text-align:center;
         border-radius:20px;
         outline:0
@@ -268,7 +268,7 @@
         position:fixed;
         left:9%;
         top:10%;
-        background-color:var(--info-color);
+        background-color:<%=colours.infoColor%>;
         border-radius:10px;
         display:none;
         overflow:auto;
@@ -297,17 +297,17 @@
       .modalHolder li {
         flex:1 1 0;
         text-align:center;
-        background-color:var(--button-color);
-        border-bottom:2px solid var(--border-color);
+        background-color:<%=colours.buttonColor%>;
+        border-bottom:2px solid <%=colours.borderColor%>;
         padding:12px;
-        color:var(--text-color)
+        color:<%=colours.textColor%>
       }
       .modalHolder .liHover {
         border-bottom:0;
         color:#ddd
       }
       .block,.currentMonth,.event,.shownCalendar,.shownCalendar tr th {
-        color:var(--text-color)
+        color:<%=colours.textColor%>
       }
       .modalBox {
         width:100%;
@@ -347,7 +347,7 @@
         text-align:center
       }
       .shownCalendar tr th {
-        background-color:var(--info-color);
+        background-color:<%=colours.infoColor%>;
         height:40px;
         border:2px solid #000
       }
@@ -375,7 +375,7 @@
         width:150px
       }
       .aColor,.soonEvent,nav a {
-        color:var(--text-color)
+        color:<%=colours.textColor%>
       }
       .event:hover .hover,nav a {
         display:block
@@ -426,7 +426,7 @@
       .line1,.line2,.line3 {
         width:28px;
         height:2px;
-        background-color:var(--text-color);
+        background-color:<%=colours.textColor%>;
         display:block;
         margin:5px auto auto;
         border-radius:2px;
@@ -469,8 +469,8 @@
       }
       nav .item {
         width:100%;
-        background-color:var(--button-color);
-        border:1px solid var(--border-color)
+        background-color:<%=colours.buttonColor%>;
+        border:1px solid <%=colours.borderColor%>
       }
       .displayClasses,.displayEvents {
         width:85%;
@@ -495,17 +495,17 @@
       .soonEvent {
         font-size:15px;
         border-radius:10px;
-        background-color:var(--info-color);
+        background-color:<%=colours.infoColor%>;
         width:100%;
         padding:15px
       }
       .bColor {
-        color:var(--button-color)
+        color:<%=colours.buttonColor%>
       }
       .boxBorder {
-        border-left:2px solid var(--border-color);
-        border-right:2px solid var(--border-color);
-        border-top:2px solid var(--border-color);
+        border-left:2px solid <%=colours.borderColor%>;
+        border-right:2px solid <%=colours.borderColor%>;
+        border-top:2px solid <%=colours.borderColor%>;
         border-bottom:0
       }
       .smallHref {
@@ -518,7 +518,7 @@
         border-radius:8px;
         font-size:19px;
         text-align:center;
-        background-color:var(--button-color)
+        background-color:<%=colours.buttonColor%>
       }
       @media screen and (max-width:320px) {
         .infoBox {
@@ -563,10 +563,10 @@
           font-size:13px
         }
         .soonEvent {
-          color:var(--text-color);
+          color:<%=colours.textColor%>;
           font-size:15px;
           border-radius:10px;
-          background-color:var(--info-color);
+          background-color:<%=colours.infoColor%>;
           width:100%
         }
         .newsMore {
@@ -594,8 +594,8 @@
           padding:30px;
           font-size:22px;
           text-decoration:none;
-          background-color:var(--button-color);
-          border:2px solid var(--border-color)
+          background-color:<%=colours.buttonColor%>;
+          border:2px solid <%=colours.borderColor%>
         }
         .menuIcon {
           display:none
@@ -699,7 +699,7 @@
       <div id = "initDisplay" class = "box initDisplay">
         <div class = "block">P V S S</div>
         <div class = "displayEvents">
-          <center><h2 style = "color: var(--text-color)">Upcoming Events: </h2></center>
+          <center><h2 style = "color: <%=colours.textColor%>">Upcoming Events: </h2></center>
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
               <% if (event.longForm) { %>
@@ -919,7 +919,7 @@
               </table>
             </div>
             <button class = "newsMore">
-              <a href = "/calendar" style = "text-decoration: none; color: var(--text-color);">Click to see more...</a>
+              <a href = "/calendar" style = "text-decoration: none; color: <%=colours.textColor%>;">Click to see more...</a>
             </button>
           </div>
         <% } else if (order[key] == "Schedule") { %>
@@ -953,7 +953,7 @@
                   <% }); %>
                 </ul>
               </div>
-              <div class = "resourceBox" style = "display: block; background-color: var(--info-color)" id = "baseBox"></div>
+              <div class = "resourceBox" style = "display: block; background-color: <%=colours.infoColor%>" id = "baseBox"></div>
               <%for (var i = 0; i < courses.length; i++) {%>
                 <div class = "resourceBox" id = "rsb<%=courses[i].course.split(' ').join('')%>">
                   Websites:

@@ -151,7 +151,7 @@
       * {
         font-family: sansFont, sans-serif;
         box-sizing: border-box;
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
       }
       html {
         width: 100%;
@@ -169,7 +169,7 @@
         top: 0;
         left: 0;
         overflow: scroll;
-        background-color: var(--bg-color);
+        background-color: <%=colours.bgColor%>;
       }
       .questionHolder {
         width: 100%;
@@ -180,17 +180,17 @@
         display: block;
         margin: auto;
 
-        background: var(--bg-color);
+        background: <%=colours.bgColor%>;
         margin-top: 0px;
         padding-bottom: 50px;
         margin-bottom: 70px;
       }
       .question {
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
         padding-top: 5px;
         padding-bottom: 5px;
-        border-bottom: 1px solid var(--border-color);
-        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid <%=colours.borderColor%>;
+        border-top: 1px solid <%=colours.borderColor%>;
         margin-top: 10px;
         margin-bottom: 20px;
         position: relative;
@@ -199,7 +199,7 @@
         font-size: 20px;
         font-weight: bold;
         cursor: pointer;
-        background-color: var(--info-color);
+        background-color: <%=colours.infoColor%>;
         z-index: 4;
       }
       .questionTitle {
@@ -239,11 +239,11 @@
         left: 50%;
         z-index: 5;
         transform: translateX(-50%);
-        background-color: var(--info-color);
+        background-color: <%=colours.infoColor%>;
         text-align: center;
         font-size: 40px;
-        color: var(--text-color);
-        border-top: 2px solid var(--border-color);
+        color: <%=colours.textColor%>;
+        border-top: 2px solid <%=colours.borderColor%>;
 
       }
       .submitPost {
@@ -255,7 +255,7 @@
         top: -100%;
         left: 50%;
         transform: translateX(-50%);
-        background: var(--bg-color);
+        background: <%=colours.bgColor%>;
         transition: top 1.2s;
         z-index: 10;
         overflow: auto;
@@ -281,10 +281,10 @@
         outline: none;
       }
       #backUp {
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
       }
       .textColour {
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
       }
       .radio {
           width: 25px;
@@ -294,7 +294,7 @@
       .submit {
         width: 150px;
         height: 50px;
-        background-color: var(--button-color);
+        background-color: <%=colours.buttonColor%>;
         margin-top: 5px;
         font-size: 18px;
         border-radius: 10px;
@@ -312,12 +312,12 @@
         display: block;
         margin: auto;
         outline: none;
-        background-color: var(--info-color);
-        color: var(--text-color);
+        background-color: <%=colours.infoColor%>;
+        color: <%=colours.textColor%>;
       }
       #title {
-        background-color: var(--info-color);
-        color: var(--text-color);
+        background-color: <%=colours.infoColor%>;
+        color: <%=colours.textColor%>;
       }
       .delete {
         width: 75px;

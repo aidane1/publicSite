@@ -138,7 +138,7 @@
       * {
         font-family: sansFont, sans-serif;
         box-sizing: border-box;
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
       }
       html {
         -webkit-text-size-adjust: 100%;
@@ -146,7 +146,7 @@
       body {
         padding: 0px;
         margin: 0px;
-        background-color: var(--bg-color);
+        background-color: <%=colours.bgColor%>;
       }
       label {
 
@@ -170,8 +170,8 @@
         height: 60px;
         display: block;
         font-size: 25px;
-        background-color: var(--button-color);
-        border: 2px solid var(--border-color);
+        background-color: <%=colours.buttonColor%>;
+        border: 2px solid <%=colours.borderColor%>;
         border-radius: 9px;
         outline: none;
         position: fixed;
@@ -189,7 +189,7 @@
       .later {
         width:60px;
         height: 30px;
-        background-color: var(--button-color);
+        background-color: <%=colours.buttonColor%>;
         position: absolute;
         left: 0px;
         top: 0px;
@@ -198,14 +198,14 @@
       .later a {
         text-decoration: none;
         font-size: 15px;
-        color: var(--text-color);
+        color: <%=colours.textColor%>;
 
       }
 
       .course {
         padding: 5%;
-        background-color: var(--info-color);
-        border: 1px solid var(--border-color);
+        background-color: <%=colours.infoColor%>;
+        border: 1px solid <%=colours.borderColor%>;
         text-align: center;
         font-size: 18px;
         border-radius: 5px;
@@ -221,7 +221,7 @@
       .courseName {
         width: 100%;
         padding: 7px;
-        border: 1px solid var(--border-color);
+        border: 1px solid <%=colours.borderColor%>;
         font-size: 14px;
       }
 
@@ -232,7 +232,7 @@
         width: 95%;
         display: block;
         text-align: center;
-        background-color: var(--info-color);
+        background-color: <%=colours.infoColor%>;
         margin: auto;
         border-radius: 10px;
         padding: 10px;
@@ -364,7 +364,7 @@
           <tr><td class = "previewBox" id = "D">LC's</td></tr>
           <tr><td class = "previewBox" id = "E">LC's</td></tr>
         </table>
-        <button onclick = "location.reload()" style = "width: 150px; display: block; margin: auto; height: 40px; background-color: var(--button-color); font-size: 18px; color: var(--text-color)">Reset</button>
+        <button onclick = "location.reload()" style = "width: 150px; display: block; margin: auto; height: 40px; background-color: <%=colours.buttonColor%>; font-size: 18px; color: <%=colours.textColor%>">Reset</button>
       </div>
       <button type = "button" class = "done" onclick = "postFunction()">
         Done!
