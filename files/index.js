@@ -882,7 +882,7 @@ app.get("/calendar", async (req, res, next) => {
     let user = await User.findOne({_id : req.session.userId});
     res.render("calendar", {offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
   } else {
-    res.render("calendar", {calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}, font: "/public/files/Evogria.otf"});
+    res.render("calendar", {offSetDays: offSetDays, calendar: monthsArray, months: monthsNames, colours: {bgColor: "#FC7753", textColor: "#F2EFEA", infoColor: '#403D58', buttonColor: "#66D7D1", borderColor: "#000000"}, font: "/public/files/Evogria.otf"});
   }
 
 
