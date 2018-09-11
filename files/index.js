@@ -47,7 +47,6 @@ function guessGrade(classes, schoolUser) {
   return Math.round(sumClassYears/(classes.length + 1));
 }
 
-
 function holidayFont(font) {
   let date = new Date();
   if (date.getDate() == 31 && date.getMonth() == 9) {
@@ -60,7 +59,6 @@ function holidayFont(font) {
   }
   return font;
 }
-
 
 function getDays(month) {
   switch (month) {
@@ -107,10 +105,12 @@ function getDays(month) {
       break;
   }
 }
+
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
+
 function blockToTime(day, offSet, all = false) {
   // let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
   let schedule = [["A", "B", "C", "D", "E"], ["E", "D", "B", "C", "A"], ["D", "A", "C", "E", "B"], ["E", "C", "B", "A", "D"], ["D", "E", "A", "B", "C"]];
@@ -122,8 +122,6 @@ function blockToTime(day, offSet, all = false) {
   }
   return schedule[(day-offSet%5+5)%5];
 }
-
-
 
 function lcSchedule(day, block, offset,  all = false) {
   let day1 = [["Mr.Bradshaw, room 20", "Ms.Staley, room 29", "Open Library"], ["Mr. Fraser, room 17", "Mr. Hughes, student center", "Open Foods", "Open Gym"], ["Ms. Seiler, Student Center", "Ms. Arthurson, room 30", "Open Library", "Open Dance"], ["Mr. Austin, Student Center", "Mr. Fox, room 26", "Open Library", "Open Shop"], ["Ms. Threatful, Student Center", "Ms. Staley, room 29"]];
@@ -156,15 +154,16 @@ function lcSchedule(day, block, offset,  all = false) {
   }
 
 }
+
 function profanityFilter(string) {
-  return string.replace(/c+\s*h+\s*o+\s*d+\s*e+|c+\s*o+\s*c+\s*k+|p+\s*u+\s*s+\s*s+\s*y+|d+\s*i+\s*c+\s*k+|f+\s*u+\s*c+\s*k+\s*i+\s*n+\s*g+|f+\s*a\s*g\s*g\s*o\s*t|j\s*i\s*v\s*e|n\s*i\s*g\s*g\s*e\s*r|n\s*i\s*g\s*g\s*a|c\s*o\s*o\s*n|j\s*a\s*p|f\s*u\s*c\s*k|s\s*h\s*i\s*t|b\s*i\s*t\s*c\s*h|c\s*u\s*n\s*t|w\s*h\s*o\s*r\s*e/gi, "****");
+  return string.replace(/c+\s*h+\s*o+\s*d+\s*e+\s*|c+\s*o+\s*c+\s*k+|p+\s*u+\s*s+\s*s+\s*y+|d+\s*i+\s*c+\s*k+\s*|f+\s*u+\s*c+\s*k+\s*i+\s*n+\s*g+|f+\s*a+\s*g+\s*g+\s*o+\s*t+\s*|j+\s*i+\s*v+\s*e+\s*|n+\s*i+\s*g+\s*g+\s*e+\s*r+\s*|n+\s*i+\s*g+\s*g+\s*a+\s*|c+\s*o+\s*o+\s*n+\s*|j+\s*a+\s*p+|f+\s*u+\s*c+\s*k+\s*|s+\s*h+\s*i+\s*t+\s*|b+\s*i+\s*t+\s*c+\s*h+\s*|c+\s*u+\s*n+\s*t+\s*|w+\s*h+\s*o+\s*r+\s*e+\s*/gi, "****");
 }
+
 function stringTest(string) {
   // return !(string.match(("^[A-z0-9]+$")) == null);
   return true;
 }
 let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 
 let express = require("express");
 
@@ -209,9 +208,7 @@ const PUBLIC_VAPID_KEY = contents.PUBLIC_VAPID_KEY;
 const PRIVATE_VAPID_KEY = contents.PRIVATE_VAPID_KEY;
 webpush.setVapidDetails('mailto:aidaneglin@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
 
-
 let nodemailer = require("nodemailer");
-
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -221,7 +218,6 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-
 mongoose.connect("mongodb://127.0.0.1:27017/users", {useNewUrlParser: true});
 
 mongoose.connection.once("open", function() {
@@ -229,9 +225,6 @@ mongoose.connection.once("open", function() {
 }).on("error", function(error) {
   console.log("connection error: " + error);
 });
-
-
-
 
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 
@@ -289,29 +282,28 @@ function pushUsers(userList, data) {
   }
 }
 
-let j = schedule.scheduleJob('* * 7 * * *', function() {
-  let currentDate = (new Date()).local();
-  Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}]}, function(error, events) {
-    if (events.length == 0 || error) {
-
-    } else {
-
-      Push.find({}, function(err, pushes) {
-        if (err) {
-
-        } else {
-          let dataString = "Event today! " + (events[0].longForm ? events[0].longForm : events[0].info);
-          for (var i = 1; i < events.length; i++) {
-            dataString += ", ";
-            dataString += events[i].longForm ? events[i].longForm : events[i].info;
-          }
-          pushUsers(pushes, {title: dataString, data: events[0].date});
-        }
-      });
-    }
-  });
-});
-
+// let j = schedule.scheduleJob('* * 7 * * *', function() {
+//   let currentDate = (new Date()).local();
+//   Events.find({$and: [{date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}]}, function(error, events) {
+//     if (events.length == 0 || error) {
+//
+//     } else {
+//
+//       Push.find({}, function(err, pushes) {
+//         if (err) {
+//
+//         } else {
+//           let dataString = "Event today! " + (events[0].longForm ? events[0].longForm : events[0].info);
+//           for (var i = 1; i < events.length; i++) {
+//             dataString += ", ";
+//             dataString += events[i].longForm ? events[i].longForm : events[i].info;
+//           }
+//           pushUsers(pushes, {title: dataString, data: events[0].date});
+//         }
+//       });
+//     }
+//   });
+// });
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
   let subscription = JSON.parse(req.body.post);
@@ -338,6 +330,57 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
   }
 });
 
+app.get("/planner", function(req, res) {
+  res.cookie("path", "/planner?day=" + req.query.day);
+  if (req.session.userId) {
+    if (req.query.day && req.query.day > 0) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        let userPlans = [];
+        for (var i = 0; i < user.planner.length; i++) {
+          if (user.planner[i][0] == req.query.day) {
+            userPlans.push(user.planner[i][1]);
+          }
+        }
+        console.log(userPlans);
+        let colours = ["orange", "blue", "red", "green", "purple"];
+        res.render("planner", {day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
+      });
+    } else {
+      res.redirect("/calendar");
+    }
+
+  } else {
+    res.redirect("/login");
+  }
+
+});
+app.post("/planner", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    if (req.query.day && req.query.day > 0) {
+      let eventStartHour = parseInt(req.body.start.split(" : ")[0]);
+      let eventStartMinute = parseInt(req.body.start.split(" ")[2]);
+      let eventStartAmOrPm = req.body.start.split(" ")[3];
+      let eventEndHour = parseInt(req.body.end.split(" : ")[0]);
+      let eventEndMinute = parseInt(req.body.end.split(" ")[2]);
+      let eventEndAmOrPm = req.body.end.split(" ")[3];
+
+      eventStartHour =eventStartHour%12 +  (eventStartAmOrPm == "AM" ? 0 : 12);
+      eventEndHour =eventEndHour%12 +  (eventEndAmOrPm == "AM" ? 0 : 12);
+      console.log(eventStartHour, eventStartMinute);
+      console.log(eventEndHour, eventEndMinute);
+      User.findOneAndUpdate({_id : req.session.userId}, {$push: {planner: [[req.query.day, {startHour : eventStartHour, startMinute : eventStartMinute, endHour : eventEndHour, endMinute: eventEndMinute, description:req.body.description }]]}}).then(function() {
+        res.redirect("/planner?day=" + req.query.day);
+      })
+    } else {
+      res.redirect("/calendar");
+    }
+
+
+  } else {
+    res.redirect("/login");
+  }
+
+});
 
 app.get("/periodic-table", function(req, res) {
   res.render("periodicTable");
@@ -351,10 +394,10 @@ app.get("/bradshaw", function(req, res) {
   res.render("bradshaw");
 })
 
-
 app.get("/home", function(req, res) {
   res.render("loading", {getURL : ""});
 });
+
 app.get("/", async (req, res, next) => {
 
 
@@ -547,11 +590,10 @@ app.post("/", urlencodedParser, function(req,res) {
   }
 });
 
-
-
 app.get("/login", function(req, res) {
   res.render("login", {error: ""});
 })
+
 app.post("/login", urlencodedParser, async (req, res, next) => {
 
   //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
@@ -576,14 +618,11 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
   }
 });
 
-
-
-
-
 app.get("/signup", function(req, res) {
   res.cookie("path", "/");
   res.render("signup", {error : "", data : [ "", "", ""]});
 });
+
 app.post("/signup", urlencodedParser, function(req, res) {
 
   //makes sure the two entered passwords match.
@@ -654,9 +693,6 @@ app.post("/signup", urlencodedParser, function(req, res) {
   }
 });
 
-
-
-
 app.get("/courses", function(req, res) {
     res.cookie("path", "/courses");
     if (req.session.userId) {
@@ -667,6 +703,7 @@ app.get("/courses", function(req, res) {
       res.redirect("/login");
     }
 });
+
 app.post("/courses", urlencodedParser, function(req, res) {
 
   //makes sure they have a session ID and that the body object is a course.
@@ -737,9 +774,6 @@ app.post("/courses", urlencodedParser, function(req, res) {
   }
 });
 
-
-
-
 app.get("/add", function(req, res) {
   res.cookie("path", "/add");
   if (req.session.userId) {
@@ -749,6 +783,7 @@ app.get("/add", function(req, res) {
   }
 
 });
+
 app.post("/add", urlencodedParser, function(req, res) {
 
   //there are three types of adds supported right now. event, course, and resource.
@@ -830,10 +865,10 @@ app.post("/add", urlencodedParser, function(req, res) {
   })
 });
 
-
 app.get("/calendar-view", function(req, res) {
   res.render("loading", {getURL : "calendar"});
 });
+
 app.get("/calendar", async (req, res, next) => {
   res.cookie("path", "/calendar");
 
@@ -889,10 +924,10 @@ app.get("/calendar", async (req, res, next) => {
 
 });
 
-
 app.get("/submit-view", function(req,res) {
   res.render("loading", {getURL : "submit"});
 });
+
 app.get("/submit", function(req, res) {
   res.cookie("path", "/submit");
 
@@ -907,6 +942,7 @@ app.get("/submit", function(req, res) {
     res.redirect("/login");
   }
 });
+
 app.post("/submit", urlencodedParser, function(req, res) {
   var tampered = false;
   //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
@@ -959,15 +995,11 @@ app.post("/submit", urlencodedParser, function(req, res) {
     res.redirect("/");
   }
 });
-
-
 //self explanitory. logs the user out.
 app.get("/logout", function(req, res) {
   req.session.destroy();
   res.redirect("/login");
 });
-
-
 
 app.get("/suggestions", async (req, res, next) => {
   res.cookie("path", "/suggestions");
@@ -1023,7 +1055,6 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
   }
 });
 
-
 app.get("/questions", async (req, res) => {
   res.cookie("path", "/questions?page=" + req.query.page);
   if (req.session.userId) {
@@ -1044,6 +1075,7 @@ app.get("/questions", async (req, res) => {
   }
 
 });
+
 app.post("/questions", urlencodedParser, function(req, res) {
   if(req.session.userId) {
     if (req.body.deleteElement) {
@@ -1100,6 +1132,7 @@ app.get("/questions/:id", function(req, res) {
   }
 
 });
+
 app.post("/questions/:id", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.body.deleteComment) {
@@ -1137,15 +1170,12 @@ app.post("/questions/:id", urlencodedParser, function(req, res) {
   }
 });
 
-
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom?chatroom=" + req.query.chatroom);
-  // (guessGrade(courses.map(x => x.course), user.schoolUsername));
-
   if (req.session.userId) {
     if (req.query.chatroom) {
       let currentDate = (new Date()).local();
-      Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*120)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
+      Texts.find({$and: [{date: {$gt: new Date(currentDate.getTime()-1000*60*720)}}, {chatroom: req.query.chatroom}]}, function(err, texts) {
         texts.sort(function(a, b) {
           return a.date>b.date ? 1 : a.date<b.date ? -1 : 0;
         });
@@ -1154,8 +1184,6 @@ app.get("/chatroom", function(req,res) {
         }
         User.findOne({_id : req.session.userId}, function(err, user) {
           res.cookie("sessionID", user._id);
-
-
           if (req.query.chatroom == "all" || user.grade == parseInt(req.query.chatroom.match(/\d+/))) {
             res.render("roomchat", {room: req.query.chatroom, texts: texts, permissions : user.permissions, colours: user.colors, font: holidayFont(user.font), grade: user.grade, confirmed: !(user.grade === undefined)});
           } else {
@@ -1166,11 +1194,11 @@ app.get("/chatroom", function(req,res) {
     } else {
       res.redirect("/chatroom?chatroom=all");
     }
-
   } else {
     res.redirect("/login");
   }
 });
+
 app.post("/chatroom", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.body.mutedUser) {
@@ -1217,7 +1245,6 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 
 });
 
-
 app.get("/tutorial", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
@@ -1231,7 +1258,6 @@ app.get("/tutorial", function(req, res) {
     res.render("tutorial", {font: "/public/fonts/LANENAR_.ttf"});
   }
 });
-
 
 app.get("/schedule", function(req, res) {
   res.cookie("path", "/schedule");
@@ -1277,6 +1303,7 @@ app.get("/alerts", function(req, res) {
     res.send([]);
   }
 });
+
 app.post("/alerts", urlencodedParser, function(req, res) {
   if (req.session.userId && req.body.delete === "true") {
     User.findOneAndUpdate({_id : req.session.userId}, {$pop: {alerts: 1}}).then(function() {
@@ -1287,10 +1314,10 @@ app.post("/alerts", urlencodedParser, function(req, res) {
   }
 });
 
-
 app.get("/users", function(req, res) {
   res.redirect("/");
 });
+
 app.get("/users/:user", function(req, res) {
   res.cookie("path", "/users/" + req.params.user);
   if (req.session.userId) {
@@ -1326,6 +1353,7 @@ app.get("/users/:user/posts", function(req, res) {
     res.redirect("/login");
   }
 });
+
 app.get("/users/:user/comments", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/comments");
   if (req.session.userId) {
@@ -1342,6 +1370,7 @@ app.get("/users/:user/comments", function(req, res) {
     res.redirect("/login");
   }
 });
+
 app.get("/users/:user/colours", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/colours");
   if (req.session.userId) {
@@ -1359,6 +1388,7 @@ app.get("/users/:user/colours", function(req, res) {
     res.redirect("/login");
   }
 });
+
 app.post("/users/:user/colours", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     let newObject = {
@@ -1375,6 +1405,7 @@ app.post("/users/:user/colours", urlencodedParser, function(req, res) {
     res.send(true);
   }
 });
+
 app.get("/users/:user/fonts", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/fonts");
   if (req.session.userId) {
@@ -1391,6 +1422,7 @@ app.get("/users/:user/fonts", function(req, res) {
   }
 
 });
+
 app.post("/users/:user/fonts", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     let fontUrl = req.body.font.split("/");
@@ -1406,6 +1438,7 @@ app.post("/users/:user/fonts", urlencodedParser, function(req, res) {
     res.send(true);
   }
 });
+
 app.get("/users/:user/order", function(req, res) {
   res.cookie("path", "/users/" + req.params.user + "/order");
   if (req.session.userId) {
@@ -1420,6 +1453,7 @@ app.get("/users/:user/order", function(req, res) {
     res.redirect("/login");
   }
 });
+
 app.post("/users/:user/order", urlencodedParser, function(req, res) {
   if (req.session.userId) {
 
@@ -1435,7 +1469,6 @@ app.post("/users/:user/order", urlencodedParser, function(req, res) {
 app.get("/about", function(req, res) {
   res.render("about");
 });
-
 
 app.get("/offLineInfo", function(req, res) {
   if (req.session.userId) {
@@ -1464,8 +1497,6 @@ app.get("/offLineInfo", function(req, res) {
   }
 });
 
-
-
 let io = socket(server);
 io.set('match origin protocol', true);
 io.on("connection", function(socket) {
@@ -1483,9 +1514,7 @@ io.on("connection", function(socket) {
           }
         });
         data = {message : profanityFilter(data.message), username : user.username, firstName: user.firstName, lastName:user.lastName, chatroom: data.chatroom};
-
         if (user.permissions != "muted" && data.message.length < 256) {
-
           io.emit("chat" + "_" + data.chatroom, data);
         }
       }
@@ -1504,17 +1533,8 @@ io.on("connection", function(socket) {
 
 });
 
-
-
-
-
-
-
-
-
-
 app.get("/down", function(req, res) {
-  res.render(__dirname + "/errirs/serverError.html");
+  res.render(__dirname + "/errors/serverError.html");
 });
 
 app.get("*", function(req, res) {

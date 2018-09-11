@@ -79,6 +79,9 @@ const UserSchema = new Schema({
   },
   grade: {
     type: Number
+  },
+  planner: {
+    type: Array
   }
 
 });

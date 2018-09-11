@@ -158,6 +158,9 @@
           position:relative;
           cursor:pointer;
       }
+      .dayDisplay {
+        font-size: 12px;
+      }
 
       .displayed {
         display: block;
@@ -166,7 +169,10 @@
 
         .shownCalendar tr td {
           height: 40px;
-          font-size: 14px;
+          font-size: 13px;
+        }
+        .dayDisplay {
+          font-size: 10px;
         }
       }
       @media screen and (min-width: 768px) {
@@ -217,7 +223,7 @@
                   <%daysElapsed++%>
 
 
-                  <td><%=calendar[i][j-calendar[i][0][2]][1]+1%>
+                  <td onclick = "openPlanner(<%=calendar[i][j-calendar[i][0][2]][1]+1%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%>
 
 
                     <% for (var badDay = 0; badDay < offSetDays.length; badDay++) { %>
@@ -228,8 +234,7 @@
                     <% } %>
 
                     <% if (calendar[i][j-calendar[i][0][2]][2] != 0 && calendar[i][j-calendar[i][0][2]][2] != 6) { %>
-                       <br><span style = "font-size: 12px;">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
-                       <!-- (<%=daysElapsed%>) -->
+                       <br><span class = "dayDisplay">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
                     <% } %>
 
 
@@ -276,4 +281,12 @@
 
 
   </body>
+  <script>
+
+    function openPlanner(day) {
+      window.location = "https://www.pvstudents.ca/planner?day=" + day;
+      // window.location = "/planner?day=" + day;
+    }
+
+  </script>
 </html>

@@ -64,8 +64,6 @@ self.addEventListener("fetch", event => {
 self.addEventListener('push', function(e) {
   var data = e.data.json();
   console.log("got push: " + data);
-
-
   e.waitUntil(
     self.registration.showNotification(data.title, {body: data.body, icon: "/public/images/icon-128x128.png"})
   );
@@ -82,7 +80,3 @@ self.addEventListener('notificationclick', function(e) {
     notification.close();
   }
 });
-
-
-
-// https://fcm.googleapis.com/fcm/send/euJOgLjZbGI:APA91bEP0_FQ5jlF_GWLbqxAYl5FVwCoGYTdAuyMd2gSXrgcwYARb_OrfEGpOCuB8Ey84edYUjI0iSzA7zJWizCMAUicNx-bMq2M2H2D1qrPXbY9AgQoE3k2eoxTgjfCp9bZPFD5K0-R
