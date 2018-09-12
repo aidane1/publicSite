@@ -223,7 +223,7 @@
                   <%daysElapsed++%>
 
 
-                  <td><span  onclick = "openPlanner(<%=calendar[i][j-calendar[i][0][2]][1]+1%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%></span>
+                  <td><span  onclick = "openPlanner(<%=daysElapsed%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%></span>
 
 
                     <% for (var badDay = 0; badDay < offSetDays.length; badDay++) { %>
