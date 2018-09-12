@@ -479,10 +479,10 @@
     <div class = "boxDisplay" id = "boxDisplay">
 
       <% for (var i = 0; i < planner.length; i++) { %>
-        <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(planner[i].startHour)/24*100%>%; height: <%=(planner[i].endHour-planner[i].startHour)/24*100%>%">
+        <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%">
 
         </div>
-        <div class = "planBoxText" onclick = "removeItem(<%=day%>, <%=i%>)" style = "top: <%=(planner[i].startHour)/24*100%>%; height: <%=(planner[i].endHour-planner[i].startHour)/24*100%>%">
+        <div class = "planBoxText" onclick = "removeItem(<%=day%>, <%=i%>)" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%">
           <div class = "spacer"></div>
           <%=planner[i].description%>
           <div class = "spacer"></div>
@@ -675,11 +675,9 @@
 
     function addBackTime() {
       if (currentPlaceEffected == 1) {
-        console.log(currentEvent);
-        console.log(actualHour.toString());
-        currentEvent.startTime = actualHour.toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
+        currentEvent.startTime = ((actualHour+12-1)%12+1).toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
       } else {
-        currentEvent.endTime = actualHour.toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
+        currentEvent.endTime = ((actualHour+12-1)%12+1).toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
       }
       toggleModal();
       toggleFirstModal();
@@ -692,27 +690,30 @@
 
     function submitItem() {
       currentEvent.description = document.getElementById("enterTimeDescription").value;
-
-      let form = document.createElement("form");
-      form.method = "POST";
-      form.action = "/planner?day=<%=day%>";
-      let startInput = document.createElement("input");
-      startInput.type = "hidden";
-      startInput.value = currentEvent.startTime;
-      startInput.name = "start";
-      let endInput = document.createElement("input");
-      endInput.type = "hidden";
-      endInput.value = currentEvent.endTime;
-      endInput.name = "end";
-      let description = document.createElement("input");
-      description.type = "hidden";
-      description.value = currentEvent.description;
-      description.name = "description";
-      form.appendChild(startInput);
-      form.appendChild(endInput);
-      form.appendChild(description);
-      document.body.appendChild(form);
-      form.submit();
+      if (parseInt(currentEvent.startTime.split(" : ")[0])%12 + parseInt(currentEvent.startTime.split(" ")[2])/60 + (currentEvent.startTime.split(" ")[3] == "AM" ? 0 : 12) < parseInt(currentEvent.endTime.split(" : ")[0])%12 + parseInt(currentEvent.endTime.split(" ")[2])/60 + (currentEvent.endTime.split(" ")[3] == "AM" ? 0 : 12)) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/planner?day=<%=day%>";
+        let startInput = document.createElement("input");
+        startInput.type = "hidden";
+        startInput.value = currentEvent.startTime;
+        startInput.name = "start";
+        let endInput = document.createElement("input");
+        endInput.type = "hidden";
+        endInput.value = currentEvent.endTime;
+        endInput.name = "end";
+        let description = document.createElement("input");
+        description.type = "hidden";
+        description.value = currentEvent.description;
+        description.name = "description";
+        form.appendChild(startInput);
+        form.appendChild(endInput);
+        form.appendChild(description);
+        document.body.appendChild(form);
+        form.submit();
+      } else {
+        alert("The end time for an event must be after the start!");
+      }
 
     }
     function removeItem(day, item) {
