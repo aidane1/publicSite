@@ -341,7 +341,6 @@ app.get("/planner", function(req, res) {
             userPlans.push(user.planner[i][1]);
           }
         }
-        console.log(userPlans);
         let colours = ["orange", "blue", "red", "green", "purple"];
         res.render("planner", {day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
       });
@@ -357,20 +356,41 @@ app.get("/planner", function(req, res) {
 app.post("/planner", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.query.day && req.query.day > 0) {
-      let eventStartHour = parseInt(req.body.start.split(" : ")[0]);
-      let eventStartMinute = parseInt(req.body.start.split(" ")[2]);
-      let eventStartAmOrPm = req.body.start.split(" ")[3];
-      let eventEndHour = parseInt(req.body.end.split(" : ")[0]);
-      let eventEndMinute = parseInt(req.body.end.split(" ")[2]);
-      let eventEndAmOrPm = req.body.end.split(" ")[3];
+      if (req.body.start && req.body.end && req.body.description) {
+        let eventStartHour = parseInt(req.body.start.split(" : ")[0]);
+        let eventStartMinute = parseInt(req.body.start.split(" ")[2]);
+        let eventStartAmOrPm = req.body.start.split(" ")[3];
+        let eventEndHour = parseInt(req.body.end.split(" : ")[0]);
+        let eventEndMinute = parseInt(req.body.end.split(" ")[2]);
+        let eventEndAmOrPm = req.body.end.split(" ")[3];
+        eventStartHour =eventStartHour%12 +  (eventStartAmOrPm == "AM" ? 0 : 12);
+        eventEndHour =eventEndHour%12 +  (eventEndAmOrPm == "AM" ? 0 : 12);
+        User.findOneAndUpdate({_id : req.session.userId}, {$push: {planner: [[req.query.day, {startHour : eventStartHour, startMinute : eventStartMinute, endHour : eventEndHour, endMinute: eventEndMinute, description:req.body.description }]]}}).then(function() {
+          res.redirect("/planner?day=" + req.query.day);
+        })
+      } else if (req.body.removedIndex) {
+        let amountFoundIndex = 0;
+        User.findOne({_id : req.session.userId}, function(err, user) {
+          let planner = user.planner;
+          for (var i = 0; i < planner.length; i++) {
+            if (planner[i][0] == req.query.day) {
+              if (req.body.removedIndex == amountFoundIndex) {
+                planner.splice(i, 1));
+                amountFoundIndex++;
+              } else {
+                amountFoundIndex++;
+              }
+            }
+          }
+          User.findOneAndUpdate({_id : req.session.userId}, {$set : {planner : planner}}).then(function() {
+            res.redirect("/planner?day=" + req.query.day);
+          });
 
-      eventStartHour =eventStartHour%12 +  (eventStartAmOrPm == "AM" ? 0 : 12);
-      eventEndHour =eventEndHour%12 +  (eventEndAmOrPm == "AM" ? 0 : 12);
-      console.log(eventStartHour, eventStartMinute);
-      console.log(eventEndHour, eventEndMinute);
-      User.findOneAndUpdate({_id : req.session.userId}, {$push: {planner: [[req.query.day, {startHour : eventStartHour, startMinute : eventStartMinute, endHour : eventEndHour, endMinute: eventEndMinute, description:req.body.description }]]}}).then(function() {
-        res.redirect("/planner?day=" + req.query.day);
-      })
+        });
+      } else {
+
+      }
+
     } else {
       res.redirect("/calendar");
     }

@@ -454,7 +454,7 @@
         <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(planner[i].startHour)/24*100%>%; height: <%=(planner[i].endHour-planner[i].startHour)/24*100%>%">
 
         </div>
-        <div class = "planBoxText" style = "top: <%=(planner[i].startHour)/24*100%>%; height: <%=(planner[i].endHour-planner[i].startHour)/24*100%>%">
+        <div class = "planBoxText" onclick = "removeItem(<%=day%>, <%=i%>)" style = "top: <%=(planner[i].startHour)/24*100%>%; height: <%=(planner[i].endHour-planner[i].startHour)/24*100%>%">
           <div class = "spacer"></div>
           <%=planner[i].description%>
           <div class = "spacer"></div>
@@ -684,6 +684,22 @@
       document.body.appendChild(form);
       form.submit();
 
+    }
+    function removeItem(day, item) {
+      console.log(day);
+      console.log(item);
+      if (confirm("are you sure you would like to remove this item?")) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/planner?day=" + day.toString();
+        let removedItemInput = document.createElement("input");
+        removedItemInput.name = "removedIndex";
+        removedItemInput.type = "hidden";
+        removedItemInput.value = item;
+        form.appendChild(removedItemInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
     }
   </script>
 </html>
