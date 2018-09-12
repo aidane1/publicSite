@@ -277,9 +277,10 @@
         display: none;
       }
       .enterTime {
-        width: 100px;
+        width: 150px;
         height: 30px;
-
+        margin-right: 5px;
+        margin-bottom: 5px;
         -webkit-appearance: none;
         font-size: 15px;
         outline: none;
@@ -288,12 +289,12 @@
         border: 1px solid black;
         outline: none;
         z-index: 6;
-
+        height: 30px;
       }
 
       .EnterItemBox h1 {
         position: relative;
-        top: -32px;
+        top: -40px;
       }
       .displayed {
         display: block;
@@ -301,6 +302,9 @@
     </style>
   </head>
   <body>
+    <div class = "back" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20">
+      <a href = "/calendar" style = "text-decoration:none; color:blue">&#8592;</a>
+    </div>
     <h1 style = "position: absolute; right: 10px; top: -15px;z-index: 4"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
     <table class = "plannerHolder" id = "plannerHolder">
       <tr>
