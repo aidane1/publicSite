@@ -585,7 +585,8 @@
     document.onclick = function(e) {
       userClickedClock(e);
     }
-    document.onTouchStart = function(e) {
+    document.ontouchstart = function(e) {
+      console.log(e);
       userClickedClock(e);
     }
     function changeHour(hour) {
