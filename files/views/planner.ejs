@@ -556,7 +556,9 @@
       document.getElementById("hourHand").style.transform = "rotate(" + (angle).toString() + "deg) translateX(-50%)";
     }
 
-    function userClickedClock(e) {
+    function userClickedClock(e, touchX, touchY) {
+      e.clientX = touchX;
+      e.clientY = touchY;
       if (e.target.id == "clockCover") {
         let referenceAngle = (Math.atan((e.clientX - window.innerWidth/2)/(e.clientY - (window.innerWidth*0.95/2 + window.innerHeight * 0.18)))*180/Math.PI);
         let quadrant;
@@ -583,11 +585,11 @@
       }
     }
     document.onclick = function(e) {
-      userClickedClock(e);
+      userClickedClock(e, e.clientX, e.clientY);
     }
     document.ontouchstart = function(e) {
-      console.log(e);
-      userClickedClock(e);
+
+      userClickedClock(e, e.touches["0"].clientX, e.touches["0"].clientY);
     }
     function changeHour(hour) {
       console.log(hour);
