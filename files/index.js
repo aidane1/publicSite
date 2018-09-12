@@ -375,7 +375,7 @@ app.post("/planner", urlencodedParser, function(req, res) {
           for (var i = 0; i < planner.length; i++) {
             if (planner[i][0] == req.query.day) {
               if (req.body.removedIndex == amountFoundIndex) {
-                planner.splice(i, 1));
+                planner.splice(i, 1);
                 amountFoundIndex++;
               } else {
                 amountFoundIndex++;
