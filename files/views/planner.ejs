@@ -555,9 +555,8 @@
       timeDisplayChange.innerHTML = (actualHour == 0 ? "12" : actualHour.toString()) + " : " + (actualMinute.toString().length == 1 ? ("0" + actualMinute.toString()) : actualMinute.toString()) + " " + (amOrPm == 0 ? "AM" : "PM");
       document.getElementById("hourHand").style.transform = "rotate(" + (angle).toString() + "deg) translateX(-50%)";
     }
-    document.onclick = function(e) {
 
-
+    function userClickedClock(e) {
       if (e.target.id == "clockCover") {
         let referenceAngle = (Math.atan((e.clientX - window.innerWidth/2)/(e.clientY - (window.innerWidth*0.95/2 + window.innerHeight * 0.18)))*180/Math.PI);
         let quadrant;
@@ -582,7 +581,12 @@
       } else if (e.target.id == "toggleModal") {
 
       }
-
+    }
+    document.onclick = function(e) {
+      userClickedClock(e);
+    }
+    document.onTouchStart = function(e) {
+      userClickedClock(e);
     }
     function changeHour(hour) {
       console.log(hour);
