@@ -342,7 +342,22 @@ app.get("/planner", function(req, res) {
           }
         }
         let colours = ["orange", "blue", "red", "green", "purple"];
-        res.render("planner", {day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
+        let monthCounter = 0;
+        let currentMonth = 8;
+        let dayCount = parseInt(req.query.day);
+
+        let finalMonth = false;
+        while (!finalMonth) {
+          if (dayCount <= getDays((currentMonth)%12)) {
+            finalMonth = true;
+          } else {
+            dayCount -= getDays(currentMonth);
+            currentMonth = (currentMonth+1)%12;
+
+          }
+        }
+
+        res.render("planner", {dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
       });
     } else {
       res.redirect("/calendar");

@@ -310,7 +310,19 @@
     <div class = "back displayed" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20" id = "back">
       <a href = "/calendar" style = "text-decoration:none; color:blue">&#8592;</a>
     </div>
-    <div style = "width: 100%; text-align: center"><h2>September 3rd</h2></div>
+    <div style = "width: 100%; text-align: center">
+      <h2><%=monthName%>
+        <%if (dayName.toString() === "1" || dayName.toString() === "21" || dayName.toString() === "31") { %>
+          <%=dayName%>st
+        <% } else if (dayName.toString() === "2" || dayName.toString() === "22") { %>
+          <%=dayName%>nd
+        <% } else if (dayName.toString() === "3" || dayName.toString() === "31") { %>
+          <%=dayName%>rd
+        <% } else { %>
+          <%=dayName%>th
+        <% } %>
+      </h2>
+    </div>
     <hr>
     <h1 style = "position: absolute; right: 10px; top: 45px;z-index: 4"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
     <table class = "plannerHolder" id = "plannerHolder">
