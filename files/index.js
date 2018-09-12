@@ -357,7 +357,7 @@ app.get("/planner", function(req, res) {
           }
         }
 
-        res.render("planner", {dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
+        res.render("planner", {localTime : (new Date()).local(), dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
       });
     } else {
       res.redirect("/calendar");
@@ -474,7 +474,6 @@ app.get("/", async (req, res, next) => {
         //also accounts for time offsets due to pro-D days
 
         let todaysBlocks = blockToTime((currentDate).getDay() -1, dayOffSetToday);
-        console.log((currentDate.getDay() +4 - dayOffSetToday%5)%5);
         //itterates through those blocks and find which course matches the block
         for (var i = 0; i < todaysBlocks.length; i++) {
           //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
@@ -521,7 +520,7 @@ app.get("/", async (req, res, next) => {
 
 
           let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
-          timeInMinutes -= (9*60 + 10);
+          timeInMinutes -= (9*60);
           let blockForTime = [];
 
           if (timeInMinutes < 0) {
