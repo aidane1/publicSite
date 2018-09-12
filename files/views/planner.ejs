@@ -24,14 +24,14 @@
         width: 100%;
         border-collapse: collapse;
         position: absolute;
-        top: 0;
+        top: 60px;
       }
       .boxDisplay {
         width: 75%;
         margin-left: 25%;
         height: 1200px;
         position: absolute;
-        top: 100px;
+        top: 160px;
       }
       .plannerHolder tr {
         width: 100%;
@@ -269,7 +269,7 @@
       }
       .EnterItemBox {
         width: 95%;
-        height: 130px;
+        height: 170px;
         position: fixed;
         top: 18%;
         left: 2.5%;
@@ -297,16 +297,22 @@
         position: relative;
         top: -40px;
       }
+      .back {
+        display: none;
+      }
       .displayed {
         display: block;
       }
+
     </style>
   </head>
   <body>
-    <div class = "back" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20">
+    <div class = "back displayed" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20" id = "back">
       <a href = "/calendar" style = "text-decoration:none; color:blue">&#8592;</a>
     </div>
-    <h1 style = "position: absolute; right: 10px; top: -15px;z-index: 4"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
+    <div style = "width: 100%; text-align: center"><h2>September 3rd</h2></div>
+    <hr>
+    <h1 style = "position: absolute; right: 10px; top: 45px;z-index: 4"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
     <table class = "plannerHolder" id = "plannerHolder">
       <tr>
         <th style = "text-align: left; padding: 5px;">Time</th>
@@ -471,10 +477,10 @@
     <div class = "EnterItemBox" id = "enterItemBox">
       <button class = "enterTime" id = "enterStartTime" onclick = "toggleFirstModal(); toggleModal(1)">Start Time</button><span id = "displayedTimes1">12 : 00 AM</span><br>
       <button class = "enterTime" id = "enterEndTime" onclick = "toggleFirstModal(); toggleModal(2)">End Time</button><span id = "displayedTimes2">1 : 00 AM</span><br>
-      <span>Description: <input type = "text" class = "enterItemDescription" id = "enterTimeDescription"/></span>
+      <span>Description: <br><input type = "text" class = "enterItemDescription" id = "enterTimeDescription"/></span>
       <br>
       <br>
-      <h1 onclick = "submitItem()">+</h1>
+      <h1 onclick = "submitItem()">+ </h1>
     </div>
 
 
@@ -635,12 +641,14 @@
       displayChange1.classList.toggle("displayed");
       displayChange2.classList.toggle("displayed");
       displayChange3.classList.toggle("displayed");
+      document.getElementById("back").classList.toggle("displayed");
     }
     function toggleFirstModal() {
       let displayChange1 = document.getElementById("enterItemBox");
       let displayChange2 = document.getElementById("enterItemModal");
       displayChange1.classList.toggle("displayed");
       displayChange2.classList.toggle("displayed");
+      document.getElementById("back").classList.toggle("displayed");
     }
 
     function addBackTime() {
