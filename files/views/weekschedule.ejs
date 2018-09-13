@@ -691,8 +691,9 @@
       for (var i = 0; i < dayDisplays.length; i++) {
         dayDisplays[i].className = "dayOfTheWeekSchedule";
       }
-
-      document.getElementById("dayOfWeek" + n.toString()).className = "dayOfTheWeekSchedule displayed";
+      if (document.getElementById("dayOfWeek" + n.toString())) {
+        document.getElementById("dayOfWeek" + n.toString()).className = "dayOfTheWeekSchedule displayed";
+      }
       document.getElementById("day" + n.toString()).className = "dayButton selected";
       selected = n;
     }

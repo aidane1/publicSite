@@ -82,8 +82,16 @@ const UserSchema = new Schema({
   },
   planner: {
     type: Array
+  },
+  weeklySchedule: {
+    day0: {type: Array},
+    day1: {type: Array},
+    day2: {type: Array},
+    day3: {type: Array},
+    day4: {type: Array},
+    day5: {type: Array},
+    day6: {type: Array}
   }
-
 });
 
 
