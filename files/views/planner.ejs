@@ -322,7 +322,7 @@
         background-color: red;
         position: absolute;
       }
-      
+
       @media screen and (min-width: 768px) {
         .timeDisplayBox {
           width: 400px;
@@ -506,7 +506,16 @@
 
     </table>
     <div class = "boxDisplay" id = "boxDisplay">
+      <% for (var i = 0; i < weeklySchedule.length; i++) { %>
+        <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weeklySchedule[i].startHour + weeklySchedule[i].startMinute/60)/24*100%>%; height: <%=(weeklySchedule[i].endHour+weeklySchedule[i].endMinute/60-weeklySchedule[i].startHour-weeklySchedule[i].startMinute/60)/24*100%>%">
 
+        </div>
+        <div class = "planBoxText" style = "top: <%=(weeklySchedule[i].startHour + weeklySchedule[i].startMinute/60)/24*100%>%; height: <%=(weeklySchedule[i].endHour+weeklySchedule[i].endMinute/60-weeklySchedule[i].startHour-weeklySchedule[i].startMinute/60)/24*100%>%">
+          <div class = "spacer"></div>
+          <%=weeklySchedule[i].description%>
+          <div class = "spacer"></div>
+        </div>
+      <% } %>
       <% for (var i = 0; i < planner.length; i++) { %>
         <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%">
 
@@ -517,6 +526,7 @@
           <div class = "spacer"></div>
         </div>
       <% } %>
+
 
     </div>
     <div class = "currentMarker" style = "margin-top: <%=79+localTime.getHours()*50+localTime.getMinutes()/60*50%>px"></div>

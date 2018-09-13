@@ -330,6 +330,54 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
   }
 });
 
+app.get("/weekly-schedule", function(req, res) {
+  res.cookie("path", "/weekly-schedule");
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      let userPlans = user.weeklySchedule;
+      let colours = ["orange", "blue", "red", "green", "purple"];
+      res.render("weekschedule", {colourArray : colours, userName : user.username, weekPlans : userPlans, colours : user.colors, font : holidayFont(user.font)});
+    });
+
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post("/weekly-schedule", urlencodedParser, function(req,res) {
+  if (req.session.userId) {
+    if (req.query.day && req.query.day >= 0 && req.query.day < 7 && req.body.start && req.body.end && req.body.description) {
+      let eventStartHour = parseInt(req.body.start.split(" : ")[0]);
+      let eventStartMinute = parseInt(req.body.start.split(" ")[2]);
+      let eventStartAmOrPm = req.body.start.split(" ")[3];
+      let eventEndHour = parseInt(req.body.end.split(" : ")[0]);
+      let eventEndMinute = parseInt(req.body.end.split(" ")[2]);
+      let eventEndAmOrPm = req.body.end.split(" ")[3];
+      eventStartHour =eventStartHour%12 +  (eventStartAmOrPm == "AM" ? 0 : 12);
+      eventEndHour =eventEndHour%12 +  (eventEndAmOrPm == "AM" ? 0 : 12);
+      let weekQuery = {};
+      weekQuery["weeklySchedule.day" + req.query.day.toString()] = [{startHour : eventStartHour, startMinute : eventStartMinute, endHour : eventEndHour, endMinute: eventEndMinute, description:req.body.description }];
+      User.findOneAndUpdate({_id : req.session.userId}, {$push: weekQuery}).then(function() {
+        res.redirect("/weekly-schedule");
+      });
+    } else if (req.query.day && req.query.day >= 0 && req.query.day < 7 && req.body.removedIndex) {
+      User.findOne({_id : req.session.userId}, function(err, user) {
+        let newDay = user.weeklySchedule["day" + req.query.day.toString()];
+        newDay.splice(req.body.removedIndex, 1);
+        let newWeeklyObject = user.weeklySchedule;
+        newWeeklyObject["day" + req.query.day.toString()] = newDay;
+        User.findOneAndUpdate({_id : req.session.userId}, {$set: {weeklySchedule : newWeeklyObject}}).then(function() {
+          res.redirect("/weekly-schedule");
+        });
+      });
+    } else {
+      res.redirect("/");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
 app.get("/planner", function(req, res) {
   res.cookie("path", "/planner?day=" + req.query.day);
   if (req.session.userId) {
@@ -344,8 +392,8 @@ app.get("/planner", function(req, res) {
         let colours = ["orange", "blue", "red", "green", "purple"];
         let monthCounter = 0;
         let currentMonth = 8;
+        let currentYear = 2018;
         let dayCount = parseInt(req.query.day);
-
         let finalMonth = false;
         while (!finalMonth) {
           if (dayCount <= getDays((currentMonth)%12)) {
@@ -353,11 +401,15 @@ app.get("/planner", function(req, res) {
           } else {
             dayCount -= getDays(currentMonth);
             currentMonth = (currentMonth+1)%12;
-
+            if (currentMonth == 0) {
+              currentYear = 2019;
+            }
           }
         }
-
-        res.render("planner", {localTime : (new Date()).local(), dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
+        let localTime = (new Date()).local();
+        let weeklySchedule = user.weeklySchedule["day" + (new Date(currentYear, currentMonth, dayCount, 0, 0, 0, 0)).getDay()];
+        console.log(weeklySchedule);
+        res.render("planner", {weeklySchedule : weeklySchedule, localTime : localTime, dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
       });
     } else {
       res.redirect("/calendar");
@@ -368,6 +420,7 @@ app.get("/planner", function(req, res) {
   }
 
 });
+
 app.post("/planner", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.query.day && req.query.day > 0) {

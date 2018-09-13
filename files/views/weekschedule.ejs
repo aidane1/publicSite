@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      @font-face {
+        font-family: sansFont;
+        src: url("<%=font%>")
+      }
+      * {
+        font-family: sansFont, sans-serif;
+        box-sizing: border-box;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+
+      }
+      .dayOfTheWeekSchedule {
+        display: none;
+      }
+      .daySelect {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .daySelect div {
+        flex-grow: 1;
+        border: 1px solid <%=colours.borderColor%>;
+
+        min-width: 100px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center;
+        color: <%=colours.textColor%>;
+      }
+      .normal {
+        background-color: <%=colours.buttonColor%>;
+      }
+      .selected {
+        background-color: <%=colours.infoColor%>;
+      }
+      .eventsHolder {
+        width: 100%;
+        position: relative;
+      }
+      .plannerHolder {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .planBox {
+        width: 100%;
+        opacity: 0.5;
+        position: absolute;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+      .planBoxText {
+        width: 100%;
+        position: absolute;
+        padding-left: 5px;
+        padding-right: 5px;
+        display: flex;
+        flex-direction: column;
+
+      }
+      .boxDisplay {
+        width: 75%;
+        margin-left: 25%;
+        height: 1200px;
+        position: absolute;
+        top: 160px;
+      }
+      .orange {
+        background-color: orange;
+      }
+      .blue {
+        background-color: blue;
+      }
+      .red {
+        background-color: red;
+      }
+      .green {
+        background-color: green;
+      }
+      .purple {
+        background-color: purple;
+      }
+      .plannerHolder tr {
+        width: 100%;
+        height: 50px;
+      }
+      .plannerHolder tr td:nth-child(2n+1) {
+        border-right: 1px solid black;
+        padding-left: 5px;
+        width: 25%;
+        vertical-align: bottom;
+      }
+      .plannerHolder tr td:nth-child(2n) {
+        vertical-align: top;
+        width: 75%;
+      }
+      .plannerHolder td {
+        border-bottom: 1px solid black;
+        position: relative;
+        height: 50px;
+      }
+      .timeSelectModal {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: black;
+        opacity: 0.7;
+        z-index: 5;
+        display: none;
+      }
+      .timeSelectBox {
+        width: 95%;
+        padding-top: 95%;
+
+        z-index: 6;
+        background-color: <%=colours.bgColor%>;
+        position: fixed;
+        top: 18%;
+        left: 2.5%;
+        display: none;
+      }
+      .timeDisplayBox {
+        width: 95%;
+        height: 90px;
+        position: fixed;
+        top: 18%;
+        left: 2.5%;
+        transform: translateY(-100%);
+        background-color: <%=colours.bgColor%>;
+        color: <%=colours.textColor%>;
+        /* text-align: center; */
+        z-index: 6;
+
+        display: none;
+      }
+      .timeDisplayBox h1 {
+
+        position: relative;
+        top: 11px;
+        font-size: 25px;
+      }
+      .timeSelectClock {
+        width: 80%;
+        height: 80%;
+        /* background-color: red; */
+        border-radius: 50%;
+        border: 3px solid black;
+        z-index: 7;
+        position: absolute;
+        top: 10%;
+        left: 10%;
+      }
+      .clockNum {
+        width: 30px;
+        height: 30px;
+        background-color: <%=colours.infoColor%>;
+        border-radius: 50%;
+        color: <%=colours.textColor%>;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        margin-top: 5px;
+        z-index: 100;
+      }
+      .clockNumHolder {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 50% 50%;
+        z-index: 0;
+
+      }
+      .clockNumCover {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+      }
+      #hourHand {
+        width: 10px;
+        height: 30%;
+        position: absolute;
+        top: 20%;
+        left: 50%;
+
+        transform-origin: 0 100%;
+        transform: rotate(0deg) translateX(-50%);
+        background-color: <%=colours.infoColor%>;
+      }
+      #hourHand::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: <%=colours.infoColor%>;
+        position: absolute;
+        top: 100%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+      }
+      #hourHand::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: <%=colours.infoColor%>;
+        position: absolute;
+        top: -3px;
+        left: 1px;
+        transform: rotate(45deg);
+      }
+      .switch12 {
+        position: absolute;
+        top: 30px;
+        font-size: 25px;
+        border: 1px solid <%=colours.borderColor%>;
+        background-color: <%=colours.buttonColor%>;
+
+        right: 5px;
+      }
+      .up {
+        position: absolute;
+
+        height: 100%;
+        top: 10px;
+        left: 0;
+        font-size: 15px;
+
+      }
+      .up div {
+        display: inline-block;
+        height: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: <%=colours.buttonColor%>;
+        border: 1px solid <%=colours.borderColor%>;
+      }
+      .down {
+        position: absolute;
+        height: 100%;
+        top: 60px;
+        left: 0;
+        font-size: 15px;
+
+      }
+
+      .down div {
+        display: inline-block;
+        height: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: <%=colours.buttonColor%>;
+        border: 1px solid <%=colours.borderColor%>;
+      }
+      .submitTime {
+        width: 100px;
+        height: 50px;
+        position: absolute;
+        background-color: <%=colours.buttonColor%>;
+        z-index: 6;
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        -webkit-appearance: none;
+        font-size: 17px;
+        outline: none;
+        color: <%=colours.textColor%>
+      }
+      .spacer {
+        flex-grow: 1;
+      }
+
+
+      .enterItemModal {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: black;
+        opacity: 0.7;
+        display: none;
+      }
+      .EnterItemBox {
+        width: 95%;
+        height: 170px;
+        position: fixed;
+        top: 18%;
+        left: 2.5%;
+        background-color: <%=colours.bgColor%>;
+        display: none;
+        color: <%=colours.textColor%>;
+      }
+      .enterTime {
+        width: 150px;
+        height: 30px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        -webkit-appearance: none;
+        font-size: 15px;
+        outline: none;
+        background-color: <%=colours.buttonColor%>;
+      }
+      .enterItemDescription {
+        border: 1px solid black;
+        outline: none;
+        z-index: 6;
+        height: 30px;
+        font-size: 18px;
+        background-color: <%=colours.infoColor%>;
+        color: <%=colours.textColor%>;
+      }
+
+      .EnterItemBox h1 {
+        position: relative;
+        top: -40px;
+      }
+      .back {
+        display: none;
+      }
+      .displayed {
+        display: block;
+      }
+
+
+      @media screen and (min-width: 768px) {
+        .timeDisplayBox {
+          width: 400px;
+          left: 50%;
+          top: 60px;
+          transform: translateX(-50%);
+        }
+        .timeSelectBox  {
+          width: 400px;
+          height: 400px;
+          padding-top: 0;
+          left: 50%;
+          top: 150px;
+          transform: translateX(-50%);
+        }
+        .submitTime {
+          top: 400px;
+        }
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "back displayed" style = "font-size: 40px; position: fixed; bottom: 10px; z-index: 20" id = "back">
+      <a href = "/users/<%=userName%>" style = "text-decoration:none; color:blue">&#8592;</a>
+    </div>
+    <div class = "daySelect">
+      <div class = "dayButton selected" onclick = "switchSelect(0)" id = "day0">Sunday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(1)" id = "day1">Monday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(2)" id = "day2">Tuesday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(3)" id = "day3">Wednesday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(4)" id = "day4">Thursday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(5)" id = "day5">Friday</div>
+      <div class = "dayButton normal" onclick = "switchSelect(6)" id = "day6">Saturday</div>
+    </div>
+    <div class = "eventsHolder">
+      <h1 style = "position: absolute; right: 10px; top: -12px;z-index: 0"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
+      <table class = "plannerHolder" id = "plannerHolder">
+        <tr>
+          <th style = "text-align: left; padding: 5px;">Time</th>
+          <th>description</th>
+        </tr>
+        <tr>
+          <td>12:00  AM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>1:00  AM</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>2:00  AM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3:00  AM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4:00  AM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5:00  AM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>6:00 AM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>7:00 AM</td>
+          <td>
+
+          </td>
+        </tr>
+        <tr>
+
+
+          <td>8:00 AM</td>
+          <td>
+
+          </td>
+        </tr>
+        <tr>
+
+
+          <td>9:00 AM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>10:00 AM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>11:00 AM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>12:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>1:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>2:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>3:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>4:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>5:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>6:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>7:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>8:00  PM</td>
+          <td></td>
+        </tr>
+        <tr>
+
+
+          <td>9:00   PM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>10:00   PM</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>11:00   PM</td>
+          <td></td>
+        </tr>
+      </table>
+      <div class = "boxDisplay" id = "boxDisplay">
+
+
+        <% for (var key in weekPlans) { %>
+
+          <% if (key === "day0") { %>
+            <div class = "dayOfTheWeekSchedule displayed" id = "dayOfWeek0">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText"  onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day1") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek1">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day2") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek2">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day3") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek3">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day4") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek4">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day5") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek5">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } else if (key === "day6") { %>
+            <div class = "dayOfTheWeekSchedule" id = "dayOfWeek6">
+            <% for (var i = 0; i < weekPlans[key].length; i++) { %>
+              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
+                <div class = "spacer"></div>
+                  <%=weekPlans[key][i].description%>
+                <div class = "spacer"></div>
+              </div>
+            <% } %>
+            </div>
+          <% } %>
+        <% } %>
+
+
+
+
+      </div>
+
+      <div class = "enterItemModal" id = "enterItemModal" onclick = "toggleFirstModal()">
+
+
+      </div>
+      <div class = "EnterItemBox" id = "enterItemBox">
+        <button class = "enterTime" id = "enterStartTime" onclick = "toggleFirstModal(); toggleModal(1)">Start Time</button><span id = "displayedTimes1">12 : 00 AM</span><br>
+        <button class = "enterTime" id = "enterEndTime" onclick = "toggleFirstModal(); toggleModal(2)">End Time</button><span id = "displayedTimes2">1 : 00 AM</span><br>
+        <span>Description: <br><input type = "text" class = "enterItemDescription" id = "enterTimeDescription"/></span>
+        <br>
+        <br>
+        <h1 onclick = "submitItem()">+ </h1>
+      </div>
+
+
+      <div class = "timeSelectModal" id = "timeSelectModal" onclick = "toggleModal()"></div>
+      <div class = "timeDisplayBox" id = "timeDisplayBox">
+        <div class = "up" id = "up"><div class = "hourUp" onclick = "timeChange(1, 1)">Hour &#9650;</div><div class = "minuteUp" onclick = "timeChange(0, 1)">Minute &#9650;</div></div>
+        <div class = "down" id = "down"><div class = "hourDown" onclick = "timeChange(1, 0)">Hour &#9660;</div><div class = "minuteDown" onclick = "timeChange(0, 0)">Minute &#9660;</div></div>
+        <h1 id = "timeDisplay">12 : 00 AM </h1><div class = "switch12" id = "switch12" onclick = "switch12(1)">PM</div>
+      </div>
+      <div class = "timeSelectBox" id = "timeSelectBox">
+        <div class = "timeSelectClock">
+          <div class = "hourHand" id = "hourHand">
+
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(0deg);">
+            <div class = "clockNum" style = "transform: rotate(-0deg)" onclick = "changeHour(12)"><div class = "spacer"></div>12<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(30deg);">
+            <div class = "clockNum" style = "transform: rotate(-30deg)" onclick = "changeHour(1)"><div class = "spacer"></div>1<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(60deg);">
+            <div class = "clockNum" style = "transform: rotate(-60deg)" onclick = "changeHour(2)"><div class = "spacer"></div>2<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(90deg);">
+            <div class = "clockNum" style = "transform: rotate(-90deg)" onclick = "changeHour(3)"><div class = "spacer"></div>3<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(120deg);">
+            <div class = "clockNum" style = "transform: rotate(-120deg)" onclick = "changeHour(4)"><div class = "spacer"></div>4<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(150deg);">
+            <div class = "clockNum" style = "transform: rotate(-150deg)" onclick = "changeHour(5)"><div class = "spacer"></div>5<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(180deg);">
+            <div class = "clockNum" style = "transform: rotate(-180deg)" onclick = "changeHour(6)"><div class = "spacer"></div>6<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(210deg);">
+            <div class = "clockNum" style = "transform: rotate(-210deg)" onclick = "changeHour(7)"><div class = "spacer"></div>7<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(240deg);">
+            <div class = "clockNum" style = "transform: rotate(-240deg)" onclick = "changeHour(8)"><div class = "spacer"></div>8<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(270deg);">
+            <div class = "clockNum" style = "transform: rotate(-270deg)" onclick = "changeHour(9)"><div class = "spacer"></div>9<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(300deg);">
+            <div class = "clockNum" style = "transform: rotate(-300deg)" onclick = "changeHour(10)"><div class = "spacer"></div>10<div class = "spacer"></div></div>
+          </div>
+          <div class = "clockNumHolder" style = "transform: rotate(330deg);">
+            <div class = "clockNum" style = "transform: rotate(-330deg)" onclick = "changeHour(11)"><div class = "spacer"></div>11<div class = "spacer"></div></div>
+          </div>
+
+
+        </div>
+        <div class = "clockNumCover" id = "clockCover">
+
+        </div>
+        <button class = "submitTime" onclick = "addBackTime()">
+          Submit!
+        </button>
+      </div>
+    </div>
+  </body>
+  <script>
+    var selected = 0;
+    function switchSelect(n) {
+      let dayButtons = document.getElementsByClassName("dayButton");
+      let dayDisplays = document.getElementsByClassName("dayOfTheWeekSchedule");
+      for (var i = 0; i < dayButtons.length; i++) {
+        dayButtons[i].className = "dayButton normal";
+      }
+      for (var i = 0; i < dayDisplays.length; i++) {
+        dayDisplays[i].className = "dayOfTheWeekSchedule";
+      }
+
+      document.getElementById("dayOfWeek" + n.toString()).className = "dayOfTheWeekSchedule displayed";
+      document.getElementById("day" + n.toString()).className = "dayButton selected";
+      selected = n;
+    }
+
+
+    let currentEvent = {
+      startTime: "12 : 00 AM",
+      endTime: "1 : 00 AM",
+      description: ""
+    }
+    let actualHour = 12;
+    let actualMinute = 0;
+    let amOrPm = 0;
+    let currentPlaceEffected = 1;
+
+
+    function updateTime() {
+      let timeDisplayChange = document.getElementById("timeDisplay");
+      let angle = actualHour%12*30+actualMinute/2;
+      timeDisplayChange.innerHTML = (actualHour == 0 ? "12" : actualHour.toString()) + " : " + (actualMinute.toString().length == 1 ? ("0" + actualMinute.toString()) : actualMinute.toString()) + " " + (amOrPm == 0 ? "AM" : "PM");
+      document.getElementById("hourHand").style.transform = "rotate(" + (angle).toString() + "deg) translateX(-50%)";
+    }
+
+    function userClickedClock(e, touchX, touchY, centerDifY) {
+      e.clientX = touchX;
+      e.clientY = touchY;
+      if (e.target.id == "clockCover") {
+        let referenceAngle = (Math.atan((e.clientX - window.innerWidth/2)/(e.clientY - centerDifY))*180/Math.PI);
+        let quadrant;
+        if (e.clientX < window.innerWidth/2 && e.clientY < centerDifY) {
+          quadrant = 2;
+        } else if (e.clientX > window.innerWidth/2 && e.clientY < centerDifY) {
+          quadrant = 1;
+        } else if (e.clientX < window.innerWidth/2 && e.clientY > centerDifY) {
+          quadrant = 3;
+        } else {
+          quadrant = 4;
+        }
+        let angle = (quadrant-(referenceAngle < 0 ? 0 : 1))*90 + referenceAngle;
+        angle = -angle+90;
+        let time = ((angle%360+360)%360)/360*12;
+        let hour = Math.floor(time);
+        let minute = Math.floor((time-hour)*60);
+        actualHour = hour;
+        actualMinute = minute;
+        updateTime();
+
+      } else if (e.target.id == "toggleModal") {
+
+      }
+    }
+    document.onclick = function(e) {
+      if (window.innerWidth < 768) {
+        userClickedClock(e, e.clientX, e.clientY, (window.innerWidth*0.95/2 + window.innerHeight * 0.18));
+      } else {
+        userClickedClock(e, e.clientX, e.clientY, 350);
+      }
+    }
+    document.ontouchstart = function(e) {
+
+      userClickedClock(e, e.touches["0"].clientX, e.touches["0"].clientY, (window.innerWidth*0.95/2 + window.innerHeight * 0.18));
+    }
+    function changeHour(hour) {
+
+    }
+    function timeChange(unit, dir) {
+      if (unit == 1 && dir == 0) {
+        actualHour = ((actualHour-1)-1+12)%12+1;
+      } else if (unit == 1 && dir == 1) {
+        actualHour = (actualHour%12+1);
+      } else if (unit == 0 && dir == 0) {
+        actualMinute = ((actualMinute-1)+60)%60;
+        if (actualMinute == 59) {
+          actualHour = ((actualHour-1)-1+12)%12+1;
+        }
+      } else {
+        actualMinute = (actualMinute+1)%60;
+        if (actualMinute == 0) {
+          actualHour = (actualHour%12+1);
+        }
+      }
+      updateTime();
+    }
+    function switch12(side) {
+      amOrPm = amOrPm == 1 ? 0 : 1;
+      let theSide = document.getElementById("switch12");
+      let timeDisplayChange = document.getElementById("timeDisplay");
+      if (side == 0) {
+        theSide.innerHTML = "PM";
+        timeDisplayChange.innerHTML = timeDisplayChange.innerHTML.split("PM").join("AM");
+        theSide.setAttribute("onclick", "switch12(1)");
+      } else {
+        theSide.innerText = "AM";
+        timeDisplayChange.innerHTML = timeDisplayChange.innerHTML.split("AM").join("PM");
+        theSide.setAttribute("onclick", "switch12(0)");
+      }
+    }
+    function addBackTime() {
+      if (currentPlaceEffected == 1) {
+        currentEvent.startTime = ((actualHour+12-1)%12+1).toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
+      } else {
+        currentEvent.endTime = ((actualHour+12-1)%12+1).toString() + " : " + (actualMinute.toString().length == 1 ? "0" : "") + actualMinute.toString() + (amOrPm == 0 ? " AM" : " PM");
+      }
+      toggleModal();
+      toggleFirstModal();
+      updateDisplayedTimes();
+    }
+    function updateDisplayedTimes() {
+      document.getElementById("displayedTimes1").innerHTML = currentEvent.startTime;
+      document.getElementById("displayedTimes2").innerHTML = currentEvent.endTime;
+    }
+
+
+    function toggleModal(effect) {
+      currentPlaceEffected = effect;
+      let displayChange1 = document.getElementById("timeSelectModal");
+      let displayChange2 = document.getElementById("timeDisplayBox");
+      let displayChange3 = document.getElementById("timeSelectBox");
+      displayChange1.classList.toggle("displayed");
+      displayChange2.classList.toggle("displayed");
+      displayChange3.classList.toggle("displayed");
+      document.getElementById("back").classList.toggle("displayed");
+    }
+    function toggleFirstModal() {
+      let displayChange1 = document.getElementById("enterItemBox");
+      let displayChange2 = document.getElementById("enterItemModal");
+      displayChange1.classList.toggle("displayed");
+      displayChange2.classList.toggle("displayed");
+      document.getElementById("back").classList.toggle("displayed");
+    }
+
+    function submitItem() {
+      currentEvent.description = document.getElementById("enterTimeDescription").value;
+      if (parseInt(currentEvent.startTime.split(" : ")[0])%12 + parseInt(currentEvent.startTime.split(" ")[2])/60 + (currentEvent.startTime.split(" ")[3] == "AM" ? 0 : 12) < parseInt(currentEvent.endTime.split(" : ")[0])%12 + parseInt(currentEvent.endTime.split(" ")[2])/60 + (currentEvent.endTime.split(" ")[3] == "AM" ? 0 : 12)) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/weekly-schedule?day=" + selected.toString();
+        let startInput = document.createElement("input");
+        startInput.type = "hidden";
+        startInput.value = currentEvent.startTime;
+        startInput.name = "start";
+        let endInput = document.createElement("input");
+        endInput.type = "hidden";
+        endInput.value = currentEvent.endTime;
+        endInput.name = "end";
+        let description = document.createElement("input");
+        description.type = "hidden";
+        description.value = currentEvent.description;
+        description.name = "description";
+        form.appendChild(startInput);
+        form.appendChild(endInput);
+        form.appendChild(description);
+        document.body.appendChild(form);
+        console.log(currentEvent);
+        console.log(form);
+        form.submit();
+      } else {
+        alert("The end time for an event must be after the start!");
+      }
+
+    }
+
+    function removeItem(item) {
+      console.log(item);
+      if (confirm("are you sure you would like to remove this item?")) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/weekly-schedule?day=" + selected.toString();
+        let removedItemInput = document.createElement("input");
+        removedItemInput.name = "removedIndex";
+        removedItemInput.type = "hidden";
+        removedItemInput.value = item;
+        form.appendChild(removedItemInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
+
+  </script>
+</html>
