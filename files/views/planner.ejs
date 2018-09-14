@@ -12,9 +12,11 @@
       * {
         box-sizing: border-box;
         font-family: sansFont, sans-serif;
+        ;
       }
       body {
         /* background-color: <%=colours.bgColor%>; */
+        background-color: #caace0;
         width: 100%;
         height: 100%;
         margin: 0;
@@ -25,6 +27,7 @@
         border-collapse: collapse;
         position: absolute;
         top: 60px;
+        color: #4c0384
       }
       .boxDisplay {
         width: 75%;
@@ -349,7 +352,7 @@
     <div class = "back displayed" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20" id = "back">
       <a href = "/calendar" style = "text-decoration:none; color:blue">&#8592;</a>
     </div>
-    <div style = "width: 100%; text-align: center">
+    <div style = "width: 100%; text-align: center;color: #4c0384">
       <h2><%=monthName%>
         <%if (dayName.toString() === "1" || dayName.toString() === "21" || dayName.toString() === "31") { %>
           <%=dayName%>st
@@ -363,7 +366,7 @@
       </h2>
     </div>
     <hr>
-    <h1 style = "position: absolute; right: 10px; top: 45px;z-index: 4"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
+    <h1 style = "position: absolute; right: 10px; top: 45px;z-index: 4; color: #4c0384"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
     <table class = "plannerHolder" id = "plannerHolder">
       <tr>
         <th style = "text-align: left; padding: 5px;">Time</th>

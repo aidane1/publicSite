@@ -17,6 +17,7 @@
         width: 100%;
         height: 100%;
         margin: 0;
+        background-color: #caace0;
 
       }
       .dayOfTheWeekSchedule {
@@ -51,6 +52,7 @@
       .plannerHolder {
         width: 100%;
         border-collapse: collapse;
+        color: #4c0384;
       }
       .planBox {
         width: 100%;
@@ -377,7 +379,7 @@
       <div class = "dayButton normal" onclick = "switchSelect(6)" id = "day6">Saturday</div>
     </div>
     <div class = "eventsHolder">
-      <h1 style = "position: absolute; right: 10px; top: -12px;z-index: 0"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
+      <h1 style = "position: absolute; right: 10px; top: -12px;z-index: 0;color: #4c0384;"><div id = "modalToggle" onclick = "toggleFirstModal()" style = "width: 30px; height: 30px">+</div></h1>
       <table class = "plannerHolder" id = "plannerHolder">
         <tr>
           <th style = "text-align: left; padding: 5px;">Time</th>
@@ -525,7 +527,7 @@
           <% if (key === "day0") { %>
             <div class = "dayOfTheWeekSchedule displayed" id = "dayOfWeek0">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText"  onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -536,7 +538,7 @@
           <% } else if (key === "day1") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek1">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -547,7 +549,7 @@
           <% } else if (key === "day2") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek2">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -558,7 +560,7 @@
           <% } else if (key === "day3") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek3">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -569,7 +571,7 @@
           <% } else if (key === "day4") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek4">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -580,7 +582,7 @@
           <% } else if (key === "day5") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek5">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
@@ -591,7 +593,7 @@
           <% } else if (key === "day6") { %>
             <div class = "dayOfTheWeekSchedule" id = "dayOfWeek6">
             <% for (var i = 0; i < weekPlans[key].length; i++) { %>
-              <div class = "planBox orange" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
+              <div class = "planBox <%=colourArray[i%5]%>" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%"></div>
               <div class = "planBoxText" onclick = "removeItem(<%=i%>)" style = "top: <%=(weekPlans[key][i].startHour + weekPlans[key][i].startMinute/60)/24*100%>%; height: <%=(weekPlans[key][i].endHour+weekPlans[key][i].endMinute/60-weekPlans[key][i].startHour-weekPlans[key][i].startMinute/60)/24*100%>%">
                 <div class = "spacer"></div>
                   <%=weekPlans[key][i].description%>
