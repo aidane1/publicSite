@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+
+      @font-face {
+        font-family: sansFont;
+        src: url("<%=font%>")
+      }
+      * {
+        font-family: sansFont, sans-serif;
+        box-sizing: border-box;
+        color: var(--text-color);
+      }
+      .scheduleTable {
+        margin: auto;
+        width: 600px;
+      }
+      .headerHolder {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+      .header {
+        flex-grow: 1;
+        height: 70px;
+        border: 1px solid black;
+        text-align: center;
+      }
+      .addBlock {
+        width: 95%;
+        display: block;
+        margin: auto;
+        background-color: #aaa;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .blockBody {
+        width: 100%;
+        height: 600px;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+      .blockDay {
+        flex-grow: 1;
+        height: 100%;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .dayBlock {
+        flex-grow: 1;
+        border: 1px solid black;
+      }
+      .removeBlock {
+        width: 95%;
+        text-align: center;
+        display: block;
+        margin: auto;
+        background-color: #aaa;
+        cursor: pointer;
+      }
+      .timeDisplay {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+      .editTime {
+        width: 100%;
+        text-align: center;
+        background-color: #aaa;
+        cursor: pointer;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "bodyContents">
+      <div class = "scheduleTable">
+        <div class = "headerHolder">
+          <div class = "header"><div class = "addBlock" onclick = "addBlock(1)">Add Block</div>Day 1</div>
+          <div class = "header"><div class = "addBlock" onclick = "addBlock(2)">Add Block</div>Day 2</div>
+          <div class = "header"><div class = "addBlock" onclick = "addBlock(3)">Add Block</div>Day 3</div>
+          <div class = "header"><div class = "addBlock" onclick = "addBlock(4)">Add Block</div>Day 4</div>
+          <div class = "header"><div class = "addBlock" onclick = "addBlock(5)">Add Block</div>Day 5</div>
+        </div>
+        <div class = "blockBody">
+          <div class = "blockDay" id = "day1">
+            <div class = "dayBlock" id = "dayBlock1_1">
+              <div class = "removeBlock" onclick = "removeBlock(1, 1)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay1_1">9:00AM - 10:00AM</div>
+              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,1)">Edit Time</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock1_2">
+              <div class = "removeBlock" onclick = "removeBlock(1, 2)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay1_2">10:00AM - 11:00AM</div>
+              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,2)">Edit Time</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock1_3">
+              <div class = "removeBlock" onclick = "removeBlock(1, 3)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay1_3">11:00AM - 12:00PM</div>
+              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,3)">Edit Time</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock1_4">
+              <div class = "removeBlock" onclick = "removeBlock(1, 4)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay1_4">12:00PM - 1:00PM</div>
+              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,4)">Edit Time</div>
+            </div>
+          </div>
+          <div class = "blockDay" id = "day2">
+            <div class = "dayBlock" id = "dayBlock2_1">
+              <div class = "removeBlock" onclick = "removeBlock(2, 1)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay2_1">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock2_2">
+              <div class = "removeBlock" onclick = "removeBlock(2, 2)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay2_2">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock2_3">
+              <div class = "removeBlock" onclick = "removeBlock(2, 3)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay2_3">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock2_4">
+              <div class = "removeBlock" onclick = "removeBlock(2, 4)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay2_4">12:00PM - 1:00PM</div>
+            </div>
+          </div>
+          <div class = "blockDay" id = "day3">
+            <div class = "dayBlock" id = "dayBlock3_1">
+              <div class = "removeBlock" onclick = "removeBlock(3, 1)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay3_1">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock3_2">
+              <div class = "removeBlock" onclick = "removeBlock(3, 2)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay3_2">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock3_3">
+              <div class = "removeBlock" onclick = "removeBlock(3, 3)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay3_3">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock3_4">
+              <div class = "removeBlock" onclick = "removeBlock(3, 4)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay3_4">12:00PM - 1:00PM</div>
+            </div>
+          </div>
+          <div class = "blockDay" id = "day4">
+            <div class = "dayBlock" id = "dayBlock4_1">
+              <div class = "removeBlock" onclick = "removeBlock(4, 1)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay4_1">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock4_2">
+              <div class = "removeBlock" onclick = "removeBlock(4, 2)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay4_2">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock4_3">
+              <div class = "removeBlock" onclick = "removeBlock(4, 3)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay4_3">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock4_4">
+              <div class = "removeBlock" onclick = "removeBlock(4, 4)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay4_4">12:00PM - 1:00PM</div>
+            </div>
+          </div>
+          <div class = "blockDay" id = "day5">
+            <div class = "dayBlock" id = "dayBlock5_1">
+              <div class = "removeBlock" onclick = "removeBlock(5, 1)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay5_1">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock5_2">
+              <div class = "removeBlock" onclick = "removeBlock(5, 2)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay5_2">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock5_3">
+              <div class = "removeBlock" onclick = "removeBlock(5, 3)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay5_3">12:00PM - 1:00PM</div>
+            </div>
+            <div class = "dayBlock" id = "dayBlock5_4">
+              <div class = "removeBlock" onclick = "removeBlock(5, 4)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay5_4">12:00PM - 1:00PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    let blockOrderObject = {
+      day1: {
+        length: 4
+      },
+      day2: {
+        length: 4
+      },
+      day3: {
+        length: 4
+      },
+      day4: {
+        length: 4
+      },
+      day5: {
+        length: 4
+      }
+    }
+
+    function addBlock(dayOfWeek) {
+      let div = document.createElement("div");
+      div.className = "dayBlock";
+      let id = (blockOrderObject["day" + dayOfWeek.toString()].length++);
+      div.id = "dayBlock" + dayOfWeek.toString() + "_" + id.toString();
+      let removeDiv = document.createElement("div");
+      removeDiv.setAttribute("onclick", `removeBlock(${dayOfWeek}, ${id})`);
+      removeDiv.className = "removeBlock";
+      removeDiv.innerHTML = "Remove Block";
+      div.appendChild(removeDiv);
+      let parent = document.getElementById("day" + dayOfWeek.toString());
+      parent.appendChild(div);
+    }
+    function removeBlock(day, block) {
+      let parentNode = document.getElementById("day" + day.toString());
+      parentNode.removeChild(document.getElementById("dayBlock" + day.toString() + "_" + block.toString()));
+    }
+    function e
+
+
+  </script>
+</html>

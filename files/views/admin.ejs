@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+      @font-face {
+        font-family: sansFont;
+        src: url("<%=font%>")
+      }
+      * {
+        font-family: sansFont, sans-serif;
+        box-sizing: border-box;
+        color: var(--text-color);
+      }
+      body {
+        background-color: <%=colours.bgColor%>
+      }
+      .bodyContents {
+          display: flex;
+          flex-direction: row;
+          /* flex-wrap: nowrap; */
+          width: 100%;
+          height: 100%;
+      }
+      .spacer {
+
+        flex-grow: 1;
+      }
+      .button {
+
+        padding-top: 30px;
+        padding-bottom: 30px;
+        width: 300px;
+        /* flex-grow: 1; */
+        margin: 5px;
+        text-align: center;
+        background-color: <%=colours.buttonColor%>;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "bodyContents">
+      <div class = "button" id = "blockSchedule"><a href = "/admin/block-schedule">Block Schedule</a></div>
+      <!-- <div class = "spacer"></div> -->
+      <div class = "button" id = "courses">Courses</div>
+
+    </div>
+  </body>
+</html>
