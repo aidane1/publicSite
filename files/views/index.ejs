@@ -889,7 +889,7 @@
                   <th>S</th>
                 </tr>
                 <tr>
-                  <% for (var i = 0; i < calendar.length; i++) { %>
+                  <% for (var i = 0; i < calendar.length + calendar[0][2]; i++) { %>
                       <% if (i >= calendar[0][2]) { %>
                         <td><%=calendar[i-calendar[0][2]][1]+1%>
                           <br>
