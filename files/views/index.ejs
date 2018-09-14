@@ -265,6 +265,13 @@
         outline:0;
         border-bottom: 8px solid grey;
       }
+      .unselectable {
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+      }
       .submitAssigned:active {
         border-bottom: 2px solid grey;
       }
@@ -857,7 +864,7 @@
                 <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" class = "bColor" style = "text-decoration: underline; cursor: pointer;"> view all</a></i>
               </div>
               <div class = "spacer"></div>
-              <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned">
+              <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned unselectable">
                 Submit assigned homework
               </button></a>
               <div class = "spacer"></div>
