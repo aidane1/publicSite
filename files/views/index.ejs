@@ -698,20 +698,20 @@
         <ul class = "holder" id = "holder" onclick = "confineFunction()">
         <% for (var key in order) { %>
           <% if (order[key] == "Courses") { %>
-            <li class = "item"><a href = "#courses">Courses</a></li>
+            <li class = "item unselectable"><a href = "#courses">Courses</a></li>
           <% } else if (order[key] == "LC") { %>
-            <li class = "item"><a href = "#LC">Open LCs</a></li>
+            <li class = "item unselectable"><a href = "#LC">Open LCs</a></li>
           <% } else if (order[key] == "Calendar") { %>
-            <li class = "item"><a href = "#news">News & Calendar</a></li>
+            <li class = "item unselectable"><a href = "#news">News & Calendar</a></li>
           <% } else if (order[key] == "Schedule") { %>
-            <li class = "item"><a href = "#schedule">Schedule and other</a></li>
+            <li class = "item unselectable"><a href = "#schedule">Schedule and other</a></li>
           <% } else if (order[key] == "Resources") { %>
-            <li class = "item"><a href = "#resources">Resources</a></li>
+            <li class = "item unselectable"><a href = "#resources">Resources</a></li>
           <% } %>
         <% } %>
           <!-- <li class = "item" id = "chatroom"><a href = "/chatroom?chatroom=all">Chatroom</a></li> -->
-          <li class = "item" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
-          <li class = "item" id = "logout"><a href = "/logout">Logout</a></li>
+          <li class = "item unselectable" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
+          <li class = "item unselectable" id = "logout"><a href = "/logout">Logout</a></li>
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
@@ -755,7 +755,7 @@
         <div class = "modalHolder">
           <ul class = "courseModalHolder">
             <% homework.forEach(function(homeworkGiven) { %>
-              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
+              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock unselectable" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
             <% }); %>
           </ul>
         </div>
@@ -855,7 +855,7 @@
                             <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
                                   <div class = "aColor homeWorkBox">Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%></div>
                             <% } else { %>
-                                  <a style = "text-decoration: underline" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')" class = "aColor smallHref">view assignment</a><br>
+                                  <a style = "text-decoration: underline" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')" class = "aColor smallHref unselectable">view assignment</a><br>
                             <% } %>
                           <% } %>
                         </td>
@@ -914,11 +914,11 @@
                           <br>
                           <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
                             <% if (calendar[i-calendar[0][2]][2] === 0) { %>
-                              <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <div class = "event unselectable">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
                             <% } else if (calendar[i-calendar[0][2]][2] === 6) { %>
-                              <div class = "event">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <div class = "event unselectable">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
                             <% } else { %>
-                              <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <div class = "event unselectable">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
                             <% } %>
                             <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
                               <%=calendar[i-calendar[0][2]][0][k]%>
@@ -940,7 +940,7 @@
                 </tr>
               </table>
             </div>
-            <button class = "newsMore">
+            <button class = "newsMore unselectable">
               <a href = "/calendar" style = "text-decoration: none; color: <%=colours.textColor%>;">Click to see more...</a>
             </button>
           </div>
@@ -949,11 +949,11 @@
             <div class = "scheduleHolder">
               <div class = "header"><h1>Schedule and other</h1></div>
               <div class = "spacer"></div>
-              <div class = "scheduleHref"><a href = "/schedule">My Schedule</a></div>
+              <div class = "scheduleHref unselectable"><a href = "/schedule">My Schedule</a></div>
               <div class = "spacer"></div>
-              <div class = "scheduleHref"><a href = "/view-LC">LC Schedule</a></div>
+              <div class = "scheduleHref unselectable"><a href = "/view-LC">LC Schedule</a></div>
               <div class = "spacer"></div>
-              <div class = "scheduleHref"><a href=  "/users/<%=username%>">Account</a></div>
+              <div class = "scheduleHref unselectable"><a href=  "/users/<%=username%>">Account</a></div>
               <div class = "spacer"></div>
             </div>
           </div>
