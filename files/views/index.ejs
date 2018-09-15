@@ -784,64 +784,7 @@
       </div>
       <div class = "modal" onclick="removeModal()" id = "modal">
       </div>
-      <div id = "allHomework" class = "allHomework">
-        <div class = "modalHolder">
-          <ul class = "courseModalHolder">
-            <% homework.forEach(function(homeworkGiven) { %>
-              <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock unselectable" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
-            <% }); %>
-          </ul>
-        </div>
-        <% homework.forEach(function(theHomeworkGiven) { %>
-          <div class = "modalBox" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>">
-            <% for (var i = theHomeworkGiven[1].length-1; i >= 0; i--) { %>
-              <br>
-              <br>
-              <% if (theHomeworkGiven[1][i].assignment != "") { %>
-                  <%=theHomeworkGiven[1][i].date.toDateString()%>
-                  <br>
-                  <%=theHomeworkGiven[1][i].assignment%>
-                  <br>
-                  notes: <%=theHomeworkGiven[1][i].notes%>
-                  <br>
-                  due by: <%=theHomeworkGiven[1][i].due%>
-                  <br>
-                  <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
-                    <span style = "color: #21ce4c">confirmed: &#10003;</span>
-                  <% } else { %>
-                    <span style = "color: #f41616">confirmed: &#10006;</span>
-                  <% } %>
-                  <% if (permissions === "admin" || theHomeworkGiven[1][i].submittedBy == username) { %>
-                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
-                      remove
-                    </div>
-                  <% } %>
-                  <br>
-              <% } else { %>
-                  <%=theHomeworkGiven[1][i].date.toDateString()%>
-                  <br>
-                  Q#<%=theHomeworkGiven[1][i].questions%>, pg.<%=theHomeworkGiven[1][i].page%>
-                  <br>
-                  notes: <%=theHomeworkGiven[1][i].notes%>
-                  <br>
-                  due by: <%=theHomeworkGiven[1][i].due%>
-                  <br>
-                  <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
-                    <span style = "color: #21ce4c">confirmed: &#10003;</span>
-                  <% } else { %>
-                    <span style = "color: #f41616">confirmed: &#10006;</span>
-                  <% } %>
-                  <% if (permissions === "admin") { %>
-                    <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
-                      remove
-                    </div>
-                  <% } %>
-                  <br>
-              <% } %>
-            <% } %>
-          </div>
-        <% }); %>
-      </div>
+
       <% for (var key in order) { %>
         <% if (order[key] == "Courses") { %>
           <div id = "courses" class = "courses box" name = "courses">
@@ -1051,6 +994,65 @@
           </div>
         <% } %>
       <% } %>
+
+    <div id = "allHomework" class = "allHomework">
+      <div class = "modalHolder">
+        <ul class = "courseModalHolder">
+          <% homework.forEach(function(homeworkGiven) { %>
+            <li onclick = "displayHomework('<%=homeworkGiven[0].split(' ').join('_')%>')" class = "modalBlock unselectable" id = "<%=homeworkGiven[0].split(' ').join('_')%>CourseBox"><%=homeworkGiven[0]%></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% homework.forEach(function(theHomeworkGiven) { %>
+        <div class = "modalBox" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>">
+          <% for (var i = theHomeworkGiven[1].length-1; i >= 0; i--) { %>
+            <br>
+            <br>
+            <% if (theHomeworkGiven[1][i].assignment != "") { %>
+                <%=theHomeworkGiven[1][i].date.toDateString()%>
+                <br>
+                <%=theHomeworkGiven[1][i].assignment%>
+                <br>
+                notes: <%=theHomeworkGiven[1][i].notes%>
+                <br>
+                due by: <%=theHomeworkGiven[1][i].due%>
+                <br>
+                <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
+                  <span style = "color: #21ce4c">confirmed: &#10003;</span>
+                <% } else { %>
+                  <span style = "color: #f41616">confirmed: &#10006;</span>
+                <% } %>
+                <% if (permissions === "admin" || theHomeworkGiven[1][i].submittedBy == username) { %>
+                  <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
+                    remove
+                  </div>
+                <% } %>
+                <br>
+            <% } else { %>
+                <%=theHomeworkGiven[1][i].date.toDateString()%>
+                <br>
+                Q#<%=theHomeworkGiven[1][i].questions%>, pg.<%=theHomeworkGiven[1][i].page%>
+                <br>
+                notes: <%=theHomeworkGiven[1][i].notes%>
+                <br>
+                due by: <%=theHomeworkGiven[1][i].due%>
+                <br>
+                <%if (theHomeworkGiven[1][i].confirmed == "T") { %>
+                  <span style = "color: #21ce4c">confirmed: &#10003;</span>
+                <% } else { %>
+                  <span style = "color: #f41616">confirmed: &#10006;</span>
+                <% } %>
+                <% if (permissions === "admin") { %>
+                  <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
+                    remove
+                  </div>
+                <% } %>
+                <br>
+            <% } %>
+          <% } %>
+        </div>
+      <% }); %>
+    </div>
     <div class = "box wideScreen" id = "wideScreen">
       <div class = "header"><h1>Redirects</h1></div>
       <!-- <div class = "redirectHref"><a href = "/chatroom">Chatroom</a></div> -->
