@@ -80,6 +80,60 @@
         background-color: #aaa;
         cursor: pointer;
       }
+      .modal {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        background-color: black;
+        opacity: 0.7;
+        display: none;
+      }
+      .enterTimeBox {
+        width: 300px;
+        height: 200px;
+        background-color: white;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        z-index: 4;
+      }
+      .enterTime {
+        display: block;
+        margin: auto;
+        font-size: 18px;
+      }
+      label {
+        font-size: 18px;
+        display: block;
+        text-align: center;
+      }
+
+      .enterTimeButton {
+        font-size: 18px;
+        width: 100px;
+        height: 50px;
+        display: block;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .submitSchedule {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        width: 300px;
+        text-align: center;
+        border-radius: 8px;
+        background-color: #ddd;
+        display: block;
+        margin: auto;
+        margin-top: 30px;
+        cursor: pointer;
+      }
+
 
 
 
@@ -96,141 +150,190 @@
           <div class = "header"><div class = "addBlock" onclick = "addBlock(5)">Add Block</div>Day 5</div>
         </div>
         <div class = "blockBody">
-          <div class = "blockDay" id = "day1">
-            <div class = "dayBlock" id = "dayBlock1_1">
-              <div class = "removeBlock" onclick = "removeBlock(1, 1)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay1_1">9:00AM - 10:00AM</div>
-              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,1)">Edit Time</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock1_2">
-              <div class = "removeBlock" onclick = "removeBlock(1, 2)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay1_2">10:00AM - 11:00AM</div>
-              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,2)">Edit Time</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock1_3">
-              <div class = "removeBlock" onclick = "removeBlock(1, 3)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay1_3">11:00AM - 12:00PM</div>
-              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,3)">Edit Time</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock1_4">
-              <div class = "removeBlock" onclick = "removeBlock(1, 4)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay1_4">12:00PM - 1:00PM</div>
-              <div class = "editTime" id = "editTime1_1" onclick = "editTime(1,4)">Edit Time</div>
-            </div>
-          </div>
-          <div class = "blockDay" id = "day2">
-            <div class = "dayBlock" id = "dayBlock2_1">
-              <div class = "removeBlock" onclick = "removeBlock(2, 1)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay2_1">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock2_2">
-              <div class = "removeBlock" onclick = "removeBlock(2, 2)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay2_2">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock2_3">
-              <div class = "removeBlock" onclick = "removeBlock(2, 3)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay2_3">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock2_4">
-              <div class = "removeBlock" onclick = "removeBlock(2, 4)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay2_4">12:00PM - 1:00PM</div>
-            </div>
-          </div>
-          <div class = "blockDay" id = "day3">
-            <div class = "dayBlock" id = "dayBlock3_1">
-              <div class = "removeBlock" onclick = "removeBlock(3, 1)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay3_1">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock3_2">
-              <div class = "removeBlock" onclick = "removeBlock(3, 2)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay3_2">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock3_3">
-              <div class = "removeBlock" onclick = "removeBlock(3, 3)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay3_3">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock3_4">
-              <div class = "removeBlock" onclick = "removeBlock(3, 4)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay3_4">12:00PM - 1:00PM</div>
-            </div>
-          </div>
-          <div class = "blockDay" id = "day4">
-            <div class = "dayBlock" id = "dayBlock4_1">
-              <div class = "removeBlock" onclick = "removeBlock(4, 1)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay4_1">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock4_2">
-              <div class = "removeBlock" onclick = "removeBlock(4, 2)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay4_2">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock4_3">
-              <div class = "removeBlock" onclick = "removeBlock(4, 3)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay4_3">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock4_4">
-              <div class = "removeBlock" onclick = "removeBlock(4, 4)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay4_4">12:00PM - 1:00PM</div>
-            </div>
-          </div>
-          <div class = "blockDay" id = "day5">
-            <div class = "dayBlock" id = "dayBlock5_1">
-              <div class = "removeBlock" onclick = "removeBlock(5, 1)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay5_1">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock5_2">
-              <div class = "removeBlock" onclick = "removeBlock(5, 2)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay5_2">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock5_3">
-              <div class = "removeBlock" onclick = "removeBlock(5, 3)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay5_3">12:00PM - 1:00PM</div>
-            </div>
-            <div class = "dayBlock" id = "dayBlock5_4">
-              <div class = "removeBlock" onclick = "removeBlock(5, 4)">Remove Block</div>
-              <div class = "timeDisplay" id = "timeDisplay5_4">12:00PM - 1:00PM</div>
-            </div>
-          </div>
+          <% for (var key in schedule) { %>
+            <% if (key === "day1") { %>
+              <div class = "blockDay" id = "day1">
+                <% for (var i = 0; i < schedule[key].length; i++) { %>
+                  <div class = "dayBlock dayBlock1" id = "dayBlock1_<%=i+1%>">
+                    <div class = "removeBlock" onclick = "removeBlock(1, <%=i+1%>)">Remove Block</div>
+                    <div class = "timeDisplay" id = "timeDisplay1_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "editTime" onclick = "editTime(1,<%=i+1%>)">Edit Time</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day2") { %>
+              <div class = "blockDay" id = "day2">
+                <% for (var i = 0; i < schedule[key].length; i++) { %>
+                  <div class = "dayBlock dayBlock2" id = "dayBlock2_<%=i+1%>">
+                    <div class = "removeBlock" onclick = "removeBlock(2, <%=i+1%>)">Remove Block</div>
+                    <div class = "timeDisplay" id = "timeDisplay2_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "editTime" onclick = "editTime(2,<%=i+1%>)">Edit Time</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day3") { %>
+              <div class = "blockDay" id = "day3">
+                <% for (var i = 0; i < schedule[key].length; i++) { %>
+                  <div class = "dayBlock dayBlock3" id = "dayBlock3_<%=i+1%>">
+                    <div class = "removeBlock" onclick = "removeBlock(3, <%=i+1%>)">Remove Block</div>
+                    <div class = "timeDisplay" id = "timeDisplay3_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "editTime" onclick = "editTime(3,<%=i+1%>)">Edit Time</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day4") { %>
+              <div class = "blockDay" id = "day4">
+                <% for (var i = 0; i < schedule[key].length; i++) { %>
+                  <div class = "dayBlock dayBlock<%=i+1%>" id = "dayBlock4_<%=i+1%>">
+                    <div class = "removeBlock" onclick = "removeBlock(4, <%=i+1%>)">Remove Block</div>
+                    <div class = "timeDisplay" id = "timeDisplay4_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "editTime" onclick = "editTime(4,<%=i+1%>)">Edit Time</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day5") { %>
+              <div class = "blockDay" id = "day5">
+                <% for (var i = 0; i < schedule[key].length; i++) { %>
+                  <div class = "dayBlock dayBlock<%=i+1%>" id = "dayBlock5_<%=i+1%>">
+                    <div class = "removeBlock" onclick = "removeBlock(5, <%=i+1%>)">Remove Block</div>
+                    <div class = "timeDisplay" id = "timeDisplay5_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "editTime" onclick = "editTime(5,<%=i+1%>)">Edit Time</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } %>
+          <% } %>
+
+
         </div>
       </div>
     </div>
+    <div class = "submitSchedule" onclick = "submitSchedule()">
+      Submit Master Schedule
+    </div>
+    <div class = "modal" id = "modal" onclick = "removeModal()"></div>
+    <div class = "enterTimeBox" id = "enterTimeBox">
+      <label for = "enterStartTime">Start: </label><input  type = "time" name = "enterStartTime" class = "enterTime" id = "enterStartTime"/>
+      <label for = "enterEndTime">End: </label><input  type = "time" name = "enterEndTime" class = "enterTime" id = "enterEndTime"/>
+      <button type = "button" class = "enterTimeButton" onclick = "enterTime()">Enter</button>
+    </div>
   </body>
   <script>
+    //change type 1 is adding a new block, type 2 is changing the time of a block, type 3 is removing a block, and type 4 is editing the block of a block
     let blockOrderObject = {
       day1: {
-        length: 4
+        length: 4,
+        changes: []
       },
       day2: {
-        length: 4
+        length: 4,
+        changes: []
       },
       day3: {
-        length: 4
+        length: 4,
+        changes: []
       },
       day4: {
-        length: 4
+        length: 4,
+        changes: []
       },
       day5: {
-        length: 4
+        length: 4,
+        changes: []
       }
     }
+    let currentEditedBlock;
 
     function addBlock(dayOfWeek) {
       let div = document.createElement("div");
-      div.className = "dayBlock";
+      div.className = "dayBlock dayBlock" + dayOfWeek ;
       let id = (blockOrderObject["day" + dayOfWeek.toString()].length++);
+      id+=2;
       div.id = "dayBlock" + dayOfWeek.toString() + "_" + id.toString();
       let removeDiv = document.createElement("div");
       removeDiv.setAttribute("onclick", `removeBlock(${dayOfWeek}, ${id})`);
       removeDiv.className = "removeBlock";
       removeDiv.innerHTML = "Remove Block";
       div.appendChild(removeDiv);
+      let timeDisplay = document.createElement("div");
+      timeDisplay.className = "timeDisplay";
+      timeDisplay.id = "timeDisplay" + dayOfWeek.toString() + "_" + id.toString();
+      timeDisplay.innerHTML = "9:00AM - 10:00AM";
+      div.appendChild(timeDisplay);
+      let editTime = document.createElement("div");
+      editTime.setAttribute("onclick", `editTime(${dayOfWeek}, ${id})`);
+      editTime.className = "editTime";
+      editTime.innerHTML = "Edit Time";
+      div.appendChild(editTime);
+
       let parent = document.getElementById("day" + dayOfWeek.toString());
       parent.appendChild(div);
+      blockOrderObject["day" + dayOfWeek.toString()].changes.push([9, 10, 10, 12, dayOfWeek, id, 1]);
     }
     function removeBlock(day, block) {
       let parentNode = document.getElementById("day" + day.toString());
       parentNode.removeChild(document.getElementById("dayBlock" + day.toString() + "_" + block.toString()));
+      blockOrderObject["day" + day.toString()].length--;
+      blockOrderObject["day" + day.toString()].changes.push([0, 0, 0, 0, day, block, 3]);
+      console.log(blockOrderObject);
+      let dayBlocks = document.getElementsByClassName("dayBlock" + day.toString());
+      for (var i = 0; i < dayBlocks.length; i++) {
+        dayBlocks[i].id = "dayBlock" + day.toString() + "_" + (i+1).toString();
+        console.log(i);
+        let children = dayBlocks[i].children;
+        console.log(children);
+        children[0].setAttribute("onclick", `removeBlock(${day}, ${i+1})`);
+        children[1].id = "timeDisplay" + day + "_" + (i+1).toString();
+        children[2].setAttribute("onclick", `editTime(${day}, ${i+1})`);
+      }
     }
-    function e
+    function editTime(day, block) {
+      document.getElementById("enterTimeBox").style.display = "block";
+      document.getElementById("modal").style.display = "block";
+      currentEditedBlock = [day, block];
+    }
+    function removeModal() {
+      document.getElementById("enterTimeBox").style.display = "none";
+      document.getElementById("modal").style.display = "none";
+    }
+    function enterTime() {
+      let startInput = document.getElementById("enterStartTime");
+      let endInput = document.getElementById("enterEndTime");
+      startTime = startInput.value;
+      endTime = endInput.value;
+      let startHour = parseInt(startTime.split(":")[0]);
+      let startMinute = parseInt(startTime.split(":")[1]);
+      let endHour = parseInt(endTime.split(":")[0]);
+      let endMinute = parseInt(endTime.split(":")[1]);
+      console.log(currentEditedBlock);
+
+      //.push(startingHour, startingMinute, endingHour, endingMinute, current day thats being edited, current block of that day, type of edit)
+      blockOrderObject["day" + currentEditedBlock[0].toString()].changes.push([startHour, startMinute, endHour, endMinute, currentEditedBlock[0], currentEditedBlock[1],2]);
+      startInput.value = "";
+      endInput.value = "";
+      console.log(blockOrderObject);
+      document.getElementById("timeDisplay" + currentEditedBlock[0].toString() + "_" + currentEditedBlock[1].toString()).innerHTML = (startHour%12 == 0 ? 12 : startHour%12).toString() + ":" + startMinute.toString() + (startHour+startMinute/60 >= 12 ? "PM" : "AM") + " - " + (endHour%12 == 0 ? 12 : endHour%12).toString() + ":" + endMinute.toString() + (endHour+endMinute/60 >= 12 ? "PM" : "AM")
+      removeModal();
+      console.log(startHour, startMinute, endHour, endMinute);
+    }
+
+    function submitSchedule() {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/block-schedule";
+      for (var key in blockOrderObject) {
+        for (var i = 0; i < blockOrderObject[key].changes.length; i++) {
+          let input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key + "Changes";
+          // console.log(blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1]+ "," + blockOrderObject[key].changes[i][2] + "," blockOrderObject[key].changes[i][3]);
+          input.value = blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1] + "," + blockOrderObject[key].changes[i][2] + "," + blockOrderObject[key].changes[i][3] + ","  + blockOrderObject[key].changes[i][4] + "," + blockOrderObject[key].changes[i][5] + "," + blockOrderObject[key].changes[i][6];
+          form.appendChild(input);
+        }
+      }
+      document.body.appendChild(form);
+      form.submit();
+    }
 
 
   </script>

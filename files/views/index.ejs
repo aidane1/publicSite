@@ -467,6 +467,28 @@
         z-index:15;
         transition:top .7s
       }
+      .courseBox {
+        flex-grow: 0.5;
+        width: 95%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .courseBox > div:not(.header2) {
+        flex-grow: 1;
+        border: 2px solid <%=colours.borderColor%>;
+        background-color: <%=colours.infoColor%>;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .courseBox > .header2 {
+        flex-grow: 0.5;
+      }
+
       .holder {
         padding:0;
         justify-content:flex-start;
@@ -528,6 +550,17 @@
       }
       .smallHref {
         font-size:16px
+      }
+      .viewHomeworkButton {
+        width: 50%;
+        text-align: center;
+        padding-top: 10px;
+        border-radius: 50px;
+        background-color: <%=colours.buttonColor%>;
+        cursor: pointer;
+        margin: auto;
+        padding-bottom: 10px;
+        border: 1px solid <%=colours.borderColor%>;
       }
       .pushNotifications div {
         display:block;
@@ -814,34 +847,44 @@
           <div id = "courses" class = "courses box" name = "courses">
             <div class = "courseHolder">
               <div class = "header"><h1>Courses</h1></div>
-              <div class = "spacer"></div>
-              <div class = "infoBox large">
+              <div style = "flex-grow: 0.1"></div>
+              <div class = "courseBox large">
                 <div class = "header2">My courses today (day <%=blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
-                <div id = "todayCourses" class = "todayCourses">
-                  <div style = "padding-bottom: 5px; padding-left: 5px">
-                    <% for (var i = 0; i < todaysCourses.length; i++) { %>
-                      <% if (i == 0 ) { %>
-                        <div>9:10-10:12 : <%=blockOrder[i]%></div>
-                      <% }  else if (i == 1) { %>
-                        <div>10:15-11:17 : <%=blockOrder[i]%></div>
-                        <div>11:19-11:29 : TA</div>
-                      <% } else if (i == 2) { %>
-                        <div>11:29-12:31 : <%=blockOrder[i]%></div>
-                        <div>12:32-1:15 : Lunch</div>
-                      <% } else if (i == 3) { %>
-                        <div>1:16-2:18 : <%=blockOrder[i]%></div>
-                      <% } else if (i == 4) { %>
-                        <div>2:21-3:23 : <%=blockOrder[i]%></div>
-                      <% }%>
-                    <% } %>
-                    <% if (todaysCourses === false) { %>
-                      <div> it's the weekend! </div>
-                    <% } %>
-                  </div>
-                </div>
+
+                <% for (var i = 0; i < todaysCourses.length; i++) { %>
+                  <% if (i == 0 ) { %>
+                    <div><div class = "spacer"></div><div>9:10-10:12 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
+                  <% }  else if (i == 1) { %>
+                    <div><div class = "spacer"></div><div>10:15-11:17 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
+                    <div><div class = "spacer"></div><div>11:19-11:29 : <span style = "float : right">TA</span></div><div class = "spacer"></div></div>
+                  <% } else if (i == 2) { %>
+                    <div><div class = "spacer"></div><div>11:29-12:31 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
+                    <div><div class = "spacer"></div><div>12:32-1:15 : <span style = "float : right">Lunch</div><div class = "spacer"></div></div>
+                  <% } else if (i == 3) { %>
+                    <div><div class = "spacer"></div><div>1:16-2:18 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
+                  <% } else if (i == 4) { %>
+                    <div><div class = "spacer"></div><div>2:21-3:23 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
+                  <% }%>
+                <% } %>
+                <% if (todaysCourses === false) { %>
+                  <div> it's the weekend! </div>
+                <% } %>
+
+
               </div>
-              <div class = "spacer"></div>
-              <div class = "infoBox">
+
+              <div class = "viewHomeworkButton" onclick  = "modalDisplay()">
+                View Homework
+              </div>
+
+
+
+
+
+
+
+
+              <!-- <div class = "infoBox">
                 <div class = "header2">Today's homework</div>
                 <div id = "possibleCourses" class = "possibleCourses">
                   <table class = "switchTable">
@@ -864,12 +907,18 @@
                   </table>
                 </div>
                 <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" class = "bColor" style = "text-decoration: underline; cursor: pointer;"> view all</a></i>
-              </div>
-              <div class = "spacer"></div>
+              </div> -->
+
+
+
+
+
+
+              <div style = "flex-grow: 0.1"></div>
               <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned unselectable">
                 Submit assigned homework
               </button></a>
-              <div class = "spacer"></div>
+              <div style = "flex-grow: 0.05"></div>
             </div>
           </div>
         <% } else if (order[key] == "LC") { %>
