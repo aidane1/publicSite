@@ -849,7 +849,7 @@
               <div class = "header"><h1>Courses</h1></div>
               <div style = "flex-grow: 0.1"></div>
               <div class = "courseBox large">
-                <div class = "header2">My courses today (day <%=blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
+                <div class = "header2">My courses today (day <%=(new Date()).getDay() == 0 || (new Date()).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
 
                 <% for (var i = 0; i < todaysCourses.length; i++) { %>
                   <% if (i == 0 ) { %>
