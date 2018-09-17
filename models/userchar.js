@@ -91,6 +91,9 @@ const UserSchema = new Schema({
     day4: {type: Array},
     day5: {type: Array},
     day6: {type: Array}
+  },
+  school: {
+    type : Schema.Types.ObjectId
   }
 });
 

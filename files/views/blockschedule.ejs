@@ -18,7 +18,7 @@
       }
       .scheduleTable {
         margin: auto;
-        width: 600px;
+        width: 1400px;
       }
       .headerHolder {
         width: 100%;
@@ -42,7 +42,7 @@
       }
       .blockBody {
         width: 100%;
-        height: 600px;
+        height: 1400px;
         border: 1px solid black;
         display: flex;
         flex-direction: row;
@@ -57,15 +57,14 @@
         flex-wrap: nowrap;
       }
       .dayBlock {
-        flex-grow: 1;
         border: 1px solid black;
       }
       .removeBlock {
-        width: 95%;
+        width: 80%;
         text-align: center;
         display: block;
         margin: auto;
-        background-color: #aaa;
+        margin-top: 5px;
         cursor: pointer;
       }
       .timeDisplay {
@@ -75,9 +74,9 @@
         font-size: 12px;
       }
       .editTime {
-        width: 100%;
+        width: 80%;
+        margin: auto;
         text-align: center;
-        background-color: #aaa;
         cursor: pointer;
       }
       .modal {
@@ -133,6 +132,87 @@
         margin-top: 30px;
         cursor: pointer;
       }
+      .displayBlock {
+        margin-top: 5px;
+        text-align: center;
+      }
+      .changeBlock {
+        width: 80%;
+        margin: auto;
+        margin-bottom: 5px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .changeBlockBox {
+        width: 300px;
+        height: 130px;
+        background-color: white;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        z-index: 4;
+      }
+      .changeBlockSelect {
+        display: block;
+        font-size: 18px;
+        width: 100px;
+        height: 50px;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .A {
+        background-color: #f6511d;
+        color: white;
+      }
+      .B {
+        background-color: #c33c54;
+        color: white;
+      }
+      .C {
+        background-color: #4c3b4d;
+        color: #FFEEd8;
+      }
+      .D {
+        background-color: #698f3f;
+        color: #FBFAF8;
+      }
+      .E {
+        background-color: #3c91e6;
+        color: #cce98a;
+      }
+      .A .changeBlock, .A .editTime, .A .removeBlock {
+        background-color: #00a6ed;
+      }
+      .B .changeBlock, .B .editTime, .B .removeBlock {
+        background-color: #254e70;
+      }
+      .C .changeBlock, .C .editTime, .C .removeBlock {
+        background-color: #a53860;
+      }
+      .D .changeBlock, .D .editTime, .D .removeBlock {
+        background-color: #0a122a;
+      }
+      .E .changeBlock, .E .editTime, .E .removeBlock {
+        background-color: #342e37;
+      }
+      .Advisory {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+      .Advisory .changeBlock, .Advisory .editTime, .Advisory .removeBlock {
+        background-color: grey;
+      }
+      .Lunch {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+      .Lunch .changeBlock, .Lunch .editTime, .Lunch .removeBlock {
+        background-color: grey;
+      }
 
 
 
@@ -154,50 +234,60 @@
             <% if (key === "day1") { %>
               <div class = "blockDay" id = "day1">
                 <% for (var i = 0; i < schedule[key].length; i++) { %>
-                  <div class = "dayBlock dayBlock1" id = "dayBlock1_<%=i+1%>">
+                  <div class = "dayBlock dayBlock1 <%=schedule[key][i][0]%>" style = "flex-grow: <%=(schedule[key][i][3] + schedule[key][i][4]/60 - (schedule[key][i][1] + schedule[key][i][2]/60))/maxBlock[key]%>" id = "dayBlock1_<%=i+1%>">
                     <div class = "removeBlock" onclick = "removeBlock(1, <%=i+1%>)">Remove Block</div>
-                    <div class = "timeDisplay" id = "timeDisplay1_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "timeDisplay" id = "timeDisplay1_<%=i+1%>"><%=schedule[key][i][1].toString() + ":" + schedule[key][i][2].toString() + "AM - " + schedule[key][i][3].toString() + ":" + schedule[key][i][4].toString() + "AM"%></div>
                     <div class = "editTime" onclick = "editTime(1,<%=i+1%>)">Edit Time</div>
+                    <div class = "displayBlock" id = "displayBlock1_<%=i+1%>"><%=schedule[key][i][0]%></div>
+                    <div class = "changeBlock" onclick = "changeBlock(1, <%=i+1%>)">Change Block</div>
                   </div>
                 <% } %>
               </div>
             <% } else if (key === "day2") { %>
               <div class = "blockDay" id = "day2">
                 <% for (var i = 0; i < schedule[key].length; i++) { %>
-                  <div class = "dayBlock dayBlock2" id = "dayBlock2_<%=i+1%>">
+                  <div class = "dayBlock dayBlock2 <%=schedule[key][i][0]%>" style = "flex-grow: <%=(schedule[key][i][3] + schedule[key][i][4]/60 - (schedule[key][i][1] + schedule[key][i][2]/60))/maxBlock[key]%>" id = "dayBlock2_<%=i+1%>">
                     <div class = "removeBlock" onclick = "removeBlock(2, <%=i+1%>)">Remove Block</div>
-                    <div class = "timeDisplay" id = "timeDisplay2_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "timeDisplay" id = "timeDisplay2_<%=i+1%>"><%=schedule[key][i][1].toString() + ":" + schedule[key][i][2].toString() + "AM - " + schedule[key][i][3].toString() + ":" + schedule[key][i][4].toString() + "AM"%></div>
                     <div class = "editTime" onclick = "editTime(2,<%=i+1%>)">Edit Time</div>
+                    <div class = "displayBlock" id = "displayBlock2_<%=i+1%>"><%=schedule[key][i][0]%></div>
+                    <div class = "changeBlock" onclick = "changeBlock(1, <%=i+1%>)">Change Block</div>
                   </div>
                 <% } %>
               </div>
             <% } else if (key === "day3") { %>
               <div class = "blockDay" id = "day3">
                 <% for (var i = 0; i < schedule[key].length; i++) { %>
-                  <div class = "dayBlock dayBlock3" id = "dayBlock3_<%=i+1%>">
+                  <div class = "dayBlock dayBlock3 <%=schedule[key][i][0]%>" style = "flex-grow: <%=(schedule[key][i][3] + schedule[key][i][4]/60 - (schedule[key][i][1] + schedule[key][i][2]/60))/maxBlock[key]%>" id = "dayBlock3_<%=i+1%>">
                     <div class = "removeBlock" onclick = "removeBlock(3, <%=i+1%>)">Remove Block</div>
-                    <div class = "timeDisplay" id = "timeDisplay3_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "timeDisplay" id = "timeDisplay3_<%=i+1%>"><%=schedule[key][i][1].toString() + ":" + schedule[key][i][2].toString() + "AM - " + schedule[key][i][3].toString() + ":" + schedule[key][i][4].toString() + "AM"%></div>
                     <div class = "editTime" onclick = "editTime(3,<%=i+1%>)">Edit Time</div>
+                    <div class = "displayBlock" id = "displayBlock3_<%=i+1%>"><%=schedule[key][i][0]%></div>
+                    <div class = "changeBlock" onclick = "changeBlock(1, <%=i+1%>)">Change Block</div>
                   </div>
                 <% } %>
               </div>
             <% } else if (key === "day4") { %>
               <div class = "blockDay" id = "day4">
                 <% for (var i = 0; i < schedule[key].length; i++) { %>
-                  <div class = "dayBlock dayBlock<%=i+1%>" id = "dayBlock4_<%=i+1%>">
+                  <div class = "dayBlock dayBlock4 <%=schedule[key][i][0]%>" style = "flex-grow: <%=(schedule[key][i][3] + schedule[key][i][4]/60 - (schedule[key][i][1] + schedule[key][i][2]/60))/maxBlock[key]%>" id = "dayBlock4_<%=i+1%>">
                     <div class = "removeBlock" onclick = "removeBlock(4, <%=i+1%>)">Remove Block</div>
-                    <div class = "timeDisplay" id = "timeDisplay4_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "timeDisplay" id = "timeDisplay4_<%=i+1%>"><%=schedule[key][i][1].toString() + ":" + schedule[key][i][2].toString() + "AM - " + schedule[key][i][3].toString() + ":" + schedule[key][i][4].toString() + "AM"%></div>
                     <div class = "editTime" onclick = "editTime(4,<%=i+1%>)">Edit Time</div>
+                    <div class = "displayBlock" id = "displayBlock4_<%=i+1%>"><%=schedule[key][i][0]%></div>
+                    <div class = "changeBlock" onclick = "changeBlock(1, <%=i+1%>)">Change Block</div>
                   </div>
                 <% } %>
               </div>
             <% } else if (key === "day5") { %>
               <div class = "blockDay" id = "day5">
                 <% for (var i = 0; i < schedule[key].length; i++) { %>
-                  <div class = "dayBlock dayBlock<%=i+1%>" id = "dayBlock5_<%=i+1%>">
+                  <div class = "dayBlock dayBlock5 <%=schedule[key][i][0]%>" style = "flex-grow: <%=(schedule[key][i][3] + schedule[key][i][4]/60 - (schedule[key][i][1] + schedule[key][i][2]/60))/maxBlock[key]%>" id = "dayBlock5_<%=i+1%>">
                     <div class = "removeBlock" onclick = "removeBlock(5, <%=i+1%>)">Remove Block</div>
-                    <div class = "timeDisplay" id = "timeDisplay5_<%=i+1%>"><%=schedule[key][i][0].toString() + ":" + schedule[key][i][1].toString() + "AM - " + schedule[key][i][2].toString() + ":" + schedule[key][i][3].toString() + "AM"%></div>
+                    <div class = "timeDisplay" id = "timeDisplay5_<%=i+1%>"><%=schedule[key][i][1].toString() + ":" + schedule[key][i][2].toString() + "AM - " + schedule[key][i][3].toString() + ":" + schedule[key][i][4].toString() + "AM"%></div>
                     <div class = "editTime" onclick = "editTime(5,<%=i+1%>)">Edit Time</div>
+                    <div class = "displayBlock" id = "displayBlock5_<%=i+1%>"><%=schedule[key][i][0]%></div>
+                    <div class = "changeBlock" onclick = "changeBlock(1, <%=i+1%>)">Change Block</div>
                   </div>
                 <% } %>
               </div>
@@ -217,38 +307,46 @@
       <label for = "enterEndTime">End: </label><input  type = "time" name = "enterEndTime" class = "enterTime" id = "enterEndTime"/>
       <button type = "button" class = "enterTimeButton" onclick = "enterTime()">Enter</button>
     </div>
+    <div class = "changeBlockBox" id = "changeBlockBox">
+      <select class = "changeBlockSelect" id = "changeBlockSelect">
+        <% for (var i = 0; i < blocks.length; i++) { %>
+          <option value = "<%=blocks[i]%>"><%=blocks[i]%></option>
+        <% } %>
+
+      </select>
+      <button type = "button" class = "enterTimeButton" onclick = "enterBlock()">Enter</button>
+    </div>
   </body>
   <script>
     //change type 1 is adding a new block, type 2 is changing the time of a block, type 3 is removing a block, and type 4 is editing the block of a block
     let blockOrderObject = {
       day1: {
-        length: 4,
+        length: <%=schedule["day1"].length%>,
         changes: []
       },
       day2: {
-        length: 4,
+        length: <%=schedule["day2"].length%>,
         changes: []
       },
       day3: {
-        length: 4,
+        length: <%=schedule["day3"].length%>,
         changes: []
       },
       day4: {
-        length: 4,
+        length: <%=schedule["day4"].length%>,
         changes: []
       },
       day5: {
-        length: 4,
+        length: <%=schedule["day5"].length%>,
         changes: []
       }
     }
     let currentEditedBlock;
-
     function addBlock(dayOfWeek) {
       let div = document.createElement("div");
-      div.className = "dayBlock dayBlock" + dayOfWeek ;
+      div.className = "A dayBlock dayBlock" + dayOfWeek ;
       let id = (blockOrderObject["day" + dayOfWeek.toString()].length++);
-      id+=2;
+      id+=1;
       div.id = "dayBlock" + dayOfWeek.toString() + "_" + id.toString();
       let removeDiv = document.createElement("div");
       removeDiv.setAttribute("onclick", `removeBlock(${dayOfWeek}, ${id})`);
@@ -265,26 +363,35 @@
       editTime.className = "editTime";
       editTime.innerHTML = "Edit Time";
       div.appendChild(editTime);
-
+      let blockDisplay = document.createElement("div");
+      blockDisplay.className = "displayBlock";
+      blockDisplay.id = "displayBlock" + dayOfWeek.toString() + "_" + id.toString();
+      blockDisplay.innerHTML = "A";
+      div.appendChild(blockDisplay);
+      let editBlock = document.createElement("div");
+      editBlock.className = "changeBlock";
+      editBlock.setAttribute("onclick", `changeBlock(${dayOfWeek}, ${id})`)
+      editBlock.innerHTML = "Change Block";
+      div.appendChild(editBlock);
       let parent = document.getElementById("day" + dayOfWeek.toString());
       parent.appendChild(div);
-      blockOrderObject["day" + dayOfWeek.toString()].changes.push([9, 10, 10, 12, dayOfWeek, id, 1]);
+      blockOrderObject["day" + dayOfWeek.toString()].changes.push([9, 10, 10, 12, dayOfWeek, id, 1, "A"]);
     }
     function removeBlock(day, block) {
       let parentNode = document.getElementById("day" + day.toString());
       parentNode.removeChild(document.getElementById("dayBlock" + day.toString() + "_" + block.toString()));
       blockOrderObject["day" + day.toString()].length--;
-      blockOrderObject["day" + day.toString()].changes.push([0, 0, 0, 0, day, block, 3]);
-      console.log(blockOrderObject);
+      blockOrderObject["day" + day.toString()].changes.push([0, 0, 0, 0, day, block, 3, "A"]);
+
       let dayBlocks = document.getElementsByClassName("dayBlock" + day.toString());
       for (var i = 0; i < dayBlocks.length; i++) {
         dayBlocks[i].id = "dayBlock" + day.toString() + "_" + (i+1).toString();
-        console.log(i);
         let children = dayBlocks[i].children;
-        console.log(children);
         children[0].setAttribute("onclick", `removeBlock(${day}, ${i+1})`);
         children[1].id = "timeDisplay" + day + "_" + (i+1).toString();
         children[2].setAttribute("onclick", `editTime(${day}, ${i+1})`);
+        children[3].id = "displayBlock" + day + "_" + (i+1).toString();
+        children[4].setAttribute("onclick", `changeBlock(${day}, ${i+1})`);
       }
     }
     function editTime(day, block) {
@@ -292,8 +399,14 @@
       document.getElementById("modal").style.display = "block";
       currentEditedBlock = [day, block];
     }
+    function changeBlock(day, block) {
+      document.getElementById("changeBlockBox").style.display = "block";
+      document.getElementById("modal").style.display = "block";
+      currentEditedBlock = [day, block];
+    }
     function removeModal() {
       document.getElementById("enterTimeBox").style.display = "none";
+      document.getElementById("changeBlockBox").style.display = "none";
       document.getElementById("modal").style.display = "none";
     }
     function enterTime() {
@@ -308,7 +421,7 @@
       console.log(currentEditedBlock);
 
       //.push(startingHour, startingMinute, endingHour, endingMinute, current day thats being edited, current block of that day, type of edit)
-      blockOrderObject["day" + currentEditedBlock[0].toString()].changes.push([startHour, startMinute, endHour, endMinute, currentEditedBlock[0], currentEditedBlock[1],2]);
+      blockOrderObject["day" + currentEditedBlock[0].toString()].changes.push([startHour, startMinute, endHour, endMinute, currentEditedBlock[0], currentEditedBlock[1],2, "A"]);
       startInput.value = "";
       endInput.value = "";
       console.log(blockOrderObject);
@@ -316,24 +429,35 @@
       removeModal();
       console.log(startHour, startMinute, endHour, endMinute);
     }
-
-    function submitSchedule() {
-      let form = document.createElement("form");
-      form.method = "POST";
-      form.action = "/admin/block-schedule";
-      for (var key in blockOrderObject) {
-        for (var i = 0; i < blockOrderObject[key].changes.length; i++) {
-          let input = document.createElement("input");
-          input.type = "hidden";
-          input.name = key + "Changes";
-          // console.log(blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1]+ "," + blockOrderObject[key].changes[i][2] + "," blockOrderObject[key].changes[i][3]);
-          input.value = blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1] + "," + blockOrderObject[key].changes[i][2] + "," + blockOrderObject[key].changes[i][3] + ","  + blockOrderObject[key].changes[i][4] + "," + blockOrderObject[key].changes[i][5] + "," + blockOrderObject[key].changes[i][6];
-          form.appendChild(input);
-        }
-      }
-      document.body.appendChild(form);
-      form.submit();
+    function enterBlock() {
+      let blockInput = document.getElementById("changeBlockSelect").value;
+      console.log(blockInput);
+      blockOrderObject["day" + currentEditedBlock[0].toString()].changes.push([0,0,0,0,currentEditedBlock[0], currentEditedBlock[1], 4, blockInput]);
+      document.getElementById("displayBlock" + currentEditedBlock[0].toString() + "_" + currentEditedBlock[1].toString()).innerHTML = blockInput;
+      document.getElementById("dayBlock" + currentEditedBlock[0].toString() + "_" + currentEditedBlock[1].toString()).className = "dayBlock dayBlock" + currentEditedBlock[0].toString() + " " + blockInput;
+      removeModal();
     }
+    function submitSchedule() {
+      if (confirm("Are you sure you would like to submit this revised master schedule? This will update everyone's schedule.")) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/admin/block-schedule";
+        for (var key in blockOrderObject) {
+          for (var i = 0; i < blockOrderObject[key].changes.length; i++) {
+            let input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key + "Changes";
+            // console.log(blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1]+ "," + blockOrderObject[key].changes[i][2] + "," blockOrderObject[key].changes[i][3]);
+            input.value = blockOrderObject[key].changes[i][0] + "," + blockOrderObject[key].changes[i][1] + "," + blockOrderObject[key].changes[i][2] + "," + blockOrderObject[key].changes[i][3] + ","  + blockOrderObject[key].changes[i][4] + "," + blockOrderObject[key].changes[i][5] + "," + blockOrderObject[key].changes[i][6] + "," + blockOrderObject[key].changes[i][7];
+            form.appendChild(input);
+          }
+        }
+        document.body.appendChild(form);
+        form.submit();
+      }
+
+    }
+
 
 
   </script>

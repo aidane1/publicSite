@@ -32,79 +32,93 @@
         font-size: 35px;
         font-weight: bold;
         display: block;
+        width: 100%;
         text-align: center;
         border-bottom: 1px solid black;
-        width: 600px;
-      }
-      .table {
-        width: 600px;
-        border-collapse: collapse;
-
-        position: absolute;
-      }
-      .table td {
-        border: 1px solid black;
-        text-align: center;
-
 
       }
-      .table th {
-        height: 30px;
-        border: 1px solid black;
-        text-align: center;
-        font-size: 13px;
-        width: 100px;
-      }
-      .none {
-        visibility:hidden;
-        width: 30px;
-        height: 30px;
-      }
+
       .time {
         width: 50px;
         font-size: 15px;
       }
-      .ta {
-        height: 30px;
+      .Advisory {
+
       }
-      .lunch {
-        height: 30px;
+      .Lunch {
+
       }
-      .a {
-        height: 100px;
-        width: 100px;
+      .Recess {
+
+      }
+      .A {
+
         background-color: #44AF69;
       }
-      .b {
-        height: 100px;
-        width: 100px;
+      .B {
+
         background-color: #F8333C;
       }
-      .c {
-        height: 100px;
-        width: 100px;
+      .C {
+
         background-color: #FCAB10;
       }
-      .d {
-        height: 100px;
-        width: 100px;
+      .D {
+
         background-color: #2B9EB3;
       }
-      .e {
-        height: 100px;
-        width: 100px;
+      .E {
+
         background-color: #DBD5B5;
       }
-      @media screen and (min-width: 768px) {
-        .table {
-          margin-top: 100px;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-        .header {
-          width: 100%;
+      .schedule {
+        width: 700px;
+        border: 2px solid black;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        margin: auto;
+      }
+      .day {
+        width: 20%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .dayBlock {
+        width: 100%;
+
+        height: 100px;
+        border: 1px solid black;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .class {
+        font-size: 13px;
+      }
+      .spacer {
+        flex-grow: 1;
+      }
+      .header2 {
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      @media screen and (max-width: 700px) {
+        body {
+          width: 700px;
         }
       }
+
+
     </style>
   </head>
   <body>
@@ -112,72 +126,77 @@
       <a id = "back" href = "/" style = "text-decoration:none;">&#8592;</a>
     </div>
     <div class = "header">Schedule</div>
-    <table class = "table">
-      <tr>
-        <td class = 'none'></td>
-        <th>Day 1</th>
-        <th>Day 2</th>
-        <th>Day 3</th>
-        <th>Day 4</th>
-        <th>Day 5</th>
-      </tr>
-      <tr>
-        <td class = "time">9:10<br>-<br>10:12</td>
-        <td class = "a"><%=courses.A[0]%><br><br><%=courses.A[1]%></td>
-        <td class = "e"><%=courses.E[0]%><br><br><%=courses.E[1]%></td>
-        <td class = "d"><%=courses.D[0]%><br><br><%=courses.D[1]%></td>
-        <td class = "e"><%=courses.E[0]%><br><br><%=courses.E[1]%></td>
-        <td class = "d"><%=courses.D[0]%><br><br><%=courses.D[1]%></td>
-      </tr>
-      <tr>
-        <td class = "time">10:15<br>-<br>11:17</td>
-        <td class = "b"><%=courses.B[0]%><br><br><%=courses.B[1]%></td>
-        <td class = "d"><%=courses.D[0]%><br><br><%=courses.D[1]%></td>
-        <td class = "a"><%=courses.A[0]%><br><br><%=courses.A[1]%></td>
-        <td class = "c"><%=courses.C[0]%><br><br><%=courses.C[1]%></td>
-        <td class = "e"><%=courses.E[0]%><br><br><%=courses.E[1]%></td>
-      </tr>
-      <tr>
-        <td  class = "taTime">11:19<br>-<br>11:29</td>
-        <td class = "ta">TA</td>
-        <td class = "ta">TA</td>
-        <td class = "ta">TA</td>
-        <td class = "ta">TA</td>
-        <td class = "ta">TA</td>
-      </tr>
-      <tr>
-        <td class = "time">11:29<br>-<br>12:31</td>
-        <td class = "c"><%=courses.C[0]%><br><br><%=courses.C[1]%></td>
-        <td class = "b"><%=courses.B[0]%><br><br><%=courses.B[1]%></td>
-        <td class = "c"><%=courses.C[0]%><br><br><%=courses.C[1]%></td>
-        <td class = "b"><%=courses.B[0]%><br><br><%=courses.B[1]%></td>
-        <td class = "a"><%=courses.A[0]%><br><br><%=courses.A[1]%></td>
-      </tr>
-      <tr>
-        <td  class = "taTime">12:32<br>-<br>1:15</td>
-        <td class = "lunch">Lunch</td>
-        <td class = "lunch">Lunch</td>
-        <td class = "lunch">Lunch</td>
-        <td class = "lunch">Lunch</td>
-        <td class = "lunch">Lunch</td>
-      </tr>
-      <tr>
-        <td class = "time">1:16<br>-<br>2:18</td>
-        <td class = "d"><%=courses.D[0]%><br><br><%=courses.D[1]%></td>
-        <td class = "c"><%=courses.C[0]%><br><br><%=courses.C[1]%></td>
-        <td class = "e"><%=courses.E[0]%><br><br><%=courses.E[1]%></td>
-        <td class = "a"><%=courses.A[0]%><br><br><%=courses.A[1]%></td>
-        <td class = "b"><%=courses.B[0]%><br><br><%=courses.B[1]%></td>
-      </tr>
-      <tr>
-        <td class = "time">2:21<br>-<br>3:23</td>
-        <td class = "e"><%=courses.E[0]%><br><br><%=courses.E[1]%></td>
-        <td class = "a"><%=courses.A[0]%><br><br><%=courses.A[1]%></td>
-        <td class = "b"><%=courses.B[0]%><br><br><%=courses.B[1]%></td>
-        <td class = "d"><%=courses.D[0]%><br><br><%=courses.D[1]%></td>
-        <td class = "c"><%=courses.C[0]%><br><br><%=courses.C[1]%></td>
-      </tr>
-
-    </table>
+    <div class = "schedule">
+      <div class = "day day1">
+        <div class = "header2"><div class = "spacer"></div>Day 1<div class = "spacer"></div></div>
+        <% for (var i = 0; i < courses["day1"].length; i++) { %>
+          <div class = "<%=courses['day1'][i][0]%> dayBlock">
+            <div class = "spacer"></div>
+            <div class = "class"><%=courses['day1'][i][1]%></div>
+            <div class = "spacer"></div>
+            <%=courses['day1'][i][2]%>
+            <div class = "spacer"></div>
+            <%=(courses['day1'][i][3]-1)%12+1%>:<%=courses['day1'][i][4]%> - <%=(courses['day1'][i][5]-1)%12+1%>:<%=courses['day1'][i][6]%>
+            <div class = "spacer"></div>
+          </div>
+        <% } %>
+      </div>
+      <div class = "day day2">
+        <div class = "header2"><div class = "spacer"></div>Day 2<div class = "spacer"></div></div>
+        <% for (var i = 0; i < courses["day2"].length; i++) { %>
+          <div class = "<%=courses['day5'][i][0]%> dayBlock">
+            <div class = "spacer"></div>
+            <div class = "class"><%=courses['day2'][i][1]%></div>
+            <div class = "spacer"></div>
+            <%=courses['day2'][i][2]%>
+            <div class = "spacer"></div>
+            <%=(courses['day2'][i][3]-1)%12+1%>:<%=courses['day2'][i][4]%> - <%=(courses['day2'][i][5]-1)%12+1%>:<%=courses['day2'][i][6]%>
+            <div class = "spacer"></div>
+          </div>
+        <% } %>
+      </div>
+      <div class = "day day3">
+        <div class = "header2"><div class = "spacer"></div>Day 3<div class = "spacer"></div></div>
+        <% for (var i = 0; i < courses["day3"].length; i++) { %>
+          <div class = "<%=courses['day5'][i][0]%> dayBlock">
+            <div class = "spacer"></div>
+            <div class = "class"><%=courses['day3'][i][1]%></div>
+            <div class = "spacer"></div>
+            <%=courses['day3'][i][2]%>
+            <div class = "spacer"></div>
+            <%=(courses['day3'][i][3]-1)%12+1%>:<%=courses['day3'][i][4]%> - <%=(courses['day3'][i][5]-1)%12+1%>:<%=courses['day3'][i][6]%>
+            <div class = "spacer"></div>
+          </div>
+        <% } %>
+      </div>
+      <div class = "day day4">
+        <div class = "header2"><div class = "spacer"></div>Day 4<div class = "spacer"></div></div>
+        <% for (var i = 0; i < courses["day4"].length; i++) { %>
+          <div class = "<%=courses['day5'][i][0]%> dayBlock">
+            <div class = "spacer"></div>
+            <div class = "class"><%=courses['day4'][i][1]%></div>
+            <div class = "spacer"></div>
+            <%=courses['day4'][i][2]%>
+            <div class = "spacer"></div>
+            <%=(courses['day4'][i][3]-1)%12+1%>:<%=courses['day4'][i][4]%> - <%=(courses['day4'][i][5]-1)%12+1%>:<%=courses['day4'][i][6]%>
+            <div class = "spacer"></div>
+          </div>
+        <% } %>
+      </div>
+      <div class = "day day5">
+        <div class = "header2"><div class = "spacer"></div>Day 5<div class = "spacer"></div></div>
+        <% for (var i = 0; i < courses["day5"].length; i++) { %>
+          <div class = "<%=courses['day5'][i][0]%> dayBlock">
+            <div class = "spacer"></div>
+            <div class = "class"><%=courses['day5'][i][1]%></div>
+            <div class = "spacer"></div>
+            <%=courses['day5'][i][2]%>
+            <div class = "spacer"></div>
+            <%=(courses['day5'][i][3]-1)%12+1%>:<%=courses['day5'][i][4]%> - <%=(courses['day5'][i][5]-1)%12+1%>:<%=courses['day5'][i][6]%>
+            <div class = "spacer"></div>
+          </div>
+        <% } %>
+      </div>
+    </div>
   </body>
 </html>

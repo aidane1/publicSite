@@ -252,17 +252,19 @@
         opacity:.5
       }
       .submitAssigned {
-        width:80%;
-        padding:8px;
+        width: 50%;
+        padding-top:10px;
+        padding-bottom: 10px;
         background-color:<%=colours.buttonColor%>;
         cursor:pointer;
         display:block;
-        margin:15px auto auto;
-        font-size:16px;
+
+        font-size:18px;
         color:<%=colours.textColor%>;
         text-align:center;
-        border-radius:20px;
-        outline:0;
+        border-radius:50px;
+        border: 1px solid <%= colours.borderColor%>;
+
 
       }
       .unselectable {
@@ -272,9 +274,7 @@
         -o-user-select: none;
         user-select: none;
       }
-      .submitAssigned:active {
 
-      }
       .addMore {
         margin-top:80px
       }
@@ -558,9 +558,14 @@
         border-radius: 50px;
         background-color: <%=colours.buttonColor%>;
         cursor: pointer;
-        margin: auto;
         padding-bottom: 10px;
+        font-size: 18px;
         border: 1px solid <%=colours.borderColor%>;
+      }
+      .coursePageButtons {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
       }
       .pushNotifications div {
         display:block;
@@ -580,11 +585,7 @@
         .header {
           height:30px
         }
-        .submitAssigned {
-          height:8%;
-          margin-top:5px;
-          font-size:15px
-        }
+
         .calendar,.displayClasses {
           margin-top:0
         }
@@ -772,13 +773,13 @@
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayClasses">
             <center><h2>Current Class: </h2></center>
-            <div class = "soonEvent"><%=currentBlock[0][0]%1 === 0 ? currentBlock[0][1] + blockOrder[currentBlock[0][0]] : currentBlock[0][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[0][0]-0.5]%></div>
+            <div class = "soonEvent"><%=currentBlock[0][0]%><%=currentBlock[0][1]%></div>
         </div>
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayClasses">
 
             <center><h2>Next Class: </h2></center>
-            <div class = "soonEvent"><%=currentBlock[1][0]%1 === 0 ? currentBlock[1][1] + blockOrder[currentBlock[1][0]] : currentBlock[1][1] + ["Nothing!", "TA", "Lunch", "Nothing!"][currentBlock[1][0]-0.5]%></div>
+            <div class = "soonEvent"><%=currentBlock[1][0]%><%=currentBlock[1][1]%></div>
         </div>
         <div style = "flex-grow: 2"></div>
       </div>
@@ -793,31 +794,12 @@
               <div style = "flex-grow: 0.1"></div>
               <div class = "courseBox large">
                 <div class = "header2">My courses today (day <%=(new Date()).getDay() == 0 || (new Date()).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
-
-                <% for (var i = 0; i < todaysCourses.length; i++) { %>
-                  <% if (i == 0 ) { %>
-                    <div><div class = "spacer"></div><div>9:10-10:12 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
-                  <% }  else if (i == 1) { %>
-                    <div><div class = "spacer"></div><div>10:15-11:17 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
-                    <div><div class = "spacer"></div><div>11:19-11:29 : <span style = "float : right">TA</span></div><div class = "spacer"></div></div>
-                  <% } else if (i == 2) { %>
-                    <div><div class = "spacer"></div><div>11:29-12:31 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
-                    <div><div class = "spacer"></div><div>12:32-1:15 : <span style = "float : right">Lunch</span></div><div class = "spacer"></div></div>
-                  <% } else if (i == 3) { %>
-                    <div><div class = "spacer"></div><div>1:16-2:18 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
-                  <% } else if (i == 4) { %>
-                    <div><div class = "spacer"></div><div>2:21-3:23 : <span style = "float : right"><%=blockOrder[i]%></span></div><div class = "spacer"></div></div>
-                  <% }%>
+                <% for (var i = 0; i < blockOrder.length; i++) { %>
+                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1]%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3]%> : <span style = "float : right"><%=blockOrder[i][4]%></span></div><div class = "spacer"></div></div>
                 <% } %>
-                <% if (todaysCourses === false) { %>
+                <% if (blockOrder === false) { %>
                   <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
                 <% } %>
-
-
-              </div>
-
-              <div class = "viewHomeworkButton" onclick  = "modalDisplay()">
-                View Homework
               </div>
 
 
@@ -858,9 +840,16 @@
 
 
               <div style = "flex-grow: 0.1"></div>
-              <a href = "/submit" style = "text-decoration: none;"><button class = "submitAssigned unselectable">
-                Submit assigned homework
-              </button></a>
+              <center><h2>Homework:</h2></center>
+              <div class = "coursePageButtons">
+                <a href = "/submit" style = "text-decoration: none;" class = "submitAssigned unselectable">
+                  Submit
+                </a>
+                <div class = "viewHomeworkButton unselectable" onclick  = "modalDisplay()">
+                  View
+                </div>
+              </div>
+
               <div style = "flex-grow: 0.05"></div>
             </div>
           </div>

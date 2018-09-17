@@ -19,7 +19,7 @@ function showFunction(id, element) {
     currentShown = "none";
   }
 }
-function modalDisplay(course) {
+function modalDisplay() {
   var modal = document.getElementById("allHomework");
   var backModal = document.getElementById("modal");
   backModal.style.visibility = "visible";
