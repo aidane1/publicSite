@@ -603,8 +603,8 @@ app.get("/", async (req, res, next) => {
 
 
 
-  // let currentDate = (new Date()).local();
-  let currentDate = new Date(2018, 8, 14, 10, 30, 0, 0);
+  let currentDate = (new Date()).local();
+  // let currentDate = new Date(2018, 8, 14, 10, 30, 0, 0);
   // console.log(currentDate.getHours());
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
