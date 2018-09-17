@@ -749,7 +749,7 @@
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
-        <div class = "block">day <%=(new Date()).getDay() == 0 || (new Date()).getDay() == 6 ? "_" : blockDay%></div>
+        <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div>
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayEvents">
           <center><h2 style = "color: <%=colours.textColor%>">Upcoming Events: </h2></center>
@@ -793,7 +793,7 @@
               <div class = "header"><h1>Courses</h1></div>
               <div style = "flex-grow: 0.1"></div>
               <div class = "courseBox large">
-                <div class = "header2">My courses today (day <%=(new Date()).getDay() == 0 || (new Date()).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
+                <div class = "header2">My courses today (day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% for (var i = 0; i < blockOrder.length; i++) { %>
                   <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1]%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3]%> : <span style = "float : right"><%=blockOrder[i][4]%></span></div><div class = "spacer"></div></div>
                 <% } %>
@@ -801,44 +801,6 @@
                   <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
                 <% } %>
               </div>
-
-
-
-
-
-
-
-
-              <!-- <div class = "infoBox">
-                <div class = "header2">Today's homework</div>
-                <div id = "possibleCourses" class = "possibleCourses">
-                  <table class = "switchTable">
-                    <% homework.forEach(function(theHomeworkCourse) { %>
-                      <tr>
-                        <td>
-                          &nbsp;&nbsp;<%=theHomeworkCourse[0]%>
-                        </td>
-                        <td>
-                          <% if (theHomeworkCourse[1].length != 0) { %>
-                            <% if (theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions != "") { %>
-                                  <div class = "aColor homeWorkBox">Q#<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].questions%>, pg.<%=theHomeworkCourse[1][theHomeworkCourse[1].length-1].page%></div>
-                            <% } else { %>
-                                  <a style = "text-decoration: underline" onclick = "modalDisplay('<%=theHomeworkCourse[0].split(' ').join('')%>')" class = "aColor smallHref unselectable">view assignment</a><br>
-                            <% } %>
-                          <% } %>
-                        </td>
-                      </tr>
-                    <% }); %>
-                  </table>
-                </div>
-                <i style = "font-size: 10px">There's more... <a onclick = "modalDisplay(0)" class = "bColor" style = "text-decoration: underline; cursor: pointer;"> view all</a></i>
-              </div> -->
-
-
-
-
-
-
               <div style = "flex-grow: 0.1"></div>
               <center><h2>Homework:</h2></center>
               <div class = "coursePageButtons">
