@@ -440,6 +440,80 @@ app.post("/admin/block-schedule", urlencodedParser, function(req, res) {
   }
 });
 
+app.get("/admin/courses", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err) {
+        res.redirect("/");
+      } else if (user.permissions == "admin" && user.school) {
+        School.findOne({_id : user.school}, function(err, school) {
+          if (err) {
+            res.redirect("/");
+          } else {
+            Course.find({school : school._id}, function(err, courses) {
+              if (err) {
+                res.redirect("/");
+              } else {
+                res.render("adminCourse", {courses : courses || [], codes : school.courseCodes || [], teachers : school.teachers || []});
+              }
+            })
+          }
+        });
+      }
+    })
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post("/admin/courses", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err) {
+        res.redirect("/");
+      } else {
+        if (user.permissions == "admin" && user.school) {
+          School.findOne({_id : user.school}, function(err, school) {
+            if (err) {
+              res.redirect("/");
+            } else {
+              if (req.body.courseKey1 && req.body.courseKey2) {
+                let oldObject = school.courseCodes || {};
+                oldObject[req.body.courseKey1] = req.body.courseKey2;
+                School.findOneAndUpdate({_id : user.school}, {$set : {courseCodes : oldObject}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.teacherName) {
+                School.findOneAndUpdate({_id : user.school}, {$push : {teachers : req.body.teacherName}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.removedTeacherId && typeof parseInt(req.body.removedTeacherId) == "number") {
+                let oldList = school.teachers;
+                oldList.splice(parseInt(req.body.removedTeacherId), 1);
+                School.findOneAndUpdate({_id : user.school}, {$set : {teachers : oldList}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.removedCodeKey) {
+                let oldObject = school.courseCodes || {};
+                delete oldObject[req.body.removedCodeKey];
+                School.findOneAndUpdate({_id : user.school}, {$set : {courseCodes : oldObject}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else {
+                res.redirect("/admin/courses");
+              }
+            }
+          })
+        } else {
+          res.redirect("/");
+        }
+      }
+    })
+  } else {
+    res.redirect("/login");
+  }
+});
+
 app.get("/weekly-schedule", function(req, res) {
   res.cookie("path", "/weekly-schedule");
   if (req.session.userId) {
@@ -604,7 +678,7 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
-  // let currentDate = new Date(2018, 8, 14, 10, 30, 0, 0);
+  // let currentDate = new Date(2018, 8, 18, 10, 30, 0, 0);
   // console.log(currentDate.getHours());
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
@@ -660,7 +734,12 @@ app.get("/", async (req, res, next) => {
           if (todaysBlocks[i][0].length !== 1) {
             todayClass.push(todaysBlocks[i][0]);
           } else {
-            todayClass.push(courseBlocks[todaysBlocks[i][0]] || "LC's");
+            if (user.blockNames) {
+              todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || "LC's");
+            } else {
+
+            }
+
           }
           todaysOrderedClasses.push(todayClass);
         }
@@ -706,20 +785,19 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][3]) {
             blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
           } else {
-            blockForTime = [["", "Nothing!"], ["9:10-10:12 : ", todaysBlocks[0][0]]];
+            blockForTime = [["", "Nothing!"], ["9:10-10:12 : ", todaysOrderedClasses[0][4]]];
             for (var i = 0; i < todaysBlocks.length; i++) {
               if (timeInMinutes > todaysBlocks[i][1]*60+todaysBlocks[i][2]) {
                 let secondArray;
                 if (i+1 >= todaysBlocks.length) {
                   secondArray = ["", "Nothing!"];
                 } else {
-                  secondArray = [`${todaysBlocks[i+1][1]}:${todaysBlocks[i+1][2]}-${todaysBlocks[i+1][3]}:${todaysBlocks[i+1][4]} : `,(todaysBlocks[i+1][0].length === 1 ? (courseBlocks[todaysBlocks[i+1][0]] || "LC's") : todaysBlocks[i+1][0])];
+                  secondArray = [`${todaysOrderedClasses[i+1][0]}:${todaysOrderedClasses[i+1][1]}-${todaysOrderedClasses[i+1][2]}:${todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][4])];
                 }
-                blockForTime = [[`${todaysBlocks[i][1]}:${todaysBlocks[i][2]}-${todaysBlocks[i][3]}:${todaysBlocks[i][4]} : `, (todaysBlocks[i][0].length === 1 ? (courseBlocks[todaysBlocks[i][0]] || "LC's") : todaysBlocks[i][0])], secondArray];
+                blockForTime = [[`${todaysOrderedClasses[i][0]}:${todaysOrderedClasses[i][1]}-${todaysOrderedClasses[i][2]}:${todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][4])], secondArray];
               }
             }
           }
-
           //update lc schedule (you changed it)
           res.render("index", {blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
@@ -1473,7 +1551,6 @@ app.get("/schedule", function(req, res) {
   res.cookie("path", "/schedule");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-
       if (err) {
         res.redirect("/");
       } else {
@@ -1485,22 +1562,28 @@ app.get("/schedule", function(req, res) {
             Course.find({_id : user.courses}, function(err, courses) {
               for (var k = 1; k < 6; k++) {
                 let key = "day" + k.toString();
-
                 for (var i = 0; i < blockObject[key].length; i++) {
                   let found = false;
                   for (var j = 0; j < courses.length; j++) {
                     if (courses[j].block == blockObject[key][i][0]) {
-                      found = true;
-                      blockObject[key][i] = [blockObject[key][i][0], courses[j].course, courses[j].teacher, blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                      if (user.blockNames) {
+                        found = true;
+                        blockObject[key][i] = [courses[j].block, (user.blockNames[courses[j].block] || courses[j].course) , courses[j].teacher, blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                      } else {
+                        found = true;
+                        blockObject[key][i] = [courses[j].block, courses[j].course, courses[j].teacher, blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                      }
                     }
                   }
                   if (!found) {
-                    blockObject[key][i] = [blockObject[key][i][0], blockObject[key][i][0].length == 1 ? "LC's" : blockObject[key][i][0], "\n", blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                    if (user.blockNames) {
+                      blockObject[key][i] = [blockObject[key][i][0], user.blockNames[blockObject[key][i][0]] || (blockObject[key][i][0].length == 1 ? "LC's" : blockObject[key][i][0]), "\n", blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                    } else {
+                      blockObject[key][i] = [blockObject[key][i][0], (blockObject[key][i][0].length == 1 ? "LC's" : blockObject[key][i][0]), "\n", blockObject[key][i][1], blockObject[key][i][2], blockObject[key][i][3], blockObject[key][i][4]];
+                    }
                   }
                 }
               }
-
-              console.log(blockObject);
               res.render("schedule", {courses : blockObject, colours: user.colors, font: holidayFont(user.font)});
             });
           }
@@ -1688,6 +1771,67 @@ app.post("/users/:user/order", urlencodedParser, function(req, res) {
     res.send(true);
   }
 
+});
+
+app.get("/users/:user/block-names", function(req,res) {
+  res.cookie("path", "/users/" + req.params.user + "/block-names");
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (user.username != req.params.user) {
+        res.redirect("/users/" + user.username + "/block-names");
+      } else {
+        let namesSent = {
+          A : "LC's",
+          B : "LC's",
+          C : "LC's",
+          D : "LC's",
+          E : "LC's"
+        }
+        let nameBlocks = user.blockNames;
+        Course.find({_id : user.courses}, function(err, courses) {
+          if (err) {
+            res.redirect("/");
+          } else {
+            for (var i = 0; i < courses.length; i++) {
+              namesSent[courses[i].block] = courses[i].course;
+            }
+            if (nameBlocks) {
+              for (var key in nameBlocks) {
+                namesSent[key] = nameBlocks[key];
+              }
+            }
+            res.render("blockNames", {namesSent : namesSent, user: user.username, colours: user.colors, font: (holidayFont(user.font))});
+          }
+        })
+      }
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post("/users/:user/block-names", urlencodedParser, function(req, res) {
+  if (req.session.userId) {
+    console.log(req.body);
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err) {
+        res.redirect("/");
+      } else {
+        let blockObject = {
+          A : req.body.blockNameA,
+          B : req.body.blockNameB,
+          C : req.body.blockNameC,
+          D : req.body.blockNameD,
+          E : req.body.blockNameE
+        }
+        User.findOneAndUpdate({_id : req.session.userId}, {$set : {blockNames : blockObject}}).then(function() {
+          res.redirect("/users/" + req.params.user);
+        });
+      }
+    })
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/about", function(req, res) {

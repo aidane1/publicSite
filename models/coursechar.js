@@ -19,6 +19,9 @@ const CourseSchema = new Schema({
   },
   code: {
     type: String
+  },
+  school: {
+    type : Schema.Types.ObjectId
   }
 });
 

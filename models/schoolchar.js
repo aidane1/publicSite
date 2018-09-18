@@ -33,6 +33,12 @@ const SchoolSchema = new Schema({
   blockNames: {
     type: Array,
     default: ["A", "B", "C", "D", "E", "Advisory", "Lunch", "Recess"]
+  },
+  courseCodes: {
+    type: Object
+  },
+  teachers: {
+    type: Array
   }
 });
 

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      * {
+        font-family: sans-serif;
+        color: #F8B195;
+        box-sizing: border-box;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        background-color: #355C7D;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        display: flex;
+      }
+      .holder {
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        text-align: center;
+        font-size: 18px;
+        color: #F8B195;
+        background-color: #C06C84;
+      }
+      .header {
+        font-size: 30px;
+        text-align: center;
+        color:
+      }
+      .list {
+        display: inline-block;
+        width: 200px;
+        margin-left: 50px;
+        margin-right: 50px;
+      }
+      .submitInput {
+        font-size: 20px;
+      }
+      .input {
+        font-size: 18px;
+        outline: none;
+        width: 100%;
+        background-color: #C06C84;
+        border: 1px solid #F8B195;
+      }
+      .submit {
+        width: 100%;
+        margin-top: 10px;
+        font-size: 30px;
+        background-color: #C06C84;
+        border: 1px solid #F8B195;
+        outline: none;
+      }
+      h1 {
+        display: inline-block;
+        color: red;
+        margin-left: 5px;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <form class = "container" method = "POST" action = "/admin/courses">
+      <div class = "coursesList list">
+        <div class = "header">Courses : </div>
+        <% for (var i = 0; i < courses.length; i++) { %>
+          <div class = "courseHolder holder"><%=courses[i].course%></div>
+        <% } %>
+      </div>
+      <div class = "codesList list">
+        <div class = "header">Code - Key pairs : </div>
+        <% for (var key in codes) { %>
+          <div class = "codeHolder holder"><%=key%> : <%=codes[key]%><h1 onclick = "removeCode('<%=key%>')">X</h1></div>
+        <% } %>
+        <hr>
+        <div class = "submitInput">
+          Add:
+          <input type = "text" name = "courseKey1" class = "input" placeholder="code..."/>
+          <input type = "text" name = "courseKey2" class = "input" placeholder="course..."/>
+          <input type = "submit" value = "submit" class = 'submit'/>
+        </div>
+      </div>
+      <div class = "teachersList list">
+        <div class = "header">Teachers : </div>
+        <% for (var i = 0; i < teachers.length; i++) { %>
+          <div class = "teacherHolder holder"><%=teachers[i]%><h1 onclick = "removeTeacher(<%=i%>)">X</h1></div>
+        <% } %>
+        <hr>
+        <div class = "submitInput">
+          Add:
+          <input type = "text" name = "teacherName" class = "input" placeholder="name..."/>
+          <input type = "submit" value = "submit" class = 'submit'/>
+        </div>
+      </div>
+    </form>
+
+  </body>
+  <script>
+    function removeTeacher(elem) {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/courses";
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "removedTeacherId";
+      input.value = elem;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    function removeCode(key) {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/courses";
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "removedCodeKey";
+      input.value = key;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+  </script>
+</html>

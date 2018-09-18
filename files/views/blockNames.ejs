@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      @font-face {
+        font-family: sansFont;
+        src: url("<%=font%>")
+      }
+      :root {
+        --bg-color: <%=colours.bgColor%>;
+        --info-color: <%=colours.infoColor%>;
+        --button-color: <%=colours.buttonColor%>;
+        --border-color: <%=colours.borderColor%>;
+        --text-color: <%=colours.textColor%>;
+      }
+      * {
+        font-family: sansFont, sans-serif;
+        color: <%=colours.textColor%>;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: <%=colours.bgColor%>;
+      }
+      .block {
+        width: 90%;
+        max-width: 300px;
+        margin: auto;
+        height: 70px;
+        border: 1px solid <%=colours.borderColor%>;
+        background-color: <%=colours.infoColor%>;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .spacer {
+        flex-grow: 1;
+      }
+      .blockName {
+        font-size: 18px;
+        outline: none;
+        background-color: <%=colours.buttonColor%>;
+        border: 1px solid <%=colours.borderColor%>;
+        float: right;
+      }
+      .submit {
+        width: 95%;
+        max-width: 300px;
+        margin: auto;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        text-align: center;
+        border-radius: 100px;
+        background-color: <%=colours.buttonColor%>;
+        border: 1px solid <%=colours.borderColor%>;
+
+      }
+      .submitButton {
+        font-size: 30px;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <form class = "container" method = "POST" action = "/users/<%=user%>/block-names">
+      <div class = "block">
+        <div class = "spacer"></div>
+        <div>A : <input type = "text" class = "blockName" name = "blockNameA" value = "<%=namesSent.A%>"/></div>
+        <div class = "spacer"></div>
+      </div>
+      <div class = "block">
+        <div class = "spacer"></div>
+        <div>B : <input type = "text" class = "blockName" name = "blockNameB" value = "<%=namesSent.B%>"/></div>
+        <div class = "spacer"></div>
+      </div>
+      <div class = "block">
+        <div class = "spacer"></div>
+        <div>C : <input type = "text" class = "blockName" name = "blockNameC" value = "<%=namesSent.C%>"/></div>
+        <div class = "spacer"></div>
+      </div>
+      <div class = "block">
+        <div class = "spacer"></div>
+        <div>D : <input type = "text" class = "blockName" name = "blockNameD" value = "<%=namesSent.D%>"/></div>
+        <div class = "spacer"></div>
+      </div>
+      <div class = "block">
+        <div class = "spacer"></div>
+        <div>E : <input type = "text" class = "blockName" name = "blockNameE" value = "<%=namesSent.E%>"/></div>
+        <div class = "spacer"></div>
+      </div>
+      <div class = "submit">
+        <input type = "submit" value = "submit" class = "submitButton"/>
+      </div>
+    </form>
+  </body>
+</html>

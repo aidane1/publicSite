@@ -94,6 +94,9 @@ const UserSchema = new Schema({
   },
   school: {
     type : Schema.Types.ObjectId
+  },
+  blockNames: {
+    type: Object
   }
 });
 
