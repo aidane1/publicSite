@@ -96,7 +96,26 @@ const UserSchema = new Schema({
     type : Schema.Types.ObjectId
   },
   blockNames: {
-    type: Object
+    A: {
+      type: String,
+      default: ""
+    },
+    B: {
+      type: String,
+      default: ""
+    },
+    C: {
+      type: String,
+      default: ""
+    },
+    D: {
+      type: String,
+      default: ""
+    },
+    E: {
+      type: String,
+      default: ""
+    }
   }
 });
 

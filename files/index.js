@@ -678,7 +678,7 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
-  // let currentDate = new Date(2018, 8, 18, 10, 30, 0, 0);
+  // let currentDate = new Date(2018, 8, 18, 15, 18, 0, 0);
   // console.log(currentDate.getHours());
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   res.cookie("path", "/");
@@ -782,7 +782,9 @@ app.get("/", async (req, res, next) => {
 
           let blockForTime;
           let currentLCOpen = ["Nothing!"];
-          if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][3]) {
+          console.log(timeInMinutes);
+          console.log(todaysBlocks[todaysBlocks.length-1]);
+          if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][4]) {
             blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
           } else {
             blockForTime = [["", "Nothing!"], ["9:10-10:12 : ", todaysOrderedClasses[0][4]]];
@@ -936,7 +938,6 @@ app.post("/signup", urlencodedParser, function(req, res) {
             },
             font: "/public/fonts/Evogria.otf",
             email: req.body.username,
-            blockNames : {},
             school: school._id
           }
           //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
@@ -1053,7 +1054,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
       theCourse = theCourse.map(x => mongoose.Types.ObjectId(x._id));
 
       //adds that list to the User's courses property
-      User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse}).then(function() {
+      User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
         res.redirect("/");
       });
     });
@@ -1798,7 +1799,9 @@ app.get("/users/:user/block-names", function(req,res) {
             }
             if (nameBlocks) {
               for (var key in nameBlocks) {
-                namesSent[key] = nameBlocks[key];
+                if (nameBlocks[key]) {
+                  namesSent[key] = nameBlocks[key];
+                }
               }
             }
             res.render("blockNames", {namesSent : namesSent, user: user.username, colours: user.colors, font: (holidayFont(user.font))});
