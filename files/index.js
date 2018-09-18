@@ -936,6 +936,7 @@ app.post("/signup", urlencodedParser, function(req, res) {
             },
             font: "/public/fonts/Evogria.otf",
             email: req.body.username,
+            blockNames : {},
             school: school._id
           }
           //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
