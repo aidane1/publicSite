@@ -202,6 +202,11 @@
         cursor: pointer;
         background-color: <%=colours.infoColor%>;
         z-index: 4;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
       }
       .questionTitle {
         margin-left: 10px;
@@ -344,6 +349,20 @@
           margin-bottom: 20px;
         }
       }
+      /* @keyframes expanding {
+        0% {
+          padding-top: 15px;
+          padding-bottom: 5px;
+          margin-top: 0px;
+          margin-bottom: 5px;
+        }
+        40% {
+          padding-top: 5px;
+          padding-bottom: 5px;
+          margin-top: 10px;
+          margin-bottom: 20px;
+        }
+      } */
       @media screen and (max-width: 320px) {
         #textarea {
           height: 100px;
