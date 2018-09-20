@@ -62,25 +62,14 @@ function confineFunction() {
   document.getElementById("menu").classList.toggle("expand");
 }
 
-function removeFunction(element) {
+function removeFunction(element, index) {
   if (confirm("Are you sure you would like to remove this homework?")) {
-    element = element.id.split("_");
-    let length = element.length-5;
-    let finalString = [];
-    for (var i = 0; i < element.length; i++) {
-      finalString.push(element[i]);
-      if (length != 0) {
-        finalString.push(" ");
-        length--;
-      } else if (i != element.length-1) {
-        finalString.push("_");
-      }
-    }
-    finalString = finalString.join("");
+
+
     let form = document.createElement("form");
     let input = document.createElement("input");
     input.type = "hidden";
-    input.value = finalString;
+    input.value = element + "_" + index;
     input.name = "removedHomework";
     form.action = "/";
     form.method = "POST";

@@ -24,101 +24,46 @@
       let financeArray = [["Mr.Landry", "MCOMP-9", "C"], ["Mr.Landry", "MENT-10", "D"], ["Mr.Landry", "MAC-11", "B"], ["Mr.Landry", "MSNSH-12", "E"], "courseContentFinance"];
       let tradesArray = [["Mr.Tujik", "MFAB-11", "E"], ["Mr.Tujik", "MAUTO-11", "C"], ["Mr.Lepine", "MWW-9", "A"], ["Mr.Lepine", "MJRT-9", "B"], ["Mr.Lepine", "MWW-9", "D"], "courseContentTrades"];
       let coursesArray = [scienceArray, mathArray, socialsArray, englishArray, financeArray, tradesArray, otherArray];
-      function makeCourses() {
-
-
-        coursesArray.forEach(function(course) {
-          console.log(course);
-          for (var i = 0; i < course.length-1; i++) {
-            let div = document.createElement("div");
-            div.setAttribute("class", "courseName " + course[i][2].toUpperCase());
-            div.setAttribute("id", (course[i][0].split(".")[0].toUpperCase() == "MR" ? "M_" : "F_") + course[i][0].split(".")[1].toUpperCase() + "_" + course[i][1] + "_" + course[i][2].toUpperCase());
-            div.setAttribute("onclick", "addCourse(this)");
-            for (var j = 0; j < dataArray.length; j++) {
-              if (dataArray[j][0] == course[i][1]) {
-                div.innerHTML = course[i][0] + "'s " + dataArray[j][1] + " (" + course[i][2].toUpperCase() + " block)";
-              }
-            }
-            document.getElementById(course[course.length-1]).appendChild(div);
-          }
-        });
-
-
-      }
 
 
 
 
 
-      let codes = [];
-      let blocks = [];
-      let teachers = [];
+
+      let courseIDs = [];
 
       function expandFunction(element) {
         element.classList.toggle("displayed");
       }
 
-      function addCourse(element) {
+      function addCourse(element, block, course) {
         element.parentNode.parentNode.classList.toggle("displayed");
-        var parsedData = element.id.split("_");
-        codes.push(parsedData[2]);
-        console.log(codes);
-        blocks.push(parsedData[3]);
-        teachers.push((parsedData[0] === "M" ? "Mr." : "Ms.") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
-        var displayData = [];
-        displayData.push(parsedData[0] === "M" ? "Mr. " : "Ms. ");
-        displayData.push(parsedData[1].charAt(0).toUpperCase() + parsedData[1].toLowerCase().slice(1) + "'s ");
-        for (var i = 0; i < dataArray.length; i++) {
-          if (dataArray[i][0] == parsedData[2]) {
-
-            document.getElementById(parsedData[3]).innerHTML = dataArray[i][1] + "<br>" + ((parsedData[0] === "M" ? "Mr." : "Ms.") + parsedData[1].charAt(0) + parsedData[1].slice(1).toLowerCase());
-            displayData.push(dataArray[i][1]);
-            break;
-          }
-        }
-        displayData.push(" block " + parsedData[3] + " course");
-        displayData = displayData.join("");
-        document.getElementById("displayCourses").innerHTML += displayData + "<br>";
-        var courseWithBlock = document.getElementsByClassName(parsedData[3]);
+        let id = element.id;
+        courseIDs.push(id);
+        document.getElementById("displayCourses").innerHTML += element.innerHTML + "<br>";
+        document.getElementById(block).innerHTML = course;
+        var courseWithBlock = document.getElementsByClassName(block);
         var length = courseWithBlock.length;
-
-
         for (var i = 0; i < length; i++) {
           courseWithBlock[0].remove();
         }
-
-
       }
 
       function postFunction() {
         let form = document.createElement("form");
         form.method = "POST";
         form.action = "/courses";
-        for (var i = 0; i  < codes.length; i++) {
-          let input1 = document.createElement("input");
-          input1.type = "hidden";
-          input1.name = "coursesCode";
-          input1.value = codes[i];
-          let input2 = document.createElement("input");
-          input2.type = "hidden";
-          input2.name = "coursesBlock";
-          input2.value = blocks[i];
-          let input3 = document.createElement("input");
-          input3.type = "hidden";
-          input3.name = "coursesTeacher";
-          input3.value = teachers[i];
-          form.appendChild(input1);
-          form.appendChild(input2);
-          form.appendChild(input3);
+        for (var i = 0; i  < courseIDs.length; i++) {
+          let input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "coursesID";
+          input.value = courseIDs[i];
+          form.appendChild(input);
         }
-
         document.body.appendChild(form);
-
         form.submit();
       }
-      window.onload = function() {
-        makeCourses();
-      }
+
 
 
 
@@ -300,59 +245,43 @@
     <div id = "courses" class = "courses" style = "overflow: auto">
       <button type = "button" class = "later"><a href = "/">later</a></button>
       <div class = "courseHolder" id = "courseHolder">
-        <div class = "course" id = "science" onclick = "expandFunction(this)">
-          Science
-          <div class = "courseContent" id = "courseContentScience">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "math" onclick = "expandFunction(this)">
-          math
-          <div class = "courseContent" id = "courseContentMath">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "socials" onclick = "expandFunction(this)">
-          Socials
-          <div class = "courseContent" id = "courseContentSocials">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "english" onclick = "expandFunction(this)">
-          Language
-          <div class = "courseContent" id = "courseContentEnglish">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
+        <% for (var j = 0; j < categories.length; j++) { %>
+          <% if (categories[j]) { %>
 
-          </div>
-        </div>
-        <div class = "course" id = "Finance" onclick = "expandFunction(this)">
-          Finance
-          <div class = "courseContent" id = "courseContentFinance">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
-
-          </div>
-        </div>
-        <div class = "course" id = "Trade" onclick = "expandFunction(this)">
-          Trades
-          <div class = "courseContent" id = "courseContentTrades">
-            Click on a class to select it as one of yours<br>
-            Click on the header to close
-          </div>
-        </div>
-        <div class = "course" id = "other" onclick = "expandFunction(this)">
+            <div class = "course" onclick = "expandFunction(this)">
+              <%=categories[j]%>
+              <div class = "courseContent">
+                Click on a class to select it as one of yours
+                Click on the header to close
+                <% for (var i = 0; i < courses.length; i++) { %>
+                  <% if (courses[i].category == categories[j]) { %>
+                    <div class = "courseName <%=courses[i].block%>" id = "<%=courses[i]._id%>" onclick = "addCourse(this, '<%=courses[i].block%>', '<%=courses[i].course%>')">
+                      <%=courses[i].teacher%>'s
+                      <%=courses[i].course%>
+                      (<%=courses[i].block%> block)
+                    </div>
+                  <% } %>
+                <% } %>
+              </div>
+            </div>
+          <% } %>
+        <% } %>
+        <div class = "course" onclick = "expandFunction(this)">
           Other
-          <div class = "courseContent" id = "courseContentOther">
-            Click on a class to select it as one of yours<br>
+          <div class = "courseContent">
+            Click on a class to select it as one of yours
             Click on the header to close
-
+            <% for (var i = 0; i < courses.length; i++) { %>
+              <% if (!courses[i].category || categories.indexOf(courses[i].category) < 0) { %>
+                <div class = "courseName <%=courses[i].block%>" id = "<%=courses[i]._id%>" onclick = "addCourse(this, '<%=courses[i].block%>', '<%=courses[i].course%>')">
+                  <%=courses[i].teacher%>'s
+                  <%=courses[i].course%>
+                  (<%=courses[i].block%> block)
+                </div>
+              <% } %>
+            <% } %>
           </div>
         </div>
-
       </div>
       <div class = "displayCourses" id = "displayCourses" style = "width: 100%; text-align: center; margin-top: 50px; margin-bottom: 100px;">
         Preview of monday (day 1):

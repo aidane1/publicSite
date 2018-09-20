@@ -973,7 +973,7 @@
                   <span style = "color: #f41616">confirmed: &#10006;</span>
                 <% } %>
                 <% if (permissions === "admin" || theHomeworkGiven[1][i].submittedBy == username) { %>
-                  <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
+                  <div class = "remove" onclick = "removeFunction('<%=theHomeworkGiven[4]%>', '<%=i%>')">
                     remove
                   </div>
                 <% } %>
@@ -993,7 +993,7 @@
                   <span style = "color: #f41616">confirmed: &#10006;</span>
                 <% } %>
                 <% if (permissions === "admin") { %>
-                  <div class = "remove" id = "<%=theHomeworkGiven[0].split(' ').join('_')%>_<%=theHomeworkGiven[2]%>_<%=theHomeworkGiven[3]%>_<%=i%>" onclick = "removeFunction(this)">
+                  <div class = "remove" onclick = "removeFunction('<%=theHomeworkGiven[4]%>', '<%=i%>')">
                     remove
                   </div>
                 <% } %>

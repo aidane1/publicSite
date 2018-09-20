@@ -72,6 +72,12 @@
         margin-left: 5px;
         margin-top: 0;
         margin-bottom: 0;
+        cursor: pointer;
+      }
+      .addSelect {
+        font-size: 18px;
+        outline: none;
+        color: black;
       }
 
     </style>
@@ -81,8 +87,38 @@
       <div class = "coursesList list">
         <div class = "header">Courses : </div>
         <% for (var i = 0; i < courses.length; i++) { %>
-          <div class = "courseHolder holder"><%=courses[i].course%></div>
+          <div class = "courseHolder holder"><%=courses[i].course%> <%=courses[i].teacher%> <%=courses[i].block%><h1 onclick = "removeCourse('<%=courses[i]._id%>')">X</h1></div>
         <% } %>
+        <hr>
+        <div class = "submitInput">
+          Add:
+          <br>
+          <select name = "addCourse" class = "addSelect">
+            <% for (var key in codes) { %>
+              <option value = "<%=key%>"><%=codes[key]%></option>
+            <% } %>
+          </select>
+          <br>
+          <select name = "addTeacher" class = "addSelect">
+            <% for (var i = 0; i < teachers.length; i++) { %>
+              <option value = "<%=teachers[i]%>"><%=teachers[i]%></option>
+            <% } %>
+          </select>
+          <select name = "addCategory" class = "addSelect">
+            <% for (var i = 0; i < categories.length; i++) { %>
+              <option value = "<%=categories[i]%>"><%=categories[i]%></option>
+            <% } %>
+          </select>
+          <br>
+          <select name = "addBlock" class = "addSelect">
+            <option value = "A">A</option>
+            <option value = "B">B</option>
+            <option value = "C">C</option>
+            <option value = "D">D</option>
+            <option value = "E">E</option>
+          </select>
+          <input type = "submit" value = "submit" class = 'submit'/>
+        </div>
       </div>
       <div class = "codesList list">
         <div class = "header">Code - Key pairs : </div>
@@ -106,6 +142,18 @@
         <div class = "submitInput">
           Add:
           <input type = "text" name = "teacherName" class = "input" placeholder="name..."/>
+          <input type = "submit" value = "submit" class = 'submit'/>
+        </div>
+      </div>
+      <div class = "categoriesList list">
+        <div class = "header">Categories : </div>
+        <% for (var i = 0; i < categories.length; i++) { %>
+          <div class = "categoiesHolder holder"><%=categories[i]%><h1 onclick = "removeCategory(<%=i%>)">X</h1></div>
+        <% } %>
+        <hr>
+        <div class = "submitInput">
+          Add:
+          <input type = "text" name = "categoryName" class = "input" placeholder="category..."/>
           <input type = "submit" value = "submit" class = 'submit'/>
         </div>
       </div>
@@ -133,6 +181,30 @@
       input.type = "hidden";
       input.name = "removedCodeKey";
       input.value = key;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    function removeCategory(index) {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/courses";
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "removedCategoryIndex";
+      input.value = index;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    function removeCourse(id) {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/courses";
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "removedCourseId";
+      input.value = id;
       form.appendChild(input);
       document.body.appendChild(form);
       form.submit();

@@ -39,6 +39,12 @@ const SchoolSchema = new Schema({
   },
   teachers: {
     type: Array
+  },
+  masterAccount: {
+    type: Schema.Types.ObjectId
+  },
+  categories: {
+    type: Array
   }
 });
 

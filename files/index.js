@@ -197,6 +197,8 @@ let Push = require("../models/pushchar.js");
 
 let School = require("../models/schoolchar.js");
 
+let Code = require("../models/createcodeschar.js");
+
 let webpush = require("web-push");
 
 let schedule = require("node-schedule");
@@ -245,29 +247,48 @@ app.use(express.static(__dirname));
 
 app.use(cookieParser());
 
+app.use(function(req, res, next) {
+
+  User.findOne({_id : req.session.userId}, function(err, user) {
+    if (err || user == null) {
+      next()
+    } else {
+      fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} GOT ${req.url} at ${new Date()} \n -----------------------END----------------------- \n`, function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+
+        }
+      })
+      next();
+    }
+  })
+
+});
+
 app.enable('trust proxy');
 
-function wwwHttpsRedirect(req, res, next) {
-    if (req.secure) {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
+// function wwwHttpsRedirect(req, res, next) {
+//     if (req.secure) {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     } else {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     }
+// };
+// app.use(wwwHttpsRedirect);
 
-        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    } else {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
 
-        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    }
-};
-app.use(wwwHttpsRedirect);
-
-
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -331,6 +352,144 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
     })
   } else {
     res.send("false");
+  }
+});
+
+app.get("/view-activity", function(req ,res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        res.redirect("/");
+      } else {
+        if (user.username = "AidanEglin") {
+          res.sendFile(__dirname + "/public/text/logins.txt");
+        } else {
+          res.redirect("/");
+        }
+      }
+    })
+  } else {
+    res.redirect("/");
+  }
+});
+
+app.get("/create-school/info", function(req, res) {
+  if (req.session.codeId) {
+    Code.findOne({_id : req.session.codeId}, function(err, code) {
+      if (err || code == null) {
+        console.log(err);
+        res.redirect("/login");
+      } else {
+        res.render("createSchool", {error: "", data: ["", "", ""]});
+      }
+    })
+  } else {
+    res.redirect("/create-school");
+  }
+});
+
+app.post("/create-school/info", urlencodedParser, function(req, res) {
+  if (req.session.codeId) {
+    Code.findOne({_id : req.session.codeId}, function(err, code) {
+      if (err || code == null) {
+        console.log(err);
+        res.redirect("/login");
+      } else {
+        if (req.body.adminFirstName && req.body.adminLastName && req.body.adminUser && req.body.adminPass && req.body.adminConf && req.body.adminEmail && req.body.schoolName) {
+          if (req.body.adminPass === req.body.adminConf) {
+            School.create({name : req.body.schoolName}, function(err, school) {
+              if (err || school === null) {
+                res.render("createSchool", {error : "An unknown error occured. Please contact Aidan Eglin at aidaneglin@gmail.com for further support.", data: ["", "", ""]});
+              } else {
+                var userData = {
+                  firstName: req.body.adminFirstName.charAt(0).toUpperCase() + req.body.adminFirstName.slice(1),
+                  lastName: req.body.adminLastName.charAt(0).toUpperCase() + req.body.adminFirstName.slice(1),
+                  username: req.body.adminUser,
+                  password: req.body.adminPass,
+                  permissions: "admin",
+                  colors: {
+                    bgColor: "rgb(79, 49, 48)",
+                    textColor: "rgb(216, 215, 143)",
+                    infoColor: "rgb(117, 55, 66)",
+                    buttonColor: "rgb(170, 80, 66)",
+                    borderColor:"rgb(216, 189, 138)"
+                  },
+                  font: "/public/fonts/Evogria.otf",
+                  email: req.body.adminEmail,
+                  school: school._id
+                }
+                //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
+                try {
+                  User.create(userData,function(error, user) {
+                    if (error) {
+                      console.log(error);
+                      res.render("createSchool", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
+                    } else {
+                      //sets the session and cookie to current user ID
+                      let mailOptions = {
+                        from: "pvsstudents@gmail.com",
+                        to: "aidaneglin@gmail.com",
+                        subject: "user signup",
+                        text: "School has been created! admin account is :  " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
+                      }
+                      transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            console.log(error)
+                          res.redirect("/")
+                        } else {
+
+                        }
+                      });
+                      School.findOneAndUpdate({_id : school._id}, {$set : {masterAccount: user._id}}).then(function() {
+                        Code.findOneAndDelete({_id : code._id}).then(function() {
+                          req.session.codeId = "";
+                          req.session.userId = user._id;
+                          res.cookie("sessionID", req.session.userId);
+                          return res.redirect("/admin");
+                        });
+                      });
+                    }
+                  });
+                } catch(e) {
+                  console.log(e);
+                  res.render("createSchool", {error: "Username is already taken.", data: ["", "", ""]});
+                }
+              }
+            });
+          } else {
+            res.render("createSchool", {error: "Passwords do not match. please try again.", data: ["", "", ""]});
+          }
+        } else {
+          res.render("createSchool", {error: "Error: Please fill out all fields.", data: ["", "", ""]});
+        }
+      }
+    })
+  } else {
+    res.redirect("/create-school");
+  }
+})
+
+app.get("/create-school", function(req, res) {
+  res.render("create", {error: ""});
+});
+
+app.post("/create-school", urlencodedParser, function(req, res) {
+  if (req.body.enterCodeInput) {
+    Code.findOne({code : parseInt(req.body.enterCodeInput)}, function(err, code) {
+      if (err) {
+        console.log(err);
+        res.redirect("/login");
+      } else {
+        if (code != null) {
+          req.session.codeId = code._id;
+          res.redirect("/create-school/info");
+        } else {
+          res.render("create", {error : "error: code could not be found in database. please try again. for help, email Aidan Eglin at aidaneglin@gmail.com"});
+        }
+      }
+    })
+  } else {
+    res.redirect("/login");
   }
 });
 
@@ -454,7 +613,7 @@ app.get("/admin/courses", function(req, res) {
               if (err) {
                 res.redirect("/");
               } else {
-                res.render("adminCourse", {courses : courses || [], codes : school.courseCodes || [], teachers : school.teachers || []});
+                res.render("adminCourse", {categories : school.categories || [], courses : courses || [], codes : school.courseCodes || [], teachers : school.teachers || []});
               }
             })
           }
@@ -477,6 +636,7 @@ app.post("/admin/courses", urlencodedParser, function(req, res) {
             if (err) {
               res.redirect("/");
             } else {
+              console.log(req.body);
               if (req.body.courseKey1 && req.body.courseKey2) {
                 let oldObject = school.courseCodes || {};
                 oldObject[req.body.courseKey1] = req.body.courseKey2;
@@ -499,6 +659,37 @@ app.post("/admin/courses", urlencodedParser, function(req, res) {
                 School.findOneAndUpdate({_id : user.school}, {$set : {courseCodes : oldObject}}).then(function() {
                   res.redirect("/admin/courses");
                 });
+              } else if (req.body.removedCourseId) {
+                Course.findOneAndRemove({school : school._id, _id : req.body.removedCourseId}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.categoryName) {
+                console.log(req.body.categoryName);
+                School.findOneAndUpdate({_id : user.school}, {$push : {categories : req.body.categoryName}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.removedCategoryIndex && typeof parseInt(req.body.removedTeacherId) == "number") {
+                let oldList = school.categories;
+                oldList.splice(parseInt(req.body.removedCategoryIndex), 1);
+                School.findOneAndUpdate({_id : user.school}, {$set : {categories : oldList}}).then(function() {
+                  res.redirect("/admin/courses");
+                });
+              } else if (req.body.addCourse && req.body.addTeacher && req.body.addBlock) {
+                if (school.courseCodes[req.body.addCourse]) {
+                  var courseData = {
+                    teacher : req.body.addTeacher,
+                    course : school.courseCodes[req.body.addCourse],
+                    block : req.body.addBlock.toUpperCase(),
+                    code : req.body.addCourse,
+                    school : school._id,
+                    category: req.body.addCategory
+                  }
+                  Course.create(courseData, function() {
+                    res.redirect("/admin/courses");
+                  });
+                } else {
+                  res.redirect("/admin/courses");
+                }
               } else {
                 res.redirect("/admin/courses");
               }
@@ -670,9 +861,7 @@ app.get("/home", function(req, res) {
   res.sendFile(__dirname + "/public/html/home.html");
 });
 
-
 // you just made BIG changes, so go through all this again when you aren't tired and make sure nothing is broken. pls.
-
 app.get("/", async (req, res, next) => {
 
 
@@ -690,6 +879,7 @@ app.get("/", async (req, res, next) => {
       res.redirect("/login");
     } else {
       try {
+
 
         let courses = await Course.find({_id : user.courses});
         let school = await School.findOne({_id : user.school});
@@ -713,7 +903,7 @@ app.get("/", async (req, res, next) => {
         //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
         courses.forEach(function(course) {
           courseCodes.push(course.code);
-          homeworkList.push([course.course, course.homework, course.block, course.teacher])
+          homeworkList.push([course.course, course.homework, course.block, course.teacher, course._id])
         });
         //gets the order of todays blocks from a function
         //also accounts for time offsets due to pro-D days
@@ -813,7 +1003,6 @@ app.get("/", async (req, res, next) => {
     res.redirect("/login");
   }
 });
-
 //the only purpose of this function as of right now is to delete user submitted homework
 app.post("/", urlencodedParser, function(req,res) {
   //makes sure the user has a session
@@ -827,23 +1016,21 @@ app.post("/", urlencodedParser, function(req,res) {
       } else {
 
 
-        //the next four lines just parse the data that was sent in the form of a string seperated by underscores
-        let course = req.body.removedHomework.split("_").slice(0,2).join(" ");
-        let block = req.body.removedHomework.split("_")[2];
-        let index = parseInt(req.body.removedHomework.split("_")[4]);
-        let teacher = (req.body.removedHomework.split("_")[3]);
+        let course = req.body.removedHomework.split("_")[0];
+        let index = parseInt(req.body.removedHomework.split("_")[1]);
+
 
         //finds the corrosponding course
-        Course.findOne({course: course, block: block, teacher: teacher}, function(err, theCourse) {
+        Course.findOne({school : user.school, _id : course}, function(err, theCourse) {
           if (err) {
             //if an error occurs at this point, redirect to home
             res.redirect("/");
           } else {
+
             //makes sure the course exists, and isn't empty
             if(theCourse != null && theCourse != "" && theCourse.course) {
               //declares homework variable for later use
               let homework;
-
               //if the homework was submitted by the person who clicked remove, or the person who clicked remove is an admin,
               //continue with the delete process
               if (theCourse.homework[index].submittedBy == user.username || user.permissions === "admin") {
@@ -907,7 +1094,14 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 
 app.get("/signup", function(req, res) {
   res.cookie("path", "/");
-  res.render("signup", {error : "", data : [ "", "", ""]});
+  School.find({}, function(err, schools) {
+    schools.sort(function(a,b) {
+      return (a.firstName > b.firstName ? -1 : 1);
+    });
+    console.log(schools);
+
+    res.render("signup", {error : "", data : [ "", "", ""], schoolNames : schools});
+  })
 });
 
 app.post("/signup", urlencodedParser, function(req, res) {
@@ -917,59 +1111,64 @@ app.post("/signup", urlencodedParser, function(req, res) {
     //if they don't, tell the user
     res.render("signup", {error : "Error : passwords do not match", data : [req.body.username, req.body.firstName, req.body.lastName]});
   //makes sure all fields were entered
-  } else if (req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
+  } else if (req.body.schoolChoice && req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
     //makes sure they didn't use special characters.
     if (stringTest(req.body.username) && stringTest(req.body.firstName) && stringTest(req.body.lastName) && stringTest(req.body.password)) {
       //makes sure they're all under 40 characters long
       if (req.body.username.length < 40 && req.body.password.length < 40 && req.body.firstName.length < 40 && req.body.lastName.length < 40) {
         //sets up the user data
-        School.findOne({name : "PVSS"}, function(err, school) {
-          var userData = {
-            firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
-            lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
-            username: req.body.username,
-            password: req.body.password,
-            colors: {
-              bgColor: "rgb(79, 49, 48)",
-              textColor: "rgb(216, 215, 143)",
-              infoColor: "rgb(117, 55, 66)",
-              buttonColor: "rgb(170, 80, 66)",
-              borderColor:"rgb(216, 189, 138)"
-            },
-            font: "/public/fonts/Evogria.otf",
-            email: req.body.username,
-            school: school._id
-          }
-          //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
-          try {
-            User.create(userData,function(error, user) {
-              if (error) {
-                console.log(error);
-                res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
-              } else {
-                //sets the session and cookie to current user ID
-                let mailOptions = {
-                  from: "pvsstudents@gmail.com",
-                  to: "aidaneglin@gmail.com",
-                  subject: "user signup",
-                  text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
-                }
-                transporter.sendMail(mailOptions, function(error, info) {
-                  if (error) {
-                      console.log(error)
-                    res.redirect("/")
-                  } else {
-
+        School.findOne({name : req.body.schoolChoice}, function(err, school) {
+          if (err || school == null) {
+            console.log(err);
+            res.render("signup", {error: "Please enter a valid school name", data: [req.body.username, req.body.firstName, req.body.lastName]});
+          } else {
+            var userData = {
+              firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
+              lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
+              username: req.body.username,
+              password: req.body.password,
+              colors: {
+                bgColor: "rgb(79, 49, 48)",
+                textColor: "rgb(216, 215, 143)",
+                infoColor: "rgb(117, 55, 66)",
+                buttonColor: "rgb(170, 80, 66)",
+                borderColor:"rgb(216, 189, 138)"
+              },
+              font: "/public/fonts/Evogria.otf",
+              email: req.body.username,
+              school: school._id
+            }
+            //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
+            try {
+              User.create(userData,function(error, user) {
+                if (error) {
+                  console.log(error);
+                  res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
+                } else {
+                  //sets the session and cookie to current user ID
+                  let mailOptions = {
+                    from: "pvsstudents@gmail.com",
+                    to: "aidaneglin@gmail.com",
+                    subject: "user signup",
+                    text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
                   }
-                });
-                req.session.userId = user._id;
-                res.cookie("sessionID", req.session.userId);
-                return res.redirect("/tutorial");
-              }
-            });
-          } catch(e) {
-            console.log(e);
-            res.render("signup", {error: "Username is already taken.", data: ["", "", ""]});
+                  transporter.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        console.log(error)
+                      res.redirect("/")
+                    } else {
+
+                    }
+                  });
+                  req.session.userId = user._id;
+                  res.cookie("sessionID", req.session.userId);
+                  return res.redirect("/tutorial");
+                }
+              });
+            } catch(e) {
+              console.log(e);
+              res.render("signup", {error: "Username is already taken.", data: ["", "", ""]});
+            }
           }
         });
       } else {
@@ -987,7 +1186,30 @@ app.get("/courses", function(req, res) {
     res.cookie("path", "/courses");
     if (req.session.userId) {
       User.findOne({_id : req.session.userId}, function(err, user) {
-        res.render("addCourses", {colours: user.colors, font: holidayFont(user.font)});
+        if (err) {
+          console.log(err);
+          res.redirect("/login");
+        } else {
+          Course.find({school : user.school}, function(err, courses) {
+            if (err || courses == null) {
+              console.log(err);
+              res.redirect("/login");
+            } else {
+              School.findOne({_id : user.school}, function(err, school) {
+                console.log(school.categories);
+                if (school.categories) {
+                  console.log("YEEETTT");
+                  console.log(school.categories);
+                  res.render("addCourses", {categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
+                } else {
+                  console.log("round 2 ");
+                  res.render("addCourses", {categories: [""], colours: user.colors, font: holidayFont(user.font), courses : courses});
+                }
+
+              })
+            }
+          });
+        }
       });
     } else {
       res.redirect("/login");
@@ -995,70 +1217,27 @@ app.get("/courses", function(req, res) {
 });
 
 app.post("/courses", urlencodedParser, function(req, res) {
-
   //makes sure they have a session ID and that the body object is a course.
-  if (req.session.userId && req.body.coursesCode && req.body.coursesBlock && req.body.coursesTeacher) {
-    Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock, teacher: req.body.coursesTeacher }, (err, theCourse) => {
-      let badCourses = [];
-      let goodCourses = [];
-
-      //due to how mongoDB works and how the user submitted input works, sometimes the Course.find may return a course that matches all the
-      //credentials but wasn't selected. To avoid passing the user the wrong info, we must confirm everything first.
-
-
-      //only returns true if there was only one selected course
-      if (typeof req.body.coursesCode === "string") {
-
-      } else {
-
-        //goes through every course that was returned by courses.find, and makes sure it matches one of the credentials list
-        for (var i = 0; i < req.body.coursesBlock.length; i++) {
-          var currentCheck = req.body;
-          theCourse.forEach(function(course) {
-            if (course.code === currentCheck.coursesCode[i] && course.block === currentCheck.coursesBlock[i] && course.teacher === currentCheck.coursesTeacher[i]) {
-              goodCourses.push(course);
-            }
-          });
-        }
-      }
-
-
-      theCourse = goodCourses;
-
-      //this block of code may seem reduntant, but It felt neater to to make it two if statements than to stuff them both in to one.
-      //this finds all the courses, if any, that the user selected that don't exist. would only occur if the user tampered with ID's client side.
-      if (typeof req.body.coursesCode === "string") {
-        if (theCourse === undefined || theCourse.length == 0) {
-          badCourses.push(req.body.coursesCode);
-        }
-      } else {
-
-        if (req.body.coursesCode.length != theCourse.length) {
-          for (var i = 0; i < req.body.coursesCode.length; i++) {
-            var found = false;
-            for (var j = 0; j < theCourse.length; j++) {
-              if (theCourse[j].code === req.body.coursesCode[i]) {
-                found = true;
-              }
-            }
-            if (!found) {
-              badCourses.push(req.body.coursesCode[i]);
-            }
-          }
-        } else {
-
-        }
-      }
-
-      //makes theCourse variable a list of all the ID's of the good courses
-      theCourse = theCourse.map(x => mongoose.Types.ObjectId(x._id));
-
-      //adds that list to the User's courses property
-      User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
+  if (req.session.userId && req.body.coursesID) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        console.log(err);
         res.redirect("/");
-      });
-    });
-
+      } else {
+        console.log(req.body.coursesID);
+        Course.find({school : user.school, _id : req.body.coursesID}, function(err, courses) {
+          console.log(courses);
+          if (err || courses == null) {
+            console.log(err);
+            res.redirect("/");
+          } else {
+            User.findOneAndUpdate({_id : req.session.userId}, {courses : courses, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
+              res.redirect("/");
+            });
+          }
+        });
+      }
+    })
   } else {
     res.redirect("/");
   }
@@ -1085,7 +1264,7 @@ app.post("/add", urlencodedParser, function(req, res) {
       res.redirect("/");
     } else {
       //makes sure the user is an admin
-      if (user != undefined && user.permissions === "admin") {
+      if (user != null && user.permissions === "admin") {
         //makes courses
         if (req.body.teacher && req.body.course && req.body.block && req.body.code) {
           var courseData = {
@@ -1147,6 +1326,31 @@ app.post("/add", urlencodedParser, function(req, res) {
               res.redirect("/add");
             });
           }
+        } else if (req.body.createCode && user.username === "AidanEglin") {
+          let code = Math.floor(Math.random() * 1000000) + 1000000;
+          Code.create({code : code}, function(err, code) {
+            console.log("created");
+            if (err) {
+              console.log(err);
+              res.redirect("/login");
+            } else {
+              let mailOptions = {
+                from: "pvsstudents@gmail.com",
+                to: "aidaneglin@gmail.com",
+                subject: "school code created",
+                text: "the school code is : " + code.code.toString()
+              }
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error)
+
+                } else {
+
+                }
+              });
+              res.redirect("/add");
+            }
+          });
         }
       } else {
         res.redirect("/login");
@@ -1266,7 +1470,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
           homeworkObject.confirmed = "T";
         }
         //adds the homework to the course
-        Course.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
+        Course.findOneAndUpdate({school: user.school, _id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
           res.redirect("/");
         });
       })
