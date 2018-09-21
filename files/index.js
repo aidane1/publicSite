@@ -1200,8 +1200,8 @@ app.get("/courses", function(req, res) {
               School.findOne({_id : user.school}, function(err, school) {
                 console.log(school.categories);
                 if (school.categories) {
-                  
-                  school.categories.sort(function(a,b) {
+
+                  courses.sort(function(a,b) {
                     return (a.firstName > b.firstName ? -1 : 1);
                   });
                   res.render("addCourses", {categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
