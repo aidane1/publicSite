@@ -181,7 +181,9 @@ let Course = require("../models/coursechar");
 
 let session = require("express-session");
 
-var cookieSession = require('cookie-session')
+var cookieSession = require('cookie-session');
+
+let MongoStore = require('connect-mongo')(session);
 
 let Events = require("../models/eventschar");
 
@@ -236,13 +238,14 @@ let app = express();
 
 app.set("view engine", "ejs");
 
-app.use(cookieSession({
+app.use(session({
   secret: contents.secret,
   resave: true,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000*86400*365
-  }
+  },
+  store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
 app.use(express.static(__dirname));
