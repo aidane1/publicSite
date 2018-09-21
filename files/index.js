@@ -1202,7 +1202,7 @@ app.get("/courses", function(req, res) {
                 if (school.categories) {
 
                   courses.sort(function(a,b) {
-                    return (a.firstName > b.firstName ? -1 : 1);
+                    return (a.teacher > b.teacher ? -1 : 1);
                   });
                   res.render("addCourses", {categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
                 } else {
