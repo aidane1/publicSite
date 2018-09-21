@@ -181,6 +181,8 @@ let Course = require("../models/coursechar");
 
 let session = require("express-session");
 
+var cookieSession = require('cookie-session')
+
 let Events = require("../models/eventschar");
 
 let socket = require("socket.io")
@@ -234,7 +236,7 @@ let app = express();
 
 app.set("view engine", "ejs");
 
-app.use(session({
+app.use(cookieSession({
   secret: contents.secret,
   resave: true,
   saveUninitialized: false,
@@ -267,28 +269,28 @@ app.use(function(req, res, next) {
 });
 
 app.enable('trust proxy');
+//
+// function wwwHttpsRedirect(req, res, next) {
+//     if (req.secure) {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     } else {
+//       if (req.headers.host.slice(0, 4) !== 'www.') {
+//
+//         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+//       } else {
+//         next();
+//       }
+//     }
+// };
+// app.use(wwwHttpsRedirect);
 
-function wwwHttpsRedirect(req, res, next) {
-    if (req.secure) {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
 
-        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    } else {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
-
-        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
-    }
-};
-app.use(wwwHttpsRedirect);
-
-
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -1200,6 +1202,9 @@ app.get("/courses", function(req, res) {
                 if (school.categories) {
                   console.log("YEEETTT");
                   console.log(school.categories);
+                  school.categories.sort(function(a,b) {
+                    return (a.firstName > b.firstName ? -1 : 1);
+                  });
                   res.render("addCourses", {categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
                 } else {
                   console.log("round 2 ");

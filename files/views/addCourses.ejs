@@ -252,6 +252,7 @@
               <%=categories[j]%>
               <div class = "courseContent">
                 Click on a class to select it as one of yours
+                <br>
                 Click on the header to close
                 <% for (var i = 0; i < courses.length; i++) { %>
                   <% if (courses[i].category == categories[j]) { %>
@@ -270,6 +271,7 @@
           Other
           <div class = "courseContent">
             Click on a class to select it as one of yours
+            <br>
             Click on the header to close
             <% for (var i = 0; i < courses.length; i++) { %>
               <% if (!courses[i].category || categories.indexOf(courses[i].category) < 0) { %>
