@@ -240,7 +240,7 @@ app.set("view engine", "ejs");
 
 app.use(session({
   secret: contents.secret,
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000*86400*365
@@ -977,8 +977,6 @@ app.get("/", async (req, res, next) => {
 
           let blockForTime;
           let currentLCOpen = ["Nothing!"];
-          console.log(timeInMinutes);
-          console.log(todaysBlocks[todaysBlocks.length-1]);
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][4]) {
             blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
           } else {
@@ -989,9 +987,9 @@ app.get("/", async (req, res, next) => {
                 if (i+1 >= todaysBlocks.length) {
                   secondArray = ["", "Nothing!"];
                 } else {
-                  secondArray = [`${todaysOrderedClasses[i+1][0]}:${todaysOrderedClasses[i+1][1]}-${todaysOrderedClasses[i+1][2]}:${todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][4])];
+                  secondArray = [`${(todaysOrderedClasses[i+1][0]-1)%12+1}:${todaysOrderedClasses[i+1][1].length == 1 ? "0" + todaysOrderedClasses[i+1][1] : todaysOrderedClasses[i+1][1]}-${(todaysOrderedClasses[i+1][2]-1)%12+1}:${todaysOrderedClasses[i+1][3].length == 1 ? "0" + todaysOrderedClasses[i+1][3] : todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][4])];
                 }
-                blockForTime = [[`${todaysOrderedClasses[i][0]}:${todaysOrderedClasses[i][1]}-${todaysOrderedClasses[i][2]}:${todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][4])], secondArray];
+                blockForTime = [[`${(todaysOrderedClasses[i][0]-1)%12+1}:${todaysOrderedClasses[i][1].length == 1 ? "0" + todaysOrderedClasses[i][1] : todaysOrderedClasses[i][1]}-${(todaysOrderedClasses[i][2]-1)%12+1}:${todaysOrderedClasses[i][3].length == 1 ? "0" + todaysOrderedClasses[i][3] : todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][4])], secondArray];
               }
             }
           }
