@@ -2422,7 +2422,11 @@ app.get("/users/:user/block-names", function(req,res) {
               }
             }
             console.log(user.blockNames);
-            let nameBlocks = JSON.parse(JSON.stringify(user.blockNames));
+            let nameBlocks = {};
+            if (user.blockNames) {
+              nameBlocks = JSON.parse(JSON.stringify(user.blockNames));
+            }
+
             Course.find({_id : user.courses}, function(err, courses) {
               if (err) {
                 res.redirect("/");
