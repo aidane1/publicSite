@@ -74,6 +74,10 @@ const SchoolSchema = new Schema({
   },
   favicon: {
     type: String
+  },
+  spareName: {
+    type: String,
+    default: "Spare"
   }
 });
 
