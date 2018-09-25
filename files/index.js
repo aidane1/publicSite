@@ -273,13 +273,15 @@ app.use(function(req, res, next) {
     if (err || user == null) {
       next()
     } else {
-      fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} GOT ${req.url} at ${(new Date()).local()} \n -----------------------END----------------------- \n`, function(err) {
-        if (err) {
-          console.log(err);
-        } else {
+      if (user.username != "AidanEglin") {
+        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} GOT ${req.url} at ${(new Date()).local()} \n -----------------------END----------------------- \n`, function(err) {
+          if (err) {
+            console.log(err);
+          } else {
 
-        }
-      })
+          }
+        })
+      } 
       next();
     }
   })
