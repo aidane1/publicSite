@@ -801,7 +801,7 @@
               <div class = "courseBox large">
                 <div class = "header2">My courses today (day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% for (var i = 0; i < blockOrder.length; i++) { %>
-                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1]%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3]%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
+                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
                 <% } %>
                 <% if (blockOrder === false) { %>
                   <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
