@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+
+      .container {
+        width: 100%;
+        height: 100%;
+        padding: 50px;
+        overflow: auto;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "container">
+      <form action = "/admin/photos" method = "POST" enctype="multipart/form-data">
+        <div class = "faviconFile">
+          Submit school logo/icon file: <input id = "faviconFile" name = "faviconFile" type = "file" />
+
+        </div>
+        <input type = "submit" value = "submit" />
+      </form>
+
+    </div>
+
+  </body>
+  <script>
+
+  </script>
+</html>

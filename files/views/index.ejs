@@ -9,6 +9,11 @@
     <meta name = "apple-mobile-web-app-status-bar-style" content = "#FC7753">
     <meta name = "apple-mobile-web-app-title" content = "PVSS">
     <link rel = "manifest" href = "public/manifests/home.json  " />
+
+    <!-- <link rel="icon" href="/favicon?v=3" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon?v=3" type="image/x-icon"> -->
+
+
     <link rel="apple-touch-icon" sizes="57x57" href="public/images/apple-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="public/images/apple-icon-72x72.png" />
     <link rel="apple-touch-icon" sizes="114x114" href="public/images/apple-icon-114x114.png" />
@@ -16,6 +21,8 @@
     <link rel = "icon" sizes = "128x128" href = "public/images/icon-128x128.png" />
     <link rel = "icon" sizes = "192x192" href = "public/images/icon-192x192.png" />
     <link rel = "apple-touch-startup-image" href = "public/images/icon-512x512.png" />
+
+
     <title>PVSS student website | Home</title>
 
     <style>
@@ -794,7 +801,7 @@
               <div class = "courseBox large">
                 <div class = "header2">My courses today (day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% for (var i = 0; i < blockOrder.length; i++) { %>
-                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1]%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3]%> : <span style = "float : right"><%=blockOrder[i][4]%></span></div><div class = "spacer"></div></div>
+                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1]%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3]%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
                 <% } %>
                 <% if (blockOrder === false) { %>
                   <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>

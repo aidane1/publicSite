@@ -28,6 +28,9 @@ const EventSchema = new Schema({
   },
   longForm: {
     type: String
+  },
+  school : {
+    type : Schema.Types.ObjectId
   }
 });
 

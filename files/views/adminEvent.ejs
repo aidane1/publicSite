@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+        color: #F8B195;
+      }
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #355C7D;
+      }
+
+      .event {
+        width: 300px;
+        padding: 10px;
+        background-color: #C06C84;
+        margin: 10px;
+        margin-right: 80px;
+        text-align: center;
+        font-size: 22px;
+        border-radius: 10px;
+        position: relative;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        display: flex;
+      }
+      .input {
+        outline: none;
+        font-size: 18px;
+        display: block;
+        color: black;
+      }
+      .submit {
+        -webkit-appearance: none;
+
+        width: 100px;
+        height: 40px;
+        font-size: 25px;
+        background-color: #C06C84;
+        border-radius: 10px;
+        border: 0;
+        display: block;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .x {
+        position: absolute;
+        top: 0;
+        right: -40px;
+        color: red;
+        cursor: pointer;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "container">
+      <div class = "displayEvents">
+        <% for (var i = 0; i < events.length; i++) { %>
+          <div class = "event">
+            <%=events[i].info%>
+            <br>
+            <% if (events[i].longForm) { %>
+              <%=events[i].longForm%>
+              <br>
+            <% } %>
+            <%=events[i].day%>/<%=events[i].month+1%>/<%=events[i].year%>
+            <h1 class = "x" onclick = "removeEvent('<%=events[i]._id%>')">X</h1>
+          </div>
+        <% } %>
+      </div>
+      <form method = "POST" action = "/admin/events" class = "addEvent">
+        <h1>Add Event: </h1>
+        <h3>Date:</h3>
+        <input type = "date" name = "date" class = "input"/>
+        <h3>Time:</h3>
+        <input type = "time" name = "time" class = "input"/>
+        <h3>information (short):</h3>
+        <input type = "text" name = "shortInfo" class = "input"/>
+        <h3>information (long):</h3>
+        <input type = "text" name = "longInfo" class = "input"/>
+        <input type = "submit" class = "submit" />
+
+      </form>
+    </div>
+    <div style = "position: fixed; bottom: 20px; left: 0">
+      <a href  = "/admin" style = "color: black; font-size: 45px; text-decoration: none">&#8592;</a>
+    </div>
+  </body>
+  <script>
+    function removeEvent(id) {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/events";
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "removedEventId";
+      input.value = id;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+
+  </script>
+</html>

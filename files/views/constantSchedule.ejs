@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .container {
+        width: <%=schedule.schedule.length*1000+500%>px;
+        height: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        padding-bottom: 100px;
+
+      }
+      .timeTable {
+        width: 200px;
+        height: 900px;
+        border: 1px solid black;
+        margin-right: 100px;
+        display: inline-block;
+
+      }
+      .head {
+        width: 200px;
+        height: 50px;
+        border: 1px solid red;
+      }
+      .addBlock {
+        width: 95%;
+        height: 30px;
+        background-color: grey;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .header {
+        width: 100%;
+        text-align: center;
+        font-size: 22px;
+      }
+      .templateBody {
+        height: 850px;
+        border: 1px solid blue;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+
+      }
+      .bodyBlock {
+        width: 100%;
+        flex-grow: 1;
+        border: 1px solid purple;
+      }
+      .removeBlock {
+        width: 95%;
+        height: 30px;
+        text-align: center;
+        background-color: grey;
+        margin: auto;
+        cursor: pointer;
+      }
+      .timeDisplay {
+        width: 95%;
+        margin: auto;
+        text-align: center;
+      }
+      .editTime {
+        width: 95%;
+        height: 30px;
+        background-color: grey;
+        margin: auto;
+        text-align: center;
+        cursor: pointer;
+      }
+      .modal {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        background-color: black;
+        opacity: 0.7;
+        display: none;
+      }
+      .enterTimeBox {
+        width: 300px;
+        height: 200px;
+        background-color: white;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        z-index: 4;
+      }
+      .enterTime {
+        display: block;
+        margin: auto;
+        font-size: 18px;
+      }
+      .enterTimeButton {
+        font-size: 18px;
+        width: 100px;
+        height: 50px;
+        display: block;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .blockTable {
+        width: 900px;
+        height: 900px;
+        margin-right: 50px;
+        border: 1px solid black;
+        position: relative;
+        top: -50px;
+        display: inline-flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+      .day {
+        flex-grow: 1;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .blockHeader {
+        width: 100%;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+      }
+      .dayBlock {
+        flex-grow: 1;
+        width: 100%;
+        border: 1px solid black;
+
+      }
+      .editBlock {
+        width: 95%;
+        height: 30px;
+        margin: auto;
+        text-align: center;
+        background-color: grey;
+      }
+      .blockBlock {
+        text-align: center;
+      }
+      .changeBlockBox {
+        width: 300px;
+        height: 130px;
+        background-color: white;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        z-index: 4;
+      }
+      .changeBlockSelect {
+        display: block;
+        font-size: 18px;
+        width: 100px;
+        height: 50px;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .A {
+        background-color: #f6511d;
+        color: white;
+      }
+      .B {
+        background-color: #c33c54;
+        color: white;
+      }
+      .C {
+        background-color: #4c3b4d;
+        color: #FFEEd8;
+      }
+      .D {
+        background-color: #698f3f;
+        color: #FBFAF8;
+      }
+      .E {
+        background-color: #3c91e6;
+        color: #cce98a;
+      }
+      .A .changeBlock, .A .editTime, .A .removeBlock {
+        background-color: #00a6ed;
+      }
+      .B .changeBlock, .B .editTime, .B .removeBlock {
+        background-color: #254e70;
+      }
+      .C .changeBlock, .C .editTime, .C .removeBlock {
+        background-color: #a53860;
+      }
+      .D .changeBlock, .D .editTime, .D .removeBlock {
+        background-color: #0a122a;
+      }
+      .E .changeBlock, .E .editTime, .E .removeBlock {
+        background-color: #342e37;
+      }
+      .Advisory {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+      .Advisory .changeBlock, .Advisory .editTime, .Advisory .removeBlock {
+        background-color: grey;
+      }
+      .Lunch {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+      .Lunch .changeBlock, .Lunch .editTime, .Lunch .removeBlock {
+        background-color: grey;
+      }
+      .submitSchedule {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        width: 300px;
+        text-align: center;
+        border-radius: 8px;
+        background-color: #ddd;
+        position: fixed;
+        bottom: 10px;
+        left: 85px;
+        cursor: pointer;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "container">
+      <div class = "timeTable">
+        <div class = "head">
+          <div class = "header"><div class = "addBlock" onclick = "addBlock()">Add Block</div>Day Template</div>
+        </div>
+        <div class = "templateBody" id = "templateBody">
+          <% for (var i = 0; i < schedule.blockSchedule.length; i++) { %>
+            <div class = "bodyBlock" id = "bodyBlock<%=i+1%>">
+              <div class = "removeBlock" onclick = "removeBlock(<%=i+1%>)">Remove Block</div>
+              <div class = "timeDisplay" id = "timeDisplay<%=i+1%>"><%=schedule.blockSchedule[i][0]%>:<%=schedule.blockSchedule[i][1]%>-<%=schedule.blockSchedule[i][2]%>:<%=schedule.blockSchedule[i][3]%></div>
+              <div class = "editTime" onclick = "editTime(<%=i+1%>)">Edit Time</div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+      <% for (var j = 0; j < schedule.schedule.length; j++) { %>
+        <div class = "blockTable">
+          <% for (var key in schedule.schedule[j]) { %>
+            <% if (key === "day1") { %>
+              <div class = "day" id = "<%j+1%>_day_1">
+                <div class = "blockHeader">Day 1</div>
+                <% for (var i = 0; i < schedule.schedule[j][key].length; i++) { %>
+                  <div class = "dayBlock <%=schedule.schedule[j][key][i][0]%>" id = "<%=j+1%>_dayBlock1_<%=i+1%>">
+                    <div class = "blockBlock" id = "<%=j+1%>_blockBlock1_<%=i+1%>"><%=schedule.schedule[j][key][i][0]%></div>
+                    <div class = "editBlock" onclick = "editBlock(<%=j+1%>,1,<%=i+1%>)">Edit Block</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day2") { %>
+              <div class = "day" id = "<%j+1%>_day_2">
+                <div class = "blockHeader">Day 2</div>
+                <% for (var i = 0; i < schedule.schedule[j][key].length; i++) { %>
+                  <div class = "dayBlock <%=schedule.schedule[j][key][i][0]%>" id = "<%=j+1%>_dayBlock2_<%=i+1%>">
+                    <div class = "blockBlock" id = "<%=j+1%>_blockBlock2_<%=i+1%>"><%=schedule.schedule[j][key][i][0]%></div>
+                    <div class = "editBlock" onclick = "editBlock(<%=j+1%>,2,<%=i+1%>)">Edit Block</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day3") { %>
+              <div class = "day" id = "<%j+1%>_day_3">
+                <div class = "blockHeader">Day 3</div>
+                <% for (var i = 0; i < schedule.schedule[j][key].length; i++) { %>
+                  <div class = "dayBlock <%=schedule.schedule[j][key][i][0]%>" id = "<%=j+1%>_dayBlock3_<%=i+1%>">
+                    <div class = "blockBlock" id = "<%=j+1%>_blockBlock3_<%=i+1%>"><%=schedule.schedule[j][key][i][0]%></div>
+                    <div class = "editBlock" onclick = "editBlock(<%=j+1%>,3,<%=i+1%>)">Edit Block</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day4") { %>
+              <div class = "day" id = "<%j+1%>_day_4">
+                <div class = "blockHeader">Day 4</div>
+                <% for (var i = 0; i < schedule.schedule[j][key].length; i++) { %>
+                  <div class = "dayBlock <%=schedule.schedule[j][key][i][0]%>" id = "<%=j+1%>_dayBlock4_<%=i+1%>">
+                    <div class = "blockBlock" id = "<%=j+1%>_blockBlock4_<%=i+1%>"><%=schedule.schedule[j][key][i][0]%></div>
+                    <div class = "editBlock" onclick = "editBlock(<%=j+1%>,4,<%=i+1%>)">Edit Block</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (key === "day5") { %>
+              <div class = "day" id = "<%j+1%>_day_5">
+                <div class = "blockHeader">Day 5</div>
+                <% for (var i = 0; i < schedule.schedule[j][key].length; i++) { %>
+                  <div class = "dayBlock <%=schedule.schedule[j][key][i][0]%>" id = "<%=j+1%>_dayBlock5_<%=i+1%>">
+                    <div class = "blockBlock" id = "<%=j+1%>_blockBlock5_<%=i+1%>"><%=schedule.schedule[j][key][i][0]%></div>
+                    <div class = "editBlock" onclick = "editBlock(<%=j+1%>,5,<%=i+1%>)">Edit Block</div>
+                  </div>
+                <% } %>
+              </div>
+            <% } %>
+          <% } %>
+        </div>
+      <% } %>
+
+
+
+    </div>
+    <div class = "submitSchedule" onclick = "submitChanges()">
+      Submit Master Schedule
+    </div>
+    <div style = "position: fixed; bottom: 20px; left: 0">
+      <a href  = "/admin" style = "color: black; font-size: 45px; text-decoration: none">&#8592;</a>
+    </div>
+    <div class = "modal" id = "modal" onclick = "removeModal()"></div>
+    <div class = "enterTimeBox" id = "enterTimeBox">
+      <label for = "enterStartTime">Start: </label><input  type = "time" name = "enterStartTime" class = "enterTime" id = "enterStartTime"/>
+      <label for = "enterEndTime">End: </label><input  type = "time" name = "enterEndTime" class = "enterTime" id = "enterEndTime"/>
+      <button type = "button" class = "enterTimeButton" onclick = "enterTime()">Enter</button>
+    </div>
+    <div class = "changeBlockBox" id = "changeBlockBox">
+      <select class = "changeBlockSelect" id = "changeBlockSelect">
+        <% for (var i = 0; i < blocks.length; i++) { %>
+          <option value = "<%=blocks[i][0]%>_<%=blocks[i][1]%>"><%=blocks[i][0]%></option>
+        <% } %>
+
+      </select>
+      <button type = "button" class = "enterTimeButton" onclick = "enterBlock()">Enter</button>
+    </div>
+  </body>
+  <script>
+    let currentEditedBlock;
+    let currentEditedBlockTemp;
+    let changesObject = {
+      //type 0 for removing a block, type 1 for adding a block, type 2 for changing the time of a block, 3 for changing a block
+      template: {
+        length: <%=schedule.blockSchedule.length%>,
+        changes: []
+      },
+      day1: [],
+      day2: [],
+      day3: [],
+      day4: [],
+      day5: []
+    }
+    function addBlock() {
+      var block = document.createElement("div");
+      var length = (++changesObject.template.length).toString();
+      block.id  = "bodyBlock" + length.toString();
+      block.className = "bodyBlock";
+      var remove = document.createElement("div");
+      remove.className = "removeBlock";
+      remove.setAttribute("onclick", `removeBlock(${length})`);
+      remove.innerHTML = "Remove Block";
+      var timeDisplay = document.createElement("div");
+      timeDisplay.id = "timeDisplay" + length.toString();
+      timeDisplay.innerHTML = "9:10-10:12";
+      timeDisplay.className = "timeDisplay";
+      var editTime = document.createElement("div");
+      editTime.className = "editTime";
+      editTime.setAttribute("onclick", `editTime(${length})`);
+      editTime.innerHTML = "Edit Time";
+      block.appendChild(remove);
+      block.appendChild(timeDisplay);
+      block.appendChild(editTime);
+      document.getElementById("templateBody").appendChild(block);
+      changesObject.template.changes.push([1,   0,0,0,0,   length, ""]);
+      updateBlocks();
+
+
+
+
+
+      let days = document.getElementsByClassName("day");
+      for (var i = 0; i < days.length; i++) {
+        let div = document.createElement("div");
+        div.className = "dayBlock A";
+        let currentSchedule = days[i].id.split("_")[0];
+        div.id = currentSchedule.toString() + "_dayBlock" + (i%5+1).toString() + "_" + length.toString();
+        let blockBlock = document.createElement("div");
+        blockBlock.className = "blockBlock";
+        blockBlock.id = currentSchedule.toString() + "_blockBlock" + (i%5+1).toString() + "_" + length.toString();
+        blockBlock.innerHTML = "A";
+        let editBlock = document.createElement("div");
+        editBlock.className = "editBlock";
+        editBlock.setAttribute("onclick", `editBlock(${currentSchedule}, ${(i%5+1)}, ${length})`);
+        editBlock.innerHTML = "Edit Block";
+        div.appendChild(blockBlock);
+        div.appendChild(editBlock);
+        days[i].appendChild(div);
+      }
+    }
+
+
+
+
+    function removeBlock(block) {
+      elementBlock = document.getElementById("bodyBlock" + block.toString());
+      elementBlock.parentNode.removeChild(elementBlock);
+      changesObject.template.changes.push([0,  0,0,0,0,   block, ""]);
+      changesObject.template.length -= 1;
+      let days = document.getElementsByClassName("day");
+      for (var i = 0; i < days.length; i++) {
+        days[i].removeChild(days[i].children[block]);
+        for(var j = 1; j < days[i].children.length; j++) {
+          days[i].children[j].id = days[i].children[j].id.split("_")[0] + "_dayBlock" + (i%5+1).toString() + "_" + j.toString();
+          days[i].children[j].children[0].id = days[i].children[j].id.split("_")[0] + "_blockBlock" + (i%5+1).toString() + "_" + j.toString();
+          days[i].children[j].children[1].setAttribute("onclick", `editBlock(${days[i].children[j].id.split("_")[0]}, ${(i%5+1)}, ${j})`);
+        }
+      }
+      updateBlocks();
+    }
+
+
+
+    function updateBlocks() {
+      let blocks = document.getElementsByClassName("bodyBlock");
+      for (var i = 0; i < blocks.length; i++) {
+        blocks[i].id = "bodyBlock" + (i+1).toString();
+        blocks[i].children[0].setAttribute("onclick", `removeBlock(${i+1})`);
+      }
+    }
+
+    function editTime(block) {
+      document.getElementById("enterTimeBox").style.display = "block";
+      document.getElementById("modal").style.display = "block";
+      currentEditedTemp = block;
+    }
+    function editBlock(schedule, day, block) {
+      console.log("Yeet");
+      document.getElementById("changeBlockBox").style.display = "block";
+      document.getElementById("modal").style.display = "block";
+      currentEditedBlock = [schedule, day, block];
+    }
+    function enterBlock() {
+      let blockInput = document.getElementById("changeBlockSelect").value;
+      changesObject["day" + currentEditedBlock[1].toString()].push([3,   currentEditedBlock[0],currentEditedBlock[1],currentEditedBlock[2],0,    blockInput.split("_")[0], blockInput.split("_")[1]]);
+      document.getElementById(currentEditedBlock[0].toString() + "_blockBlock" + currentEditedBlock[1].toString() + "_" + currentEditedBlock[2].toString()).innerHTML = blockInput.split("_")[0];
+      document.getElementById(currentEditedBlock[0].toString() + "_dayBlock" + currentEditedBlock[1].toString() + "_" + currentEditedBlock[2].toString()).className = "dayBlock dayBlock" + currentEditedBlock[1].toString() + " " + blockInput.split("_")[0];
+      removeModal();
+    }
+    function removeModal() {
+      document.getElementById("enterTimeBox").style.display = "none";
+      document.getElementById("changeBlockBox").style.display = "none";
+      document.getElementById("modal").style.display = "none";
+    }
+    function enterTime() {
+      let startInput = document.getElementById("enterStartTime");
+      let endInput = document.getElementById("enterEndTime");
+      startTime = startInput.value;
+      endTime = endInput.value;
+      let startHour = parseInt(startTime.split(":")[0]);
+      let startMinute = parseInt(startTime.split(":")[1]);
+      let endHour = parseInt(endTime.split(":")[0]);
+      let endMinute = parseInt(endTime.split(":")[1]);
+      changesObject.template.changes.push([2, startHour, startMinute, endHour, endMinute, currentEditedTemp, ""]);
+      startInput.value = "";
+      endInput.value = "";
+      document.getElementById("timeDisplay" + currentEditedTemp.toString()).innerHTML = (startHour%12 == 0 ? 12 : startHour%12).toString() + ":" + startMinute.toString() + (startHour+startMinute/60 >= 12 ? "PM" : "AM") + " - " + (endHour%12 == 0 ? 12 : endHour%12).toString() + ":" + endMinute.toString() + (endHour+endMinute/60 >= 12 ? "PM" : "AM");
+      removeModal();
+    }
+
+
+    function submitChanges() {
+      console.log(changesObject);
+      if (confirm("Are you sure you would like to submit this revised master schedule? This will update everyone's schedule.")) {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/admin/block-schedule-constant";
+        for (var key in changesObject) {
+          if (key === "template") {
+            for (var i = 0; i < changesObject[key].changes.length; i++) {
+              let input = document.createElement("input");
+              input.type = "hidden";
+              input.name = key + "Changes";
+              input.value = changesObject[key].changes[i][0] + "," + changesObject[key].changes[i][1] + "," + changesObject[key].changes[i][2] + "," + changesObject[key].changes[i][3] + ","  + changesObject[key].changes[i][4] + "," + changesObject[key].changes[i][5] + "," + changesObject[key].changes[i][6];
+              form.appendChild(input);
+            }
+          } else {
+
+            for (var i = 0; i < changesObject[key].length; i++) {
+              let input = document.createElement("input");
+              input.type = "hidden";
+              input.name = key + "Changes";
+              input.value = changesObject[key][i][0] + "," + changesObject[key][i][1] + "," + changesObject[key][i][2] + "," + changesObject[key][i][3] + ","  + changesObject[key][i][4] + "," + changesObject[key][i][5] + "," + changesObject[key][i][6];
+              form.appendChild(input);
+            }
+          }
+        }
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
+  </script>
+</html>

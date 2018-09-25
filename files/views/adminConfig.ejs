@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {display:none;}
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+        color: #F8B195;
+      }
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: #355C7D;
+      }
+      .container {
+        width: 100%;
+        min-width: 700px;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        overflow-x: auto;
+        padding: 25px;
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 100px;
+      }
+      .scheduleType {
+        margin-right: 50px;
+
+      }
+      .scheduleRadio {
+        width: 20px;
+        height: 20px;
+      }
+      .sliderTF {
+        display: inline-block;
+        position: relative;
+        top: -10px;
+      }
+      .constantLength {
+        margin-right: 50px;
+      }
+      .available {
+
+      }
+      .blockAv {
+        padding: 10px;
+        border: 2px solid black;
+        width: 100px;
+        text-align: center;
+        margin-top: 5px;
+        position: relative;
+      }
+      .x {
+        font-size: 30px;
+        position: absolute;
+        left: 105px;
+        top: 3px;
+        color: red;
+        cursor: pointer;
+      }
+      .addBlock {
+        font-size: 40px;
+        color: lightgreen;
+        cursor: pointer;
+      }
+      .nWeekInput {
+        width: 40px;
+        color: black;
+        height: 30px;
+        font-size: 18px;
+        outline: none;
+      }
+      .submit {
+        position: fixed;
+        bottom: 10px;
+        left: 80px;
+        width: 200px;
+        height: 50px;
+        -webkit-appearance: none;
+        font-size: 20px;
+        outline: none;
+        cursor: pointer;
+        background-color: #C06C84;
+        border: 0;
+        border-radius: 10px;
+      }
+      .constantNew {
+        color: black;
+        font-size: 18px;
+        width: 100px;
+        margin-top: 10px;
+        outline: none;
+      }
+      .changingNew {
+        color: black;
+        font-size: 18px;
+        width: 100px;
+        margin-top: 10px;
+        outline: none;
+      }
+      .enter {
+        width: 28px;
+        height: 28px;
+        color: lightgreen;
+        font-size: 45px;
+        display: inline-block;
+        position: relative;
+        top: 4px;
+        margin-left: 5px;
+      }
+      .faviconFile {
+
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "container">
+      <div class = "scheduleType">
+        <h1>Schedule type: <a href = "/admin/what"><h6 style = 'font-size: 10px; display: inline'>what is this?</h6></a></h1>
+        <h3>
+          <input type = "radio" name = "scheduleType" id = "rollingWeek" class = "scheduleRadio" onchange = "scheduleFunction(0)" value = "0" <%=scheduleType === 0 ? "checked" : ""%> /><label for "rollingWeek">Rolling Week</label>
+          <br>
+          <input type = "radio" name = "scheduleType" id = "orderWeek" class = "scheduleRadio" onchange = "scheduleFunction(1)" value = "1" <%=scheduleType === 1 ? "checked" : ""%> /><label for "orderWeek">1 Week Rotation</label>
+          <br>
+          <input type = "radio" name = "scheduleType" id = "orderMonth" class = "scheduleRadio" onchange = "scheduleFunction(2)" value = "2" <%=scheduleType === 2 ? "checked" : ""%> /><label for "orderMonth">4 Week Rotation</label>
+          <br>
+          <input type = "radio" name = "scheduleType" id = "orderMonthN" class = "scheduleRadio" onchange = "scheduleFunction(3)" value = "3" <%=scheduleType === 3 ? "checked" : ""%> /><label for "orderMonth"><input type = "number" min="1" max="52" class = "nWeekInput" value = "<%=numOfWeeks%>" id = "nWeekInput" onchange = "scheduleFunction(3)"/> Week Rotation</label>
+        </h3>
+      </div>
+
+
+      <div class = "constantLength">
+        <h1>Constant length blocks: <a href = "/admin/what"><h6 style = 'font-size: 10px; display: inline'>what is this?</h6></a></h1>
+        <div style = "width: 50%;margin: auto">
+          <h2 class = "sliderTF">False</h2>
+          <label class="switch">
+            <input type="checkbox" onchange = "constantFunction(this)" <%=constantBlocks ? "checked" : ""%>>
+            <span class="slider round"></span>
+          </label>
+          <h2 class = "sliderTF">True</h2>
+        </div>
+      </div>
+
+
+      <div class = "availableBlocks">
+        <h1>Available Blocks: </h1>
+        <div class = "constantAvailable available" id = "constantParent">
+          <h3>Constant Blocks: </h3>
+          <% for (var i = 0; i < blockNames.length; i++) { %>
+            <% if (blockNames[i][1] === "constant") { %>
+              <div class = "blockAv"><%=blockNames[i][0]%><div class = "x" onclick = "removeBlock(<%=i%>, this)">X</div></div>
+            <% } %>
+          <% } %>
+          <div class = "addConstant addBlock" id = "addConstant" onclick = "addConstant()">+</div>
+        </div>
+        <div class = "changingAvailable available" id = "changingParent">
+          <h3>Changing Blocks: </h3>
+          <% for (var i = 0; i < blockNames.length; i++) { %>
+            <% if (blockNames[i][1] === "changing") { %>
+              <div class = "blockAv"><%=blockNames[i][0]%><div class = "x" onclick = "removeBlock(<%=i%>, this)">X</div></div>
+            <% } %>
+          <% } %>
+          <div class = "addChanging addBlock" id = "addChanging" onclick = "addChanging()">+</div>
+        </div>
+
+
+      </div>
+
+      
+      <div class = "submit">
+        <input type = "button" class = "submit" value = "Submit Changes"  onclick = "submitFunction()"/>
+      </div>
+      <div style = "position: fixed; bottom: 20px; left: 0">
+        <a href  = "/admin" style = "color: black; font-size: 45px; text-decoration: none">&#8592;</a>
+      </div>
+
+
+
+
+    </div>
+  </body>
+  <script>
+    let length = <%=blockNames.length%>;
+
+    //0 for adding a constant or changing block, 1 for removing one, 2 for changing type of schedule, 3 for changing constant length blocks or not
+    var changes = {
+      blockChanges: [],
+      scheduleChanges: [],
+      constantChanges: []
+    }
+
+    function constantFunction(element) {
+      changes.constantChanges = ["3", "0", element.checked || false];
+    }
+    function addChanging() {
+      let input = document.createElement("input");
+      input.type = "text";
+      input.className = "changingNew";
+      input.id = "changingNew";
+      let add = document.createElement("div");
+      add.setAttribute("onclick", "enterChanging()");
+      add.className = "enter";
+      add.innerHTML = "+";
+      add.id = "addChangingNew";
+      document.getElementById("changingParent").insertBefore(input, document.getElementById("addChanging"));
+      document.getElementById("changingParent").insertBefore(add, document.getElementById("addChanging"));
+      document.getElementById("addChanging").style.display = "none";
+    }
+    function enterChanging() {
+      let value = document.getElementById("changingNew").value;
+      let text = document.createElement("div");
+      text.className = "blockAv";
+      let x = document.createElement("div");
+      x.className = "x";
+      x.innerHTML = "X";
+      text.innerHTML = value;
+      x.setAttribute("onclick", `removeBlock(${length++}, this)`);
+      text.appendChild(x);
+      document.getElementById("changingParent").insertBefore(text, document.getElementById("addChanging"));
+      document.getElementById("changingParent").removeChild(document.getElementById("changingNew"));
+      document.getElementById("changingParent").removeChild(document.getElementById("addChangingNew"));
+      changes.blockChanges.push(["0", "changing", value]);
+      document.getElementById("addChanging").style.display = "block";
+    }
+    function addConstant() {
+      let input = document.createElement("input");
+      input.type = "text";
+      input.className = "constantNew";
+      input.id = "constantNew";
+      let add = document.createElement("div");
+      add.setAttribute("onclick", "enterConstant()");
+      add.className = "enter";
+      add.innerHTML = "+";
+      add.id = "addConstantNew";
+      document.getElementById("constantParent").insertBefore(input, document.getElementById("addConstant"));
+      document.getElementById("constantParent").insertBefore(add, document.getElementById("addConstant"));
+      document.getElementById("addConstant").style.display = "none";
+    }
+    function enterConstant() {
+      let value = document.getElementById("constantNew").value;
+      let text = document.createElement("div");
+      text.className = "blockAv";
+      let x = document.createElement("div");
+      x.className = "x";
+      x.innerHTML = "X";
+      x.setAttribute("onclick", `removeBlock(${length++}, this)`);
+      text.innerHTML = value;
+      text.appendChild(x);
+      document.getElementById("constantParent").insertBefore(text, document.getElementById("addConstant"));
+      document.getElementById("constantParent").removeChild(document.getElementById("constantNew"));
+      document.getElementById("constantParent").removeChild(document.getElementById("addConstantNew"));
+      changes.blockChanges.push(["0", "constant", value]);
+      document.getElementById("addConstant").style.display = "block";
+    }
+    function scheduleFunction(x) {
+      if (x == 3) {
+        let nSchedule = parseInt(document.getElementById("nWeekInput").value) || 1;
+        changes.scheduleChanges = ["2", "3", nSchedule.toString()];
+      } else {
+        changes.scheduleChanges = ["2", x.toString(), "0"];
+      }
+    }
+    function removeBlock(index, item) {
+      changes.blockChanges.push(["1", "_", index]);
+      item.parentNode.parentNode.removeChild(item.parentNode);
+    }
+
+    function submitFunction() {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/configure";
+      for (var key in changes) {
+        for (var i = 0; i < changes[key].length; i++) {
+          let input = document.createElement("input");
+          input.name = key;
+          input.type = "hidden";
+          input.value = changes[key][i];
+          form.appendChild(input);
+        }
+      }
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+  </script>
+</html>

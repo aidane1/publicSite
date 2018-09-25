@@ -21,7 +21,7 @@
       .bodyContents {
           display: flex;
           flex-direction: row;
-          /* flex-wrap: nowrap; */
+          flex-wrap: wrap;
           width: 100%;
           height: 100%;
       }
@@ -33,7 +33,7 @@
 
         padding-top: 30px;
         padding-bottom: 30px;
-        width: 300px;
+        min-width: 300px;
         /* flex-grow: 1; */
         margin: 5px;
         text-align: center;
@@ -49,6 +49,18 @@
       <!-- <div class = "spacer"></div> -->
       <div class = "button" id = "courses"><a href = "/admin/courses">Courses</a></div>
 
+      <div class = "button" id = "events"><a href = "/admin/events">Events</a></div>
+
+      <div class = "button" id = "configure"><a href = "/admin/configure">Configure</a></div>
+
+      <div class = "button" id = "permissions"><a href = "/admin/user-permissions">User Permissions</a></div>
+
+      <div class = "button" id = "logo"><a href = "/admin/photos">Photos / Logo</a></div>
+
+
+    </div>
+    <div style = "position: fixed; bottom: 20px; left: 0">
+      <a href  = "/" style = "color: black; font-size: 45px; text-decoration: none">&#8592;</a>
     </div>
   </body>
 </html>
