@@ -756,7 +756,12 @@
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
-        <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div>
+        <% if (schoolName === "PVSS") { %>
+          <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div>
+        <% } else { %>
+          <div class = "block"><h3><%=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()]</h3></div>
+        <% } %>
+
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayEvents">
           <center><h2 style = "color: <%=colours.textColor%>">Upcoming Events: </h2></center>
