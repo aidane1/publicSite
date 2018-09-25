@@ -289,7 +289,7 @@ app.use(function(req, res, next) {
 });
 
 app.enable('trust proxy');
-//
+// //
 function wwwHttpsRedirect(req, res, next) {
     if (req.secure) {
       if (req.headers.host.slice(0, 4) !== 'www.') {
@@ -1290,7 +1290,8 @@ app.get("/", async (req, res, next) => {
             if (user.blockNames) {
               todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
             } else {
-              todayClass.push((courseBlocks[todaysBlocks[i][0]][1]) || (school.spareName || "Spare"));
+              console.log(todaysBlocks[i]);
+              todayClass.push((courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
             }
 
           }
