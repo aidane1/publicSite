@@ -173,6 +173,11 @@
       .faviconFile {
 
       }
+      #spareName {
+        outline: none;
+        font-size: 18px;
+        color: black;
+      }
 
     </style>
   </head>
@@ -225,31 +230,30 @@
           <% } %>
           <div class = "addChanging addBlock" id = "addChanging" onclick = "addChanging()">+</div>
         </div>
-
-
       </div>
 
-      
+      <div class = "spareName">
+        <label for "spareName">Spare (free) block name : </label><input value = "<%=spareName%>", type = "text" id = "spareName" name = "spareName" onchange = "spareFunction(this.value)"/>
+      </div>
+
+
       <div class = "submit">
         <input type = "button" class = "submit" value = "Submit Changes"  onclick = "submitFunction()"/>
       </div>
       <div style = "position: fixed; bottom: 20px; left: 0">
         <a href  = "/admin" style = "color: black; font-size: 45px; text-decoration: none">&#8592;</a>
       </div>
-
-
-
-
     </div>
   </body>
   <script>
     let length = <%=blockNames.length%>;
 
-    //0 for adding a constant or changing block, 1 for removing one, 2 for changing type of schedule, 3 for changing constant length blocks or not
+    //0 for adding a constant or changing block, 1 for removing one, 2 for changing type of schedule, 3 for changing constant length blocks or not, 4 for changing spare name
     var changes = {
       blockChanges: [],
       scheduleChanges: [],
-      constantChanges: []
+      constantChanges: [],
+      spareChanges: []
     }
 
     function constantFunction(element) {
@@ -326,6 +330,9 @@
     function removeBlock(index, item) {
       changes.blockChanges.push(["1", "_", index]);
       item.parentNode.parentNode.removeChild(item.parentNode);
+    }
+    function spareFunction(value) {
+      changes.spareChanges = ["4", value, ""];
     }
 
     function submitFunction() {

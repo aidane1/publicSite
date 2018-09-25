@@ -281,7 +281,7 @@ app.use(function(req, res, next) {
 
           }
         })
-      } 
+      }
       next();
     }
   })
@@ -881,7 +881,7 @@ app.get("/admin/configure", function(req, res) {
             res.redirect("/");
           } else {
             console.log(school.scheduleType);
-            res.render("adminConfig", {numOfWeeks : school.blockOrder.length,  scheduleType : parseInt(school.scheduleType) || 0, constantBlocks : school.constantBlocks || false, blockNames : school.blockNames});
+            res.render("adminConfig", {spareName : school.spareName || "Spare", numOfWeeks : school.blockOrder.length,  scheduleType : parseInt(school.scheduleType) || 0, constantBlocks : school.constantBlocks || false, blockNames : school.blockNames});
           }
         });
       }
@@ -950,6 +950,14 @@ app.post("/admin/Configure", urlencodedParser, function(req, res) {
               } else if (key === "constantChanges") {
                 if (req.body.constantChanges[2]) {
                   School.findOneAndUpdate({_id : user.school}, {$set : {constantBlocks : (req.body.constantChanges[2] === "true" ? true : false)}}).then(function() {
+                    res.redirect("/admin/configure");
+                  })
+                } else {
+                  res.redirect("/");
+                }
+              } else if (key === "spareChanges") {
+                if (req.body.spareChanges[1]) {
+                  School.findOneAndUpdate({_id : user.school}, {$set : {spareName : req.body.spareChanges[1]}}).then(function() {
                     res.redirect("/admin/configure");
                   })
                 } else {
@@ -1273,9 +1281,9 @@ app.get("/", async (req, res, next) => {
             todayClass.push(todaysBlocks[i][0]);
           } else {
             if (user.blockNames) {
-              todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || "LC's");
+              todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
             } else {
-              todayClass.push((courseBlocks[todaysBlocks[i][0]][1]) || "LC's");
+              todayClass.push((courseBlocks[todaysBlocks[i][0]][1]) || (school.spareName || "Spare"));
             }
 
           }
@@ -2144,7 +2152,7 @@ app.get("/schedule", function(req, res) {
                           }
                         }
                         if (!found) {
-                          currentDay.push([constantBlockSchedule[i][day][j][0], "LC's", "", constantBlockOrder[j][0], constantBlockOrder[j][1], constantBlockOrder[j][2], constantBlockOrder[j][3]])
+                          currentDay.push([constantBlockSchedule[i][day][j][0], (school.spareName || "Spare"), "", constantBlockOrder[j][0], constantBlockOrder[j][1], constantBlockOrder[j][2], constantBlockOrder[j][3]])
                         }
                       } else {
                         currentDay.push([constantBlockSchedule[i][day][j][0], constantBlockSchedule[i][day][j][0], "", constantBlockOrder[j][0], constantBlockOrder[j][1], constantBlockOrder[j][2], constantBlockOrder[j][3]])
@@ -2177,9 +2185,9 @@ app.get("/schedule", function(req, res) {
                       }
                       if (!found) {
                         if (user.blockNames) {
-                          blockObject[l][key][i] = [blockObject[l][key][i][0], user.blockNames[blockObject[l][key][i][0]] || (blockObject[l][key][i][5] === "changing" ? "LC's" : blockObject[l][key][i][0]), "\n", blockObject[l][key][i][1], blockObject[l][key][i][2], blockObject[l][key][i][3], blockObject[l][key][i][4]];
+                          blockObject[l][key][i] = [blockObject[l][key][i][0], user.blockNames[blockObject[l][key][i][0]] || (blockObject[l][key][i][5] === "changing" ? (school.spareName || "Spare") : blockObject[l][key][i][0]), "\n", blockObject[l][key][i][1], blockObject[l][key][i][2], blockObject[l][key][i][3], blockObject[l][key][i][4]];
                         } else {
-                          blockObject[l][key][i] = [blockObject[l][key][i][0], (blockObject[l][key][i][5] === "changing" ? "LC's" : blockObject[l][key][i][0]), "\n", blockObject[l][key][i][1], blockObject[l][key][i][2], blockObject[l][key][i][3], blockObject[l][key][i][4]];
+                          blockObject[l][key][i] = [blockObject[l][key][i][0], (blockObject[l][key][i][5] === "changing" ? (school.spareName || "Spare") : blockObject[l][key][i][0]), "\n", blockObject[l][key][i][1], blockObject[l][key][i][2], blockObject[l][key][i][3], blockObject[l][key][i][4]];
                         }
                       }
                     }
@@ -2382,29 +2390,44 @@ app.get("/users/:user/block-names", function(req,res) {
       if (user.username != req.params.user) {
         res.redirect("/users/" + user.username + "/block-names");
       } else {
-        let namesSent = {
-          A : "LC's",
-          B : "LC's",
-          C : "LC's",
-          D : "LC's",
-          E : "LC's"
-        }
-        let nameBlocks = user.blockNames;
-        Course.find({_id : user.courses}, function(err, courses) {
-          if (err) {
+        School.findOne({_id : user.school}, function(err, school) {
+          if (err || school == null) {
             res.redirect("/");
           } else {
-            for (var i = 0; i < courses.length; i++) {
-              namesSent[courses[i].block] = courses[i].course;
+            let namesSent = {
+
             }
-            if (nameBlocks) {
-              for (var key in nameBlocks) {
-                if (nameBlocks[key]) {
-                  namesSent[key] = nameBlocks[key];
-                }
+
+            for (var i = 0; i < school.blockNames.length; i++) {
+              if (school.blockNames[i][1] === "changing") {
+                namesSent[school.blockNames[i][0]] = (school.spareName || "Spare");
+              } else {
+
               }
             }
-            res.render("blockNames", {namesSent : namesSent, user: user.username, colours: user.colors, font: (holidayFont(user.font))});
+            console.log(user.blockNames);
+            let nameBlocks = JSON.parse(JSON.stringify(user.blockNames));
+            Course.find({_id : user.courses}, function(err, courses) {
+              if (err) {
+                res.redirect("/");
+              } else {
+                for (var i = 0; i < courses.length; i++) {
+                  namesSent[courses[i].block] = courses[i].course;
+                }
+                if (nameBlocks) {
+                  console.log(nameBlocks);
+                  for (var key in nameBlocks) {
+                    if (nameBlocks[key]) {
+                      namesSent[key] = nameBlocks[key];
+                    }
+                  }
+                }
+                console.log(namesSent);
+
+
+                res.render("blockNames", {namesSent : namesSent, user: user.username, colours: user.colors, font: (holidayFont(user.font))});
+              }
+            })
           }
         })
       }
@@ -2422,13 +2445,12 @@ app.post("/users/:user/block-names", urlencodedParser, function(req, res) {
         res.redirect("/");
       } else {
         let blockObject = {
-          A : req.body.blockNameA,
-          B : req.body.blockNameB,
-          C : req.body.blockNameC,
-          D : req.body.blockNameD,
-          E : req.body.blockNameE
+
         }
-        User.findOneAndUpdate({_id : req.session.userId}, {$set : {blockNames : blockObject}}).then(function() {
+        for (var key in req.body) {
+          blockObject[key.split("blockName")[1]] = req.body[key];
+        }
+        User.findOneAndUpdate({_id : req.session.userId}, {$set : {blockNames : blockObject}}).then(function(object) {
           res.redirect("/users/" + req.params.user);
         });
       }

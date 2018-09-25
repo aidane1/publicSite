@@ -82,31 +82,13 @@
   </head>
   <body>
     <form class = "container" method = "POST" action = "/users/<%=user%>/block-names">
-      <div class = "block">
-        <div class = "spacer"></div>
-        <div>A : <input type = "text" class = "blockName" name = "blockNameA" value = "<%=namesSent.A%>"/></div>
-        <div class = "spacer"></div>
-      </div>
-      <div class = "block">
-        <div class = "spacer"></div>
-        <div>B : <input type = "text" class = "blockName" name = "blockNameB" value = "<%=namesSent.B%>"/></div>
-        <div class = "spacer"></div>
-      </div>
-      <div class = "block">
-        <div class = "spacer"></div>
-        <div>C : <input type = "text" class = "blockName" name = "blockNameC" value = "<%=namesSent.C%>"/></div>
-        <div class = "spacer"></div>
-      </div>
-      <div class = "block">
-        <div class = "spacer"></div>
-        <div>D : <input type = "text" class = "blockName" name = "blockNameD" value = "<%=namesSent.D%>"/></div>
-        <div class = "spacer"></div>
-      </div>
-      <div class = "block">
-        <div class = "spacer"></div>
-        <div>E : <input type = "text" class = "blockName" name = "blockNameE" value = "<%=namesSent.E%>"/></div>
-        <div class = "spacer"></div>
-      </div>
+      <% for (var key in namesSent) { %>
+        <div class = "block">
+          <div class = "spacer"></div>
+          <div><%=key%> : <input type = "text" class = "blockName" name = "blockName<%=key%>" value = "<%=namesSent[key]%>"/></div>
+          <div class = "spacer"></div>
+        </div>
+      <% } %>
       <div class = "submit">
         <input type = "submit" value = "submit" class = "submitButton"/>
       </div>
