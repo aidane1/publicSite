@@ -22,7 +22,7 @@
       }
       .bodyHolder {
         position: fixed;
-        top: 0; 
+        top: 0;
         bottom: 0;
         left: 0;
         right: 0;
@@ -116,7 +116,7 @@
       <div class = "textHolder" id = "textHolder">
         This is the signup page
       </div>
-      <a href = "/courses">skip</a>
+      <a href = "/<%=hasCourses ? 'courses' : 'users/' + username + '/block-names'%>">skip</a>
     </div>
   </body>
   <script>
@@ -141,7 +141,7 @@
         currentImageNum = 0;
       } else if (currentImageNum >= sources.length) {
         currentImageNum = sources.length-1;
-        window.location = "https://www.pvstudents.ca/courses";
+        window.location = "https://www.pvstudents.ca/<%=hasCourses ? 'courses' : 'users/' + username + '/block-names'%>";
       }
       maxNum += Math.abs(dir);
       if (maxNum < sources.length-1) {

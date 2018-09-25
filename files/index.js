@@ -2113,10 +2113,17 @@ app.post("/chatroom", urlencodedParser, function(req, res) {
 app.get("/tutorial", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
-      if (err) {
+
+      if (err || !user || user == null) {
         res.render("tutorial", {font: "/public/fonts/LANENAR_.ttf"});
       } else {
-        res.render("tutorial", {font: holidayFont(user.font)})
+        Course.find({school : user.school}, function(err, courses) {
+          if (err || courses === null) {
+            res.redirect("/");
+          } else {
+            res.render("tutorial", {username : user.username, hasCourses : (courses.length > 0), font: holidayFont(user.font)});
+          }
+        })
       }
     })
   } else {
