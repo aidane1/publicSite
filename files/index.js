@@ -1481,7 +1481,13 @@ app.post("/signup", urlencodedParser, function(req, res) {
         School.findOne({name : req.body.schoolChoice}, function(err, school) {
           if (err || school == null) {
             console.log(err);
-            res.render("signup", {error: "Please enter a valid school name", data: [req.body.username, req.body.firstName, req.body.lastName]});
+            School.find({}, function(err, schools) {
+              schools.sort(function(a,b) {
+                return (a.firstName > b.firstName ? -1 : 1);
+              });
+              res.render("signup", {error: "Please enter a valid school name", schoolNames: schools, data: [req.body.username, req.body.firstName, req.body.lastName]});
+            })
+
           } else {
             var userData = {
               firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
@@ -1501,45 +1507,76 @@ app.post("/signup", urlencodedParser, function(req, res) {
             }
             //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
             try {
-              User.create(userData,function(error, user) {
-                if (error) {
-                  console.log(error);
-                  res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
-                } else {
-                  //sets the session and cookie to current user ID
-                  let mailOptions = {
-                    from: "pvsstudents@gmail.com",
-                    to: "aidaneglin@gmail.com",
-                    subject: "user signup",
-                    text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
-                  }
-                  transporter.sendMail(mailOptions, function(error, info) {
+              User.findOne({username : req.body.username}, function(err, userNameTrue) {
+                console.log(userNameTrue);
+                if (userNameTrue === null) {
+                  User.create(userData,function(error, user) {
                     if (error) {
-                        console.log(error)
-                      res.redirect("/")
+                      console.log(error);
+                      res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
                     } else {
+                      //sets the session and cookie to current user ID
+                      let mailOptions = {
+                        from: "pvsstudents@gmail.com",
+                        to: "aidaneglin@gmail.com",
+                        subject: "user signup",
+                        text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
+                      }
+                      transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            console.log(error)
+                          res.redirect("/")
+                        } else {
 
+                        }
+                      });
+                      req.session.userId = user._id;
+                      res.cookie("sessionID", req.session.userId);
+                      res.redirect("/tutorial");
                     }
                   });
-                  req.session.userId = user._id;
-                  res.cookie("sessionID", req.session.userId);
-                  return res.redirect("/tutorial");
+                } else {
+                  School.find({}, function(err, schools) {
+                    schools.sort(function(a,b) {
+                      return (a.firstName > b.firstName ? -1 : 1);
+                    });
+                    res.render("signup", {error: "Username is already taken.", data: ["", "", ""], schoolNames : schools});
+                  })
+
                 }
-              });
+              })
             } catch(e) {
               console.log(e);
-              res.render("signup", {error: "Username is already taken.", data: ["", "", ""]});
+              School.find({}, function(err, schools) {
+                schools.sort(function(a,b) {
+                  return (a.firstName > b.firstName ? -1 : 1);
+                });
+                res.render("signup", {error: "Username is already taken.", schoolNames : schools, data: ["", "", ""]});
+              })
+
             }
           }
         });
       } else {
-        res.render("signup", {error: "Please limit input fields length to 40 characters.", data : ["", "", ""]});
+        School.find({}, function(err, schools) {
+          schools.sort(function(a,b) {
+            return (a.firstName > b.firstName ? -1 : 1);
+          });
+          res.render("signup", {error: "Please limit input fields length to 40 characters.",schoolNames : schools, data : ["", "", ""]});
+        })
+
       }
     } else {
-      res.render("signup", {error: "Please do not use special characters in your signup information.", data : ["", "", "", ""]});
+      School.find({}, function(err, schools) {
+        schools.sort(function(a,b) {
+          return (a.firstName > b.firstName ? -1 : 1);
+        });
+        res.render("signup", {error: "Please do not use special characters in your signup information.", schoolNames : schools, data : ["", "", "", ""]});
+      })
+
     }
   } else {
-    res.redirect("/signup", {error: "please fill in all the requested fields.", data : ["", "", "", ""]});
+    res.redirect("/signup");
   }
 });
 
