@@ -759,7 +759,7 @@
         <% if (schoolName === "PVSS") { %>
           <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div>
         <% } else { %>
-          <div class = "block"><h3><%=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()]%></h3></div>
+          <div class = "block"><%=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()]%></div>
         <% } %>
 
         <div style = "flex-grow: 0.5"></div>
