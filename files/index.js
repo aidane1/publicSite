@@ -289,7 +289,7 @@ app.use(function(req, res, next) {
 });
 
 app.enable('trust proxy');
-
+//
 function wwwHttpsRedirect(req, res, next) {
     if (req.secure) {
       if (req.headers.host.slice(0, 4) !== 'www.') {
@@ -1207,7 +1207,6 @@ app.get("/home", function(req, res) {
 app.get("/", async (req, res, next) => {
 
 
-
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2018, 8, 20, 15, 18, 0, 0);
 
@@ -1259,13 +1258,21 @@ app.get("/", async (req, res, next) => {
           todaysOrderedClasses = false;
         } else {
           if (school.constantBlocks) {
-            todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()];
+            if (school.name === "PVSS") {
+              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()];
+            } else {
+              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDate.getDay()];
+            }
             let constantSchedule = school.constantBlockSchedule.blockSchedule;
             for (var i = 0; i < todaysBlocks.length; i++) {
               todaysBlocks[i] = [todaysBlocks[i][0], constantSchedule[i][0], constantSchedule[i][1], constantSchedule[i][2], constantSchedule[i][3], todaysBlocks[i][1]];
             }
           } else {
-            todaysBlocks = (school.blockOrder[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()]);
+            if (school.name === "PVSS") {
+              todaysBlocks = (school.blockOrder[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()]);
+            } else {
+              todaysBlocks = (school.blockOrder[weekOffset]["day" + currentDate.getDay()]);
+            }
           }
         }
 
@@ -1744,6 +1751,8 @@ app.get("/calendar", async (req, res, next) => {
       //finds ALL events. will fix later.
       //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
       let yearEvent = await Events.find({school : user.school, $and: [{date: {$gte: lowEnd}}, {date: {$lte: highEnd}}]});
+      let school = await School.findOne({_id : user.school});
+
       // starts the first day of the calendar on september first of that year
       let theDay = lowEnd.getDay();
       // declares an array that will be filled with the info for every day of the year
@@ -1774,8 +1783,8 @@ app.get("/calendar", async (req, res, next) => {
         //pushes this month to the array
         monthsArray.push(currentMonth);
       }
-      console.log(user.colors);
-      res.render("calendar", {offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
+
+      res.render("calendar", {school: school, offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
     }
   }
 });

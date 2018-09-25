@@ -235,7 +235,10 @@
                     <% } %>
 
                     <% if (calendar[i][j-calendar[i][0][2]][2] != 0 && calendar[i][j-calendar[i][0][2]][2] != 6) { %>
-                       <br><span class = "dayDisplay">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
+                      <% if (school.name === "PVSS") { %>
+                          <br><span class = "dayDisplay">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
+                      <% } %>
+
                     <% } %>
 
 
