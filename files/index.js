@@ -207,12 +207,16 @@ let webpush = require("web-push");
 
 let schedule = require("node-schedule");
 
+let sharp = require("sharp");
+
+let toIco = require("to-ico");
+
 let multer  = require('multer');
 
 let path = require("path");
 
 let storage = multer.diskStorage({
-  destination: __dirname + "/public/favicons/",
+  destination: __dirname + "/public/schoolLogos/",
   filename: function(req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   }
@@ -290,27 +294,27 @@ app.use(function(req, res, next) {
 
 app.enable('trust proxy');
 // //
-// function wwwHttpsRedirect(req, res, next) {
-//     if (req.secure) {
-//       if (req.headers.host.slice(0, 4) !== 'www.') {
-//
-//         return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
-//       } else {
-//         next();
-//       }
-//     } else {
-//       if (req.headers.host.slice(0, 4) !== 'www.') {
-//
-//         return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-//       } else {
-//         next();
-//       }
-//     }
-// };
-// app.use(wwwHttpsRedirect);
+function wwwHttpsRedirect(req, res, next) {
+    if (req.secure) {
+      if (req.headers.host.slice(0, 4) !== 'www.') {
+
+        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+      } else {
+        next();
+      }
+    } else {
+      if (req.headers.host.slice(0, 4) !== 'www.') {
+
+        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+      } else {
+        next();
+      }
+    }
+};
+app.use(wwwHttpsRedirect);
 
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
@@ -1029,9 +1033,29 @@ app.post("/admin/photos", function(req, res) {
             if (err) {
               console.log(err);
             } else {
-              School.findOneAndUpdate({_id : user.school}, {favicon : "/public/favicons/" + req.file.filename}).then(function() {
-                res.redirect("/admin/photos");
+
+              // fs.writeFileSync(__dirname + "/public/favicons/57x57_" + req.file.filename);
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(72,72).toFile(__dirname + "/public/schoolLogos/72x72_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(57,57).toFile(__dirname + "/public/schoolLogos/57x57_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(114,114).toFile(__dirname + "/public/schoolLogos/114x114_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(144,144).toFile(__dirname + "/public/schoolLogos/144x144_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(128,128).toFile(__dirname + "/public/schoolLogos/128x128_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(192,192).toFile(__dirname + "/public/schoolLogos/192x192_" + req.file.filename, function(err) {});
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(512,512).toFile(__dirname + "/public/schoolLogos/512x512_" + req.file.filename, function(err) {});
+
+
+
+              sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(64,64).toFile(__dirname + "/public/schoolLogos/64x64_" + req.file.filename, function(err) {
+                School.findOneAndUpdate({_id : user.school}, {favicon : req.file.filename}).then(function() {
+                  res.redirect("/admin/photos");
+                });
               });
+
+
+
+
+
+
             }
           });
 
