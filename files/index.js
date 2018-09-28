@@ -1286,10 +1286,10 @@ app.get("/", async (req, res, next) => {
           if (school.constantBlocks) {
             if (school.name === "PVSS") {
               todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()];
-              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0] : "")).join("");
+              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0][0] : "")).join("");
             } else {
               todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDate.getDay()];
-              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0] : "")).join("");
+              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0][0]: "")).join("");
             }
             let constantSchedule = school.constantBlockSchedule.blockSchedule;
             for (var i = 0; i < todaysBlocks.length; i++) {
