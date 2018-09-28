@@ -1314,7 +1314,6 @@ app.get("/", async (req, res, next) => {
             if (user.blockNames) {
               todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
             } else {
-              console.log(todaysBlocks[i]);
               todayClass.push((courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
             }
 
@@ -1363,20 +1362,22 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][4]) {
             blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
           } else {
-            blockForTime = [["", "Nothing!"], ["9:10-10:12 : ", todaysOrderedClasses[0][5]]];
+            console.log(todaysOrderedClasses);
+            blockForTime = [["", "Nothing!"], [`${todaysOrderedClasses[0][0]}:${todaysOrderedClasses[0][1].toString().length === 1 ? "0" + todaysOrderedClasses[0][1].toString() : todaysOrderedClasses[0][1]}-${todaysOrderedClasses[0][2]}:${todaysOrderedClasses[0][3].toString().length === 1 ? "0" + todaysOrderedClasses[0][3].toString() : todaysOrderedClasses[0][3]} `, todaysOrderedClasses[0][5]]];
             for (var i = 0; i < todaysBlocks.length; i++) {
               if (timeInMinutes > todaysBlocks[i][1]*60+todaysBlocks[i][2]) {
                 let secondArray;
                 if (i+1 >= todaysBlocks.length) {
                   secondArray = ["", "Nothing!"];
                 } else {
-                  secondArray = [`${(todaysOrderedClasses[i+1][0]-1)%12+1}:${todaysOrderedClasses[i+1][1].length == 1 ? "0" + todaysOrderedClasses[i+1][1] : todaysOrderedClasses[i+1][1]}-${(todaysOrderedClasses[i+1][2]-1)%12+1}:${todaysOrderedClasses[i+1][3].length == 1 ? "0" + todaysOrderedClasses[i+1][3] : todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][5])];
+                  secondArray = [`${(todaysOrderedClasses[i+1][0]-1)%12+1}:${todaysOrderedClasses[i+1][1].toString().length == 1 ? "0" + todaysOrderedClasses[i+1][1].toString() : todaysOrderedClasses[i+1][1]}-${(todaysOrderedClasses[i+1][2]-1)%12+1}:${todaysOrderedClasses[i+1][3].toString().length == 1 ? "0" + todaysOrderedClasses[i+1][3] : todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][5])];
                 }
-                blockForTime = [[`${(todaysOrderedClasses[i][0]-1)%12+1}:${todaysOrderedClasses[i][1].length == 1 ? "0" + todaysOrderedClasses[i][1] : todaysOrderedClasses[i][1]}-${(todaysOrderedClasses[i][2]-1)%12+1}:${todaysOrderedClasses[i][3].length == 1 ? "0" + todaysOrderedClasses[i][3] : todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][5])], secondArray];
+                blockForTime = [[`${(todaysOrderedClasses[i][0]-1)%12+1}:${todaysOrderedClasses[i][1].toString().length == 1 ? "0" + todaysOrderedClasses[i][1] : todaysOrderedClasses[i][1]}-${(todaysOrderedClasses[i][2]-1)%12+1}:${todaysOrderedClasses[i][3].toString().length == 1 ? "0" + todaysOrderedClasses[i][3] : todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][5])], secondArray];
               }
             }
           }
           //update lc schedule (you changed it)
+          console.log(blockForTime);
           res.render("index", {schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
