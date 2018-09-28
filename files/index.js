@@ -1277,15 +1277,19 @@ app.get("/", async (req, res, next) => {
         //also accounts for time offsets due to pro-D days
 
         let todaysBlocks;
+        let blockOrderLetters;
         if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
           todaysBlocks = false;
           todaysOrderedClasses = false;
+          blockOrderLetters = false;
         } else {
           if (school.constantBlocks) {
             if (school.name === "PVSS") {
               todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()];
+              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0] : "")).join("");
             } else {
               todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDate.getDay()];
+              blockOrderLetters = todaysBlocks.map(x => (x[1] === "changing" ? x[0] : "")).join("");
             }
             let constantSchedule = school.constantBlockSchedule.blockSchedule;
             for (var i = 0; i < todaysBlocks.length; i++) {
@@ -1362,7 +1366,6 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][4]) {
             blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
           } else {
-            console.log(todaysOrderedClasses);
             blockForTime = [["", "Nothing!"], [`${todaysOrderedClasses[0][0]}:${todaysOrderedClasses[0][1].toString().length === 1 ? "0" + todaysOrderedClasses[0][1].toString() : todaysOrderedClasses[0][1]}-${todaysOrderedClasses[0][2]}:${todaysOrderedClasses[0][3].toString().length === 1 ? "0" + todaysOrderedClasses[0][3].toString() : todaysOrderedClasses[0][3]} `, todaysOrderedClasses[0][5]]];
             for (var i = 0; i < todaysBlocks.length; i++) {
               if (timeInMinutes > todaysBlocks[i][1]*60+todaysBlocks[i][2]) {
@@ -1378,7 +1381,7 @@ app.get("/", async (req, res, next) => {
           }
           //update lc schedule (you changed it)
           console.log(blockForTime);
-          res.render("index", {schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {blockOrderLetters : blockOrderLetters, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);
