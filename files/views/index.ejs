@@ -783,9 +783,9 @@
           <%soonEvents.forEach(function(event) { %>
             <div class = "soonEvent">
               <% if (event.longForm) { %>
-                <%=(event.day+1).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.longForm%>
+                <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.longForm%>
               <% } else { %>
-                <%=(event.day+1).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.info%>
+                <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.info%>
               <% } %>
 
             </div>
