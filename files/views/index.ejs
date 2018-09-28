@@ -460,7 +460,9 @@
         top:10px;
         right:15px;
         border-radius:3px;
-        z-index:16
+        z-index:16;
+
+        padding-top: 10px;
       }
       .line1,.line2,.line3 {
         width:28px;
@@ -472,8 +474,9 @@
         transition:.4s
       }
       .change .line1 {
+        transform-origin: 50% 50%;
         -webkit-transform:rotate(-45deg) translate(-9px,0);
-        transform:rotate(-45deg) translate(-9px,0)
+        transform:rotate(-45deg) translate(-9px,0);
       }
       .change .line2 {
         opacity:0
@@ -483,10 +486,10 @@
         transform:rotate(45deg) translate(-10px,0)
       }
       nav {
-        top:-400px;
+        top:-500px;
         width:100%;
         z-index:15;
-        transition:top .7s
+        transition:top .9s
       }
       .courseBox {
         flex-grow: 0.5;
@@ -755,16 +758,18 @@
           <% if (order[key] == "Courses") { %>
             <li class = "item unselectable"><a href = "#courses">Courses</a></li>
           <% } else if (order[key] == "LC") { %>
-            <li class = "item unselectable"><a href = "#LC">Open LCs</a></li>
+            <!-- <li class = "item unselectable"><a href = "#LC">Open LCs</a></li> -->
           <% } else if (order[key] == "Calendar") { %>
             <li class = "item unselectable"><a href = "#news">News & Calendar</a></li>
           <% } else if (order[key] == "Schedule") { %>
-            <li class = "item unselectable"><a href = "#schedule">Schedule and other</a></li>
+            <!-- <li class = "item unselectable"><a href = "#schedule">Schedule and other</a></li> -->
           <% } else if (order[key] == "Resources") { %>
-            <li class = "item unselectable"><a href = "#resources">Resources</a></li>
+            <!-- <li class = "item unselectable"><a href = "#resources">Resources</a></li> -->
           <% } %>
         <% } %>
           <!-- <li class = "item" id = "chatroom"><a href = "/chatroom?chatroom=all">Chatroom</a></li> -->
+          <li class = "item unselectable"><a href = "/schedule">My Schedule</a></li>
+          <li class = "item unselectable" id = "accountdropDown"><a href = "/users/<%=username%>">Account</a></li>
           <li class = "item unselectable" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
           <li class = "item unselectable" id = "logout"><a href = "/logout">Logout</a></li>
         </ul>
@@ -847,7 +852,7 @@
               <div style = "flex-grow: 0.05"></div>
             </div>
           </div>
-        <% } else if (order[key] == "LC") { %>
+        <% } else if (order[key] == "LC" && schoolName === "PVSS") { %>
           <div id = "LC" class = "LC box" name = "LC">
             <div class = "header"><h1>Open LC's</h1></div>
             <div class = "openRooms">
