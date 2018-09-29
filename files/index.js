@@ -392,14 +392,7 @@ app.get("/manifest", function(req, res) {
           if (err || school == null) {
             res.send(JSON.stringify({}));
           } else {
-            fs.readFile(__dirname + "/public/manifests/home.json", function(err, data) {
-              if (err) {
-                console.log(err);
-                res.send(JSON.stringify({}));
-              } else {
-                res.end(data);
-              }
-            });
+            res.sendFile(__dirname + "/public/manifests/home.json");
           }
         })
       }
@@ -407,7 +400,7 @@ app.get("/manifest", function(req, res) {
   } else {
     res.send(JSON.stringify({}));
   }
-  // res.sendFile(__dirname + "/public/manifests/home.json");
+
 });
 
 app.get("/view-activity", function(req ,res) {
