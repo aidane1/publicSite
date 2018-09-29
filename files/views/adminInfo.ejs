@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+
+
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+        color: #F8B195;
+      }
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: #355C7D;
+      }
+      .weekDisplayedInformation {
+        margin: 20px 20px 0 20px;
+      }
+      .weekDisplayedInformation label {
+        position: relative;
+        top: 4px;
+        left: 10px;
+      }
+      .submit {
+        position: fixed;
+        bottom: 10px;
+        left: 80px;
+        width: 200px;
+        height: 50px;
+        -webkit-appearance: none;
+        font-size: 20px;
+        outline: none;
+        cursor: pointer;
+        background-color: #C06C84;
+        border: 0;
+        border-radius: 10px;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "weekDisplayedInformation">
+      <h1>Title Display:</h1>
+      <h3>
+        <input type = "radio" name = "weekTitle" id = "dayOfWeek" class = "weekRadio" onchange = "titleFunction(0)" value = "0" <%=currentTitle === 0 ? "checked" : ""%> /><label>Day Of Week</label>
+        <br>
+        <input type = "radio" name = "weekTitle" id = "blockOrder" class = "weekRadio" onchange = "titleFunction(1)" value = "1" <%=currentTitle === 1 ? "checked" : ""%> /><label>Block Order</label>
+        <br>
+        <input type = "radio" name = "weekTitle" id = "blockDay" class = "weekRadio" onchange = "titleFunction(2)" value = "2" <%=currentTitle === 2 ? "checked" : ""%> /><label>Day 1 - 5</label>
+      </h3>
+    </div>
+    <div class = "submit">
+      <input type = "button" class = "submit" value = "Submit Changes"  onclick = "submitFunction()"/>
+    </div>
+  </body>
+  <script>
+    var changes = {
+      titleChanges: []
+    }
+
+    function titleFunction(value) {
+      changes.titleChanges[0] = value;
+    }
+
+    function submitFunction() {
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/admin/information";
+      for (var key in changes) {
+        for (var i = 0; i < changes[key].length; i++) {
+          let input = document.createElement("input");
+          input.name = key;
+          input.type = "hidden";
+          input.value = changes[key][i];
+          form.appendChild(input);
+        }
+      }
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+  </script>
+</html>

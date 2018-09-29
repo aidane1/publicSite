@@ -591,6 +591,7 @@
         display: flex;
         flex-direction: row;
       }
+
       .pushNotifications div {
         display:block;
         margin:auto;
@@ -775,14 +776,10 @@
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
-        <% if (schoolName === "PVSS") { %>
-          <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div>
 
-        <% } else { %>
-          <!-- <div class = "block"><%=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()]%></div> -->
-          <!-- <div class = "block">day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%></div> -->
-          <div class = "block"><%=blockOrderLetters ? blockOrderLetters : "____" %></div>
-        <% } %>
+        <div class = "block"><%=titleDisplay%></div>
+
+
 
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayEvents">
@@ -852,24 +849,6 @@
               <div style = "flex-grow: 0.05"></div>
             </div>
           </div>
-        <% } else if (order[key] == "LC" && schoolName === "PVSS") { %>
-          <div id = "LC" class = "LC box" name = "LC">
-            <div class = "header"><h1>Open LC's</h1></div>
-            <div class = "openRooms">
-              <% if (lcSchedule !== false) { %>
-                <% lcSchedule.forEach(function(LC) { %>
-                  <div class = "spacer"></div>
-                  <div class = "LCRoom"><%=LC%></div>
-                  <br>
-                <% }); %>
-              <% } else { %>
-                <div class = "LCRoom">It's the weekend!</div>
-              <% } %>
-              <div class = "spacer"></div>
-              <div class = "spacer"></div>
-              <div class = "spacer"></div>
-            </div>
-          </div>
         <% } else if (order[key] == "Calendar") { %>
           <div id = "news" class = "news box" name = "news">
             <div class = "header"><h1>News & Calendar</h1></div>
@@ -895,18 +874,32 @@
                           <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
                             <% if (calendar[i-calendar[0][2]][2] === 0) { %>
                               <div class = "event unselectable">event<span class = "hover left" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
+                                <%=calendar[i-calendar[0][2]][0][k]%>
+                                <hr>
+                              <% } %>
+                              <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
+                              </span>
+                              </div>
                             <% } else if (calendar[i-calendar[0][2]][2] === 6) { %>
                               <div class = "event unselectable">event<span class = "hover right" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
+                                <%=calendar[i-calendar[0][2]][0][k]%>
+                                <hr>
+                              <% } %>
+                              <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
+                              </span>
+                              </div>
                             <% } else { %>
                               <div class = "event unselectable">event<span class = "hover" style = "top: <%=-20-calendar[i-calendar[0][2]][0].length*55%>px; height: <%=calendar[i-calendar[0][2]][0].length*55%>px">
+                              <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
+                                <%=calendar[i-calendar[0][2]][0][k]%>
+                                <hr>
+                              <% } %>
+                              <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
+                              </span>
+                              </div>
                             <% } %>
-                            <% for (var k = 0; k < calendar[i-calendar[0][2]][0].length-1; k++) { %>
-                              <%=calendar[i-calendar[0][2]][0][k]%>
-                              <hr>
-                            <% } %>
-                            <%=calendar[i-calendar[0][2]][0][calendar[i-calendar[0][2]][0].length-1]%>
-                            </span>
-                            </div>
                           <% } %>
                         </td>
                       <% } else { %>
@@ -941,10 +934,11 @@
           <div id = "resources" class = "resources box" name = "resources">
             <div class = "header" style = "margin-bottom: 15px"><h1>Resources</h1></div>
             <% if (courses.length === 5) { %>
-              <div class = 'classHolder' style = "font-size: 15px">
+
             <% } else { %>
-              <div class = "classHolder">
+
             <% } %>
+            <div class = 'classHolder' style = "font-size: 15px">
                 <ul class = "helperHolder">
                   <% courses.forEach(function(course) { %>
                     <% if (courses.length === 5) { %>
@@ -1052,6 +1046,8 @@
         Enable push notifications
       </div>
     </div>
+
+  </div>
   </body>
   <script src = "/public/js/home.js"></script>
   <!-- the script for getting alerts -->

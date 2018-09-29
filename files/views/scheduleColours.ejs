@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <script src = "/public/js/jscolor.js"></script>
+    <title></title>
+    <style>
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: <%=colours.bgColor%>;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: sans-serif;
+        color: <%=colours.textColor%>;
+      }
+      .blockColor {
+        font-size: 22px;
+
+      }
+      .blockColor input {
+        outline: none;
+        font-size: 22px;
+        width: 100px;
+      }
+      .flexContainer {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        overflow: auto;
+      }
+      .blockColor {
+        display: block;
+        /* margin: auto; */
+      }
+      .spacer {
+        flex-grow: 1;
+        min-height: 15px;
+      }
+      .enter {
+        width: 95%;
+        max-width: 400px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-radius: 15px;
+        font-size: 35px;
+        text-align: center;
+        background-color: <%=colours.buttonColor%>;
+        margin: auto;
+        margin-bottom: 10px;
+      }
+      .jscolor {
+        border: 1px solid <%=colours.bgColor%>;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "flexContainer">
+      <div class = "spacer"></div>
+      <% for (var key in blocks) { %>
+        <div class = "blockColor">
+          <%=key%> (<%=blocks[key][0]%>) : <input class="jscolor {width:200, height:150, borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" value="<%=blocks[key][1]%>" onchange = "changeFunction(this.value, '<%=key%>')">
+        </div>
+        <div class = "spacer"></div>
+      <% } %>
+
+      <div class = "enter" onclick = "submitFunction()">
+        Submit
+      </div>
+
+    </div>
+
+
+  </body>
+  <script>
+    let changes = {
+
+    }
+    function changeFunction(value, key) {
+      changes[key] = value;
+    }
+    function submitFunction() {
+      let form = document.createElement("form");
+      form.action = "/users/<%=user%>/schedule-colours";
+      form.method = "POST";
+      for (var key in changes) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = changes[key];
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+  </script>
+</html>
