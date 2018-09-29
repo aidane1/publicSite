@@ -389,19 +389,23 @@ app.get("/manifest", function(req, res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
-
+        console.log("bad user");
+        res.sendFile(__dirname + "/public/manifests/home.json");
       } else {
         School.findOne({_id : user.school}, function(err, school) {
           if (err || school == null) {
-
+            console.log("bad school");
+            res.sendFile(__dirname + "/public/manifests/home.json");
           } else {
+            console.log("final form");
             res.sendFile(__dirname + "/public/manifests/home.json");
           }
         })
       }
     })
   } else {
-
+    console.log("bad id");
+    res.sendFile(__dirname + "/public/manifests/home.json");
   }
 });
 
