@@ -3,12 +3,12 @@
   <head>
     <meta charset = "utf-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
-    <meta name = "description" content = "The PVSS student home page. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
+    <meta name = "description" content = "The <%=schoolName%> student home page. View your courses, schedule, resources, and more here." />
     <meta name = "theme-color" content = "<%=colours.bgColor%>" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name = "apple-mobile-web-app-status-bar-style" content = "#FC7753">
     <meta name = "apple-mobile-web-app-title" content = "<%=schoolName%>">
-    <link rel = "manifest" href = "public/manifests/home.json  " />
+    <link rel = "manifest" href = "/manifest" />
 
     <!-- <link rel="icon" href="/favicon?v=3" type="image/x-icon">
     <link rel="shortcut icon" href="/favicon?v=3" type="image/x-icon"> -->
@@ -34,10 +34,7 @@
 
 
 
-    <!-- <link rel = "apple-touch-startup-image" href = "public/images/icon-512x512.png" /> -->
-
-
-    <title>PVSS student website | Home</title>
+    <title><%=schoolName%> student website | Home</title>
 
     <style>
       *,.scheduleHref a{
@@ -825,11 +822,7 @@
             <div class = "courseHolder">
               <div class = "header"><h1>Courses</h1></div>
               <div class = "courseBox large">
-                <% if (schoolName === "PVSS") { %>
-                <div class = "header2"> My courses today (day <%=(new Date((new Date()).getTime() - 420*60*1000)).getDay() == 0 || (new Date((new Date()).getTime() - 420*60*1000)).getDay() == 6 ? "_" : blockDay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
-                <% } else { %>
-                  <div class = "header2">My courses today (<%=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()]%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
-                <% } %>
+                <div class = "header2"> My courses today &nbsp;(<%=titleDisplay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% for (var i = 0; i < blockOrder.length; i++) { %>
                   <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
                 <% } %>

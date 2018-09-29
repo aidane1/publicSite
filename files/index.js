@@ -383,6 +383,10 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
   }
 });
 
+app.get("/manifest", function(req, res) {
+  res.sendFile(__dirname + "/public/manifests/home.json");
+});
+
 app.get("/view-activity", function(req ,res) {
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
