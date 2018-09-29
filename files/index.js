@@ -383,20 +383,19 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 });
 
 app.get("/manifest", function(req, res) {
-  res.header("Content-Type", "text/cache-manifest");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
-        res.end(JSON.stringify({}));
+        res.send(JSON.stringify({}));
       } else {
         School.findOne({_id : user.school}, function(err, school) {
           if (err || school == null) {
-            res.end(JSON.stringify({}));
+            res.send(JSON.stringify({}));
           } else {
             fs.readFile(__dirname + "/public/manifests/home.json", function(err, data) {
               if (err) {
                 console.log(err);
-                res.end(JSON.stringify({}));
+                res.send(JSON.stringify({}));
               } else {
                 res.end(data);
               }
@@ -406,8 +405,7 @@ app.get("/manifest", function(req, res) {
       }
     })
   } else {
-    console.log("fuck");
-    res.end(JSON.stringify({}));
+    res.send(JSON.stringify({}));
   }
   // res.sendFile(__dirname + "/public/manifests/home.json");
 });
