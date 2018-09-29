@@ -385,7 +385,7 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 
 app.get("/manifest", function(req, res) {
 
-
+  console.log(req.session.userId);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
