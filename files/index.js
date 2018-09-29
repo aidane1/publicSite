@@ -1109,7 +1109,6 @@ app.post("/admin/information", urlencodedParser, function(req, res) {
             if (key === "titleChanges") {
               console.log(req.body.titleChanges);
               School.findOneAndUpdate({_id : user.school}, {$set : {titleDisplay : parseInt(req.body.titleChanges)}}).then(function(object) {
-                console.log(object);
                 res.redirect("/admin/information");
               })
             }
@@ -1391,7 +1390,12 @@ app.get("/", async (req, res, next) => {
         } else if (titleDisplay === 1) {
           titleDisplay = blockOrderLetters || "___";
         } else if (titleDisplay === 2) {
-          titleDisplay = "day " + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString();
+          if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+            titleDisplay = "Weekend!";
+          } else {
+            titleDisplay = "day " + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString();
+          }
+
         } else {
           titleDisplay = "___";
         }
