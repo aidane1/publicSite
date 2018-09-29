@@ -21,7 +21,7 @@
         font-size: 22px;
 
       }
-      .blockColor input {
+      .blockColor button {
         outline: none;
         font-size: 22px;
         width: 150px;
@@ -64,11 +64,14 @@
     </style>
   </head>
   <body>
+    <div class = "back" style = "font-size: 40px; position: fixed; top: 10px; z-index: 20">
+      <a href = "/users/<%=user%>" style = "text-decoration:none; color:<%=colours.textColor%>">&#8592;</a>
+    </div>
     <div class = "flexContainer">
       <div class = "spacer"></div>
       <% for (var key in blocks) { %>
         <div class = "blockColor">
-          <%=key%> (<%=blocks[key][0]%>) : <br> <input class="jscolor {width:200, height:150, borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" value="<%=blocks[key][1]%>" onchange = "changeFunction(this.value, '<%=key%>')">
+          <%=key%> (<%=blocks[key][0]%>) : <br> <button class="jscolor {width:200, height:150, borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666', valueElement:null, value: '<%=blocks[key][1]%>'}"  onchange = "changeFunction(this.value, '<%=key%>')">Pick a Colour</button>
         </div>
         <div class = "spacer"></div>
       <% } %>
