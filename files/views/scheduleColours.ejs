@@ -68,7 +68,7 @@
       <div class = "spacer"></div>
       <% for (var key in blocks) { %>
         <div class = "blockColor">
-          <%=key%> (<%=blocks[key][0]%>) : <input class="jscolor {width:200, height:150, borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" value="<%=blocks[key][1]%>" onchange = "changeFunction(this.value, '<%=key%>')">
+          <%=key%> (<%=blocks[key][0]%>) : <br> <input class="jscolor {width:200, height:150, borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" value="<%=blocks[key][1]%>" onchange = "changeFunction(this.value, '<%=key%>')">
         </div>
         <div class = "spacer"></div>
       <% } %>

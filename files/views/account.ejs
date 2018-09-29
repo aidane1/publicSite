@@ -64,7 +64,9 @@
         height: 90%;
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        overflow: auto;
+        margin-bottom: 15px;
       }
       .spacer {
         flex-grow: 1;
@@ -76,6 +78,7 @@
         }
         .flexHolder {
           flex-direction: row;
+          flex-wrap: wrap;
         }
         .spacer {
           display: none;
