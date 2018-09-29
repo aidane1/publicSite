@@ -383,6 +383,7 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 });
 
 app.get("/manifest", function(req, res) {
+  res.sendFile(__dirname + "/public/manifests/home.json");
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
@@ -392,7 +393,7 @@ app.get("/manifest", function(req, res) {
           if (err || school == null) {
             res.send(JSON.stringify({}));
           } else {
-            res.sendFile(__dirname + "/public/manifests/home.json");
+
           }
         })
       }
