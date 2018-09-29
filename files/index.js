@@ -320,6 +320,7 @@ let server = app.listen(80, function() {
 
 
 function pushUsers(userList, data) {
+  console.log(data);
   for (var i = 0; i < userList.length; i++) {
     let payload = JSON.stringify({ title: data.title, body: data.body });
     webpush.sendNotification(userList[i].code, payload).catch(error => {
@@ -384,24 +385,6 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 
 app.get("/manifest", function(req, res) {
   res.sendFile(__dirname + "/public/manifests/home.json");
-  if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      if (err || user == null) {
-        res.send(JSON.stringify({}));
-      } else {
-        School.findOne({_id : user.school}, function(err, school) {
-          if (err || school == null) {
-            res.send(JSON.stringify({}));
-          } else {
-
-          }
-        })
-      }
-    })
-  } else {
-    res.send(JSON.stringify({}));
-  }
-
 });
 
 app.get("/view-activity", function(req ,res) {
