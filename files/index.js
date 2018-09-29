@@ -1391,7 +1391,7 @@ app.get("/", async (req, res, next) => {
           titleDisplay = blockOrderLetters || "___";
         } else if (titleDisplay === 2) {
           if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-            titleDisplay = "Weekend!";
+            titleDisplay = "Day _";
           } else {
             titleDisplay = "day " + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString();
           }
