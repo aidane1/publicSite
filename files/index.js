@@ -1107,7 +1107,9 @@ app.post("/admin/information", urlencodedParser, function(req, res) {
         if (user.permissions === "admin" && user.school) {
           for (var key in req.body) {
             if (key === "titleChanges") {
-              School.findOneAndUpdate({_id : user.school}, {$set : {titleDisplay : parseInt(req.body.titleChanges)}}).then(function() {
+              console.log(req.body.titleChanges);
+              School.findOneAndUpdate({_id : user.school}, {$set : {titleDisplay : parseInt(req.body.titleChanges)}}).then(function(object) {
+                console.log(object);
                 res.redirect("/admin/information");
               })
             }

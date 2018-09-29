@@ -78,6 +78,10 @@ const SchoolSchema = new Schema({
   spareName: {
     type: String,
     default: "Spare"
+  },
+  titleDisplay: {
+    type: Number,
+    default: 0
   }
 });
 
