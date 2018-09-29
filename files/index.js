@@ -320,7 +320,6 @@ let server = app.listen(80, function() {
 
 
 function pushUsers(userList, data) {
-  console.log(data);
   for (var i = 0; i < userList.length; i++) {
     let payload = JSON.stringify({ title: data.title, body: data.body });
     webpush.sendNotification(userList[i].code, payload).catch(error => {
@@ -384,7 +383,33 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 });
 
 app.get("/manifest", function(req, res) {
-  res.sendFile(__dirname + "/public/manifests/home.json");
+  res.header("Content-Type", "text/cache-manifest");
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        res.end(JSON.stringify({}));
+      } else {
+        School.findOne({_id : user.school}, function(err, school) {
+          if (err || school == null) {
+            res.end(JSON.stringify({}));
+          } else {
+            fs.readFile(__dirname + "/public/manifests/home.json", function(err, data) {
+              if (err) {
+                console.log(err);
+                res.end(JSON.stringify({}));
+              } else {
+                res.end(data);
+              }
+            });
+          }
+        })
+      }
+    })
+  } else {
+    console.log("fuck");
+    res.end(JSON.stringify({}));
+  }
+  // res.sendFile(__dirname + "/public/manifests/home.json");
 });
 
 app.get("/view-activity", function(req ,res) {
