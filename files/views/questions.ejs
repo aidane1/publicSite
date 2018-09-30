@@ -10,6 +10,10 @@
     <title>PVSS student website | Questions</title>
 
     <script>
+      function stopScrolling(yVal) {
+        console.log(yVal);
+      }
+
       window.onload  = function() {
 
         // enable vibration support
@@ -32,6 +36,8 @@
             let selectedElement = (event.target.parentNode.classList.contains("question") ? event.target.parentNode : event.target);
             if (selectedElement.classList.contains("question")) {
               currentElement = selectedElement;
+              currentElement.style.transition = "initial";
+              currentElement.style.right = "0px";
             } else {
               currentElement = false;
             }
@@ -40,6 +46,9 @@
             currentV = currentVertical[1] - event.touches["0"].clientY;
             currentH = currentVertical[0] - event.touches["0"].clientX;
             if (Math.abs(currentV/currentH) < 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20) && !pastAllowed) {
+
+
+
               allowed = true;
             } else if (Math.abs(currentV/currentH) > 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20)) {
               pastAllowed = true;
@@ -47,6 +56,7 @@
             if (!currentElement) {
 
             } else if (allowed) {
+
               let xVal = event.touches["0"].clientX;
               currentElement.style.right = (startValue - xVal).toString() + "px";
 
@@ -81,34 +91,15 @@
             if (!currentElement || !allowed || currentElement === undefined) {
 
             } else {
-              let acceleration = 100;
-              let preVelocity = 0;
-              let velocity = 0;
-              var ourInterval = setInterval(function() {
-                preVelocity += acceleration;
-                velocity = (Math.sqrt(preVelocity));
-                if (velocity > 10) {
-                  velocity = 10;
-                }
-                var interval = (parseInt(currentElement.style.right) > 0 ? 1 : -1);
-                currentElement.style.right = (parseInt(currentElement.style.right) - interval*velocity*2).toString() + "px";
-                if ((parseInt(currentElement.style.right) > 0 && parseInt(currentElement.style.right) < 21) || (parseInt(currentElement.style.right) < 0 && parseInt(currentElement.style.right) > -21)) {
-                  var replyBoxes = document.getElementsByClassName("replyBox");
-                  for (var i = 0; i < replyBoxes.length; i++) {
-                    replyBoxes[i].classList.remove("boxFull");
-                  }
-                  currentElement.style.right = "0px";
-                  clearInterval(ourInterval);
-                  if (finished) {
-                    window.location.replace("https://www.pvstudents.ca/questions/" + currentElement.id);
-                  }
-                  currentElement = "";
-                  startValue = 0;
-                  finished = false;
-                  allowed = false;
-                }
-
-              }, 1);
+              currentElement.style.transition = "right 0.4s";
+              currentElement.style.right = "0px";
+              if (finished) {
+                window.location.replace("https://www.pvstudents.ca/questions/" + currentElement.id);
+              }
+              currentElement = "";
+              startValue = 0;
+              finished = false;
+              allowed = false;
             }
           });
         } else {
@@ -202,6 +193,7 @@
         margin-bottom: 15px;
         position: relative;
         right: 0px;
+        /* transition: right 1s; */
         font-size: 20px;
         font-weight: bold;
         cursor: pointer;
@@ -212,6 +204,9 @@
         -webkit-user-select: none;
         -o-user-select: none;
         user-select: none;
+      }
+      .rightZero {
+        right: 0px;
       }
       .questionTitle {
         margin-left: 10px;
@@ -407,7 +402,7 @@
   </head>
   <body>
 
-    <div class = "questionHolder">
+    <div class = "questionHolder" id = "questionHolder">
       <% posts.forEach(function(post) { %>
         <div class = "question" id = "<%=post._id%>">
           <div class = "questionTitle"><%=post.title%></div>
