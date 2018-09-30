@@ -93,20 +93,23 @@
             } else {
               currentElement.style.transition = "right 0.4s";
               currentElement.style.right = "0px";
-              if (finished) {
-                setTimeout(function() {
 
+              setTimeout(function() {
 
-                  // console.log("yeet");
+                if (finished) {
+
                   window.location.replace("https://www.pvstudents.ca/questions/" + currentElement.id);
+                }
+                currentElement = "";
+                startValue = 0;
+                finished = false;
+                allowed = false;
 
-                }, 400);
-              }
 
-              currentElement = "";
-              startValue = 0;
-              finished = false;
-              allowed = false;
+              }, 350);
+
+
+
             }
           });
         } else {
