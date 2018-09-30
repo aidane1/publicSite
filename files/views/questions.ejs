@@ -12,6 +12,9 @@
     <script>
       window.onload  = function() {
 
+        // enable vibration support
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
 
 
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -54,6 +57,8 @@
                   if (currentElement.children[i].classList.contains("replyBox")) {
                     currentElement.classList.add("expanding");
                     currentElement.children[i].classList.add("boxFull");
+                    currentElement.children[i].children[0].classList.add("openReplyImage");
+
                   }
                 }
               }
@@ -64,6 +69,7 @@
                   if (currentElement.children[i].classList.contains("replyBox")) {
                     currentElement.children[i].classList.remove("boxFull");
                     currentElement.classList.remove("expanding");
+                    currentElement.children[i].children[0].classList.remove("openReplyImage");
                   }
                 }
 
@@ -193,9 +199,8 @@
         border-bottom: 1px solid <%=colours.borderColor%>;
         border-top: 1px solid <%=colours.borderColor%>;
         margin-top: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         position: relative;
-
         right: 0px;
         font-size: 20px;
         font-weight: bold;
@@ -212,15 +217,16 @@
         margin-left: 10px;
       }
       .replyBox {
-
         width: 100%;
         height: 100%;
         position: absolute;
+        box-sizing: initial;
+        border-top: 2px solid <%=colours.bgColor%>;
+        border-bottom: 2px solid <%=colours.bgColor%>;
         right: -100%;
-        top: 0px;
-        background-color: #004720;
+        top: -2px;
+        background-color: #71cefc;
         z-index: 1;
-
       }
       .boxFull {
         background-color: #28bf41;
@@ -229,13 +235,7 @@
         font-size: 10px;
         margin-left: 10px;
       }
-      .reply {
-        font-size: 15px;
-        height: 15px;
-        position: absolute;
-        top: 30%;
-        margin-left: 25px;
-      }
+
       .bar {
         width: 100%;
         height: 60px;
@@ -325,6 +325,21 @@
         background-color: <%=colours.infoColor%>;
         color: <%=colours.textColor%>;
       }
+      .openImage {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        fill: none;
+        stroke-width: 2;
+        stroke: white;
+      }
+      .openReplyImage {
+        fill: white;
+      }
+
       .delete {
         width: 75px;
         height: 30px;
@@ -332,7 +347,7 @@
         text-align: center;
       }
       .expanding {
-        /* -webkit-animation: expanding 1s; 
+        /* -webkit-animation: expanding 1s;
         animation: expanding 1s; */
       }
       @keyframes expanding {
@@ -410,7 +425,7 @@
             </div>
           <% }%>
           <div class = "replyBox">
-            <div class = "reply">OPEN</div>
+            <svg  class = "openImage" x="0px" y="0px" viewBox="0 0 32 40" enable-background="new 0 0 32 32" xml:space="preserve"><path d="M16.1,7.1V2c0-0.3-0.2-0.6-0.5-0.7c-0.3-0.1-0.6-0.1-0.8,0.2l-14,14c-0.1,0.1-0.2,0.3-0.2,0.5c0,0.2,0.1,0.4,0.2,0.5l14,14  c0.1,0.1,0.3,0.2,0.5,0.2c0.1,0,0.2,0,0.3-0.1c0.3-0.1,0.5-0.4,0.5-0.7v-6.7c2.5-0.4,5.3,0,7.8,1.2c2.4,1.1,4.5,2.7,6.2,5  c0.2,0.3,0.5,0.4,0.8,0.3c0.3-0.1,0.5-0.4,0.5-0.7c0.1-5.7-2.4-11.6-6.8-16.1C22.3,10.4,19.4,8.5,16.1,7.1z"/></svg>
           </div>
         </div>
       <% }) %>
