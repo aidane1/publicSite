@@ -13,7 +13,7 @@
         if (navigator.cookieEnabled) {
 
         } else {
-          document.getElementById("error").innerHTML = "This website uses cookies to store your session data. please enable them to continue.";
+          document.getElementById("error").innerHTML = "This website uses cookies to store your session data, and nothing else. please enable them to continue.";
         }
       }
 
@@ -38,27 +38,82 @@
       #login {
         display: block;
         margin: auto;
-        bottom: 100px;
+        position: fixed;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+      }
+      .iconContainer {
+        /* width: 60%; */
+        height: 40px;
+        display: flex;
+        border-radius: 5px;
+        overflow: hidden;
+        border: 1px solid #aaaaaa;
+        float: right;
+        margin-right: 10px;
+
+      }
+      .selectGreen {
+        outline: #2ded6d;
+      }
+      .icon {
+        width: 40px;
+        height: 40px;
+        background-color: #dddddd;
+        display: inline-flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        text-align: center;
+        border-right: 1px solid #aaaaaa;
+        overflow: hidden;
+      }
+      .icon .usernameIcon {
+        position: relative;
+        top: 4px;
+        width: 40px;
+        height: 40px;
+      }
+      .icon .passwordIcon {
+        position: relative;
+        top: 4px;
+        width: 40px;
+        height: 40px;
+      }
+      .labelInput {
+        font-size: 22px;
+        margin-bottom: 30px;
+        margin-left: 10px;
+      }
+      .labelInput label {
+        position: relative;
+        top: 5px;
+      }
+      .spacer {
+        flex-grow: 1;
       }
       .userInput {
-        display: block;
-        width: 100%;
-        border: 1px solid grey;
+        margin-left: 2px;
+        border: 0;
+        /* flex-grow: 1; */
+        width: 150px;
         height: 40px;
-        outline: none;
         font-size: 18px;
-        background-color: rgb(117, 55, 66);
+        outline: none;
       }
       #submit {
-        width: 100%;
-        height: 60px;
+        width: 150px;
+        padding-top: 7.5px;
+        padding-bottom: 7.5px;
         background-color: rgb(170, 80, 66);
+        border-radius: 3px;
         font-size: 25px;
         margin-top: 10px;
+        position: absolute;
+        right: 10px;
         outline: none;
         border: none;
         -webkit-appearance: none;
-
       }
 
       .error {
@@ -90,31 +145,45 @@
         margin-left: 10%;
         margin-right: 10%;
       }
+      .signup {
+        width: 150px;
+        padding-top: 7.5px;
+        padding-bottom: 7.5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: rgb(170, 80, 66);
+        border-radius: 3px;
+        font-size: 25px;
+        margin-top: 10px;
+        position: absolute;
+        left: 10px;
+        outline: none;
+        border: none;
+        -webkit-appearance: none;
+      }
       @media screen and (min-width: 768px) {
-        .labelInput {
-          width: 400px;
-          display: block;
-          margin:auto;
-        }
-        .userInput {
-          width: 100%;
-          display:block;
-          margin: auto;
-        }
-        #submit {
-          width: 400px;
-          display: block;
-          margin: auto;
-        }
+
+
         #login {
           width: 500px;
-
-
-          border: 1px solid black;
+          display: block;
+          top: 40%;
+          left: 50%;
+          transform: translateX(-50%);
         }
-        #inputs {
-          padding-top: 200px;
-          padding-bottom: 200px;
+
+
+      }
+      @media screen and (max-width: 320px) {
+        .userInput {
+          width: 100px;
+        }
+        #submit {
+          width: 100px;
+
+        }
+        .signup {
+          width: 100px;
         }
       }
 
@@ -132,16 +201,15 @@
       </div>
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/login">
-          <div class = "labelInput"><label for "logname">Username: </label><input type = "text" name = "logname" placeholder = "Enter Username..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
+          <div class = "labelInput"><label for "logname">Username: </label><div class = "iconContainer selectGreen"><div class = "icon"><img src = "/public/icons/username.svg" class = "usernameIcon"></div><input type = "text" name = "logname" placeholder = "Enter Username..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div></div>
           <br>
-          <div class = "labelInput"><label for "logword">Password: </label><input type = "password" name = "logword" placeholder = "Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
+          <div class = "labelInput"><label for "logword">Password: </label><div class = "iconContainer"><div class = "icon"><img src = "/public/icons/password.svg" class = "passwordIcon"></div><input type = "password" name = "logword" placeholder = "Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div></div>
           <br>
-          <input type = "submit" id = "submit">
+          <input type = "submit" id = "submit" />
         </form>
 
-        <center><i><h5>don't have an account? <a href = "/signup" style = "color: rgb(216, 215, 143)">sign up</a></h5></i></center>
+        <a href = "/signup" class = "signup" style = "color: rgb(216, 215, 143)">sign up</a>
         <br>
-        <center><h5 class = "navBar"><a href = "/about">about this site</a></h5></center>
       </div>
       <div class = "createSchool">
         <a href = "/create-school" style = "text-decoration: none;">Create School</a>
