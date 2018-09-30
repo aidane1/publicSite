@@ -93,8 +93,16 @@
             } else {
               currentElement.style.transition = "right 0.4s";
               currentElement.style.right = "0px";
-              currentElement.setAttribute("transitionend", `endedTransition(${finished})`)
-              currentElement.addEventListener(`transitionend`, endedTransition(finished, currentElement.id));
+              if (finished) {
+                setTimeout(function() {
+
+
+                  // console.log("yeet");
+                  window.location.replace("https://www.pvstudents.ca/questions/" + currentElement.id);
+
+                }, 400);
+              }
+
               currentElement = "";
               startValue = 0;
               finished = false;
@@ -111,11 +119,7 @@
           });
         }
       }
-      function endedTransition(finished, id) {
-        if (finished) {
-          window.location.replace("https://www.pvstudents.ca/questions/" + id);
-        }
-      }
+
       function submitPost() {
         var submitPost = document.getElementById("submitPost");
         submitPost.classList.toggle("submitPostSee");
