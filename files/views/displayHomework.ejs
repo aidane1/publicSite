@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+
+    </style>
+  </head>
+  <body>
+    <form method = "get" action = "/homework-sd83">
+      username: <input name = "username" />
+      password: <input name = "password" />
+      <input type = "submit" />
+
+    </form>
+    <% for (var i = 0; i < homework.length; i++) { %>
+      <% for (var j = 0; j < homework[i].length; j++) { %>
+        <%=homework[i][j]%>
+        <br>
+      <% } %>
+      <br>
+      <br>
+    <% } %>
+  </body>
+</html>

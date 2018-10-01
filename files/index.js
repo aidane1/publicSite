@@ -171,6 +171,12 @@ let fs = require("fs");
 
 let http = require("http");
 
+var https = require("https");
+
+let cheerio = require("cheerio");
+
+let request = require("request");
+
 let querystring = require("querystring");
 
 let bodyParser = require("body-parser");
@@ -319,6 +325,156 @@ let server = app.listen(80, function() {
 });
 
 
+async function getLoginCredentials(username, password) {
+  return new Promise(function(resolve, reject) {
+    var postData = {
+      ctl00$FormContentPlaceHolder$USERID: username,
+      ctl00$FormContentPlaceHolder$PAUTH: password,
+      ctl00$FormContentPlaceHolder$btnOK: "Sign In",
+      __EVENTTARGET: "",
+      __EVENTARGUMENT: "",
+      __VIEWSTATE: "",
+      __VIEWSTATEGENERATOR: "",
+      __EVENTVALIDATION: ""
+    }
+    https.get("https://cimsweb.sd83.bc.ca/SchoolConnect/StuConSignon.aspx", function(res) {
+      let data = "";
+      res.on("data", function(chunk) {
+        data += chunk;
+      });
+      res.on("end", function() {
+        let $ = cheerio.load(data);
+        $("input").each(function(i, input) {
+          if (input.attribs.value) {
+            postData[input.attribs.name] = input.attribs.value;
+          }
+        })
+        resolve([querystring.stringify(postData), res.headers["set-cookie"]]);
+      })
+    })
+  });
+}
+
+async function login(data, cookies) {
+  return new Promise(function(resolve, reject) {
+    let options = {
+      url : `https://cimsweb.sd83.bc.ca/SchoolConnect/StuConSignon.aspx?${data}`,
+      method: "GET",
+      headers: {
+        "Cookie": cookies[0]
+      }
+    }
+    request(options, function(err, response, body) {
+      if (!err && response.statusCode == 200) {
+        resolve(true);
+      } else {
+        reject(err);
+      }
+    })
+  });
+}
+
+async function getAssignment(cookies) {
+  return new Promise(function(resolve, reject) {
+    let options = {
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
+      method: "GET",
+      headers: {
+        'Cookie': cookies[0]
+      }
+    }
+    request(options, function(error, response, body) {
+      resolve(body);
+    })
+  })
+}
+
+async function getAssignmentCredentials(body, cookies) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let newPostData = {
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C",
+      __EVENTTARGET: "ctl00$ctl00$NavigationItemsPlaceHolder$AA34",
+      __EVENTARGUMENT: "",
+      __LASTFOCUS: "",
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpLimCourse: "   000      ",
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpTerm: "1"
+    }
+    $("input").each(function(i, input) {
+      if (input.attribs.name == "__VIEWSTATE" || input.attribs.name == "__EVENTVALIDATION" || input.attribs.name == "__EVENTTARGET" || input.attribs.name == "__LASTFOCUS" || input.attribs.name == "__VIEWSTATEGENERATOR" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$STUNO" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SGRADE" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SCLASS" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$ISTART") {
+        newPostData[input.attribs.name] =  input.attribs.value;
+      }
+    })
+    let optionsObject = {
+      __EVENTTARGET: "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect",
+      __EVENTARGUMENT: "",
+      __LASTFOCUS: "",
+      __VIEWSTATE: newPostData["__VIEWSTATE"],
+      __EVENTVALIDATION : newPostData["__EVENTVALIDATION"],
+      __VIEWSTATEGENERATOR: "7D3BF3BB",
+       ctl00$ctl00$FormContentPlaceHolder$STUNO: '9828102',
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpLimCourse: "   000      ",
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$ISTART: '00/00/0000',
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpTerm: "1",
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C",
+      ctl00$ctl00$FormContentPlaceHolder$SGRADE: '11',
+      ctl00$ctl00$FormContentPlaceHolder$SCLASS: '11'
+    }
+    let headers = {
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
+      headers: {
+        "Cookie": cookies[0]
+      },
+      form: optionsObject
+    }
+    request.post(headers, function(err, response, body) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(body);
+      }
+    })
+  });
+}
+
+async function compileInfo(body) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let texts = [
+
+    ];
+    let trs = $("#FormContentPlaceHolder_ContentPlaceHolder1_StuAssign tr");
+    trs.each(function(i, element) {
+      if (i !== 0 && i !== 1) {
+        let currentTr = [];
+        $(this).children().each(function(j, elem) {
+          let td = $(elem);
+          if (td.text().replace(/\s/g,'')) {
+            currentTr.push([td.text().replace(/\s/g,'')]);
+          }
+        });
+        currentTr.length && currentTr.length !== 1 ? texts.push(currentTr) : "";
+      }
+    })
+    resolve(texts);
+  })
+}
+
+async function getHomework(username, password) {
+  let loginCredentials = await getLoginCredentials(username, password);
+  await login(loginCredentials[0], loginCredentials[1]);
+  let assignmentBody = await getAssignment(loginCredentials[1]);
+  let assignmentCredentials = await getAssignmentCredentials(assignmentBody, loginCredentials[1]);
+  let compiledInfo = compileInfo(assignmentCredentials);
+  return (compiledInfo);
+}
+
+//example on how to get homework within an async function
+    // let homework = await getHomework("eglia02", "kppq9");
+    // console.log(homework);
+
+
+
 function pushUsers(userList, data) {
   console.log(data);
   for (var i = 0; i < userList.length; i++) {
@@ -356,6 +512,17 @@ function pushUsers(userList, data) {
 //   console.log(school);
 // })
 
+
+app.get("/homework-sd83", async function(req, res, next) {
+  console.log("yeet");
+  if (req.query.username && req.query.password) {
+    let homework = await getHomework(req.query.username, req.query.password);
+    res.render("displayHomework", {homework:homework});
+
+  } else {
+    res.render("displayHomework", {homework: []});
+  }
+})
 
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
