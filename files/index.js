@@ -177,6 +177,8 @@ let cheerio = require("cheerio");
 
 let request = require("request");
 
+let url = require("url");
+
 let querystring = require("querystring");
 
 let bodyParser = require("body-parser");
@@ -284,7 +286,7 @@ app.use(function(req, res, next) {
       next()
     } else {
       if (user.username != "AidanEglin") {
-        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} GOT ${req.url} at ${(new Date()).local()} \n -----------------------END----------------------- \n`, function(err) {
+        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} ${req.method} ${url.parse(req.url).pathname} at ${(new Date()).local()} \n -------------------END------------------- \n`, function(err) {
           if (err) {
             console.log(err);
           } else {
@@ -299,7 +301,7 @@ app.use(function(req, res, next) {
 });
 
 app.enable('trust proxy');
-// //
+
 function wwwHttpsRedirect(req, res, next) {
     if (req.secure) {
       if (req.headers.host.slice(0, 4) !== 'www.') {
