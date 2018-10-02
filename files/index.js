@@ -389,6 +389,49 @@ async function getAssignment(cookies) {
   })
 }
 
+async function getScheduleBody(cookies) {
+  return new Promise(function(resolve, reject) {
+    let options = {
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCSchedule.aspx",
+      method: "GET",
+      headers: {
+        'Cookie': cookies[0]
+      }
+    }
+    request(options, function(error, response, body) {
+      resolve(body);
+    })
+  });
+}
+
+async function compileScheduleInfo(body, semester) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let classes = [];
+    let scheduleRows = $("#FormContentPlaceHolder_ContentPlaceHolder1_StuSched tr");
+
+    scheduleRows.each(function(i, element) {
+      if (i > 1) {
+        let currentClass = [];
+        $(this).children().each(function(j, elem) {
+          let classBox = $(elem);
+          if (classBox.text().replace(/\s/g,'') && j < 7) {
+            currentClass.push(classBox.text().replace(/\s/g,''));
+          }
+        });
+        currentClass.length && currentClass.length !== 1 ? classes.push(currentClass) : "";
+      }
+    });
+    let orderedClasses = [];
+    for (var i = 0; i < classes.length; i++) {
+      if (classes[i][4] === "LINEAR" || classes[i][4] === semester) {
+        orderedClasses.push([classes[i][0], classes[i][3], classes[i][5]]);
+      }
+    }
+    resolve(orderedClasses);
+  });
+}
+
 async function getAssignmentCredentials(body, cookies) {
   return new Promise(function(resolve, reject) {
     let $ = cheerio.load(body);
@@ -460,6 +503,7 @@ async function compileInfo(body) {
   })
 }
 
+
 async function getHomework(username, password) {
   let loginCredentials = await getLoginCredentials(username, password);
   await login(loginCredentials[0], loginCredentials[1]);
@@ -469,9 +513,48 @@ async function getHomework(username, password) {
   return (compiledInfo);
 }
 
-//example on how to get homework within an async function
-    // let homework = await getHomework("eglia02", "kppq9");
-    // console.log(homework);
+//semester is in the form SEM1 or SEM2
+async function getSchedule(username, password, semester) {
+  let loginCredentials = await getLoginCredentials(username, password);
+  await login(loginCredentials[0], loginCredentials[1]);
+  let scheduleBody = await getScheduleBody(loginCredentials[1]);
+  let compiledSchedule = await compileScheduleInfo(scheduleBody, semester);
+  let names = compiledSchedule.map(x => ["Mr." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase(), "Ms." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase(), "Mme." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase()]);
+  let blocks = compiledSchedule.map(x => ["A", "B", "C", "D", "E"][(parseInt(x[2])-1)/2]);
+  let classes = compiledSchedule.map(x => x[0].substring(0,2).toLowerCase());
+  let userCourses = [];
+  for (var i = 0; i < names.length; i++) {
+    let currentCourse = await Course.find({$and: [{teacher : names[i]}, {block : blocks[i]}]});
+
+    if (currentCourse.length != 0) {
+      if (currentCourse.length === 1) {
+        userCourses.push(currentCourse[0]._id);
+      } else {
+        let found = false;
+        for (var j = 0; j < currentCourse.length; j++) {
+          if (currentCourse.course.substring(0,2).toLowerCase() === classes[i] && !found) {
+            found = true;
+            userCourses.push(currentCourse[j]._id);
+          }
+        }
+        if (!found) {
+          userCourses.push(currentCourse[0]);
+        }
+      }
+    }
+  }
+  return userCourses;
+}
+
+async function test() {
+  let schedule = await getSchedule("eglia02", "kppq9", "SEM1");
+
+  console.log(schedule);
+
+
+}
+test();
+
 
 
 
@@ -512,6 +595,22 @@ function pushUsers(userList, data) {
 //   console.log(school);
 // })
 
+app.get("/remote-schedule", async function(req, res, next) {
+  if (req.session.userId && req.query.username && req.query.password) {
+    User.findOne({_id : req.session.userId}, async function(err, user) {
+      if (err || user == null) {
+        res.redirect("/");
+      } else {
+        let schedule = await getSchedule(req.query.username, req.query.password, "SEM1");
+        User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
+          res.redirect("/");
+        })
+      }
+    })
+  } else {
+    res.render("remoteCourseAdd");
+  }
+});
 
 app.get("/homework-sd83", async function(req, res, next) {
   console.log("yeet");
@@ -523,7 +622,6 @@ app.get("/homework-sd83", async function(req, res, next) {
     res.render("displayHomework", {homework: []});
   }
 })
-
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
   let subscription = JSON.parse(req.body.post);
@@ -1898,10 +1996,9 @@ app.get("/courses", function(req, res) {
                   courses.sort(function(a,b) {
                     return (a.teacher > b.teacher ? 1 : -1);
                   });
-                  res.render("addCourses", {categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
+                  res.render("addCourses", {schoolName : school.name, categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
                 } else {
-                  console.log("round 2 ");
-                  res.render("addCourses", {categories: [""], colours: user.colors, font: holidayFont(user.font), courses : courses});
+                  res.render("addCourses", {schoolName : school.name, categories: [""], colours: user.colors, font: holidayFont(user.font), courses : courses});
                 }
 
               })
