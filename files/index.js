@@ -546,14 +546,7 @@ async function getSchedule(username, password, semester) {
   return userCourses;
 }
 
-async function test() {
-  let schedule = await getSchedule("eglia02", "kppq9", "SEM1");
 
-  console.log(schedule);
-
-
-}
-test();
 
 
 
@@ -601,10 +594,15 @@ app.get("/remote-schedule", async function(req, res, next) {
       if (err || user == null) {
         res.redirect("/");
       } else {
-        let schedule = await getSchedule(req.query.username, req.query.password, "SEM1");
-        User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
+        let schedule = await getSchedule(req.query.username.toLowerCase(), req.query.password, "SEM1");
+        if (schedule.length) {
+          User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
+            res.redirect("/");
+          })
+        } else {
           res.redirect("/");
-        })
+        }
+
       }
     })
   } else {
