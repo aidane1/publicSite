@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      .gradesTable {
+        width: 100%;
+
+      }
+      .gradesTable td {
+        width: 33%;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+      }
+      .gradesTable th {
+        width: 33%;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+      }
+      input {
+        font-size: 18px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class = "back" style = "font-size: 40px; position: fixed; bottom: 10px; z-index: 20">
+      <a href = "/" style = "text-decoration:none; color:blue">&#8592;</a>
+    </div>
+    <form method = "get" action = "/grade-history">
+      Login for sd83 website :
+      <br>
+      username: <input type = "text" name = "username" />
+      <br>
+      password: <input name = "password" type = "password" />
+      <br>
+      <input type = "submit" class = "submit" />
+
+    </form>
+    <br>
+    <br>
+    <table class = "gradesTable">
+      <tr>
+        <th>Year: </th>
+        <th>Class: </th>
+        <th>Grade: </th>
+      </tr>
+      <% for (var i = 0; i < history.length; i++) { %>
+        <tr>
+          <td><%=history[i][0]%></td>
+          <td><%=history[i][1]%></td>
+          <td><%=history[i][2]%></td>
+        </tr>
+      <% } %>
+    </table>
+
+  </body>
+</html>

@@ -418,7 +418,7 @@ async function compileScheduleInfo(body, semester) {
         $(this).children().each(function(j, elem) {
           let classBox = $(elem);
           if (classBox.text().replace(/\s/g,'') && j < 7) {
-            currentClass.push(classBox.text().replace(/\s/g,''));
+            currentClass.push(classBox.text().replace(/\s\s+/g,' '));
           }
         });
         currentClass.length && currentClass.length !== 1 ? classes.push(currentClass) : "";
@@ -452,18 +452,9 @@ async function getAssignmentCredentials(body, cookies) {
     })
     let optionsObject = {
       __EVENTTARGET: "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect",
-      __EVENTARGUMENT: "",
-      __LASTFOCUS: "",
       __VIEWSTATE: newPostData["__VIEWSTATE"],
       __EVENTVALIDATION : newPostData["__EVENTVALIDATION"],
-      __VIEWSTATEGENERATOR: "7D3BF3BB",
-       ctl00$ctl00$FormContentPlaceHolder$STUNO: '9828102',
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpLimCourse: "   000      ",
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$ISTART: '00/00/0000',
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpTerm: "1",
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C",
-      ctl00$ctl00$FormContentPlaceHolder$SGRADE: '11',
-      ctl00$ctl00$FormContentPlaceHolder$SCLASS: '11'
+      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C"
     }
     let headers = {
       url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
@@ -472,6 +463,7 @@ async function getAssignmentCredentials(body, cookies) {
       },
       form: optionsObject
     }
+
     request.post(headers, function(err, response, body) {
       if (err) {
         reject(err);
@@ -495,7 +487,7 @@ async function compileInfo(body) {
         $(this).children().each(function(j, elem) {
           let td = $(elem);
           if (td.text().replace(/\s/g,'')) {
-            currentTr.push([td.text().replace(/\s/g,'')]);
+            currentTr.push([td.text().replace(/\s\s+/g,' ')]);
           }
         });
         currentTr.length && currentTr.length !== 1 ? texts.push(currentTr) : "";
@@ -503,6 +495,46 @@ async function compileInfo(body) {
     })
     resolve(texts);
   })
+}
+
+async function getHistoryBody(cookies) {
+  return new Promise(function(resolve, reject) {
+    let options = {
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCTranscript.aspx",
+      method: "GET",
+      headers: {
+        'Cookie': cookies[0]
+      }
+    }
+    request(options, function(error, response, body) {
+      resolve(body);
+    })
+  });
+}
+
+async function compileHistory(body) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let classes = [];
+    let scheduleRows = $("#FormContentPlaceHolder_ContentPlaceHolder1_StuTrans tr");
+    scheduleRows.each(function(i, element) {
+      if (i > 1) {
+        let currentClass = [];
+        $(this).children().each(function(j, elem) {
+          let classBox = $(elem);
+          if (j < 8) {
+            currentClass.push(classBox.text().replace(/\s\s+/g,' '));
+          }
+        });
+        currentClass.length && currentClass.length !== 1 ? classes.push(currentClass) : "";
+      }
+    });
+    let orderedClasses = [];
+    for (var i = 0; i < classes.length; i++) {
+      orderedClasses.push([classes[i][1],classes[i][5],classes[i][7]])
+    }
+    resolve(orderedClasses);
+  });
 }
 
 
@@ -520,32 +552,57 @@ async function getSchedule(username, password, semester) {
   let loginCredentials = await getLoginCredentials(username, password);
   await login(loginCredentials[0], loginCredentials[1]);
   let scheduleBody = await getScheduleBody(loginCredentials[1]);
-  let compiledSchedule = await compileScheduleInfo(scheduleBody, semester);
-  let names = compiledSchedule.map(x => ["Mr." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase(), "Ms." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase(), "Mme." + x[1].substring(1, x[1].length)[0].toUpperCase() + x[1].substring(1, x[1].length).substring(1).toLowerCase()]);
-  let blocks = compiledSchedule.map(x => ["A", "B", "C", "D", "E"][(parseInt(x[2])-1)/2]);
-  let classes = compiledSchedule.map(x => x[0].substring(0,2).toLowerCase());
-  let userCourses = [];
-  for (var i = 0; i < names.length; i++) {
-    let currentCourse = await Course.find({$and: [{teacher : names[i]}, {block : blocks[i]}]});
+  let compiledSchedule = compileScheduleInfo(scheduleBody, semester);
+  return compiledSchedule;
+}
 
-    if (currentCourse.length != 0) {
-      if (currentCourse.length === 1) {
-        userCourses.push(currentCourse[0]._id);
-      } else {
-        let found = false;
-        for (var j = 0; j < currentCourse.length; j++) {
-          if (currentCourse.course.substring(0,2).toLowerCase() === classes[i] && !found) {
-            found = true;
-            userCourses.push(currentCourse[j]._id);
-          }
-        }
-        if (!found) {
-          userCourses.push(currentCourse[0]);
-        }
+async function getHistoryBody(cookies) {
+  return new Promise(function(resolve, reject) {
+    let options = {
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCTranscript.aspx",
+      method: "GET",
+      headers: {
+        'Cookie': cookies[0]
       }
     }
-  }
-  return userCourses;
+    request(options, function(error, response, body) {
+      resolve(body);
+    })
+  });
+}
+
+async function compileHistory(body) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let classes = [];
+    let scheduleRows = $("#FormContentPlaceHolder_ContentPlaceHolder1_StuTrans tr");
+    scheduleRows.each(function(i, element) {
+      if (i > 1) {
+        let currentClass = [];
+        $(this).children().each(function(j, elem) {
+          let classBox = $(elem);
+          if (j < 8) {
+            currentClass.push(classBox.text().replace(/\s\s+/g,' '));
+          }
+        });
+        currentClass.length && currentClass.length !== 1 ? classes.push(currentClass) : "";
+      }
+    });
+    let orderedClasses = [];
+    for (var i = 0; i < classes.length; i++) {
+      orderedClasses.push([classes[i][1],classes[i][5],classes[i][7]])
+    }
+    resolve(orderedClasses);
+  });
+}
+
+//gets history of grades for you
+async function getHistory(username, password) {
+  let loginCredentials = await getLoginCredentials(username, password);
+  await login(loginCredentials[0], loginCredentials[1]);
+  let history = await getHistoryBody(loginCredentials[1]);
+  let compiledHistory = compileHistory(history);
+  return compiledHistory;
 }
 
 
@@ -589,6 +646,15 @@ function pushUsers(userList, data) {
 // School.create({name : "PVSS"},function(err, school) {
 //   console.log(school);
 // })
+app.get("/grade-history", async function(req, res, next) {
+  if (req.query.username && req.query.password) {
+    let history = await getHistory(req.query.username.toLowerCase(), req.query.password);
+    res.render("remoteHistory", {history:history});
+
+  } else {
+    res.render("remoteHistory", {history: []});
+  }
+});
 
 app.get("/remote-schedule", async function(req, res, next) {
   if (req.session.userId && req.query.username && req.query.password) {
@@ -613,9 +679,8 @@ app.get("/remote-schedule", async function(req, res, next) {
 });
 
 app.get("/homework-sd83", async function(req, res, next) {
-  console.log("yeet");
   if (req.query.username && req.query.password) {
-    let homework = await getHomework(req.query.username, req.query.password);
+    let homework = await getHomework(req.query.username.toLowerCase(), req.query.password);
     res.render("displayHomework", {homework:homework});
 
   } else {
@@ -1576,11 +1641,20 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
+  let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+  let currentDay;
+  if (req.query.day) {
+    currentDay = parseInt(req.query.day);
+  }  else {
+    currentDay = (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1);
+  }
+
   // let currentDate = new Date(2018, 8, 20, 15, 18, 0, 0);
 
 
   // console.log(currentDate.getHours());
-  let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+
+
   res.cookie("path", "/");
   //makes sure the user has a session
   if (req.session.userId) {
@@ -1629,7 +1703,7 @@ app.get("/", async (req, res, next) => {
         } else {
           if (school.constantBlocks) {
             if (school.name === "PVSS") {
-              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()];
+              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDay.toString()];
             } else {
               todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDate.getDay()];
             }
@@ -1639,7 +1713,7 @@ app.get("/", async (req, res, next) => {
             }
           } else {
             if (school.name === "PVSS") {
-              todaysBlocks = (school.blockOrder[weekOffset]["day" + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString()]);
+              todaysBlocks = (school.blockOrder[weekOffset]["day" + currentDay.toString()]);
             } else {
               todaysBlocks = (school.blockOrder[weekOffset]["day" + currentDate.getDay()]);
             }
@@ -1684,7 +1758,7 @@ app.get("/", async (req, res, next) => {
           if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
             titleDisplay = "Day _";
           } else {
-            titleDisplay = "day " + (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1).toString();
+            titleDisplay = "day " + currentDay.toString();
           }
 
         } else {
