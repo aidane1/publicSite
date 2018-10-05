@@ -55,7 +55,7 @@ self.addEventListener("fetch", event => {
   if (event.request.destination === "unknown" || event.request.destination === "document") {
     if (event.request.url.split("?").length === 2) {
       event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-    } else if (event.request.url === "https://www.pvstudents.ca/schedule" || evemt.request === "https://www.pvstudents.ca/calendar") {
+    } else if (event.request.url === "https://www.pvstudents.ca/schedule" || event.request === "https://www.pvstudents.ca/calendar") {
       event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
     } else {
       event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
