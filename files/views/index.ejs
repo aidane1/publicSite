@@ -1154,31 +1154,12 @@
   <!-- This shit is SUPER fucky. leave it for the time being -->
   <% if (!offLine) { %>
     <script>
-        if (window.Worker) {
-          console.log("yea");
-          var myWorker = new Worker("sw.js");
-          if (typeof Storage != "undefined") {
-            if (localStorage.getItem("userData")) {
-              let userData = JSON.parse(localStorage.getItem("userData"));
-              let daysOffset = userData.dayOffSet;
-              myWorker.postMessage(daysOffset);
-            }
-          }
-          myWorker.onmessage = function(e) {
-            console.log(e);
-          }
-    
-        } else if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('sw.js').then(function(reg) {
-            console.log('Registration succeeded. Scope is ' + reg.scope);
-          }).catch(function(error) {
-            console.log('Registration failed with ' + error);
-          });
-        } else {
-          console.log("service workers are not supported by your browser. please consider switching to one that does to get the highest quality content we can offer.");
-        }
-    
-        if ("Notification" in window && 'serviceWorker' in navigator) {
+        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+                navigator.userAgent &&
+                navigator.userAgent.indexOf('CriOS') == -1 &&
+                navigator.userAgent.indexOf('FxiOS') == -1;
+                
+        if ("Notification" in window && 'serviceWorker' in navigator && !isSafari) {
           navigator.serviceWorker.register('sw.js').then(function(reg) {
             console.log('Registration succeeded. Scope is ' + reg.scope);
             reg.pushManager.getSubscription().then(function(sub) {
@@ -1189,6 +1170,12 @@
                 console.log("subscription object: " + sub);
               }
             })
+          }).catch(function(error) {
+            console.log('Registration failed with ' + error);
+          });
+        } else if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').then(function(reg) {
+            console.log('Registration succeeded. Scope is ' + reg.scope);
           }).catch(function(error) {
             console.log('Registration failed with ' + error);
           });
