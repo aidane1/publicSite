@@ -1,4 +1,11 @@
-const cacheName = "v1";
+var getParams = function(url) {
+	let urlParams = new URLSearchParams(url)
+	return urlParams.get("day");
+};
+
+
+
+const cacheName = "v2";
 
 const cacheAssets = [
   "public/html/offline.html",
@@ -10,11 +17,11 @@ const cacheAssets = [
   "/?day=4&offline=true",
   "/?day=5&offline=true",
   "/schedule",
-  "/calendar"
+  "/calendar",
+  "favicon.ico"
 ]
 
 self.addEventListener("install", e => {
-  console.log('installing dumb shit');
   e.waitUntil(
     caches
       .open(cacheName)
@@ -41,65 +48,32 @@ self.addEventListener("activate", e => {
   );
 
 });
-self.addEventListener("message", function(message) {
-  let date = new Date();
-  let offSetArray = message.data;
-  self.indexedDB.open("skipDays", 1, function(upgradeDB) {
-    let store = upgradeDB.createObjectStore("skipDays", {
-      keyPath: "id"
-    })
-    store.put({id: 1, days: offSetArray});
-  })
-  self.indexedDB.open("skipDays", 1, function(db) {
-    console.log("big black cock");
-    var tx = db.transaction(['skipDays'], 'readonly');
-    var store = tx.objectStore('beverages');
-    console.log(store.getAll());
-  })
-
-});
 
 
 
 self.addEventListener("fetch", event => {
-  if (event.request.destination == "font" && event.request.referrer.split("/")[event.request.referrer.split("/").length-1] != "fonts") {
-    caches.match(event.request).then(function(resp) {
-      return resp || fetch(event.request).then(function(response) {
-        return caches.open(cacheName).then(function(cache) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-  } else if(event.request.destination == "script") {
-    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-  } else {
-    let currentDate = new Date();
-    let cacheToGet = 0;
+  if (event.request.destination === "unknown" || event.request.destination === "document") {
     if (event.request.url.split("?").length === 2) {
-      let queryDay = (event.request.url.split("?")[1].split("="));
-      if (queryDay[0] == "day") {
-        cacheToGet = parseInt(queryDay[1]);
-      }
-    }
-    if (cacheToGet === 0) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
-    } else if (cacheToGet === 1) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/?day=1&offline=true")));
-    } else if (cacheToGet === 2) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/?day=2&offline=true")));
-    } else if (cacheToGet === 3) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/?day=3&offline=true")));
-    } else if (cacheToGet === 4) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/?day=4&offline=true")));
-    } else if (cacheToGet === 5) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/?day=5&offline=true")));
-    } else if (cacheToGet === 6) {
-      event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
+      event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+    } else if (event.request.url === "https://www.pvstudents.ca/schedule" || evemt.request === "https://www.pvstudents.ca/calendar") {
+      event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
     } else {
       event.respondWith(fetch(event.request).catch(() => caches.match("public/html/offline.html")));
     }
+  } else if (event.request.destination === "font") {
+    // caches.match(event.request).then(function(resp) {
+    //   return resp || fetch(event.request).then(function(response) {
+    //     return caches.open(cacheName).then(function(cache) {
+    //       cache.put(event.request, response.clone());
+    //       return response;
+    //     });
+    //   });
+    // })
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+  } else {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
   }
+
 });
 self.addEventListener('push', function(e) {
   var data = e.data.json();

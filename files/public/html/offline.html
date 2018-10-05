@@ -18,7 +18,9 @@
               offSet++;
             }
           }
-          window.location = "/?day=" + (((currentDate.getDay()-1)-offSet%5+5)%5+1).toString();
+          let locationString = "/?day=" + (((currentDate.getDay()-1)-offSet%5+5)%5+1).toString() + "&offline=true";
+          console.log(locationString);
+          window.location = locationString;
         }
       }
     </script>
