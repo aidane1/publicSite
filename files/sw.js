@@ -1,4 +1,4 @@
-const cacheName = "v2";
+const cacheName = "v1";
 
 const cacheAssets = [
   "public/html/offline.html",
@@ -14,6 +14,7 @@ const cacheAssets = [
 ]
 
 self.addEventListener("install", e => {
+  console.log('installing dumb shit');
   e.waitUntil(
     caches
       .open(cacheName)
