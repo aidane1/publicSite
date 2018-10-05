@@ -1643,10 +1643,14 @@ app.get("/", async (req, res, next) => {
   let currentDate = (new Date()).local();
   let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
   let currentDay;
+  let offLine = false;
   if (req.query.day) {
     currentDay = parseInt(req.query.day);
   }  else {
     currentDay = (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1);
+  }
+  if (req.query.offline) {
+    offLine = true;
   }
 
   // let currentDate = new Date(2018, 8, 20, 15, 18, 0, 0);
@@ -1822,7 +1826,7 @@ app.get("/", async (req, res, next) => {
             }
           }
           //update lc schedule (you changed it)
-          res.render("index", {titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);

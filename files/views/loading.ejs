@@ -70,6 +70,8 @@
     </div>
   </body>
   <script>
+
+   
     let xmlhttp;
     if (window.XMLHttpRequest) {
       // code for modern browsers
@@ -81,13 +83,9 @@
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         newDoc = (new DOMParser()).parseFromString(this.responseText, "text/html");
-
-
         document.open("text/html");
         document.write(this.responseText);
         document.close();
-
-
       }
     }
     xmlhttp.open("GET", "/<%=getURL%>", true);

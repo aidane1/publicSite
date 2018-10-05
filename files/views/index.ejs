@@ -20,17 +20,19 @@
     <link rel="apple-touch-icon" sizes="144x144" href="public/images/apple-icon-144x144.png" />
     <link rel = "icon" sizes = "128x128" href = "public/images/icon-128x128.png" />
     <link rel = "icon" sizes = "192x192" href = "public/images/icon-192x192.png" /> -->
+    <% if (!offLine) { %>
+      <link rel="icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
+      <link rel="shortcut icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
 
-    <link rel="icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
-    <link rel="shortcut icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
-
-    <link rel = "icon" sizes = "128x128" href = "/public/schoolLogos/128x128_<%=favicon%>" />
-    <link rel = "icon" sizes = "192x192" href = "/public/schoolLogos/192x192_<%=favicon%>" />
-    <link rel = "apple-touch-startup-image" href = "/public/schoolLogos/512x512_<%=favicon%>"/>
-    <link rel = "apple-touch-icon" sizes = " 144x144" href = "/public/schoolLogos/144x144_<%=favicon%>" />
-    <link rel = "apple-touch-icon" sizes = " 114x114" href = "/public/schoolLogos/114x114_<%=favicon%>" />
-    <link rel = "apple-touch-icon" sizes = " 57x57" href = "/public/schoolLogos/57x57_<%=favicon%>" />
-    <link rel = "apple-touch-icon" sizes = " 72x72" href = "/public/schoolLogos/72x72_<%=favicon%>" />
+      <link rel = "icon" sizes = "128x128" href = "/public/schoolLogos/128x128_<%=favicon%>" />
+      <link rel = "icon" sizes = "192x192" href = "/public/schoolLogos/192x192_<%=favicon%>" />
+      <link rel = "apple-touch-startup-image" href = "/public/schoolLogos/512x512_<%=favicon%>"/>
+      <link rel = "apple-touch-icon" sizes = " 144x144" href = "/public/schoolLogos/144x144_<%=favicon%>" />
+      <link rel = "apple-touch-icon" sizes = " 114x114" href = "/public/schoolLogos/114x114_<%=favicon%>" />
+      <link rel = "apple-touch-icon" sizes = " 57x57" href = "/public/schoolLogos/57x57_<%=favicon%>" />
+      <link rel = "apple-touch-icon" sizes = " 72x72" href = "/public/schoolLogos/72x72_<%=favicon%>" />
+    <% } %>
+    
 
 
 
@@ -769,8 +771,10 @@
         <% } %>
           <!-- <li class = "item" id = "chatroom"><a href = "/chatroom?chatroom=all">Chatroom</a></li> -->
           <li class = "item unselectable"><a href = "/schedule">My Schedule</a></li>
-          <li class = "item unselectable" id = "accountdropDown"><a href = "/users/<%=username%>">Account</a></li>
-          <li class = "item unselectable" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
+          <% if (!offLine) { %>
+            <li class = "item unselectable" id = "accountdropDown"><a href = "/users/<%=username%>">Account</a></li>
+            <li class = "item unselectable" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
+          <% } %>
           <li class = "item unselectable" id = "logout"><a href = "/logout">Logout</a></li>
         </ul>
       </nav>
@@ -912,7 +916,7 @@
               <a href = "/calendar" style = "text-decoration: none; color: <%=colours.textColor%>;">Click to see more...</a>
             </button>
           </div>
-        <% } else if (order[key] == "Schedule") { %>
+        <% } else if (order[key] == "Schedule" && !offLine) { %>
           <div id = "schedule" class = "schedule box" name = "schedule">
             <div class = "scheduleHolder">
               <div class = "header"><h1>Schedule and other</h1></div>
@@ -925,7 +929,7 @@
               <div class = "spacer"></div>
             </div>
           </div>
-        <% } else if (order[key] == "Resources") { %>
+        <% } else if (order[key] == "Resources" && !offLine) { %>
           <div id = "resources" class = "resources box" name = "resources">
             <div class = "header" style = "margin-bottom: 15px"><h1>Resources</h1></div>
             <% if (courses.length === 5) { %>
@@ -1046,199 +1050,228 @@
   </body>
   <script src = "/public/js/home.js"></script>
   <!-- the script for getting alerts -->
-  <script>
-  function postAlerts(deleteMessage) {
-    let xmlhttp;
-    if (window.XMLHttpRequest) {
-      // code for modern browsers
-      xmlhttp = new XMLHttpRequest();
-    } else {
-      // code for old IE browsers
-      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.open("POST", "/alerts");
-    xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-    // xmlhttp.onreadystatechange = function() {
-    //   if (this.readyState == 4 && this.status == 200) {
-    //
-    //   }
-    // }
-    xmlhttp.send(encodeURI("delete=" + deleteMessage));
-  }
-  function loadAlerts() {
-    console.log("yeet");
-    let xmlhttp;
-    if (window.XMLHttpRequest) {
-      // code for modern browsers
-      xmlhttp = new XMLHttpRequest();
-    } else {
-      // code for old IE browsers
-      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        let alerts = this.responseText.split('"').join("").split("[").join("").split("]").join("");
-        alerts = alerts.split(",");
-        if (alerts != "") {
-          if (alerts[0] === "postComment") {
-            if (confirm(alerts[1] + " Click okay to go view the comment.")) {
-              window.location.href = alerts[2];
-            }
-          } else {
-            confirm(alerts);
-          }
-          postAlerts(true);
-        }
-      }
-    }
-    xmlhttp.open("GET", "/alerts", true);
-    xmlhttp.send();
-  }
-  loadAlerts();
-  </script>
 
-  <!-- the script for adding to local storage -->
-  <script>
-    if (typeof Storage != "undefined") {
-      let loadRequest;
-      if (window.XMLHttpRequest) {
-        // code for modern browsers
-        loadRequest = new XMLHttpRequest();
-      } else {
-        // code for old IE browsers
-        loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+  <% if (!offLine) { %>
+    <script>
+      function postAlerts(deleteMessage) {
+        let xmlhttp;
+        if (window.XMLHttpRequest) {
+          // code for modern browsers
+          xmlhttp = new XMLHttpRequest();
+        } else {
+          // code for old IE browsers
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST", "/alerts");
+        xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+        // xmlhttp.onreadystatechange = function() {
+        //   if (this.readyState == 4 && this.status == 200) {
+        //
+        //   }
+        // }
+        xmlhttp.send(encodeURI("delete=" + deleteMessage));
       }
-      loadRequest.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          let parsedText = JSON.parse(this.responseText);
-          let userObject = parsedText[0];
-          let courseObject = parsedText[1];
-          let lcObject = parsedText[2];
-          let offSetObject = parsedText[3];
-          let blockTimeObject = parsedText[4];
-          let newObject = {
-            colors: userObject.colors,
-            order: userObject.order,
-            courses: courseObject.map(x => {
-              return {
-                teacher : x.teacher,
-                course : x.course,
-                block : x.block
+      function loadAlerts() {
+        let xmlhttp;
+        if (window.XMLHttpRequest) {
+          // code for modern browsers
+          xmlhttp = new XMLHttpRequest();
+        } else {
+          // code for old IE browsers
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            let alerts = this.responseText.split('"').join("").split("[").join("").split("]").join("");
+            alerts = alerts.split(",");
+            if (alerts != "") {
+              if (alerts[0] === "postComment") {
+                if (confirm(alerts[1] + " Click okay to go view the comment.")) {
+                  window.location.href = alerts[2];
+                }
+              } else {
+                confirm(alerts);
               }
-            }),
-            lcSchedule: lcObject,
-            dayOffSet: offSetObject.timeOffset.map(x => new Date(x)),
-            blockTime: blockTimeObject
+              postAlerts(true);
+            }
           }
-          localStorage.setItem("userData", JSON.stringify(newObject));
         }
+        xmlhttp.open("GET", "/alerts", true);
+        xmlhttp.send();
       }
-      loadRequest.open("GET", "/offLineInfo", true);
-      loadRequest.send();
-
-    } else {
-
-    }
-
-  </script>
+      loadAlerts();
+    </script>      
+  <% } %>
+  
+  <!-- the script for adding to local storage -->
+  <% if (!offLine) { %>
+    <script>
+        if (typeof Storage != "undefined") {
+          let loadRequest;
+          if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+          } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              let parsedText = JSON.parse(this.responseText);
+              let userObject = parsedText[0];
+              let courseObject = parsedText[1];
+              let lcObject = parsedText[2];
+              let offSetObject = parsedText[3];
+              let blockTimeObject = parsedText[4];
+              let newObject = {
+                colors: userObject.colors,
+                order: userObject.order,
+                courses: courseObject.map(x => {
+                  return {
+                    teacher : x.teacher,
+                    course : x.course,
+                    block : x.block
+                  }
+                }),
+                lcSchedule: lcObject,
+                dayOffSet: offSetObject.timeOffset.map(x => new Date(x)),
+                blockTime: blockTimeObject
+              }
+              localStorage.setItem("userData", JSON.stringify(newObject));
+            }
+          }
+          loadRequest.open("GET", "/offLineInfo", true);
+          loadRequest.send();
+    
+        } else {
+    
+        }
+    
+      </script>
+  <% } %>
+  
 
   <!-- This shit is SUPER fucky. leave it for the time being -->
-  <script>
-    if ("Notification" in window && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(function(reg) {
-
-        console.log('Registration succeeded. Scope is ' + reg.scope);
-        reg.pushManager.getSubscription().then(function(sub) {
-          if (sub === null) {
-            document.getElementById("pushNotifications").style.display = "block";
-            console.log("not subscribed to push service!");
-          } else {
-            console.log("subscription object: " + sub);
+  <% if (!offLine) { %>
+    <script>
+        if (window.Worker) {
+          console.log("yea");
+          var myWorker = new Worker("sw.js");
+          if (typeof Storage != "undefined") {
+            if (localStorage.getItem("userData")) {
+              let userData = JSON.parse(localStorage.getItem("userData"));
+              let daysOffset = userData.dayOffSet;
+              myWorker.postMessage(daysOffset);
+            }
           }
-        })
-      }).catch(function(error) {
-        console.log('Registration failed with ' + error);
-      });
-
-    } else {
-      console.log("service workers are not supported by your browser. please consider switching to one that does to get the highest quality content we can offer.");
-    }
-
-    function subscribeUser() {
-      document.getElementById("pushNotifications").setAttribute("onclick", "''");
-      const publicVapidKey = 'BJOheX5G-E8hh06N7PPi2i1_gCVvUWxwjOUTVaqRBifRpGyi7e7-FYU-WcdmXenmWh-kLZWMFjxjhK37_LvK52M';
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.ready.then(function(reg) {
-          reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-          }).then(function(sub) {
-            let xmlhttp;
-            if (window.XMLHttpRequest) {
-              // code for modern browsers
-              xmlhttp = new XMLHttpRequest();
-            } else {
-              // code for old IE browsers
-              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.open("POST", "/subscribe");
-            xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-            xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-
-              }
-            }
-            xmlhttp.send(encodeURI("post=" + JSON.stringify(sub)));
-            location.reload();
-          }).catch(function(e) {
-            if (Notification.permission === "denied") {
-              console.log("permissions for notifications denied.");
-            } else {
-              console.log("unable to subscribe to push: " + e);
-            }
+          myWorker.onmessage = function(e) {
+            console.log(e);
+          }
+    
+        } else if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').then(function(reg) {
+            console.log('Registration succeeded. Scope is ' + reg.scope);
+          }).catch(function(error) {
+            console.log('Registration failed with ' + error);
           });
-        })
-      }
-    }
-
-
-    function urlBase64ToUint8Array(base64String) {
-      const padding = '='.repeat((4 - base64String.length % 4) % 4);
-      const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-
-      const rawData = window.atob(base64);
-      const outputArray = new Uint8Array(rawData.length);
-
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-      }
-      return outputArray;
-    }
-
-
-    async function displayNotification() {
-      if (Notification.permission == 'granted') {
-        navigator.serviceWorker.getRegistration().then(function(reg) {
-          var options = {
-            body: 'Here is a notification body!',
-            icon: 'images/example.png',
-            vibrate: [100, 50, 100],
-            data: {
-              dateOfArrival: Date.now(),
-              primaryKey: 1
-            },
-            actions: [
-              {action: 'explore', title: 'Explore this new world',
-                icon: 'images/checkmark.png'},
-              {action: 'close', title: 'Close notification',
-                icon: 'images/xmark.png'},
-            ]
-          };
-          reg.showNotification('Hello world!', options);
-        });
-      }
-    }
-  </script>
+        } else {
+          console.log("service workers are not supported by your browser. please consider switching to one that does to get the highest quality content we can offer.");
+        }
+    
+        if ("Notification" in window && 'serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').then(function(reg) {
+            console.log('Registration succeeded. Scope is ' + reg.scope);
+            reg.pushManager.getSubscription().then(function(sub) {
+              if (sub === null) {
+                document.getElementById("pushNotifications").style.display = "block";
+                console.log("not subscribed to push service!");
+              } else {
+                console.log("subscription object: " + sub);
+              }
+            })
+          }).catch(function(error) {
+            console.log('Registration failed with ' + error);
+          });
+        } else {
+          console.log("notifications are not supported in this browser. please consider switching to a browser that supports notifications");
+        }
+    
+        function subscribeUser() {
+          document.getElementById("pushNotifications").setAttribute("onclick", "''");
+          const publicVapidKey = 'BJOheX5G-E8hh06N7PPi2i1_gCVvUWxwjOUTVaqRBifRpGyi7e7-FYU-WcdmXenmWh-kLZWMFjxjhK37_LvK52M';
+          if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.ready.then(function(reg) {
+              reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+              }).then(function(sub) {
+                let xmlhttp;
+                if (window.XMLHttpRequest) {
+                  // code for modern browsers
+                  xmlhttp = new XMLHttpRequest();
+                } else {
+                  // code for old IE browsers
+                  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.open("POST", "/subscribe");
+                xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+                xmlhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+    
+                  }
+                }
+                xmlhttp.send(encodeURI("post=" + JSON.stringify(sub)));
+                location.reload();
+              }).catch(function(e) {
+                if (Notification.permission === "denied") {
+                  console.log("permissions for notifications denied.");
+                } else {
+                  console.log("unable to subscribe to push: " + e);
+                }
+              });
+            })
+          }
+        }
+    
+    
+        function urlBase64ToUint8Array(base64String) {
+          const padding = '='.repeat((4 - base64String.length % 4) % 4);
+          const base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+    
+          const rawData = window.atob(base64);
+          const outputArray = new Uint8Array(rawData.length);
+    
+          for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+          }
+          return outputArray;
+        }
+    
+    
+        async function displayNotification() {
+          if (Notification.permission == 'granted') {
+            navigator.serviceWorker.getRegistration().then(function(reg) {
+              var options = {
+                body: 'Here is a notification body!',
+                icon: 'images/example.png',
+                vibrate: [100, 50, 100],
+                data: {
+                  dateOfArrival: Date.now(),
+                  primaryKey: 1
+                },
+                actions: [
+                  {action: 'explore', title: 'Explore this new world',
+                    icon: 'images/checkmark.png'},
+                  {action: 'close', title: 'Close notification',
+                    icon: 'images/xmark.png'},
+                ]
+              };
+              reg.showNotification('Hello world!', options);
+            });
+          }
+        }
+      </script>
+  <% } %>
 </html>
