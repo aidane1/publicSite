@@ -3049,7 +3049,7 @@ app.get("/users/:user/schedule-colours", function(req, res) {
             if (err || school == null) {
               res.redirect("/users/" + user.username);
             } else {
-              Course.find({_id : user.courses}, function(err, courses) {
+              Course.find({school: user.school, _id : user.courses}, function(err, courses) {
                 let classesForBlocks = blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName);
                 for (var key in classesForBlocks) {
                   classesForBlocks[key] = [classesForBlocks[key], user.scheduleColours[key] || "#FFFFFF"];
