@@ -312,8 +312,8 @@ function wwwHttpsRedirect(req, res, next) {
       }
     }
 };
-app.use(wwwHttpsRedirect);
 
+app.use(wwwHttpsRedirect);
 
 let server = app.listen(80, function() {
   console.log("listening for requests");
@@ -338,8 +338,7 @@ function blockNamesObject(blocks, courses, courseNames, spareName) {
   return blockObject;
 }
 
-
-async function getLoginCredentials(username, password) {
+async function getLoginCredentials(username, password, district) {
   return new Promise(function(resolve, reject) {
     var postData = {
       ctl00$FormContentPlaceHolder$USERID: username,
@@ -351,7 +350,7 @@ async function getLoginCredentials(username, password) {
       __VIEWSTATEGENERATOR: "",
       __EVENTVALIDATION: ""
     }
-    https.get("https://cimsweb.sd83.bc.ca/SchoolConnect/StuConSignon.aspx", function(res) {
+    https.get(`https://cimsweb.${district}.bc.ca/SchoolConnect/StuConSignon.aspx`, function(res) {
       let data = "";
       res.on("data", function(chunk) {
         data += chunk;
@@ -369,10 +368,10 @@ async function getLoginCredentials(username, password) {
   });
 }
 
-async function login(data, cookies) {
+async function login(data, cookies, district) {
   return new Promise(function(resolve, reject) {
     let options = {
-      url : `https://cimsweb.sd83.bc.ca/SchoolConnect/StuConSignon.aspx?${data}`,
+      url : `https://cimsweb.${district}.bc.ca/SchoolConnect/StuConSignon.aspx?${data}`,
       method: "GET",
       headers: {
         "Cookie": cookies[0]
@@ -388,10 +387,10 @@ async function login(data, cookies) {
   });
 }
 
-async function getAssignment(cookies) {
+async function getAssignment(cookies, district) {
   return new Promise(function(resolve, reject) {
     let options = {
-      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
+      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCAssignments.aspx`,
       method: "GET",
       headers: {
         'Cookie': cookies[0]
@@ -403,10 +402,10 @@ async function getAssignment(cookies) {
   })
 }
 
-async function getScheduleBody(cookies) {
+async function getScheduleBody(cookies, district) {
   return new Promise(function(resolve, reject) {
     let options = {
-      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCSchedule.aspx",
+      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCSchedule.aspx`,
       method: "GET",
       headers: {
         'Cookie': cookies[0]
@@ -446,7 +445,7 @@ async function compileScheduleInfo(body, semester) {
   });
 }
 
-async function getAssignmentCredentials(body, cookies) {
+async function getAssignmentCredentials(body, cookies, district) {
   return new Promise(function(resolve, reject) {
     let $ = cheerio.load(body);
     let newPostData = {
@@ -469,7 +468,7 @@ async function getAssignmentCredentials(body, cookies) {
       ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C"
     }
     let headers = {
-      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
+      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCAssignments.aspx`,
       headers: {
         "Cookie": cookies[0]
       },
@@ -509,10 +508,10 @@ async function compileInfo(body) {
   })
 }
 
-async function getHistoryBody(cookies) {
+async function getHistoryBody(cookies, district) {
   return new Promise(function(resolve, reject) {
     let options = {
-      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCTranscript.aspx",
+      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCTranscript.aspx`,
       method: "GET",
       headers: {
         'Cookie': cookies[0]
@@ -524,54 +523,50 @@ async function getHistoryBody(cookies) {
   });
 }
 
-async function compileHistory(body) {
-  return new Promise(function(resolve, reject) {
-    let $ = cheerio.load(body);
-    let classes = [];
-    let scheduleRows = $("#FormContentPlaceHolder_ContentPlaceHolder1_StuTrans tr");
-    scheduleRows.each(function(i, element) {
-      if (i > 1) {
-        let currentClass = [];
-        $(this).children().each(function(j, elem) {
-          let classBox = $(elem);
-          if (j < 8) {
-            currentClass.push(classBox.text().replace(/\s\s+/g,' '));
-          }
-        });
-        currentClass.length && currentClass.length !== 1 ? classes.push(currentClass) : "";
-      }
-    });
-    let orderedClasses = [];
-    for (var i = 0; i < classes.length; i++) {
-      orderedClasses.push([classes[i][1],classes[i][5],classes[i][7]])
-    }
-    resolve(orderedClasses);
-  });
-}
-
-
-async function getHomework(username, password) {
-  let loginCredentials = await getLoginCredentials(username, password);
-  await login(loginCredentials[0], loginCredentials[1]);
-  let assignmentBody = await getAssignment(loginCredentials[1]);
-  let assignmentCredentials = await getAssignmentCredentials(assignmentBody, loginCredentials[1]);
+async function getHomework(username, password, district) {
+  let loginCredentials = await getLoginCredentials(username, password, district);
+  await login(loginCredentials[0], loginCredentials[1], district);
+  let assignmentBody = await getAssignment(loginCredentials[1], district);
+  let assignmentCredentials = await getAssignmentCredentials(assignmentBody, loginCredentials[1], district);
   let compiledInfo = compileInfo(assignmentCredentials);
   return (compiledInfo);
 }
-
 //semester is in the form SEM1 or SEM2
-async function getSchedule(username, password, semester) {
-  let loginCredentials = await getLoginCredentials(username, password);
-  await login(loginCredentials[0], loginCredentials[1]);
-  let scheduleBody = await getScheduleBody(loginCredentials[1]);
-  let compiledSchedule = compileScheduleInfo(scheduleBody, semester);
-  return compiledSchedule;
+async function getSchedule(username, password, semester, district) {
+  let loginCredentials = await getLoginCredentials(username, password, district);
+  await login(loginCredentials[0], loginCredentials[1], district);
+  let scheduleBody = await getScheduleBody(loginCredentials[1], district);
+  let compiledSchedule = await compileScheduleInfo(scheduleBody, semester, district);
+  let names = compiledSchedule.map(x => ["Mr." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Ms." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Mme." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase()]);
+  let blocks = compiledSchedule.map(x => ["A", "B", "C", "D", "E"][(parseInt(x[2])-1)/2]);
+  let classes = compiledSchedule.map(x => x[0].substring(0,2).toLowerCase());
+  let userCourses = [];
+  for (var i = 0; i < names.length; i++) {
+    let currentCourse = await Course.find({$and: [{teacher : names[i]}, {block : blocks[i]}]});
+    if (currentCourse.length != 0) {
+      if (currentCourse.length === 1) {
+        userCourses.push(currentCourse[0]._id);
+      } else {
+        let found = false;
+        for (var j = 0; j < currentCourse.length; j++) {
+          if (currentCourse.course.substring(0,2).toLowerCase() === classes[i] && !found) {
+            found = true;
+            userCourses.push(currentCourse[j]._id);
+          }
+        }
+        if (!found) {
+          userCourses.push(currentCourse[0]);
+        }
+      }
+    }
+  }
+  return userCourses;
 }
 
-async function getHistoryBody(cookies) {
+async function getHistoryBody(cookies, district) {
   return new Promise(function(resolve, reject) {
     let options = {
-      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCTranscript.aspx",
+      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCTranscript.aspx`,
       method: "GET",
       headers: {
         'Cookie': cookies[0]
@@ -607,20 +602,14 @@ async function compileHistory(body) {
     resolve(orderedClasses);
   });
 }
-
 //gets history of grades for you
-async function getHistory(username, password) {
-  let loginCredentials = await getLoginCredentials(username, password);
-  await login(loginCredentials[0], loginCredentials[1]);
-  let history = await getHistoryBody(loginCredentials[1]);
+async function getHistory(username, password, district) {
+  let loginCredentials = await getLoginCredentials(username, password, district);
+  await login(loginCredentials[0], loginCredentials[1], district);
+  let history = await getHistoryBody(loginCredentials[1], district);
   let compiledHistory = compileHistory(history);
   return compiledHistory;
 }
-
-
-
-
-
 
 function pushUsers(userList, data) {
   console.log(data);
@@ -655,48 +644,63 @@ function pushUsers(userList, data) {
 //   });
 // });
 
-// School.create({name : "PVSS"},function(err, school) {
-//   console.log(school);
-// })
 app.get("/grade-history", async function(req, res, next) {
-  if (req.query.username && req.query.password) {
-    let history = await getHistory(req.query.username.toLowerCase(), req.query.password);
-    res.render("remoteHistory", {history:history});
-
-  } else {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      if (req.query.username && req.query.password) {
+        let history = await getHistory(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        res.render("remoteHistory", {history:history});
+      } else {
+        res.render("remoteHistory", {history: []});
+      }
+    } else {
+      res.render("remoteHistory", {history: []});
+    }
+  } catch(e) {
     res.render("remoteHistory", {history: []});
   }
 });
 
 app.get("/remote-schedule", async function(req, res, next) {
-  if (req.session.userId && req.query.username && req.query.password) {
-    User.findOne({_id : req.session.userId}, async function(err, user) {
-      if (err || user == null) {
-        res.redirect("/");
-      } else {
-        let schedule = await getSchedule(req.query.username.toLowerCase(), req.query.password, "SEM1");
-        if (schedule.length) {
-          User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
-            res.redirect("/");
-          })
-        } else {
+  try {
+    if (req.session.userId && req.query.username && req.query.password) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      let schedule = await getSchedule(req.query.username.toLowerCase(), req.query.password, "SEM 1 ", school.schoolDistrict);
+      if (schedule.length) {
+        User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
           res.redirect("/");
-        }
-
+        })
+      } else {
+        res.redirect("/");
       }
-    })
-  } else {
-    res.render("remoteCourseAdd");
+    } else {
+      res.render("remoteCourseAdd");
+    }
+  } catch(e) {
+    res.redirect("/");
   }
 });
 
-app.get("/homework-sd83", async function(req, res, next) {
-  if (req.query.username && req.query.password) {
-    let homework = await getHomework(req.query.username.toLowerCase(), req.query.password);
-    res.render("displayHomework", {homework:homework});
-
-  } else {
-    res.render("displayHomework", {homework: []});
+app.get("/homework-school", async function(req, res, next) {
+  try {
+    if (req.session.userId) {
+      if (req.query.username && req.query.password) {
+        let user = await User.findOne({_id : req.session.userId});
+        let school = await School.findOne({_id : user.school});
+        let homework = await getHomework(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        res.render("displayHomework", {homework:homework});
+      } else {
+        res.render("displayHomework", {homework: []});
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/");
   }
 })
 
@@ -791,9 +795,9 @@ app.post("/create-school/info", urlencodedParser, function(req, res) {
         console.log(err);
         res.redirect("/login");
       } else {
-        if (req.body.adminFirstName && req.body.adminLastName && req.body.adminUser && req.body.adminPass && req.body.adminConf && req.body.adminEmail && req.body.schoolName) {
+        if (req.body.adminFirstName && req.body.adminLastName && req.body.adminUser && req.body.adminPass && req.body.adminConf && req.body.adminEmail && req.body.schoolName && req.body.schoolDistrict) {
           if (req.body.adminPass === req.body.adminConf) {
-            School.create({name : req.body.schoolName}, function(err, school) {
+            School.create({name : req.body.schoolName, district : req.body.schoolDistrict.toLowerCase()}, function(err, school) {
               if (err || school === null) {
                 res.render("createSchool", {error : "An unknown error occured. Please contact Aidan Eglin at aidaneglin@gmail.com for further support.", data: ["", "", ""]});
               } else {

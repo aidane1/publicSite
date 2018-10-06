@@ -82,6 +82,9 @@ const SchoolSchema = new Schema({
   titleDisplay: {
     type: Number,
     default: 0
+  },
+  schoolDistrict: {
+    type: String
   }
 });
 
