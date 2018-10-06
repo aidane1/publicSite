@@ -3049,22 +3049,13 @@ app.get("/users/:user/schedule-colours", function(req, res) {
             if (err || school == null) {
               res.redirect("/users/" + user.username);
             } else {
-              let classesForBlocks = {
-
-              }
-              for (var i = 0; i < school.blockNames.length; i++) {
-                if (school.blockNames[i][1] === "changing") {
-                  classesForBlocks[school.blockNames[i][0]] = [user.blockNames[school.blockNames[i][0]] || school.spareName, (user.scheduleColours ? user.scheduleColours[school.blockNames[i][0]] || "#FFFFFF" : "#FFFFFF")];
-                }
-              }
               Course.find({_id : user.courses}, function(err, courses) {
-                for (var i = 0; i < courses.length; i++) {
-                  classesForBlocks[courses[i].block][0] = user.blockNames[courses[i].block] || courses[i].course;
+                let classesForBlocks = blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName);
+                for (var key in classesForBlocks) {
+                  classesForBlocks[key] = [classesForBlocks[key], user.scheduleColours[key] || "#FFFFFF"];
                 }
-                console.log(classesForBlocks);
                 res.render("scheduleColours", {blocks : classesForBlocks, user: req.params.user, colours: user.colors, font: holidayFont(user.font)});
               });
-
             }
           })
         }
