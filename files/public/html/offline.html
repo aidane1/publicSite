@@ -7,22 +7,7 @@
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
     <title>PVSS student website | Home</title>
     <script>
-     if (typeof Storage != "undefined") {
-        if (localStorage.getItem("userData")) {
-          let currentDate = new Date();
-          let userData = JSON.parse(localStorage.getItem("userData"));
-          let offSetDays = userData.dayOffSet;
-          let offSet = 0;
-          for (var i = 0; i < offSetDays.length; i++) {
-            if (currentDate.getTime() > new Date(offSetDays[i]).getTime()) {
-              offSet++;
-            }
-          }
-          let locationString = "/?day=" + (((currentDate.getDay()-1)-offSet%5+5)%5+1).toString() + "&offline=true";
-          console.log(locationString);
-          window.location = locationString;
-        }
-      }
+      window.location = "https://www.pvstudents.ca/";
     </script>
     <style>
 
@@ -32,14 +17,6 @@
 
 
     </style>
-
   </head>
   <body>
-
-
-  <script src = "public/js/home.js"></script>
-
-
-
-
 </html>

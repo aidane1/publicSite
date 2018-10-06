@@ -3,20 +3,13 @@
 
 
 //a function to offset the days based on proDdays
-function dayOffset(date, all = false) {
-  let offSetArray = [
-    new Date(2018, 8, 3, 0, 0, 0, 0), new Date(2018, 8, 17, 0, 0, 0, 0), new Date(2018, 9, 5, 0, 0, 0, 0), new Date(2018, 9, 8, 0, 0, 0, 0),
-    new Date(2018, 9, 19, 0, 0, 0, 0), new Date(2018, 10, 12, 0, 0, 0, 0), new Date(2018, 10, 13, 0, 0, 0, 0), new Date(2018, 11, 24, 0, 0, 0, 0),
-    new Date(2018, 11, 25, 0, 0, 0, 0), new Date(2018, 11, 26, 0, 0, 0, 0), new Date(2019, 0, 28, 0, 0, 0, 0), new Date(2019, 1, 15, 0, 0, 0, 0), new Date(2019, 1, 18, 0, 0, 0, 0),
-    new Date(2019, 3, 19, 0, 0, 0, 0), new Date(2019, 3, 22, 0, 0, 0, 0), new Date(2019, 3, 23, 0, 0, 0, 0), new Date(2019, 4, 17, 0, 0, 0, 0),
-    new Date(2019, 4, 20, 0, 0, 0, 0)
-  ];
+function dayOffset(events, date, all = false) {
   if (all) {
-    return offSetArray;
+    return events.map(x => x.date);
   }
   let offSet = 0;
-  for (var i = 0; i < offSetArray.length; i++) {
-    if (date.getTime() > offSetArray[i].getTime()) {
+  for (var i = 0; i < events.length; i++) {
+    if (date.getTime() > events[i].date.getTime()) {
       offSet += 1;
     }
   }
@@ -319,12 +312,31 @@ function wwwHttpsRedirect(req, res, next) {
       }
     }
 };
-// app.use(wwwHttpsRedirect);
+app.use(wwwHttpsRedirect);
 
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
+
+function blockNamesObject(blocks, courses, courseNames, spareName) {
+  let blockObject = {};
+  for (var i = 0; i  < blocks.length; i++) {
+    if (blocks[i][1] === "changing") {
+      blockObject[blocks[i][0]] = spareName;
+    } else {
+      blockObject[blocks[i][0]] = blocks[i][0]
+    }
+  }
+  for (var i = 0; i < courses.length; i++) {
+    blockObject[courses[i].block] = courses[i].course;
+  } 
+  let parsedNames = JSON.parse(JSON.stringify(courseNames));
+  for (var key in parsedNames) {
+    blockObject[key] = parsedNames[key];
+  }
+  return blockObject;
+}
 
 
 async function getLoginCredentials(username, password) {
@@ -1219,7 +1231,7 @@ app.post("/admin/events", urlencodedParser, function(req, res) {
             timeArray[0] = (timeArray[0] == 0 ? 12 : timeArray[0]);
             time = timeArray[0].toString() + ":" + timeArray[1].toString() + " " + timeArray[2];
           }
-          Events.create({school : user.school, time : time, longForm : req.body.longInfo || req.body.shortInfo, info : req.body.shortInfo, year : year, month : month, day : day, date : req.body.date}, function(err, event) {
+          Events.create({school : user.school, time : time, longForm : req.body.longInfo || req.body.shortInfo, info : req.body.shortInfo, year : year, month : month, day : day, date : req.body.date, dayRolled: (req.body.dayRolled ? true : false), schoolSkipped: (req.body.schoolSkipped ? true : false)}, function(err, event) {
             res.redirect("/admin/events");
           })
         }
@@ -1641,17 +1653,7 @@ app.get("/", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
-  let dayOffSetToday = dayOffset(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
-  let currentDay;
-  let offLine = false;
-  if (req.query.day) {
-    currentDay = parseInt(req.query.day);
-  }  else {
-    currentDay = (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1);
-  }
-  if (req.query.offline) {
-    offLine = true;
-  }
+  
 
   // let currentDate = new Date(2018, 8, 20, 15, 18, 0, 0);
 
@@ -1676,7 +1678,20 @@ app.get("/", async (req, res, next) => {
         //gathers the events from the past month for the calendar
         let monthEvent = await Events.find({school : user.school, month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
         let soonEvents = await Events.find({school : user.school, $and: [{date: {$gt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
+        let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
         soonEvents = soonEvents.reverse();
+
+        let dayOffSetToday = dayOffset(offSetEvents, new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+        let currentDay;
+        let offLine = false;
+        if (req.query.day) {
+          currentDay = parseInt(req.query.day);
+        }  else {
+          currentDay = (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1);
+        }
+        if (req.query.offline) {
+          offLine = true;
+        }
 
         //declares the top level variables that will be used
 
@@ -1726,7 +1741,7 @@ app.get("/", async (req, res, next) => {
         if (todaysBlocks) {
           blockOrderLetters = todaysBlocks.map(x => (x[5] === "changing" ? x[0][0] : "")).join("");
         }
-        console.log(todaysBlocks);
+        
 
 
         // console.log(todaysBlocks);
@@ -1826,6 +1841,7 @@ app.get("/", async (req, res, next) => {
             }
           }
           //update lc schedule (you changed it)
+          console.log(todaysOrderedClasses);
           res.render("index", {offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
@@ -2257,7 +2273,12 @@ app.get("/calendar", async (req, res, next) => {
       }
       let monthsArray = [];
       let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
-      let offSetDays = dayOffset(false, true);
+      let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
+      let skipEvents = await Events.find({$and: [{school : user.school}, {schoolSkipped: true}]});
+      let offSetDays = offSetEvents.map(x => x.date);
+      skipEvents = skipEvents.map(x => x.date);
+      console.log(offSetDays);
+      console.log(skipEvents);
       //finds ALL events. will fix later.
       //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
       let yearEvent = await Events.find({school : user.school, $and: [{date: {$gte: lowEnd}}, {date: {$lte: highEnd}}]});
@@ -2294,7 +2315,7 @@ app.get("/calendar", async (req, res, next) => {
         monthsArray.push(currentMonth);
       }
 
-      res.render("calendar", {school: school, offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
+      res.render("calendar", {skipEvents: skipEvents, school: school, offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
     }
   }
 });
@@ -3065,18 +3086,18 @@ app.get("/offLineInfo", function(req, res) {
           if (err || !courses) {
             res.send("");
           } else {
-            //object
-            let userLCSchedule = lcSchedule("", "", true);
-            //array
-            let timeOffSet = dayOffset("", true);
-            //array
-            School.findOne({_id : user.school}, function(err, school) {
-              if (err) {
-                res.send("");
-              } else {
-                let blockSchedule = school.blockOrder;
-                res.send([user, courses, userLCSchedule, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}]);
-              }
+            Events.find({$and: [{school: user.school}, {dayRolled: true}]}, function(err, events) {
+              let timeOffSet = dayOffset(events, new Date(), true);
+            
+              
+              School.findOne({_id : user.school}, function(err, school) {
+                if (err) {
+                  res.send("");
+                } else {
+                  let blockSchedule = school.blockOrder;
+                  res.send([user, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}, {blockNames : blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName)}]);
+                }
+              })
             })
           }
         });

@@ -222,26 +222,25 @@
 
                 <% if (j >= calendar[i][0][2]) { %>
                   <%daysElapsed++%>
+                  <% skipDay = false%>
+                  <% dayRolled = false%>
 
 
                   <td><span  onclick = "openPlanner(<%=daysElapsed%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%></span>
-
-
                     <% for (var badDay = 0; badDay < offSetDays.length; badDay++) { %>
-
-                      <% if ((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() == offSetDays[badDay].getTime()) { %>
+                      <% if ((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() == offSetDays[badDay].getTime()+25200000) { %>
+                        <% dayRolled = true%>
                         <%counter++%>
                       <% } %>
                     <% } %>
-
-                    <% if (calendar[i][j-calendar[i][0][2]][2] != 0 && calendar[i][j-calendar[i][0][2]][2] != 6) { %>
-                      <% if (school.name === "PVSS") { %>
-                          <br><span class = "dayDisplay">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
+                    <% for (var badDay = 0; badDay < skipEvents.length; badDay++) { %>
+                      <% if ((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() == skipEvents[badDay].getTime()+25200000) { %>
+                        <% skipDay = true%>
                       <% } %>
-
                     <% } %>
-
-
+                    <% if (calendar[i][j-calendar[i][0][2]][2] != 0 && calendar[i][j-calendar[i][0][2]][2] != 6 && !skipDay && !dayRolled) { %>
+                        <br><span class = "dayDisplay">(day <%=(calendar[i][j-calendar[i][0][2]][2]-counter%5+4)%5+1%>)</span>
+                    <% } %>
                     <br>
                     <%if (calendar[i][j-calendar[i][0][2]][0].length != 0) { %>
                       <% if (calendar[i][j-calendar[i][0][2]][2] === 0) { %>

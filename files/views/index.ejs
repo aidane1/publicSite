@@ -50,7 +50,7 @@
       }
       @font-face{
         font-family:sansFont;
-        src:url(<%=font%>)
+        src:url(<%=font.substring(1)%>);
       }
       :root{
         --bg-color:<%=colours.bgColor%>;
@@ -774,13 +774,22 @@
           <% if (!offLine) { %>
             <li class = "item unselectable" id = "accountdropDown"><a href = "/users/<%=username%>">Account</a></li>
             <li class = "item unselectable" id = "questions"><a href = "/questions?page=0">Discussion</a></li>
+          <% } else { %>
+            <li class = "item unselectable" id = "refresh"><a href = "/">Refresh</a></li>
           <% } %>
           <li class = "item unselectable" id = "logout"><a href = "/logout">Logout</a></li>
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
 
-        <div class = "block"><%=titleDisplay%></div>
+        
+          <div class = "block" id = "mainDayDisplay">
+            <% if (!offLine) { %>
+              <%=titleDisplay%>
+            <% } %>
+          </div>
+        
+        
 
 
 
@@ -825,13 +834,16 @@
           <div id = "courses" class = "courses box" name = "courses">
             <div class = "courseHolder">
               <div class = "header"><h1>Courses</h1></div>
-              <div class = "courseBox large">
-                <div class = "header2"> My courses today &nbsp;(<%=titleDisplay%>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
-                <% for (var i = 0; i < blockOrder.length; i++) { %>
-                  <div><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
-                <% } %>
-                <% if (blockOrder === false) { %>
-                  <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
+              <div class = "courseBox large" id = "todayCoursesDisplay">
+                
+                <div class = "header2"> My courses today &nbsp;(<span id = "secondaryDayDisplay"><%=titleDisplay%></span>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
+                <% if (!offLine) { %>
+                  <% for (var i = 0; i < blockOrder.length; i++) { %>
+                    <div class = "todayCourseBox"><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
+                  <% } %>
+                  <% if (blockOrder === false) { %>
+                    <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
+                  <% } %>
                 <% } %>
               </div>
               <div style = "flex-grow: 0.1"></div>
@@ -1049,6 +1061,47 @@
   </div>
   </body>
   <script src = "/public/js/home.js"></script>
+  <% if (offLine) { %>
+    <script>
+      if (typeof Storage != "undefined") {
+        if (localStorage.getItem("userData")) {
+          let userData = JSON.parse(localStorage.getItem("userData"));
+          let blockDisplays = document.getElementsByClassName("todayCourseBox");
+          while (blockDisplays.length) {
+            blockDisplays[0].parentElement.removeChild(blockDisplays[0]);
+          }
+          let currentDate = new Date();
+          let offSetDays = userData.dayOffSet;
+          let offSet = 0;
+          for (var i = 0; i < offSetDays.length; i++) {
+            if (currentDate.getTime() > new Date(offSetDays[i]).getTime()) {
+              offSet++;
+            }
+          }
+          let dayNumber = (((currentDate.getDay()-1)-offSet%5+5)%5+1).toString();
+          let weekNumber =  Math.floor((currentDate.getTime() - (new Date(2018, 8, 2)).getTime())/1000/60/60/24/7)%userData.blockSchedule.blockSchedule.length;
+          document.getElementById("mainDayDisplay").innerHTML = "Day " + dayNumber;
+          document.getElementById("secondaryDayDisplay").innerHTML = "Day " + dayNumber;
+          let day = userData.blockSchedule.blockSchedule[weekNumber]["day" + dayNumber];
+          let blockNames = userData.courses.blockNames;
+          for (var i = 0; i < day.length; i++) {
+            let div = document.createElement("div");
+            let spacer1 = document.createElement("div");
+            let spacer2 = document.createElement("div");
+            let content = document.createElement("div");
+            div.className = "todayCourseBox";
+            spacer1.className = "spacer";
+            spacer2.className = "spacer";
+            content.innerHTML = `${(day[i][1]-1)%12+1}:${day[i][2].toString().length === 1 ? "0" + day[i][2].toString() : day[i][2].toString()}-${(day[i][3]-1)%12+1}:${day[i][4].toString().length === 1 ? "0" + day[i][4].toString() : day[i][4].toString()} <span style = 'float: right'>${day[i][5] === "constant" ? day[i][0] : blockNames[day[i][0]]}</span>`;
+            div.appendChild(spacer1);
+            div.appendChild(content);
+            div.appendChild(spacer2);
+            document.getElementById("todayCoursesDisplay").appendChild(div);
+          }
+        }
+      }  
+    </script>
+  <% } %>
   <!-- the script for getting alerts -->
 
   <% if (!offLine) { %>
@@ -1119,23 +1172,15 @@
             if (this.readyState == 4 && this.status == 200) {
               let parsedText = JSON.parse(this.responseText);
               let userObject = parsedText[0];
-              let courseObject = parsedText[1];
-              let lcObject = parsedText[2];
-              let offSetObject = parsedText[3];
-              let blockTimeObject = parsedText[4];
+              let timeOffset = parsedText[1];
+              let blockSchedule = parsedText[2];
+              let blockNames = parsedText[3];
               let newObject = {
                 colors: userObject.colors,
                 order: userObject.order,
-                courses: courseObject.map(x => {
-                  return {
-                    teacher : x.teacher,
-                    course : x.course,
-                    block : x.block
-                  }
-                }),
-                lcSchedule: lcObject,
-                dayOffSet: offSetObject.timeOffset.map(x => new Date(x)),
-                blockTime: blockTimeObject
+                courses: blockNames,
+                dayOffSet: timeOffset.timeOffset.map(x => new Date(x)),
+                blockSchedule: blockSchedule
               }
               localStorage.setItem("userData", JSON.stringify(newObject));
             }
@@ -1158,7 +1203,7 @@
                 navigator.userAgent &&
                 navigator.userAgent.indexOf('CriOS') == -1 &&
                 navigator.userAgent.indexOf('FxiOS') == -1;
-                
+
         if ("Notification" in window && 'serviceWorker' in navigator && !isSafari) {
           navigator.serviceWorker.register('sw.js').then(function(reg) {
             console.log('Registration succeeded. Scope is ' + reg.scope);

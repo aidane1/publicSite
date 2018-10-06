@@ -60,10 +60,22 @@
       }
       .x {
         position: absolute;
-        top: 0;
+        top: -30px;
         right: -40px;
         color: red;
         cursor: pointer;
+      }
+      .schoolCheck {
+        padding-top: 15px;
+        padding-bottom: 5px;
+      }
+      .schoolCheck input {
+        width: 25px;
+        height: 25px;
+      }
+      .schoolCheck label {
+        position: relative;
+        top: -3px;
       }
 
 
@@ -74,13 +86,29 @@
       <div class = "displayEvents">
         <% for (var i = 0; i < events.length; i++) { %>
           <div class = "event">
-            <%=events[i].info%>
+            short info: <%=events[i].info%>
             <br>
             <% if (events[i].longForm) { %>
-              <%=events[i].longForm%>
-              <br>
+              long info: <%=events[i].longForm%>
+            <% } else { %>
+              No Longform
             <% } %>
-            <%=events[i].day%>/<%=events[i].month+1%>/<%=events[i].year%>
+            <br>
+            date: <%=events[i].day%>/<%=events[i].month+1%>/<%=events[i].year%>
+            <br>
+            <% if (events[i].schoolSkipped) { %>
+              School Skipped: <span color = "lightgreen">true</span>
+            <% } else { %>
+              School Skipped: <span color = "red">false</span>
+            <% } %>
+            <br>
+            <% if (events[i].dayRolled) { %>
+              Day Rolled : true
+            <% } else { %>
+              Day Rolled : false
+            <% } %>
+            <br>
+            
             <h1 class = "x" onclick = "removeEvent('<%=events[i]._id%>')">X</h1>
           </div>
         <% } %>
@@ -94,9 +122,15 @@
         <h3>information (short):</h3>
         <input type = "text" name = "shortInfo" class = "input"/>
         <h3>information (long):</h3>
+        
         <input type = "text" name = "longInfo" class = "input"/>
+        <div class = "schoolCheck">
+            <input type = "checkbox" name = "dayRolled" id = "dayRolled"><label for "dayRolled">Day Rolled</label>
+          </div>
+        <div class = "schoolCheck">
+          <input type = "checkbox" name = "schoolSkipped" id = "schoolSkipped"><label for "dayRolled">School Missed</label>
+        </div>
         <input type = "submit" class = "submit" />
-
       </form>
     </div>
     <div style = "position: fixed; bottom: 20px; left: 0">
@@ -116,7 +150,5 @@
       document.body.appendChild(form);
       form.submit();
     }
-
-
   </script>
 </html>
