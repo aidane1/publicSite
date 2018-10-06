@@ -86,16 +86,18 @@
       <div class = "displayEvents">
         <% for (var i = 0; i < events.length; i++) { %>
           <div class = "event">
-            short info: <%=events[i].info%>
-            <br>
+            <% if (events[i].info) { %>
+              short info: <%=events[i].info%>
+              <br>
+            <% } %>
             <% if (events[i].longForm) { %>
               long info: <%=events[i].longForm%>
-            <% } else { %>
-              No Longform
+              <br>
             <% } %>
-            <br>
-            date: <%=events[i].day%>/<%=events[i].month+1%>/<%=events[i].year%>
-            <br>
+            <% if (events[i].date) { %>
+              date: <%=events[i].day%>/<%=events[i].month+1%>/<%=events[i].year%>
+              <br>
+            <% } %>
             <% if (events[i].schoolSkipped) { %>
               School Skipped: <span color = "lightgreen">true</span>
             <% } else { %>
@@ -108,6 +110,11 @@
               Day Rolled : false
             <% } %>
             <br>
+            <% if (events[i].displayedEvent) { %>
+              Displayed: true
+            <% } else { %>
+              Displayed: false
+            <% } %>
             
             <h1 class = "x" onclick = "removeEvent('<%=events[i]._id%>')">X</h1>
           </div>
@@ -115,6 +122,7 @@
       </div>
       <form method = "POST" action = "/admin/events" class = "addEvent">
         <h1>Add Event: </h1>
+        <input type = "hidden" name = "displayedEvent" vale = "true" />
         <h3>Date:</h3>
         <input type = "date" name = "date" class = "input"/>
         <h3>Time:</h3>
@@ -124,6 +132,19 @@
         <h3>information (long):</h3>
         
         <input type = "text" name = "longInfo" class = "input"/>
+        <div class = "schoolCheck">
+            <input type = "checkbox" name = "dayRolled" id = "dayRolled"><label for "dayRolled">Day Rolled</label>
+          </div>
+        <div class = "schoolCheck">
+          <input type = "checkbox" name = "schoolSkipped" id = "schoolSkipped"><label for "dayRolled">School Missed</label>
+        </div>
+        <input type = "submit" class = "submit" />
+      </form>
+      <form method = "POST" action = "/admin/events" class = "addEvent" style = "margin-left: 50px">
+        <h1>Add Skip Day: </h1>
+        <input type = "hidden" name = "displayedEvent" vale = "false" />
+        <h3>Date:</h3>
+        <input type = "date" name = "date" class = "input"/>
         <div class = "schoolCheck">
             <input type = "checkbox" name = "dayRolled" id = "dayRolled"><label for "dayRolled">Day Rolled</label>
           </div>

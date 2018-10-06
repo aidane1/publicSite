@@ -1216,24 +1216,44 @@ app.post("/admin/events", urlencodedParser, function(req, res) {
           Events.findOneAndDelete({_id : req.body.removedEventId, school : user.school}).then(function() {
             res.redirect("/admin/events");
           });
-        } else if (req.body.shortInfo && req.body.date) {
-          console.log(req.body.date);
-          let date = req.body.date;
-          let isoDate = new Date(parseInt(date.split("-")[0]), parseInt(date.split("-")[1])-1, parseInt(date.split("-")[2]));
-          let year = isoDate.getFullYear();
-          let month = isoDate.getMonth();
-          let day = isoDate.getDate();
-          let time = "9:20 AM";
-          if (req.body.time) {
-            let timeArray = [req.body.time.split(":")[0], req.body.time.split(":")[1], "AM"];
-            timeArray[2] = parseInt(timeArray[0]) >= 12 ? "PM" : "AM";
-            timeArray[0] = (parseInt(timeArray[0])-1)%12+1;
-            timeArray[0] = (timeArray[0] == 0 ? 12 : timeArray[0]);
-            time = timeArray[0].toString() + ":" + timeArray[1].toString() + " " + timeArray[2];
+        } else if (req.body.date) {
+          if (req.body.displayedEvent === "true" && req.body.shortInfo) {
+            let date = req.body.date;
+            let isoDate = new Date(parseInt(date.split("-")[0]), parseInt(date.split("-")[1])-1, parseInt(date.split("-")[2]));
+            let year = isoDate.getFullYear();
+            let month = isoDate.getMonth();
+            let day = isoDate.getDate();
+            let time = "9:20 AM";
+            if (req.body.time) {
+              let timeArray = [req.body.time.split(":")[0], req.body.time.split(":")[1], "AM"];
+              timeArray[2] = parseInt(timeArray[0]) >= 12 ? "PM" : "AM";
+              timeArray[0] = (parseInt(timeArray[0])-1)%12+1;
+              timeArray[0] = (timeArray[0] == 0 ? 12 : timeArray[0]);
+              time = timeArray[0].toString() + ":" + timeArray[1].toString() + " " + timeArray[2];
+            }
+            Events.create({displayedEvent: true, school : user.school, time : time, longForm : req.body.longInfo || req.body.shortInfo, info : req.body.shortInfo, year : year, month : month, day : day, date : req.body.date, dayRolled: (req.body.dayRolled ? true : false), schoolSkipped: (req.body.schoolSkipped ? true : false)}, function(err, event) {
+              res.redirect("/admin/events");
+            })
+          } else {
+            let date = req.body.date;
+            let isoDate = new Date(parseInt(date.split("-")[0]), parseInt(date.split("-")[1])-1, parseInt(date.split("-")[2]));
+            let year = isoDate.getFullYear();
+            let month = isoDate.getMonth();
+            let day = isoDate.getDate();
+            let time = "9:20 AM";
+            if (req.body.time) {
+              let timeArray = [req.body.time.split(":")[0], req.body.time.split(":")[1], "AM"];
+              timeArray[2] = parseInt(timeArray[0]) >= 12 ? "PM" : "AM";
+              timeArray[0] = (parseInt(timeArray[0])-1)%12+1;
+              timeArray[0] = (timeArray[0] == 0 ? 12 : timeArray[0]);
+              time = timeArray[0].toString() + ":" + timeArray[1].toString() + " " + timeArray[2];
+            }
+            Events.create({displayedEvent : false, school : user.school, time : time, year : year, month : month, day : day, date : req.body.date, dayRolled: (req.body.dayRolled ? true : false), schoolSkipped: (req.body.schoolSkipped ? true : false)}, function(err, event) {
+              res.redirect("/admin/events");
+            })
           }
-          Events.create({school : user.school, time : time, longForm : req.body.longInfo || req.body.shortInfo, info : req.body.shortInfo, year : year, month : month, day : day, date : req.body.date, dayRolled: (req.body.dayRolled ? true : false), schoolSkipped: (req.body.schoolSkipped ? true : false)}, function(err, event) {
-            res.redirect("/admin/events");
-          })
+        } else {
+          res.redirect("/admin");
         }
       }
     })

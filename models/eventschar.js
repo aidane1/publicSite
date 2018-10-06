@@ -37,6 +37,9 @@ const EventSchema = new Schema({
   },
   dayRolled: {
     type: Boolean
+  },
+  displayedEvent: {
+    type: Boolean
   }
 });
 
