@@ -2301,7 +2301,7 @@ app.get("/calendar", async (req, res, next) => {
       console.log(skipEvents);
       //finds ALL events. will fix later.
       //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
-      let yearEvent = await Events.find({school : user.school, $and: [{date: {$gte: lowEnd}}, {date: {$lte: highEnd}}, {displayed : true}]});
+      let yearEvent = await Events.find({school : user.school, $and: [{date: {$gte: lowEnd}}, {date: {$lte: highEnd}}, {displayedEvent : true}]});
       let school = await School.findOne({_id : user.school});
 
       // starts the first day of the calendar on september first of that year
