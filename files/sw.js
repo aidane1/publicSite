@@ -16,6 +16,7 @@ const cacheAssets = [
   "/?day=3&offline=true",
   "/?day=4&offline=true",
   "/?day=5&offline=true",
+  "/?offline=true",
   "/schedule",
   "/calendar",
   "favicon.ico"
@@ -53,8 +54,8 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", event => {
   if (event.request.destination === "unknown" || event.request.destination === "document") {
-    if (event.request.url.split("?").length === 2) {
-      event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+    if (event.request.url === "https://www.pvstudents.ca/" || event.request.url === "https://www.pvstudents.ca") {
+      event.respondWith(fetch(event.request).catch(() => caches.match("/offline=true")));
     } else if (event.request.url === "https://www.pvstudents.ca/schedule" || event.request === "https://www.pvstudents.ca/calendar") {
       event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
     } else {
