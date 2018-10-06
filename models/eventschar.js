@@ -31,6 +31,12 @@ const EventSchema = new Schema({
   },
   school : {
     type : Schema.Types.ObjectId
+  },
+  schoolSkipped: {
+    type: Boolean
+  },
+  dayRolled: {
+    type: Boolean
   }
 });
 
