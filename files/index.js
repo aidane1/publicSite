@@ -2017,6 +2017,16 @@ app.get("/postHomework", function(req, res) {
         });
       }
     })
+  } else if (req.session.userId && req.query.action == "removeNote" && req.query.id) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        res.send("");
+      } else {
+        Notes.findOneAndRemove({writtenBy : user.username, _id : req.query.id}).then(function(note) {
+          res.send(JSON.stringify(note));
+        });
+      }
+    })
   } else {
     res.send("");
   }

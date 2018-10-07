@@ -142,6 +142,20 @@
         font-size: 30px;
         color: lightgreen;
       }
+      .removeNote {
+        position: absolute;
+        width: 35px;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        top: 0px;
+        left: 0px;
+        font-size: 30px;
+        background-color: #ff0000;
+        color: #990000;
+      }
       .noteLine {
         width: 100%;
         height: 12%;
@@ -1191,6 +1205,7 @@
           <div class = "notesHeader" id = "addNotesHeader_<%=key%>">Add Note: </div>
           <% for (var i = 0; i < notes[key].length; i++) { %>
             <div class="noteLineFilled">
+              <div class = "removeNote" onclick = "removeNote('<%=notes[key][i]._id%>', this)"><div class = "spacer" style = "flex-grow: 1"></div>X<div class = "spacer" style = "flex-grow: 1"></div></div>
               <span class = "editableNoteLine"><%=notes[key][i].text%></span>
             </div>
           <% } %>
