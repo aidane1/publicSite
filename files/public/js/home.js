@@ -158,12 +158,43 @@ function submitNote(id, element) {
     }
     loadRequest.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        console.log(JSON.parse(this.responseText));
+        let response = (JSON.parse(this.responseText));
+        console.log(response);
+        element.parentElement.children[1].contentEditable = false;
+        let removeElement = document.createElement("div");
+        removeElement.className = "removeNote";
+        let spacer1 = document.createElement("div");
+        spacer1.className = "spacer";
+        spacer1.style.flexGrow = "1";
+        let spacer2 = document.createElement("div");
+        spacer2.className = "spacer";
+        spacer2.style.flexGrow = "1";
+        removeElement.appendChild(spacer1);
+        removeElement.innerHTML += "X";
+        removeElement.appendChild(spacer2);
+        removeElement.setAttribute("onclick", `removeNote('${response._id}', this)`);
+        element.parentElement.replaceChild(removeElement, element);
       }
     }
     loadRequest.open("GET", "/postHomework?text=" + element.parentNode.children[1].innerText + "&id=" + id, true);
-    loadRequest.send();
-    element.parentElement.children[1].contentEditable = false;
-    element.parentElement.removeChild(element);
+    loadRequest.send(); 
   }
+}
+
+function removeNote(id, element) {
+  let loadRequest;
+  if (window.XMLHttpRequest) {
+    // code for modern browsers
+    loadRequest = new XMLHttpRequest();
+  } else {
+    // code for old IE browsers
+    loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  loadRequest.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      element.parentElement.parentElement.removeChild(element.parentElement);
+    }
+  }
+  loadRequest.open("GET", "/postHomework?action=removeNote&id=" + id, true);
+  loadRequest.send(); 
 }
