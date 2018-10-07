@@ -28,6 +28,14 @@ function modalDisplay() {
 function removeModal() {
   document.getElementById("allHomework").style.display = "none";
   document.getElementById("modal").style.visibility = "hidden";
+  let addNotes = document.getElementsByClassName("addNote");
+  for (var i = 0; i < addNotes.length; i++) {
+    addNotes[i].style.display = "none";
+  }
+  let notesEnter = document.getElementsByClassName("addNoteEnter");
+  for (var i = 0; i < notesEnter.length; i++) {
+    notesEnter[i].style.display = "none";
+  }
 }
 function displayHomework(course) {
   var blocks = document.getElementsByClassName("modalBlock");
@@ -78,5 +86,84 @@ function removeFunction(element, index) {
     form.submit();
   } else {
 
+  }
+}
+
+function addNotes(id, name) {
+  let addNotes = document.getElementsByClassName("addNote");
+  for (var i = 0; i < addNotes.length; i++) {
+    addNotes[i].style.display = "none";
+  }
+  let notesEnter = document.getElementsByClassName("addNoteEnter");
+  for (var i = 0; i < notesEnter.length; i++) {
+    notesEnter[i].style.display = "none";
+  }
+  if (id.toString() !== "1") {
+    var modal = document.getElementById("addNote_" + id);
+    var backModal = document.getElementById("modal");
+    backModal.style.visibility = "visible";
+    modal.style.display = "block";
+    let addDiv = document.createElement("div");
+    addDiv.className = "plusNote";
+    addDiv.innerHTML = "+";
+    addDiv.setAttribute("onclick", `submitNotes('${id}', this, '${name}')`);
+    document.getElementById("notesHeader_" + id).innerHTML = "notes for " + name + "<br>";
+    document.getElementById("notesHeader_" + id).appendChild(addDiv);
+  }
+}
+function submitNotes(id, element,name) {
+  let noteEnter = document.getElementById("addNoteEnter_" + id);
+  document.getElementById("addNotesHeader_" + id).innerHTML = "Add  " + name + " note: ";
+  noteEnter.style.display = "block";
+  for (var i = 0; i < 10; i++) {
+    let noteLine = document.createElement("div");
+    noteLine.className = "noteLine";
+    let editableNoteLine = document.createElement("span");
+    editableNoteLine.contentEditable = true;
+    editableNoteLine.className = "editableNoteLine";
+    let addNote = document.createElement("div");
+    addNote.className = "confirmNote";
+    addNote.innerHTML = "+";
+    addNote.setAttribute("onclick", `submitNote('${id}', this)`)
+    addNote.contentEditable = false;
+    noteLine.appendChild(addNote);
+    noteLine.appendChild(editableNoteLine);
+    noteEnter.appendChild(noteLine);
+  }
+}
+
+function submitNote(id, element) {
+  let noteEnter = document.getElementById("addNoteEnter_" + id);
+  let noteLine = document.createElement("div");
+  noteLine.className = "noteLine";
+  let editableNoteLine = document.createElement("span");
+  editableNoteLine.contentEditable = true;
+  editableNoteLine.className = "editableNoteLine";
+  let addNote = document.createElement("div");
+  addNote.className = "confirmNote";
+  addNote.innerHTML = "+";
+  addNote.setAttribute("onclick", `submitNote('${id}', this)`)
+  addNote.contentEditable = false;
+  noteLine.appendChild(addNote);
+  noteLine.appendChild(editableNoteLine);
+  noteEnter.appendChild(noteLine);
+  if (element.parentNode.children[1].innerText) {
+    let loadRequest;
+    if (window.XMLHttpRequest) {
+      // code for modern browsers
+      loadRequest = new XMLHttpRequest();
+    } else {
+      // code for old IE browsers
+      loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    loadRequest.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(JSON.parse(this.responseText));
+      }
+    }
+    loadRequest.open("GET", "/postHomework?text=" + element.parentNode.children[1].innerText + "&id=" + id, true);
+    loadRequest.send();
+    element.parentElement.children[1].contentEditable = false;
+    element.parentElement.removeChild(element);
   }
 }

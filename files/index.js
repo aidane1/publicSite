@@ -204,6 +204,8 @@ let School = require("../models/schoolchar.js");
 
 let Code = require("../models/createcodeschar.js");
 
+let Notes = require("../models/notechar.js");
+
 let webpush = require("web-push");
 
 let schedule = require("node-schedule");
@@ -1703,6 +1705,56 @@ app.get("/", async (req, res, next) => {
         let monthEvent = await Events.find({school : user.school, month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
         let soonEvents = await Events.find({school : user.school, $and: [{date: {$gt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
         let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
+        let userNotes = await Notes.find({$and: [{writtenBy: user.username}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
+        let allNotes = await Notes.find({forCourse: user.courses});
+        let viewNotesDisplay = [1, "nothing"];
+        if (courses.length) {
+          viewNotesDisplay = [courses[0]._id || 1, courses[0].course];
+        }
+        let notesObject = {
+
+        }
+        let allNotesObject = {
+
+        }
+        for (var i = 0; i < courses.length; i++) {
+          notesObject[courses[i]._id] = [];
+          allNotesObject[courses[i]._id] = {
+            course: courses[i].course,
+            notes: []
+          };
+        }
+        for (var i = 0; i < userNotes.length; i++) {
+          notesObject[userNotes[i].forCourse].push(userNotes[i]);
+        }
+        for (var i = 0; i < allNotes.length; i++) {
+          allNotesObject[allNotes[i].forCourse].notes.push(allNotes[i]);
+        }
+        for (var key in allNotesObject) {
+          allNotesObject[key].notes.sort((a,b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
+          let setterDate = allNotesObject[key].notes[0] ? allNotesObject[key].notes[0].date : false;
+          if (setterDate) {
+            setterDate = new Date(setterDate.getFullYear(), setterDate.getMonth(), setterDate.getDate());
+            let newFormat = [];
+            let currentPart = [setterDate.toDateString(), allNotesObject[key].notes[0]];
+            for (var i = 1; i < allNotesObject[key].notes.length; i++) {
+              let currentDate = allNotesObject[key].notes[i].date;
+              currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+              if (currentDate.getTime() < setterDate.getTime()) {
+                setterDate = currentDate;
+                newFormat.push(currentPart);
+                currentPart = [setterDate.toDateString()];
+              }
+              currentPart.push(allNotesObject[key].notes[i]);
+            }
+            newFormat.push(currentPart);
+            allNotesObject[key].notes = newFormat;
+          } else {
+
+          }
+        }
+        
+        
         soonEvents = soonEvents.reverse();
 
         let dayOffSetToday = dayOffset(offSetEvents, new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
@@ -1724,6 +1776,7 @@ app.get("/", async (req, res, next) => {
         }
         for (var i = 0; i < courses.length; i++) {
           courseBlocks[courses[i].block] = courses[i].course;
+          courseBlocks[courses[i].block + "_id"] = courses[i]._id;
         }
         let homeworkList = [];
         let todaysOrderedClasses = [];
@@ -1780,8 +1833,10 @@ app.get("/", async (req, res, next) => {
           } else {
             if (user.blockNames) {
               todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
+              todayClass.push(courseBlocks[todaysBlocks[i][0] + "_id"] || "1");
             } else {
               todayClass.push((courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
+              todayClass.push(courseBlocks[todaysBlocks[i][0] + "_id"] || "1");
             }
 
           }
@@ -1864,9 +1919,7 @@ app.get("/", async (req, res, next) => {
               }
             }
           }
-          //update lc schedule (you changed it)
-          console.log(todaysOrderedClasses);
-          res.render("index", {offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {viewNotesDisplay: viewNotesDisplay, allNotes: allNotesObject, notes: notesObject, offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);
@@ -1936,6 +1989,36 @@ app.post("/", urlencodedParser, function(req,res) {
   } else {
     //if the user doesn't have a session, redirect to home.
     res.redirect("/");
+  }
+});
+
+app.get("/postHomework", function(req, res) {
+  if (req.session.userId && req.query.text && req.query.id) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        res.send("");
+      } else {
+        Course.findOne({_id : req.query.id}, function(err, course) {
+          if (err || course == null) {
+            res.send("");
+          } else {
+            let notesOjbect = {
+              text: req.query.text,
+              writtenBy: user.username,
+              forCourse: course._id,
+              date: (new Date()).local()
+            }
+            Notes.create(notesOjbect, function(err, note) {
+              User.findOneAndUpdate({_id : user._id}, {$push: {notes: note._id}}).then(function() {
+                res.send(JSON.stringify(note));
+              });
+            });
+          }
+        });
+      }
+    })
+  } else {
+    res.send("");
   }
 });
 

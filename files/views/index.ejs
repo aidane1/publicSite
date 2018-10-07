@@ -110,6 +110,112 @@
         margin:0;
         padding:0
       }
+      .addNote {
+        width:82%;
+        height:80%;
+        position:fixed;
+        left:9%;
+        top:10%;
+        background-color:white;
+        border-radius:10px;
+        display:none;
+        overflow:auto;
+        z-index:5001;
+      }
+      .addNoteEnter {
+        width:100%;
+        height:80%;
+        position:fixed;
+        left:0%;
+        top:10%;
+        background-color:white;
+        display:none;
+        overflow:auto;
+        z-index:5001;
+      }
+      .confirmNote {
+        position: absolute;
+        width: 40px;
+        text-align: center;
+        top: 0px;
+        left: 0px;
+        font-size: 30px;
+        color: lightgreen;
+      }
+      .noteLine {
+        width: 100%;
+        height: 12%;
+        border-bottom: 1px solid black;
+        position: relative;
+      }
+      .noteLineFilled {
+        width: 100%;
+        height: 12%;
+        border-bottom: 1px solid black;
+        position: relative;
+      }
+      .editableNoteLine {
+        width: calc(100% - 40px);
+        height: 100%;
+        position: absolute;
+        left: 40px;
+        overflow: auto;
+        color: black;
+      }
+      .notesHeader {
+        color: black;
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid black;
+      }
+      .dayBox {
+        width: 100%;
+        padding: 10px;
+        color: black;
+        border-bottom: 1px solid black;
+      }
+      .dayHeader {
+        width: 100%;
+        text-align: left;
+        font-size: 16px;
+        color: black;
+      }
+      .dayNote {
+        color: black;
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: 5px;
+      }
+      .notesNext {
+        width: 100%;
+        height: 30px;
+      }
+      .arrowLeft {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        color: black;
+        font-size: 30px;
+        float: left;
+      }
+      .arrowRight {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        color: black;
+        font-size: 30px;
+        float: right;
+      }
+      .plusNote {
+        width: 100%;
+        /* text-align: left; */
+        color: black;
+        font-size: 30px;
+        /* padding-left: 10px; */
+      }
       .courseHolder{
         width:100%;
         height:100%;
@@ -274,7 +380,7 @@
         opacity:.5
       }
       .submitAssigned {
-        width: 50%;
+        width: 33.333%;
         padding-top:10px;
         padding-bottom: 10px;
         background-color:<%=colours.buttonColor%>;
@@ -465,6 +571,17 @@
 
         padding-top: 10px;
       }
+      .viewNotesButton {
+        width: 33.33%;
+        text-align: center;
+        padding-top: 10px;
+        border-radius: 50px;
+        background-color: <%=colours.buttonColor%>;
+        cursor: pointer;
+        padding-bottom: 10px;
+        font-size: 18px;
+        border: 1px solid <%=colours.borderColor%>;
+      }
       .line1,.line2,.line3 {
         width:28px;
         height:2px;
@@ -577,7 +694,7 @@
         font-size:16px
       }
       .viewHomeworkButton {
-        width: 50%;
+        width: 33.33%;
         text-align: center;
         padding-top: 10px;
         border-radius: 50px;
@@ -586,6 +703,11 @@
         padding-bottom: 10px;
         font-size: 18px;
         border: 1px solid <%=colours.borderColor%>;
+      }
+      .homeworkTitles {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
       }
       .coursePageButtons {
         width: 100%;
@@ -839,7 +961,7 @@
                 <div class = "header2"> My courses today &nbsp;(<span id = "secondaryDayDisplay"><%=titleDisplay%></span>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% if (!offLine) { %>
                   <% for (var i = 0; i < blockOrder.length; i++) { %>
-                    <div class = "todayCourseBox"><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
+                    <div class = "todayCourseBox" onclick = "addNotes('<%=blockOrder[i][6] || 1 %>', `<%=blockOrder[i][5]%>`)"><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
                   <% } %>
                   <% if (blockOrder === false) { %>
                     <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
@@ -847,12 +969,15 @@
                 <% } %>
               </div>
               <div style = "flex-grow: 0.1"></div>
-              <center><h2>Homework:</h2></center>
+              <div class = 'homeworkTitles'><span style = "width: 66.66%; text-align: center"><h2>Homework:</h2></span><span style = "width: 33.333%; text-align: center"><h2>Notes:</h2></span></div>
               <div class = "coursePageButtons">
+                <div class = "viewHomeworkButton unselectable" onclick  = "modalDisplay()">
+                  View
+                </div>
                 <a href = "/submit" style = "text-decoration: none;" class = "submitAssigned unselectable">
                   Submit
                 </a>
-                <div class = "viewHomeworkButton unselectable" onclick  = "modalDisplay()">
+                <div class = "viewNotesButton unselectable" onclick  = "addNotes('<%=viewNotesDisplay[0]%>', '<%=viewNotesDisplay[1]%>')">
                   View
                 </div>
               </div>
@@ -1046,6 +1171,32 @@
         </div>
       <% }); %>
     </div>
+    <% notesKeys = Object.keys(allNotes)%>
+    <% for (var i = 0; i < notesKeys.length; i++) { %>
+      <div class="addNote" id="addNote_<%=notesKeys[i]%>">
+        <div class = "notesNext"><div class = "arrowLeft" onclick='addNotes("<%=notesKeys[(i-1+notesKeys.length)%notesKeys.length]%>", "<%=allNotes[notesKeys[(i-1+notesKeys.length)%notesKeys.length]].course%>")'>&larr;</div><div class = "arrowRight" onclick='addNotes("<%=notesKeys[(i+1)%notesKeys.length]%>", "<%=allNotes[notesKeys[(i+1)%notesKeys.length]].course%>")'>&rarr;</div></div>
+        <div class = "notesHeader" id = "notesHeader_<%=notesKeys[i]%>"></div>
+        <% for (var j = 0; j < allNotes[notesKeys[i]].notes.length; j++) { %>
+          <div class = "dayBox">
+            <div class = "dayHeader"><%=allNotes[notesKeys[i]].notes[j][0]%></div>
+            <% for (var k = 1; k < allNotes[notesKeys[i]].notes[j].length; k++) { %>
+              <div class = "dayNote"> - <%=allNotes[notesKeys[i]].notes[j][k].text%></div>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+    <% for (var key in notes) { %>
+        <div class = "addNoteEnter" id = "addNoteEnter_<%=key%>">
+          <div class = "notesHeader" id = "addNotesHeader_<%=key%>">Add Note: </div>
+          <% for (var i = 0; i < notes[key].length; i++) { %>
+            <div class="noteLineFilled">
+              <span class = "editableNoteLine"><%=notes[key][i].text%></span>
+            </div>
+          <% } %>
+        </div>
+    <% } %>
+    
     <div class = "box wideScreen" id = "wideScreen">
       <div class = "header"><h1>Redirects</h1></div>
       <!-- <div class = "redirectHref"><a href = "/chatroom">Chatroom</a></div> -->

@@ -100,6 +100,9 @@ const UserSchema = new Schema({
   },
   scheduleColours : {
     type: Object
+  },
+  notes: {
+    type: [Schema.Types.ObjectId]
   }
 });
 
