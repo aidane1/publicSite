@@ -5,7 +5,7 @@ var getParams = function(url) {
 
 
 
-const cacheName = "v2";
+const cacheName = "v99";
 
 const cacheAssets = [
   "public/html/offline.html",
@@ -53,9 +53,10 @@ self.addEventListener("activate", e => {
 
 
 self.addEventListener("fetch", event => {
+  console.log(event.request.url);
   if (event.request.destination === "unknown" || event.request.destination === "document") {
-    if (event.request.url === "https://www.pvstudents.ca/" || event.request.url === "https://www.pvstudents.ca") {
-      event.respondWith(fetch(event.request).catch(() => caches.match("/offline=true")));
+    if (event.request.url === "https://www.pvstudents.ca/" || event.request.url === "https://www.pvstudents.ca" || event.request.url === "http://127.0.0.1:8080/") {
+      event.respondWith(fetch(event.request).catch(() => caches.match("/?offline=true")));
     } else if (event.request.url === "https://www.pvstudents.ca/schedule" || event.request === "https://www.pvstudents.ca/calendar") {
       event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
     } else {

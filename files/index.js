@@ -214,6 +214,8 @@ let sharp = require("sharp");
 
 let toIco = require("to-ico");
 
+let moment = require("moment");
+
 let multer  = require('multer');
 
 let path = require("path");
@@ -1736,7 +1738,7 @@ app.get("/", async (req, res, next) => {
           if (setterDate) {
             setterDate = new Date(setterDate.getFullYear(), setterDate.getMonth(), setterDate.getDate());
             let newFormat = [];
-            let currentPart = [setterDate.toDateString(), allNotesObject[key].notes[0]];
+            let currentPart = [moment(setterDate).format("dddd, MMMM Do YYYY"), allNotesObject[key].notes[0]];
             for (var i = 1; i < allNotesObject[key].notes.length; i++) {
               let currentDate = allNotesObject[key].notes[i].date;
               currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
