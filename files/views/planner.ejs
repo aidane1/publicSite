@@ -509,9 +509,10 @@
 
     </table>
     <div class = "boxDisplay" id = "boxDisplay">
+      <% colourCounter = 0 %>
       <% for (var i = 0; i < weeklySchedule.length; i++) { %>
-        <div class = "planBox" style = "top: <%=(weeklySchedule[i].startHour + weeklySchedule[i].startMinute/60)/24*100%>%; height: <%=(weeklySchedule[i].endHour+weeklySchedule[i].endMinute/60-weeklySchedule[i].startHour-weeklySchedule[i].startMinute/60)/24*100%>%; background-color: <%=colourArray[i%5]%>">
-
+        <div class = "planBox" style = "top: <%=(weeklySchedule[i].startHour + weeklySchedule[i].startMinute/60)/24*100%>%; height: <%=(weeklySchedule[i].endHour+weeklySchedule[i].endMinute/60-weeklySchedule[i].startHour-weeklySchedule[i].startMinute/60)/24*100%>%; background-color: <%=colourArray[colourCounter%colourArray.length]%>">
+          <% colourCounter++%>
         </div>
         <div class = "planBoxText" style = "top: <%=(weeklySchedule[i].startHour + weeklySchedule[i].startMinute/60)/24*100%>%; height: <%=(weeklySchedule[i].endHour+weeklySchedule[i].endMinute/60-weeklySchedule[i].startHour-weeklySchedule[i].startMinute/60)/24*100%>%">
           <div class = "spacer"></div>
@@ -520,8 +521,8 @@
         </div>
       <% } %>
       <% for (var i = 0; i < planner.length; i++) { %>
-        <div class = "planBox" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%; background-color : <%=colourArray[i%5]%>">
-
+        <div class = "planBox" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%; background-color : <%=colourArray[colourCounter%colourArray.length]%>">
+          <% colourCounter++%>
         </div>
         <div class = "planBoxText" onclick = "removeItem(<%=day%>, <%=i%>)" style = "top: <%=(planner[i].startHour + planner[i].startMinute/60)/24*100%>%; height: <%=(planner[i].endHour+planner[i].endMinute/60-planner[i].startHour-planner[i].startMinute/60)/24*100%>%">
           <div class = "spacer"></div>
