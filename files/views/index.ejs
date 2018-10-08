@@ -266,15 +266,30 @@
         top: 0;
         left: 0;
         display:block;
-        overflow:scroll
+        overflow:scroll;
+        -webkit-overflow-scrolling: touch;
       }
       .initDisplay {
         display:flex;
         width:100%;
         height:100%;
-        position:relative;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+      }
+      .initDisplay::-webkit-scrollbar {
+        display: none;
+      }
+      .classesDisplay {
+        width: 100%;
+        display:flex;
         flex-direction: column;
         flex-wrap: nowrap;
+      }
+      .plannerDisplay {
+        flex: 0 0 auto;
+        /* border: 5px solid black; */
       }
       .box,.header,.header2,.infoBox,.newsBox {
         display:block
@@ -927,61 +942,59 @@
         </ul>
       </nav>
       <div id = "initDisplay" class = "initDisplay" style = "width: 100%; height: 100%; margin-top: 0">
-
-        
-          <div class = "block" id = "mainDayDisplay">
-            <% if (!offLine) { %>
-              <% if (!schoolSkipped) { %>
-                <%=titleDisplay%>
-              <% } else { %>
-                ___
+        <div class = "classesDisplay">
+            <div class = "block" id = "mainDayDisplay">
+              <% if (!offLine) { %>
+                <% if (!schoolSkipped) { %>
+                  <%=titleDisplay%>
+                <% } else { %>
+                  ___
+                <% } %>
               <% } %>
-            <% } %>
-          </div>
-        
-        
-
-
-
-        <div style = "flex-grow: 0.5"></div>
-        <div class = "displayEvents">
-          <center><h2 style = "color: <%=colours.textColor%>">Upcoming Events: </h2></center>
-          <%soonEvents.forEach(function(event) { %>
-            <div class = "soonEvent">
-              <% if (event.longForm) { %>
-                <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.longForm%>
-              <% } else { %>
-                <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.info%>
+            </div>
+            <div style = "flex-grow: 0.5"></div>
+            <div class = "displayEvents">
+              <center><h2 style = "color: <%=colours.textColor%>">Upcoming Events: </h2></center>
+              <%soonEvents.forEach(function(event) { %>
+                <div class = "soonEvent">
+                  <% if (event.longForm) { %>
+                    <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.longForm%>
+                  <% } else { %>
+                    <%=(event.day).toString() + "/" + (event.month+1).toString() + "/" + (event.year).toString() + " at " + event.time %> : <%=event.info%>
+                  <% } %>
+    
+                </div>
+                <br>
+              <% }) %>
+              <% if (soonEvents.length == 0) { %>
+                <div class = "soonEvent">
+                  No upcoming events!
+                </div>
               <% } %>
+            </div>
+            <div style = "flex-grow: 0.5"></div>
+            <div class = "displayClasses">
+                <center><h2>Current Class: </h2></center>
+                <% if (!schoolSkipped) { %>
+                  <div class = "soonEvent"><%=currentBlock[0][0]%><%=currentBlock[0][1]%></div>
+                <% } else { %>
+                  <div class = "soonEvent">Nothing!</div>
+                <% } %>
+            </div>
+            <div style = "flex-grow: 0.5"></div>
+            <div class = "displayClasses">
+                <center><h2>Next Class: </h2></center>
+                <% if (!schoolSkipped) { %>
+                  <div class = "soonEvent"><%=currentBlock[1][0]%><%=currentBlock[1][1]%></div>
+                <% } else { %>
+                  <div class = "soonEvent">Nothing!</div>
+                <% } %>
+            </div>
+            <div style = "flex-grow: 2"></div>
+        </div>
+        <div class = "plannerDisplay">
 
-            </div>
-            <br>
-          <% }) %>
-          <% if (soonEvents.length == 0) { %>
-            <div class = "soonEvent">
-              No upcoming events!
-            </div>
-          <% } %>
         </div>
-        <div style = "flex-grow: 0.5"></div>
-        <div class = "displayClasses">
-            <center><h2>Current Class: </h2></center>
-            <% if (!schoolSkipped) { %>
-              <div class = "soonEvent"><%=currentBlock[0][0]%><%=currentBlock[0][1]%></div>
-            <% } else { %>
-              <div class = "soonEvent">Nothing!</div>
-            <% } %>
-        </div>
-        <div style = "flex-grow: 0.5"></div>
-        <div class = "displayClasses">
-            <center><h2>Next Class: </h2></center>
-            <% if (!schoolSkipped) { %>
-              <div class = "soonEvent"><%=currentBlock[1][0]%><%=currentBlock[1][1]%></div>
-            <% } else { %>
-              <div class = "soonEvent">Nothing!</div>
-            <% } %>
-        </div>
-        <div style = "flex-grow: 2"></div>
       </div>
       <div class = "modal" onclick="removeModal()" id = "modal">
       </div>
