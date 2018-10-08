@@ -227,7 +227,7 @@
                   <% dayRolled = false%>
 
 
-                  <td style = "background-color: <%=((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() === (new Date(currentDateDay.getFullYear(), currentDateDay.getMonth(), currentDateDay.getDate())).getTime() ? colours.buttonColor : 'initial')%>"><span  onclick = "openPlanner(<%=daysElapsed%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%></span>
+                  <td style = "background-color: <%=((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() === (new Date(currentDateDay.getFullYear(), currentDateDay.getMonth(), currentDateDay.getDate())).getTime() ? colours.borderColor : 'initial')%>"><span  onclick = "openPlanner(<%=daysElapsed%>)"><%=calendar[i][j-calendar[i][0][2]][1]+1%></span>
                     <% for (var badDay = 0; badDay < offSetDays.length; badDay++) { %>
                       <% if ((new Date(2018, 8, daysElapsed, 0, 0, 0, 0)).getTime() == offSetDays[badDay].getTime()) { %>
                         <% dayRolled = true%>
