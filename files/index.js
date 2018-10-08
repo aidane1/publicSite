@@ -1722,7 +1722,7 @@ app.get("/", async (req, res, next) => {
         let school = await School.findOne({_id : user.school});
         let weekOffset = Math.floor((currentDate.getTime() - (new Date(2018, 8, 2)).getTime())/1000/60/60/24/7)%school.blockOrder.length;
         //gathers the events from the past month for the calendar
-        let monthEvent = await Events.find({school : user.school, month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
+        let monthEvent = await Events.find({$and: [{displayedEvent : true}, {school : user.school}, {month: (currentDate).getMonth()}, {year : (currentDate).getFullYear()}]});
         let soonEvents = await Events.find({$and: [{displayedEvent : true}, {school : user.school}, {date: {$gt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
         let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
         let skippedDays = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]});
