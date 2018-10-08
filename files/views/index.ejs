@@ -1010,6 +1010,8 @@
             </div>
           </div>
         <% } else if (order[key] == "Calendar") { %>
+          <% currentDateDay = new Date() %>
+          <%daysElapsed = 1%>
           <div id = "news" class = "news box" name = "news">
             <div class = "header"><h1>News & Calendar</h1></div>
             <div class = "calendar">
@@ -1028,8 +1030,10 @@
                 </tr>
                 <tr>
                   <% for (var i = 0; i < calendar.length + calendar[0][2]; i++) { %>
+                      
                       <% if (i >= calendar[0][2]) { %>
-                        <td><%=calendar[i-calendar[0][2]][1]+1%>
+                        <td style = "background-color: <%=((new Date(2018, currentDateDay.getMonth(), daysElapsed, 0, 0, 0, 0)).getTime() === (new Date(currentDateDay.getFullYear(), currentDateDay.getMonth(), currentDateDay.getDate())).getTime() ? colours.borderColor : 'initial')%>"><%=calendar[i-calendar[0][2]][1]+1%>
+                          <%daysElapsed++%>
                           <br>
                           <% if (calendar[i-calendar[0][2]][0].length != 0) { %>
                             <% if (calendar[i-calendar[0][2]][2] === 0) { %>
