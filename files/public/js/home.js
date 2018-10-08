@@ -123,7 +123,15 @@ function submitNotes(id, element,name) {
     editableNoteLine.className = "editableNoteLine";
     let addNote = document.createElement("div");
     addNote.className = "confirmNote";
-    addNote.innerHTML = "+";
+    let spacer1 = document.createElement("div");
+    spacer1.className = "spacer";
+    spacer1.style.flexGrow = "1";
+    let spacer2 = document.createElement("div");
+    spacer2.className = "spacer";
+    spacer2.style.flexGrow = "1";
+    addNote.appendChild(spacer1);
+    addNote.innerHTML += "+";
+  addNote.appendChild(spacer2);
     addNote.setAttribute("onclick", `submitNote('${id}', this)`)
     addNote.contentEditable = false;
     noteLine.appendChild(addNote);
@@ -141,7 +149,15 @@ function submitNote(id, element) {
   editableNoteLine.className = "editableNoteLine";
   let addNote = document.createElement("div");
   addNote.className = "confirmNote";
-  addNote.innerHTML = "+";
+  let spacer1 = document.createElement("div");
+  spacer1.className = "spacer";
+  spacer1.style.flexGrow = "1";
+  let spacer2 = document.createElement("div");
+  spacer2.className = "spacer";
+  spacer2.style.flexGrow = "1";
+  addNote.appendChild(spacer1);
+  addNote.innerHTML += "+";
+  addNote.appendChild(spacer2);
   addNote.setAttribute("onclick", `submitNote('${id}', this)`)
   addNote.contentEditable = false;
   noteLine.appendChild(addNote);
