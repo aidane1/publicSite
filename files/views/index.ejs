@@ -1010,8 +1010,8 @@
             </div>
           </div>
         <% } else if (order[key] == "Calendar") { %>
-          <% currentDateDay = new Date() %>
-          <%daysElapsed = 1%>
+          <% currentDateDay = new Date((new Date()).getTime()-25200000) %>
+          <%daysElapsed = 0%>
           <div id = "news" class = "news box" name = "news">
             <div class = "header"><h1>News & Calendar</h1></div>
             <div class = "calendar">
