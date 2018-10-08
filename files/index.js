@@ -1725,6 +1725,11 @@ app.get("/", async (req, res, next) => {
         let monthEvent = await Events.find({school : user.school, month : (currentDate).getMonth(), year : (currentDate).getFullYear()});
         let soonEvents = await Events.find({$and: [{displayedEvent : true}, {school : user.school}, {date: {$gt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
         let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
+        let skippedDays = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]});
+        let schoolSkippedToday = false;
+        if (skippedDays.map(x => x.date.getTime()).indexOf((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())).getTime()) !== -1) {
+          schoolSkippedToday = true;
+        }
         let userNotes = await Notes.find({$and: [{writtenBy: user.username}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
         let allNotes = await Notes.find({forCourse: user.courses});
         let viewNotesDisplay = [1, "nothing"];
@@ -1939,13 +1944,12 @@ app.get("/", async (req, res, next) => {
               }
             }
           }
-          res.render("index", {viewNotesDisplay: viewNotesDisplay, allNotes: allNotesObject, notes: notesObject, offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
+          res.render("index", {schoolSkipped: schoolSkippedToday, viewNotesDisplay: viewNotesDisplay, allNotes: allNotesObject, notes: notesObject, offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
         });
       } catch(e) {
         console.log(e);
-        res.redirect("/down");
+        res.sendFile(__dirname + "/errors/serverError.html");
       }
-
     }
   } else {
     res.redirect("/login");

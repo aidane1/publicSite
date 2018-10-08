@@ -931,7 +931,11 @@
         
           <div class = "block" id = "mainDayDisplay">
             <% if (!offLine) { %>
-              <%=titleDisplay%>
+              <% if (!schoolSkipped) { %>
+                <%=titleDisplay%>
+              <% } else { %>
+                ___
+              <% } %>
             <% } %>
           </div>
         
@@ -962,13 +966,20 @@
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayClasses">
             <center><h2>Current Class: </h2></center>
-            <div class = "soonEvent"><%=currentBlock[0][0]%><%=currentBlock[0][1]%></div>
+            <% if (!schoolSkipped) { %>
+              <div class = "soonEvent"><%=currentBlock[0][0]%><%=currentBlock[0][1]%></div>
+            <% } else { %>
+              <div class = "soonEvent">Nothing!</div>
+            <% } %>
         </div>
         <div style = "flex-grow: 0.5"></div>
         <div class = "displayClasses">
-
             <center><h2>Next Class: </h2></center>
-            <div class = "soonEvent"><%=currentBlock[1][0]%><%=currentBlock[1][1]%></div>
+            <% if (!schoolSkipped) { %>
+              <div class = "soonEvent"><%=currentBlock[1][0]%><%=currentBlock[1][1]%></div>
+            <% } else { %>
+              <div class = "soonEvent">Nothing!</div>
+            <% } %>
         </div>
         <div style = "flex-grow: 2"></div>
       </div>
@@ -982,13 +993,14 @@
               <div class = "header"><h1>Courses</h1></div>
               <div class = "courseBox large" id = "todayCoursesDisplay">
                 
-                <div class = "header2"> My courses today &nbsp;(<span id = "secondaryDayDisplay"><%=titleDisplay%></span>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
+                <div class = "header2"> My courses today &nbsp;(<span id = "secondaryDayDisplay"><%=schoolSkipped ? "_ _ _" : titleDisplay%></span>)&nbsp; <a href = "courses" class = "bColor" style = "font-size: 12px;">edit</a></div>
                 <% if (!offLine) { %>
-                  <% for (var i = 0; i < blockOrder.length; i++) { %>
-                    <div class = "todayCourseBox" onclick = "addNotes('<%=blockOrder[i][6] || 1 %>', `<%=blockOrder[i][5]%>`)"><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
-                  <% } %>
-                  <% if (blockOrder === false) { %>
-                    <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>It's the weekend!</div><div class = "spacer"></div></div>
+                  <% if (blockOrder && !schoolSkipped) { %>
+                    <% for (var i = 0; i < blockOrder.length; i++) { %>
+                      <div class = "todayCourseBox" onclick = "addNotes('<%=blockOrder[i][6] || 1 %>', `<%=blockOrder[i][5]%>`)"><div class = "spacer"></div><div><%=(blockOrder[i][0]-1)%12+1%>:<%=blockOrder[i][1].toString().length === 1 ? "0" + blockOrder[i][1].toString() : blockOrder[i][1].toString()%>-<%=(blockOrder[i][2]-1)%12+1%>:<%=blockOrder[i][3].toString().length === 1 ? "0" + blockOrder[i][3].toString() : blockOrder[i][3].toString()%> : <span style = "float : right"><%=blockOrder[i][5]%></span></div><div class = "spacer"></div></div>
+                    <% } %>
+                  <% } else { %>
+                    <div style = "flex-grow: 0.2; text-align: center"><div class = "spacer"></div><div>No School Today!</div><div class = "spacer"></div></div>
                   <% } %>
                 <% } %>
               </div>
