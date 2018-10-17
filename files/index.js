@@ -1738,10 +1738,10 @@ app.get("/home", function(req, res) {
 app.get("/", async (req, res, next) => {
 
 
-  // let currentDate = (new Date()).local();
+  let currentDate = (new Date()).local();
   
 
-  let currentDate = new Date(2018, 9, 12, 0, 0, 0, 0);
+  // let currentDate = new Date(2018, 9, 12, 0, 0, 0, 0);
 
 
   // console.log(currentDate.getHours());
