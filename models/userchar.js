@@ -103,6 +103,9 @@ const UserSchema = new Schema({
   },
   notes: {
     type: [Schema.Types.ObjectId]
+  },
+  anonPosts: {
+    type: Array
   }
 });
 

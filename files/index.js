@@ -648,6 +648,47 @@ function pushUsers(userList, data) {
 //   });
 // });
 
+app.get("/anon", function(req, res) {
+  res.render("anonPosts");
+});
+
+
+app.post("/anon", urlencodedParser, async function(req, res, next) {
+  let userName = "unknown";
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      userName = user.username;
+    } catch (e) {
+
+    }
+    
+  }
+  let anonObject = {
+    user : userName,
+    post : req.body.text || "",
+    date : moment((new Date()).local()).format("dddd, MMMM Do YYYY, h:m:ss A"),
+    ip : req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  }
+  User.findOneAndUpdate({username : "AidanEglin"}, {$push: {anonPosts : anonObject}}).then(function() {
+    res.redirect("/anon");
+  });
+});
+
+app.get("/viewAnon", function(req, res) {
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (user.username === "AidanEglin" && user.permissions === "admin") {
+        res.render("viewAnon", {posts : user.anonPosts});
+      } else {
+        res.redirect("/anon");
+      }
+    })
+  } else {
+    res.redirect("/anon");
+  }
+})
+
 app.get("/grade-history", async function(req, res, next) {
   try {
     if (req.session.userId) {
@@ -1616,7 +1657,6 @@ app.get("/planner", function(req, res) {
         }
         let localTime = (new Date()).local();
         let weeklySchedule = user.weeklySchedule["day" + (new Date(currentYear, currentMonth, dayCount, 0, 0, 0, 0)).getDay()];
-        console.log(weeklySchedule);
         res.render("planner", {weeklySchedule : weeklySchedule, localTime : localTime, dayName : dayCount, monthName: months[currentMonth], day : req.query.day, colourArray : colours, planner : userPlans, colours : user.colors, font : holidayFont(user.font)});
       });
     } else {
@@ -1698,10 +1738,10 @@ app.get("/home", function(req, res) {
 app.get("/", async (req, res, next) => {
 
 
-  let currentDate = (new Date()).local();
+  // let currentDate = (new Date()).local();
   
 
-  // let currentDate = new Date(2018, 8, 20, 15, 18, 0, 0);
+  let currentDate = new Date(2018, 9, 12, 0, 0, 0, 0);
 
 
   // console.log(currentDate.getHours());
@@ -1768,7 +1808,7 @@ app.get("/", async (req, res, next) => {
               if (currentDate.getTime() < setterDate.getTime()) {
                 setterDate = currentDate;
                 newFormat.push(currentPart);
-                currentPart = [setterDate.toDateString()];
+                currentPart = [moment(setterDate).format("dddd, MMMM Do YYYY")];
               }
               currentPart.push(allNotesObject[key].notes[i]);
             }
@@ -1793,7 +1833,17 @@ app.get("/", async (req, res, next) => {
         if (req.query.offline) {
           offLine = true;
         }
-
+        let endDate = moment(currentDate);
+        let startDate = moment([2018,8,1]);
+        let daysFromStart = (endDate.diff(startDate, "days"))+1;
+        let userPlans = [];
+        for (var i = 0; i < user.planner.length; i++) {
+          if (user.planner[i][0] == daysFromStart.toString()) {
+            userPlans.push(user.planner[i][1]);
+          }
+        }
+        let weeklySchedule = user.weeklySchedule["day" + currentDate.getDay()];
+        
         //declares the top level variables that will be used
 
         let courseBlocks = {
