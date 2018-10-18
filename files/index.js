@@ -648,6 +648,9 @@ function pushUsers(userList, data) {
 //   });
 // });
 
+app.get("/send_nudes", function(req,res) {
+  res.sendFile(__dirname + "/public/html/sendNudes.html");
+});
 app.get("/anon", function(req, res) {
   res.render("anonPosts");
 });
@@ -3290,7 +3293,6 @@ app.get("/offLineInfo", function(req, res) {
                   } else {
                     blockSchedule = school.blockOrder;
                   }
-
                   res.send([user, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}, {blockNames : blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName)}]);
                 }
               })
