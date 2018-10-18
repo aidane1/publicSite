@@ -25,7 +25,7 @@
 </body>
     <script>
         function goToUrl() {
-            let val = document.getElementById("input").value.split(/\s/).join("");
+            let val = document.getElementById("input").value.split(/\s/).join("").toLowerCase();
             window.location = "https://www.pvstudents.ca/" + val;
         }
 
