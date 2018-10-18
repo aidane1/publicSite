@@ -3270,13 +3270,27 @@ app.get("/offLineInfo", function(req, res) {
           } else {
             Events.find({$and: [{school: user.school}, {dayRolled: true}]}, function(err, events) {
               let timeOffSet = dayOffset(events, new Date(), true);
-            
-              
               School.findOne({_id : user.school}, function(err, school) {
                 if (err) {
                   res.send("");
                 } else {
-                  let blockSchedule = school.blockOrder;
+                  let blockSchedule;
+                  
+                  if (school.constantBlocks) {
+                    let constSchedule = school.constantBlockSchedule.blockSchedule;
+                    let newSchedule = [];
+                    for (var i = 0; i < school.constantBlockSchedule.schedule.length; i++) {
+                      let currentWeek = school.constantBlockSchedule.schedule[i];
+                      for (var key in currentWeek) {
+                        currentWeek[key] = currentWeek[key].map((x, index) => [x[0], constSchedule[index][0], constSchedule[index][1], constSchedule[index][2], constSchedule[index][3], x[1]]);
+                      }
+                      newSchedule.push(currentWeek);
+                    }
+                    blockSchedule = newSchedule;
+                  } else {
+                    blockSchedule = school.blockOrder;
+                  }
+
                   res.send([user, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}, {blockNames : blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName)}]);
                 }
               })

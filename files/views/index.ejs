@@ -1374,7 +1374,9 @@
           }
           loadRequest.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+              
               let parsedText = JSON.parse(this.responseText);
+              console.log(parsedText);
               let userObject = parsedText[0];
               let timeOffset = parsedText[1];
               let blockSchedule = parsedText[2];
@@ -1386,6 +1388,7 @@
                 dayOffSet: timeOffset.timeOffset.map(x => new Date(x)),
                 blockSchedule: blockSchedule
               }
+              console.log(newObject);
               localStorage.setItem("userData", JSON.stringify(newObject));
             }
           }
