@@ -651,6 +651,10 @@ function pushUsers(userList, data) {
 app.get("/send_nudes", function(req,res) {
   res.sendFile(__dirname + "/public/html/sendNudes.html");
 });
+
+app.get("/goToUrl", function(req, res) {
+  res.sendFile(__dirname + "/public/html/goTo.html");
+});
 app.get("/anon", function(req, res) {
   res.render("anonPosts");
 });
