@@ -18,15 +18,22 @@
     </style>
 </head>
 <body>
+    This page will be used to enter all codes found.<br>
     go to url: 
     <hr>
     pvstudents.ca/ <input class = "input" type = "text" id = "input" />
     <button onclick = "goToUrl()" class = "go">Go!</button>
 </body>
     <script>
+        let locations = [["send_nudes", "send_nudes"], ["A17bg5", "public/codes/code4693.html"], ["158962555217826360000", "public/codes/code3490.html"], ["158,962,555,217,826,360,000", "public/codes/code3490.html"], ["1-877-377-0958", "public/codes/code2432.html"],["18773770958", "public/codes/code2432.html"]];
         function goToUrl() {
             let val = document.getElementById("input").value.split(/\s/).join("").toLowerCase();
-            window.location = "https://www.pvstudents.ca/" + val;
+            console.log(val);
+            for (var i = 0; i < locations.length; i++) {
+                if (locations[i][0].toLowerCase() === val) {
+                    window.location = locations[i][1];
+                }
+            }
         }
 
     </script>
