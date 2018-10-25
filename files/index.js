@@ -3303,7 +3303,7 @@ app.get("/offLineInfo", function(req, res) {
                   } else {
                     blockSchedule = school.blockOrder;
                   }
-                  res.send([user, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}, {blockNames : blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName)}]);
+                  res.send([user, {timeOffset: timeOffSet}, {blockSchedule : blockSchedule}, {blockNames : blockNamesObject(school.blockNames, courses, user.blockNames || {}, school.spareName)}]);
                 }
               })
             })
