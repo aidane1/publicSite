@@ -13,7 +13,7 @@
     </script>
     <style>
       * {
-        font-family: sansFont, sans-serif;
+        font-family: sans-serif;
         box-sizing: border-box;
         color: rgb(216, 215, 143);
       }
@@ -49,14 +49,14 @@
       #login {
         display: block;
         margin: auto;
-        margin-top: 0px;
-        width: 90%;
-
+        width: 100%;
       }
       #inputs {
-        position: absolute;
-        top: 10px;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
         width: 90%;
+        left: 5%;
       }
       .userInput {
         display: block;
@@ -158,17 +158,22 @@
       <div class = "error">
         <%=error%>
       </div>
+      
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/signup">
-          <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
+          <div class = "note" style = "text-align: center; margin-bottom: 25px">
+            Sign in to your school district account using your username and password
+    
+          </div>
+          <!-- <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div> -->
 
-          <div class = "inputLabel"><label for "lastName" >Last Name: </label><input value = "<%=data[2]%>" type = "text" name = "lastName" placeholder = "Enter lastName..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
+          <!-- <div class = "inputLabel"><label for "lastName" >Last Name: </label><input value = "<%=data[2]%>" type = "text" name = "lastName" placeholder = "Enter lastName..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div> -->
 
           <div class = "inputLabel"><label for "email" >Username: </label><input value = "<%=data[0]%>" type = "text" name = "username" placeholder = "Enter Username..." class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
 
           <div class = "inputLabel"><label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
 
-          <div class = "inputLabel"><label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div>
+          <!-- <div class = "inputLabel"><label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div> -->
 
 
           <div class = "inputLabel">
@@ -180,10 +185,21 @@
             </select>
           </div>
 
-          <input type = "submit" id = "submit" style = "margin-bottom: 50px">
+          <input type = "submit" id = "submit" style = "margin-bottom: 50px" onclick = "disableSubmit()">
         </form>
         <!-- <center><div class = "login"><i><h6>already have an account? <a href = "/login">login</a></h6></i></div></center> -->
       </div>
     </div>
+    <script>
+      let disabledCount = 0;
+      function disableSubmit() {
+        if (disabledCount === 0) {
+          disabledCount++;
+        } else {
+          document.getElementById("submit").disabled = true;
+        }
+        
+      }
+    </script>
   </body>
 </html>

@@ -220,6 +220,16 @@ let multer  = require('multer');
 
 let path = require("path");
 
+let tesseract = require("node-tesseract");
+
+// tesseract.process(__dirname + "/public/images/randomText.jpg",{}, function(err, text) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(text);
+//   }
+// })
+
 let storage = multer.diskStorage({
   destination: __dirname + "/public/schoolLogos/",
   filename: function(req, file, cb) {
@@ -383,7 +393,7 @@ async function login(data, cookies, district) {
     }
     request(options, function(err, response, body) {
       if (!err && response.statusCode == 200) {
-        resolve(true);
+        resolve(body);
       } else {
         reject(err);
       }
@@ -606,6 +616,8 @@ async function compileHistory(body) {
     resolve(orderedClasses);
   });
 }
+
+
 //gets history of grades for you
 async function getHistory(username, password, district) {
   let loginCredentials = await getLoginCredentials(username, password, district);
@@ -614,6 +626,24 @@ async function getHistory(username, password, district) {
   let compiledHistory = compileHistory(history);
   return compiledHistory;
 }
+
+async function compileHomeInfo(body) {
+  return new Promise(function(resolve, reject) {
+    let $ = cheerio.load(body);
+    let gradeForm = $("#FormContentPlaceHolder_SGRADE");
+    let classForm = $("#FormContentPlaceHolder_SCLASS");
+    let fullName = $("#UserOptionsTextPlaceHolder_UserInfo");
+    resolve([gradeForm.val(), classForm.val(), fullName.text().split(" ")[1], fullName.text().split(" ")[2], fullName.text().split(" ")[4 ]]);
+  });
+}
+//gets user grade and other ID stuff
+async function getUserInfo(username, password, district) {
+  let loginCredentials = await getLoginCredentials(username, password, district);
+  let homePage = await login(loginCredentials[0], loginCredentials[1], district);
+  let compiledHome = compileHomeInfo(homePage);
+  return compiledHome;
+}
+
 
 function pushUsers(userList, data) {
   console.log(data);
@@ -696,6 +726,25 @@ app.get("/viewAnon", function(req, res) {
   }
 })
 
+
+app.get("/user-information", async function(req, res, next) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      if (req.query.username && req.query.password) {
+        let history = await getUserInfo(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        res.send(history);
+      } else {
+        res.send("");
+      }
+    } else {
+      res.send("");
+    }
+  } catch(e) {
+    res.send("");
+  }
+});
 app.get("/grade-history", async function(req, res, next) {
   try {
     if (req.session.userId) {
@@ -2153,119 +2202,76 @@ app.get("/signup", function(req, res) {
   })
 });
 
-app.post("/signup", urlencodedParser, function(req, res) {
-
-  //makes sure the two entered passwords match.
-  if (req.body.password != req.body.passwordConf) {
-    //if they don't, tell the user
-    res.render("signup", {error : "Error : passwords do not match", data : [req.body.username, req.body.firstName, req.body.lastName]});
-  //makes sure all fields were entered
-  } else if (req.body.schoolChoice && req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
-    //makes sure they didn't use special characters.
-    if (stringTest(req.body.username) && stringTest(req.body.firstName) && stringTest(req.body.lastName) && stringTest(req.body.password)) {
-      //makes sure they're all under 40 characters long
-      if (req.body.username.length < 40 && req.body.password.length < 40 && req.body.firstName.length < 40 && req.body.lastName.length < 40) {
-        //sets up the user data
-        School.findOne({name : req.body.schoolChoice}, function(err, school) {
-          if (err || school == null) {
-            console.log(err);
-            School.find({}, function(err, schools) {
-              schools.sort(function(a,b) {
-                return (a.firstName > b.firstName ? -1 : 1);
-              });
-              res.render("signup", {error: "Please enter a valid school name", schoolNames: schools, data: [req.body.username, req.body.firstName, req.body.lastName]});
-            })
-
-          } else {
-            var userData = {
-              firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
-              lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
-              username: req.body.username,
-              password: req.body.password,
-              colors: {
-                bgColor: "rgb(79, 49, 48)",
-                textColor: "rgb(216, 215, 143)",
-                infoColor: "rgb(117, 55, 66)",
-                buttonColor: "rgb(170, 80, 66)",
-                borderColor:"rgb(216, 189, 138)"
-              },
-              font: "/public/fonts/Evogria.otf",
-              email: req.body.username,
-              school: school._id
-            }
-            //tries to make the user character. if someone shares their username or the server is down, it will throw an error.
-            try {
-              User.findOne({username : req.body.username}, function(err, userNameTrue) {
-                console.log(userNameTrue);
-                if (userNameTrue === null) {
-                  User.create(userData,function(error, user) {
-                    if (error) {
-                      console.log(error);
-                      res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
-                    } else {
-                      //sets the session and cookie to current user ID
-                      let mailOptions = {
-                        from: "pvsstudents@gmail.com",
-                        to: "aidaneglin@gmail.com",
-                        subject: "user signup",
-                        text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
-                      }
-                      transporter.sendMail(mailOptions, function(error, info) {
-                        if (error) {
-                            console.log(error)
-                          res.redirect("/")
-                        } else {
-
-                        }
-                      });
-                      req.session.userId = user._id;
-                      res.cookie("sessionID", req.session.userId);
-                      res.redirect("/tutorial");
-                    }
-                  });
+app.post("/signup", urlencodedParser, async function(req, res, next) {
+  let schools = await School.find({});
+  schools.sort(function(a,b) {
+    return (a.firstName > b.firstName ? -1 : 1);
+  });
+  try {
+    if (req.body.username && req.body.password && req.body.schoolChoice) {
+      let school = await School.findOne({name : req.body.schoolChoice}); 
+      let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password, school.schoolDistrict || "sd83");
+      let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password, "SEM 1 ", school.schoolDistrict);
+      if (userInfo[0]) {
+        let userObject = {
+          firstName : userInfo[2][0] + userInfo[2].substring(1,userInfo[2].length).toLowerCase(),
+          lastName : userInfo[3][0] + userInfo[3].substring(1,userInfo[3].length).toLowerCase(),
+          username : req.body.username,
+          password: req.body.password,
+          courses : schedule,
+          colors: {
+            bgColor: "rgb(79, 49, 48)",
+            textColor: "rgb(216, 215, 143)",
+            infoColor: "rgb(117, 55, 66)",
+            buttonColor: "rgb(170, 80, 66)",
+            borderColor:"rgb(216, 189, 138)"
+          },
+          font: "/public/fonts/Evogria.otf",
+          email: req.body.username,
+          school: school._id
+        }
+        try {
+          User.create(userObject,function(error, user) {
+            if (error) {
+              console.log(error);
+              res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
+            } else {
+              //sets the session and cookie to current user ID
+              let mailOptions = {
+                from: "pvsstudents@gmail.com",
+                to: "aidaneglin@gmail.com",
+                subject: "user signup",
+                text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
+              }
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    console.log(error)
+                  res.redirect("/")
                 } else {
-                  School.find({}, function(err, schools) {
-                    schools.sort(function(a,b) {
-                      return (a.firstName > b.firstName ? -1 : 1);
-                    });
-                    res.render("signup", {error: "Username is already taken.", data: ["", "", ""], schoolNames : schools});
-                  })
 
                 }
-              })
-            } catch(e) {
-              console.log(e);
-              School.find({}, function(err, schools) {
-                schools.sort(function(a,b) {
-                  return (a.firstName > b.firstName ? -1 : 1);
-                });
-                res.render("signup", {error: "Username is already taken.", schoolNames : schools, data: ["", "", ""]});
-              })
-
+              });
+              req.session.userId = user._id;
+              res.cookie("sessionID", req.session.userId);
+              res.redirect("/tutorial");
             }
-          }
-        });
-      } else {
-        School.find({}, function(err, schools) {
-          schools.sort(function(a,b) {
-            return (a.firstName > b.firstName ? -1 : 1);
           });
-          res.render("signup", {error: "Please limit input fields length to 40 characters.",schoolNames : schools, data : ["", "", ""]});
-        })
-
+        } catch(e) {
+          console.log(e);
+          res.render("signup", {error: "Error : username is already is use. please try again", schoolNames : schools, data : ["", "", ""]});
+        }
+      } else {
+        res.render("signup", {schoolNames : schools, error : "Error : user not found. please make sure that your log in credentials are correct", data: [req.body.username, "", ""]});
       }
-    } else {
-      School.find({}, function(err, schools) {
-        schools.sort(function(a,b) {
-          return (a.firstName > b.firstName ? -1 : 1);
-        });
-        res.render("signup", {error: "Please do not use special characters in your signup information.", schoolNames : schools, data : ["", "", "", ""]});
-      })
-
+      
     }
-  } else {
-    res.redirect("/signup");
+  } catch(e) {
+    console.log(e);
+    res.render("signup", {schoolNames : schools, error: "Error : please fill out all input fields", data: ["", "", ""]});
   }
+  
+
+  
 });
 
 app.get("/courses", function(req, res) {

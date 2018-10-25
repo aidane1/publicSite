@@ -19,9 +19,7 @@
 
     </script>
     <style>
-      @font-face {
-        font-family: sansFont;
-      }
+      
       * {
         font-family: sans-serif;
         box-sizing: border-box;
@@ -50,7 +48,6 @@
         border-radius: 5px;
         overflow: hidden;
         border: 1px solid #aaaaaa;
-        float: right;
         margin-right: 10px;
         background-color: white;
       }
@@ -87,7 +84,8 @@
       }
       .labelInput label {
         position: relative;
-        top: 5px;
+        
+        display: block;
       }
       .spacer {
         flex-grow: 1;
@@ -95,8 +93,7 @@
       .userInput {
         margin-left: 2px;
         border: 0;
-        /* flex-grow: 1; */
-        width: 150px;
+        flex-grow: 1;
         height: 40px;
         font-size: 18px;
         outline: none;
@@ -147,14 +144,10 @@
         margin-right: 10%;
       }
       .signup {
-        width: 150px;
-        padding-top: 7.5px;
-        padding-bottom: 7.5px;
-        text-align: center;
-        text-decoration: none;
-        background-color: rgb(170, 80, 66);
-        border-radius: 3px;
-        font-size: 25px;
+        
+        
+        
+        
         margin-top: 10px;
         position: absolute;
         left: 10px;
@@ -206,15 +199,15 @@
           <br>
           <div class = "labelInput"><label for "logword">Password: </label><div class = "iconContainer"><div class = "icon"><img src = "/public/icons/password.svg" class = "passwordIcon"></div><input type = "password" name = "logword" placeholder = "Enter Password" class = "userInput" required onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" maxlength="40"/></div></div>
           <br>
-          <input type = "submit" id = "submit" />
+          <input type = "submit" id = "submit"  value = "submit"/>
         </form>
 
         <a href = "/signup" class = "signup" style = "color: rgb(216, 215, 143)">sign up</a>
         <br>
       </div>
-      <div class = "createSchool">
+      <!-- <div class = "createSchool">
         <a href = "/create-school" style = "text-decoration: none;">Create School</a>
-      </div>
+      </div> -->
     </div>
   </body>
 </html>
