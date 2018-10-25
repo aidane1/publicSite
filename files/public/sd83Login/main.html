@@ -335,9 +335,6 @@
     function loadLoading(string) {
       loadingString = '<div class = "loginBox"><div class = "imageLogo"><img src = "../images/studentConnect.png"  class = "logoImage" /></div><div class = "header" id = "userHeader">Other user</div><div class = "loadingWelcome"><div class = "spinner"><img src = "spinner.svg" class = "spinnergif"/><div class = "welcomeText">Welcome</div></div></div></div>';
       document.getElementById("backGround").innerHTML = loadingString;
-      setTimeout(function() {
-        noServers();
-      }, 3000);
       submitUserInfo(string[0], string[1]);
     }
     function noServers() {
@@ -362,6 +359,9 @@
       }
       loadRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+          setTimeout(function() {
+            noServers();
+          }, 3000);
           let text = JSON.parse(this.responseText);
           let firstName = text[2];
           firstName = firstName[0] + firstName.substring(1, firstName.length).toLowerCase();
