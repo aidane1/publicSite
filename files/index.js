@@ -726,6 +726,9 @@ app.get("/viewAnon", function(req, res) {
   }
 })
 
+app.get("/sd83Login", function(req, res) {
+  res.sendFile(__dirname + "/public/sd83Login/main.html");
+});
 
 app.get("/userInfo", async function(req, res, next) {
   if (req.query.username && req.query.password) {
