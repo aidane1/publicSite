@@ -82,16 +82,24 @@
       .scheduleHolder{
         width:100%;
         height:100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        flex-wrap:wrap;
-        flex-direction:column
+        -ms-flex-wrap:wrap;
+            flex-wrap:wrap;
+        -webkit-box-orient:vertical;
+        -webkit-box-direction:normal;
+            -ms-flex-direction:column;
+                flex-direction:column
       }
       .scheduleHref,.scheduleHref a{
         display:block;
         text-align:center
       }
       .spacer{
-        flex-grow:.5
+        -webkit-box-flex:.5;
+            -ms-flex-positive:.5;
+                flex-grow:.5
       }
       .scheduleHref{
         width:95%;
@@ -111,23 +119,20 @@
         padding:0
       }
       .addNote {
-        width:82%;
-        height:80%;
+        width:100%;
         position:fixed;
-        left:9%;
-        top:10%;
+        top:50px;
+        height: calc(100% - 100px);
         background-color:white;
-        border-radius:10px;
         display:none;
         overflow:auto;
         z-index:5001;
       }
       .addNoteEnter {
         width:100%;
-        height:80%;
         position:fixed;
-        left:0%;
-        top:10%;
+        top:50px;
+        height: calc(100% - 100px);
         background-color:white;
         display:none;
         overflow:auto;
@@ -138,9 +143,15 @@
         width: 35px;
         height: 100%;
         text-align: center;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
         top: 0px;
         left: 0px;
         font-size: 30px;
@@ -152,9 +163,15 @@
         width: 35px;
         height: 100%;
         text-align: center;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
         top: 0px;
         left: 0px;
         font-size: 30px;
@@ -243,13 +260,20 @@
       .courseHolder{
         width:100%;
         height:100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        flex-wrap:nowrap;
-        flex-direction:column
+        -ms-flex-wrap:nowrap;
+            flex-wrap:nowrap;
+        -webkit-box-orient:vertical;
+        -webkit-box-direction:normal;
+            -ms-flex-direction:column;
+                flex-direction:column
       }
       *{
         font-family:sansFont,sans-serif;
-        box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+                box-sizing:border-box;
         font-weight:900
       }
       body {
@@ -269,10 +293,13 @@
         overflow:scroll;
       }
       .initDisplay {
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
         width:100%;
         height:100%;
-        flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
         overflow-x: auto;
         -ms-overflow-style: -ms-autohiding-scrollbar;
       }
@@ -281,12 +308,20 @@
       }
       .classesDisplay {
         width: 100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
       }
       .plannerDisplay {
-        flex: 0 0 auto;
+        -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
         /* border: 5px solid black; */
       }
       .box,.header,.header2,.infoBox,.newsBox {
@@ -332,9 +367,15 @@
       .openRooms {
         width:100%;
         height:100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        flex-wrap:wrap;
-        flex-direction:column;
+        -ms-flex-wrap:wrap;
+            flex-wrap:wrap;
+        -webkit-box-orient:vertical;
+        -webkit-box-direction:normal;
+            -ms-flex-direction:column;
+                flex-direction:column;
         overflow:auto
       }
       .LCRoom {
@@ -394,12 +435,16 @@
       .classHolder ul {
         margin:0;
         height:100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
         font-size:15px;
         padding:0
       }
       .classHolder li {
-        flex:1 1 0;
+        -webkit-box-flex:1;
+            -ms-flex:1 1 0px;
+                flex:1 1 0;
         text-align:center;
         border-bottom:2px solid #000;
         padding:12px
@@ -423,21 +468,18 @@
         background-color:<%=colours.buttonColor%>;
         cursor:pointer;
         display:block;
-
         font-size:18px;
         color:<%=colours.textColor%>;
         text-align:center;
         border-radius:50px;
         border: 1px solid <%= colours.borderColor%>;
-
-
       }
       .unselectable {
         -moz-user-select: -moz-none;
-        -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
-        user-select: none;
+        -ms-user-select: none;
+            user-select: none;
       }
 
       .addMore {
@@ -457,6 +499,7 @@
       }
       .modalHolder {
         width:100%;
+        position:-webkit-sticky;
         position:sticky;
         top:0;
         height:65px;
@@ -469,6 +512,8 @@
       .modalHolder ul {
         margin:0;
         height:100%;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
         font-size:12px;
         padding:0;
@@ -476,7 +521,9 @@
         width:100%
       }
       .modalHolder li {
-        flex:1 1 0;
+        -webkit-box-flex:1;
+            -ms-flex:1 1 0px;
+                flex:1 1 0;
         text-align:center;
         background-color:<%=colours.buttonColor%>;
         border-bottom:2px solid <%=colours.borderColor%>;
@@ -494,7 +541,7 @@
         width:100%;
         display:none;
         top:30px;
-        z-index:5001
+        z-index:5001;
         white-space: pre-wrap;
         white-space: -moz-pre-wrap;
         white-space: -pre-wrap;
@@ -573,9 +620,9 @@
         color: <%=colours.textColor%>;
         left:50%;
         margin-left:-10px;
-        -moz-transform:rotate(45deg);
         -webkit-transform:rotate(45deg);
-        transform:rotate(45deg);
+        -ms-transform:rotate(45deg);
+            transform:rotate(45deg);
         z-index:0
       }
       .left {
@@ -599,14 +646,13 @@
         position:fixed
       }
       .menuIcon {
-        width:50px;
-        height:50px;
+        padding: 0 5px 0 5px;
         top:10px;
         right:15px;
         border-radius:3px;
         z-index:16;
-        -webkit-overflow-scrolling: initial;
-        padding-top: 10px;
+        background-color: <%=colours.buttonColor%>;
+        
       }
       .viewNotesButton {
         width: 33.33%;
@@ -620,59 +666,86 @@
         border: 1px solid <%=colours.borderColor%>;
       }
       .line1,.line2,.line3 {
-        width:28px;
-        height:2px;
+        width: 35px;
+        height: 5px;
+        margin: 6px 0;
         background-color:<%=colours.textColor%>;
         display:block;
-        margin:5px auto auto;
         border-radius:2px;
+        -webkit-transition:.4s;
+        -o-transition:.4s;
         transition:.4s
       }
       .change .line1 {
-        transform-origin: 50% 50%;
-        -webkit-transform:rotate(-45deg) translate(-9px,0);
-        transform:rotate(-45deg) translate(-9px,0);
+        -ms-transform:rotate(-45deg) translate(-9px,6px);
+        -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+        transform: rotate(-45deg) translate(-9px, 6px);
       }
       .change .line2 {
         opacity:0
       }
       .change .line3 {
-        -webkit-transform:rotate(45deg) translate(-10px,0);
-        transform:rotate(45deg) translate(-10px,0)
+
+        -ms-transform:rotate(45deg) translate(-8px,-8px);
+        -webkit-transform: rotate(45deg) translate(-8px, -8px);
+        transform: rotate(45deg) translate(-8px, -8px);
       }
       nav {
         top:-500px;
         width:100%;
         z-index:15;
+        -webkit-transition:top .9s;
+        -o-transition:top .9s;
         transition:top .9s
       }
       .courseBox {
-        flex-grow: 0.5;
+        -webkit-box-flex: 0.5;
+            -ms-flex-positive: 0.5;
+                flex-grow: 0.5;
         width: 100%;
         margin: auto;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
       }
       .courseBox > div:not(.header2) {
-        flex-grow: 1;
+        -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+                flex-grow: 1;
         /* border: 2px solid <%=colours.borderColor%>; */
         margin-top: 2px;
         background-color: <%=colours.infoColor%>;
         padding-left: 10px;
         padding-right: 10px;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
       }
       .courseBox > .header2 {
-        flex-grow: 0.5;
+        -webkit-box-flex: 0.5;
+            -ms-flex-positive: 0.5;
+                flex-grow: 0.5;
       }
 
       .holder {
         padding:0;
-        justify-content:flex-start;
-        flex-wrap:wrap
+        -webkit-box-pack:start;
+            -ms-flex-pack:start;
+                justify-content:flex-start;
+        -ms-flex-wrap:wrap;
+            flex-wrap:wrap
       }
       .homeWorkBox {
          white-space: pre-wrap;
@@ -743,14 +816,25 @@
         border: 1px solid <%=colours.borderColor%>;
       }
       .homeworkTitles {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
       }
       .coursePageButtons {
         width: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: row;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
       }
 
       .pushNotifications div {
@@ -761,6 +845,9 @@
         font-size:19px;
         text-align:center;
         background-color:<%=colours.buttonColor%>
+      }
+      .change {
+        background-color: initial;
       }
       @media screen and (max-width:320px) {
         .infoBox {
@@ -838,19 +925,25 @@
         .menuIcon {
           display:none
         }
+        
         nav {
           display:block;
           width:100%;
           z-index:15;
           position:fixed;
           top:-20px;
+          -webkit-transition:top 0s;
+          -o-transition:top 0s;
           transition:top 0s
         }
         .holder {
           list-style-type:none;
           padding:0;
+          display:-webkit-box;
+          display:-ms-flexbox;
           display:flex;
-          flex-wrap:nowrap
+          -ms-flex-wrap:nowrap;
+              flex-wrap:nowrap
         }
         nav .item {
           background-color:#000;
@@ -860,9 +953,14 @@
           display:none
         }
         .backdrop {
+          display:-webkit-box;
+          display:-ms-flexbox;
           display:flex;
-          flex-wrap:wrap;
-          justify-content:center;
+          -ms-flex-wrap:wrap;
+              flex-wrap:wrap;
+          -webkit-box-pack:center;
+              -ms-flex-pack:center;
+                  justify-content:center;
           padding:50px
         }
         .allHomework,.initDisplay {
@@ -887,7 +985,9 @@
           position:fixed;
           left:50%;
           top:10%;
-          transform:translateX(-50%);
+          -webkit-transform:translateX(-50%);
+              -ms-transform:translateX(-50%);
+                  transform:translateX(-50%);
           border-radius:10px;
           overflow:auto;
           min-width:500px;
@@ -1106,7 +1206,7 @@
             </button>
           </div>
         <% } else if (order[key] == "Schedule" && !offLine) { %>
-          <div id = "schedule" class = "schedule box" name = "schedule">
+          <!-- <div id = "schedule" class = "schedule box" name = "schedule">
             <div class = "scheduleHolder">
               <div class = "header"><h1>Schedule and other</h1></div>
               <div class = "spacer"></div>
@@ -1117,7 +1217,7 @@
               <div class = "scheduleHref unselectable"><a href=  "/users/<%=username%>">Account</a></div>
               <div class = "spacer"></div>
             </div>
-          </div>
+          </div> -->
         <% } else if (order[key] == "Resources" && !offLine) { %>
           <div id = "resources" class = "resources box" name = "resources">
             <div class = "header" style = "margin-bottom: 15px"><h1>Resources</h1></div>
