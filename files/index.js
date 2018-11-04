@@ -1809,6 +1809,54 @@ app.get("/home", function(req, res) {
   res.sendFile(__dirname + "/public/html/home.html");
 });
 
+function createArray(depth) {
+  if (depth == 1) {
+    return new Array(10);
+  } else if (depth == 0) {
+    return new Array(0);
+  } else {
+    let returnArray = new Array(10);
+    for (var i = 0; i < returnArray.length; i++) {
+      returnArray[i] = createArray(depth-1);
+    }
+    return returnArray;
+  }
+}
+
+// function flattenDeep(arr1) {
+//   return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
+// }
+
+// function radixSort(array, magnitude) {
+//   let newArray = createArray(magnitude);
+//   for (var i = 0; i < array.length; i++) {
+//     let newNum = array[i].toString();
+//     if (newNum.length != magnitude-1) {
+//       let newString = "";
+//       for (var j = 0; j < magnitude-1-newNum.length; j++) {
+//         newString += "0";
+//       }
+//       newNum = newString + newNum;
+//     }
+//     let placeString = "newArray[";
+//     for (var j = 0; j < newNum.length-1; j++) {
+//       placeString += newNum[j] + "][";
+//     }
+//     placeString += newNum[newNum.length-1] + "] = parseInt(newNum)";
+//     eval(placeString);
+//   }
+//   return flattenDeep(newArray);
+// }
+// console.log(radixSort(makeRandomArray(10000000, 1000000), 7));
+
+// function makeRandomArray(length, max) {
+//   let array = [];
+//   for (var i = 0; i < length; i++) {
+//     array.push(Math.floor(Math.random()*max));
+//   }
+//   return array;
+// }
+
 // you just made BIG changes, so go through all this again when you aren't tired and make sure nothing is broken. pls.
 app.get("/", async (req, res, next) => {
 
