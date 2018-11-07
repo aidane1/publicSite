@@ -2263,7 +2263,7 @@ app.get("/signup", function(req, res) {
     schools.sort(function(a,b) {
       return (a.firstName > b.firstName ? -1 : 1);
     });
-    console.log(schools);
+    
 
     res.render("signup", {error : "", data : [ "", "", ""], schoolNames : schools});
   })
@@ -2277,6 +2277,10 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
   try {
     if (req.body.username && req.body.password && req.body.schoolChoice) {
       let school = await School.findOne({name : req.body.schoolChoice}); 
+      let schools = await School.findOne({});
+      schools.sort(function(a,b) {
+        return (a.firstName > b.firstName ? -1 : 1);
+      });
       let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password, school.schoolDistrict || "sd83");
       let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password, "SEM 1 ", school.schoolDistrict);
       if (userInfo[0]) {
@@ -2301,7 +2305,7 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
           User.create(userObject,function(error, user) {
             if (error) {
               console.log(error);
-              res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
+              res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
             } else {
               //sets the session and cookie to current user ID
               let mailOptions = {
@@ -2325,20 +2329,17 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
           });
         } catch(e) {
           console.log(e);
-          res.render("signup", {error: "Error : username is already is use. please try again", schoolNames : schools, data : ["", "", ""]});
+
+          
         }
       } else {
         res.render("signup", {schoolNames : schools, error : "Error : user not found. please make sure that your log in credentials are correct", data: [req.body.username, "", ""]});
       }
-      
     }
   } catch(e) {
     console.log(e);
-    res.render("signup", {schoolNames : schools, error: "Error : please fill out all input fields", data: ["", "", ""]});
+    res.render("signup", {error: "Error : username is already is use. please try again", schoolNames : schools, data : ["", "", ""]});
   }
-  
-
-  
 });
 
 app.get("/courses", function(req, res) {
