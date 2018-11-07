@@ -3436,11 +3436,13 @@ io.on("connection", function(socket) {
     console.log(data.song.substring(0,2));
     let songObject = {
       date : (new Date()).local(),
-      song : data.song
+      song : data.song,
+      prepended: false
     }
     if (data.song.substring(0, 2) == "!!") {
-      songObject.song = data.song.substring(2, data.song.length),
-      songObject.date = new Date(2000, 1, 1)
+      songObject.song = data.song.substring(2, data.song.length);
+      songObject.date = new Date(2000, 1, 1);
+      songObject.prepended = true;
     }
     let song = await Song.create(songObject);
     io.emit("song", song);

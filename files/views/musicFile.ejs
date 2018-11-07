@@ -169,7 +169,12 @@
             songDiv.appendChild(removeButton);
             removeButton.setAttribute("onclick", `removeSong('${data._id}')`);
         <% } %>
-        document.getElementById("songsBox").appendChild(songDiv);
+        if (data.prepended) {
+            document.getElementById("songsBox").prepend(songDiv);
+        } else {
+            document.getElementById("songsBox").appendChild(songDiv);
+        }
+        
     })
 </script>
 </html>
