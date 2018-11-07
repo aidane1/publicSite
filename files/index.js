@@ -3445,7 +3445,7 @@ io.on("connection", function(socket) {
       songObject.prepended = true;
     }
     let song = await Song.create(songObject);
-    io.emit("song", songObject);
+    io.emit("song", song);
   });
   socket.on("removeSong", async function(data) {
     try {

@@ -10,6 +10,10 @@ const SongSchema = new Schema({
   },
   song : {
     type: String
+  },
+  prepended: {
+    type: Boolean,
+    default: false
   }
 });
 
