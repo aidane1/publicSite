@@ -169,6 +169,7 @@
             songDiv.appendChild(removeButton);
             removeButton.setAttribute("onclick", `removeSong('${data._id}')`);
         <% } %>
+        console.log(data);
         if (data.prepended) {
             document.getElementById("songsBox").prepend(songDiv);
         } else {
