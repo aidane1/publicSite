@@ -178,7 +178,9 @@ let bodyParser = require("body-parser");
 
 let User = require("../models/userchar");
 
-let Course = require("../models/coursechar");
+let Course = require("../models/coursechar.js");
+
+let Song = require("../models/songchar.js");
 
 let session = require("express-session");
 
@@ -1744,6 +1746,19 @@ app.get("/planner", function(req, res) {
 
 });
 
+app.get("/suggest-music", async function(req, res, next) {
+  let suggestedSongs = await Song.find({});
+  let userPermissions = "user";
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    userPermissions = user.permissions;
+  }
+  suggestedSongs.sort(function(a, b) {
+    return a.date.getTime() > b.date.getTime() ? 1 : -1
+  })
+  res.render("musicFile", {songs : suggestedSongs, permissions : userPermissions});
+})
+
 app.post("/planner", urlencodedParser, function(req, res) {
   if (req.session.userId) {
     if (req.query.day && req.query.day > 0) {
@@ -2277,7 +2292,7 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
   try {
     if (req.body.username && req.body.password && req.body.schoolChoice) {
       let school = await School.findOne({name : req.body.schoolChoice}); 
-      let schools = await School.findOne({});
+      let schools = await School.find({});
       schools.sort(function(a,b) {
         return (a.firstName > b.firstName ? -1 : 1);
       });
@@ -3417,6 +3432,18 @@ io.on("connection", function(socket) {
       }
     });
   });
+  socket.on("song", async function(data) {
+    let song = await Song.create({date : (new Date()).local(), song : data.song});
+    io.emit("song", song);
+  });
+  socket.on("removeSong", async function(data) {
+    try {
+      await Song.remove({_id : data.id});
+      io.emit("removedSong", data);
+    } catch(e) {
+      io.emit("removedSong", data);
+    }
+  })
 
 
 });
