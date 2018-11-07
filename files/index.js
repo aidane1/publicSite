@@ -3433,7 +3433,16 @@ io.on("connection", function(socket) {
     });
   });
   socket.on("song", async function(data) {
-    let song = await Song.create({date : (new Date()).local(), song : data.song});
+    console.log(data.song.substring(0,2));
+    let songObject = {
+      date : (new Date()).local(),
+      song : data.song
+    }
+    if (data.song.substring(0, 2) == "!!") {
+      songObject.song = data.song.substring(2, data.song.length),
+      songObject.date = new Date(2000, 1, 1)
+    }
+    let song = await Song.create(songObject);
     io.emit("song", song);
   });
   socket.on("removeSong", async function(data) {

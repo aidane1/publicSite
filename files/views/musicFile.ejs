@@ -133,9 +133,12 @@
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
 <script>
     let socket = io.connect("https://pvstudents.ca", {secure: true, rejectUnauthorized: false});
+    // let socket = io.connect("http://127.0.0.1:8080", {secure: true, rejectUnauthorized: false});
     function addSongFunction() {
+        // console.log("Yeet");
         let input = document.getElementById("enterSong");
         let value = input.value;
+        
         if (value) {
             socket.emit("song", {song : value});
         }
