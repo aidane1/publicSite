@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href='https://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .titleBar {
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: black;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            z-index: 2;
+            user-select: none;
+        }
+        .documentBody {
+            width: 100%;
+            height: calc(100% - 100px);
+            position: absolute;
+            top: 100px;
+            left: 0;
+        }
+        .documentCover {
+            width: 100%;
+            height: calc(100% - 100px);
+            position: absolute;
+            top: 100px;
+            left: 0;
+            background: radial-gradient(rgba(255,0,0, 0.6), rgba(0,0,0, 0.7));
+        }
+        .spacer {
+            flex-grow: 1;
+        }
+        .titleAction {
+            /* border: 1px solid black; */
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            margin-left: 10px;
+            margin-right: 100px;
+            color: white;
+            font-size: 20px;
+            font-family: cursive;
+            cursor: pointer;
+            z-index: 3;
+        }
+        .titleName {
+            font-size: 40px;
+            font-family: 'Arizonia', Helvetica, sans-serif;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            color: white;
+            margin-right: auto;
+            margin-left: 40px;
+            z-index: 3;
+        }
+        .imagesBackground {
+            position: absolute;
+            width: 100%;
+            top: 0px;
+            left: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-flow: dense;
+            list-style: none;
+            padding: 0;
+            margin-top: 0;
+            opacity: 0.8;
+        }
+        
+        .imagesBackground li.landscape {
+            grid-column-end: span 2;
+        }
+        .backgroundImage {
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        .selectArrow {
+            font-size: 15px;
+            color:rgb(219,84,63);
+            display: inline-block;
+        }
+        .upArrow {
+            font-size: 15px;
+            color:rgb(219,84,63);
+            display: inline-block;
+            transform: rotate(180deg);
+        }
+        .dilema {
+            padding: 20px 50px;
+            background-color: #ddd;
+            display: inline-block;
+            border-radius: 15px;
+            font-size: 25px;
+            font-weight: 900;
+            position: absolute;
+            top: -200px;
+            transition: top 0.2s ease-in;
+            left: -300px;
+            width: 300px;
+            color: black;
+            z-index: 2;
+            user-select: none;
+            cursor:not-allowed; 
+        }
+        .dilema::before {
+            content: '';
+            position: absolute;
+            left: 325px;
+            transform: rotate(45deg);
+            border: 10px solid #ddd;
+            top: -10px;
+        }
+        .dropped {
+            top: 115px;
+        }
+        .titleBarTwo {
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: black;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            z-index: 1;
+        }
+        .titleIcon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(to right bottom,red,rgba(0,0,0,1), rgba(0,0,0,0));
+        }
+        
+    
+    </style>
+</head>
+<body>
+    <div class="background">
+        
+        <div class="titleBar">
+            <div class="titleIcon">
+
+            </div>
+            <div class="titleName">
+                <div class="spacer"></div>
+                Aidan Eglin
+                <div class="spacer"></div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div onclick = "dropDown('dilema')" id = "dilemaTitle">Dilema <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div>Sources <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div>Articles <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+            </div>
+        </div>
+        <div class="titleBarTwo">
+            <div class="titleName">
+                <div class="spacer"></div>
+                Aidan Eglin
+                <div class="spacer"></div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div onclick = "dropDown('dilema')">Dilema <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+                <div class="dilema" id = "dilemaDropDown">
+                    Should the government be able to mandate compulsory actions in its citizens, such as schooling and military service?
+                </div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div>Sources <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+            </div>
+            <div class="titleAction">
+                <div class="spacer"></div>
+                <div>Articles <span class = "selectArrow"> &#9660;</span></div>
+                <div class="spacer"></div>
+            </div>
+        </div>
+        <div class="documentBody">
+            <ul class="imagesBackground">
+                <li><img class = "backgroundImage" src = "public/images/hemingway.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_1.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_2.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_3.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_4.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_5.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_6.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_7.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_8.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_9.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_10.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_11.jpeg"/></li>
+                
+                <!-- <img class = "backgroundImage" src = "public/images/hemingway.jpg"/> -->
+            </ul>
+        </div>
+        <div class = "documentCover">
+
+        </div>
+    </div>
+</body>
+<script>
+    var elem = document.body; // Make the body go full screen.
+    document.addEventListener("keydown", function(e) {
+      if (e.keyCode == 192) {
+        requestFullScreen(elem);
+      } else if (e.keyCode == 13) {
+        getInfo();
+      }
+    })
+    function requestFullScreen(element) {
+      // Supports most browsers and their versions.
+      var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+      if (requestMethod) { // Native full screen.
+          requestMethod.call(element);
+      } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+          var wscript = new ActiveXObject("WScript.Shell");
+          if (wscript !== null) {
+              wscript.SendKeys("{F11}");
+          }
+      }
+    }
+    function dropDown(item) {
+        if (item === "dilema") {
+            let dilema = document.getElementById("dilemaDropDown");
+            dilema.classList.toggle("dropped");
+            document.getElementById("dilemaTitle").innerHTML = dilema.classList.contains("dropped") ? "Dilema <span class = 'selectArrow upArrow'> &#9660;</span>" : "Dilema <span class = 'selectArrow'> &#9660;</span>";
+        } else if (item === "sources") {
+
+        } else {
+
+        }
+    }
+</script>
+</html>
