@@ -33,7 +33,7 @@
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
-            z-index: 2;
+            z-index: 5;
             user-select: none;
         }
         .documentBody {
@@ -49,7 +49,7 @@
             position: absolute;
             top: 100px;
             left: 0;
-            background: radial-gradient(rgba(255,0,0, 0.5), rgba(0,0,0, 0.6),rgba(0,0,0, 0.7));
+            background: radial-gradient(rgba(255,0,0, 0.1), rgba(0,0,0, 0.6),rgba(0,0,0, 0.3));
         }
         .spacer {
             flex-grow: 1;
@@ -119,16 +119,78 @@
             display: inline-block;
             border-radius: 15px;
             font-size: 25px;
-            font-weight: 900;
+            font-weight: 200;
             position: absolute;
             top: -200px;
             transition: top 0.2s ease-out;
             left: -300px;
             width: 300px;
             color: black;
-            z-index: 2;
+            z-index: 5;
             user-select: none;
-            cursor:not-allowed; 
+            cursor:not-allowed;
+            word-wrap: break-word;
+        }
+        .sources {
+          padding: 20px 50px;
+          background-color: #ddd;
+          display: inline-block;
+          border-radius: 15px;
+          font-size: 25px;
+          font-weight: 200;
+          position: absolute;
+          top: -700px;
+          transition: top 0.2s ease-out;
+          left: -500px;
+          width: 500px;
+          color: black;
+          z-index: 5;
+          user-select: none;
+          cursor:not-allowed;
+          word-wrap: break-word;
+        }
+        .articles {
+            padding: 20px 50px;
+            background-color: #ddd;
+            display: inline-block;
+            border-radius: 15px;
+            font-size: 25px;
+            font-weight: 200;
+            position: absolute;
+            top: -700px;
+            transition: top 0.2s ease-out;
+            left: -500px;
+            width: 500px;
+            color: black;
+            z-index: 5;
+            user-select: none;
+            cursor:pointer;
+            word-wrap: break-word;
+        }
+        .articles::before {
+            content: '';
+            position: absolute;
+            left: 525px;
+            transform: rotate(45deg);
+            border: 10px solid #ddd;
+            top: -10px;
+        }
+        .sources::before {
+          content: '';
+          position: absolute;
+          left: 525px;
+          transform: rotate(45deg);
+          border: 10px solid #ddd;
+          top: -10px;
+        }
+        .sourceOverflow {
+
+            height: 500px;
+            width: 100%;
+
+            overflow-y: scroll;
+            padding-right: 17px;
+            /*box-sizing: content-box;*/
         }
         .dilema::before {
             content: '';
@@ -141,6 +203,44 @@
         .dropped {
             top: 115px;
         }
+        .sourceAuthor {
+          font-size: 20px;
+          /*font-style: italic;*/
+          font-family: serif;
+          opacity: 0.8;
+        }
+        .sourceTitle {
+          font-size: 20px;
+          font-weight: 900;
+          font-family: Garamond;
+          opacity: 0.8;
+        }
+        .sourceLocation {
+          font-size: 20px;
+          font-weight: 900;
+          font-family: Garamond;
+          font-style: italic;
+          opacity: 0.8;
+          font-weight: 900;
+        }
+        .sourceDate {
+          font-size: 20px;
+          font-weight: 900;
+          font-family: Garamond;
+          opacity: 0.8;
+          font-weight: 900;
+        }
+        .sourceDate sup {
+          font-weight: 700;
+        }
+        .sourceHref {
+          font-size: 18px;
+          font-family: Helvetica
+        }
+        .sourceHref a {
+          font-family: Garamond;
+          color: blue;
+        }
         .titleBarTwo {
             width: 100%;
             height: 100px;
@@ -151,12 +251,211 @@
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
-            z-index: 1;
+            z-index: 3;
         }
         .titleIcon {
             width: 100px;
             height: 100px;
             background: linear-gradient(to right bottom,red,rgba(0,0,0,1), rgba(0,0,0,0));
+        }
+        .contentBoxes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px 150px 20px 150px;
+            z-index: 2;
+        }
+        .contentBoxParent {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 20px 20px 20px 20px;
+        }
+        .lowOpacity {
+            opacity: 0.1;
+        }
+        .contentBox {
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transform: scaleX(1);
+            perspective: 1000;
+            /* font-size: 20px; */
+            transition: all 0.8s ease-out;
+            top: 0px;
+            left: 0px;
+            user-select: none;
+            
+        }
+        
+        .contentContainer {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: all 0.8s ease-out;
+        }
+        .contentClicked .contentContainer {
+            transform: rotateY(180deg);
+            
+        }
+        .contentClicked_top {
+            z-index: 2;
+            transform: translate(-25%, 0%);
+            width: 550px;
+            height: 550px;
+            opacity: 1;
+        }
+        .contentClicked_bottom {
+            z-index: 2;
+            transform: translate(-25%, 0%);
+            width: 550px;
+            height: 550px;
+            top: -275px;
+            opacity: 1;
+        }
+        
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            overflow-y: hidden;
+            background-color: white;
+            padding: 2px 5px 2px 5px;
+            border-radius: 10px;
+        }
+        .backFace {
+            display: block;
+            transform: rotateY(180deg);
+            box-sizing: border-box;
+            padding: 10px;
+            text-align: center;
+            overflow: auto;
+            height: 100%;
+        }
+        
+        .contentTitle {
+            width: 100%;
+            font-size: 22px;
+            text-align: center;
+            padding: 5px 0px 5px 0px;
+            border-bottom: 1px solid black;
+            transition: all 1s ease-out;
+        }
+        .contentBody {
+            width: 100%;
+            overflow-y: hidden;
+            transition: all 1s ease-out;
+            font-weight: 900;
+            text-align: center;
+            font-size: 22px;
+        }
+        .articleName {
+            font-size: 24px;
+            font-weight: 900;
+        }
+        .schoolSVG {
+            width: 80%;
+            height: 80%;
+        }
+        .backTitle {
+            width: 100%;
+            font-size: 25px;
+            text-align: center;
+            font-weight: 900;
+            border-bottom: 1px solid black;
+            padding: 5px 0px 5px 0px;
+        }
+        .backSourceName {
+            font-style: italic;
+            width: 100%;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 5px 15px 5px 0px;
+        }
+        .backBodyText {
+            /* width: 100%; */
+            padding: 5px 0px 5px 0px;
+            text-align: left;
+            
+        }
+        .backBodyText p {
+            text-indent: 20px;
+        }
+        .socialMedia {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+        .logoImage {
+            width: 25px;
+            height: 25px;
+            position: relative;
+            top: 7px;
+            margin-right: 5px;
+        }
+        .marginer {
+            margin: 0px 20px 0px 15px;
+        }
+        .sourceNumber {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+        .imageHovered {
+            background: none repeat scroll 0 0 #F8F8F8;
+            border: 5px solid #DFDFDF;
+            color: #717171;
+            font-size: 13px;
+            height: 30px;
+            letter-spacing: 1px;
+            line-height: 30px;
+            margin: 0 auto;
+            position: absolute;
+            text-align: center;
+            text-transform: uppercase;
+            top: -235px;
+            left:-140px;
+            display:none;
+            width: 300px;
+            height: 220px;
+
+        }
+        .imageHovered:after{
+            content:'';
+            position:absolute;
+            bottom:-10px;
+            width:10px;
+            height:10px;
+            border-bottom:5px solid #dfdfdf;
+            border-right:5px solid #dfdfdf;
+            background:#f8f8f8;
+            left:50%;
+            margin-left:-5px;
+            -moz-transform:rotate(45deg);
+            -webkit-transform:rotate(45deg);
+            transform:rotate(45deg);
+        }
+        .hoverImage {
+            float:left;
+            position:relative;
+            cursor:pointer;
+            display: inline;
+            color: blue;
+            margin: 0;
+        }
+
+        .hoverImage:hover .imageHovered{
+            display:block;
         }
         
     
@@ -173,6 +472,9 @@
                 <div class="spacer"></div>
                 Aidan Eglin
                 <div class="spacer"></div>
+                <div class = "socialMedia">
+                    <img class = "logoImage" src = "public/images/snapchat.svg" />: AidanEglin <span class = "marginer">|</span><img class = "logoImage" src = "public/images/instagram.svg" />: @AidanEglin
+                </div>
             </div>
             <div class="titleAction">
                 <div class="spacer"></div>
@@ -181,12 +483,12 @@
             </div>
             <div class="titleAction">
                 <div class="spacer"></div>
-                <div>Sources <span class = "selectArrow"> &#9660;</span></div>
+                <div onclick = "dropDown('sources')" id = "sourcesTitle">Sources <span class = "selectArrow"> &#9660;</span></div>
                 <div class="spacer"></div>
             </div>
             <div class="titleAction">
                 <div class="spacer"></div>
-                <div>Articles <span class = "selectArrow"> &#9660;</span></div>
+                <div onclick = "dropDown('articles')" id = "articlesTitle">Articles <span class = "selectArrow"> &#9660;</span></div>
                 <div class="spacer"></div>
             </div>
         </div>
@@ -195,6 +497,9 @@
                 <div class="spacer"></div>
                 Aidan Eglin
                 <div class="spacer"></div>
+                <div class = "socialMedia">
+                    snapchat: dicks
+                </div>
             </div>
             <div class="titleAction">
                 <div class="spacer"></div>
@@ -208,11 +513,41 @@
                 <div class="spacer"></div>
                 <div>Sources <span class = "selectArrow"> &#9660;</span></div>
                 <div class="spacer"></div>
+                <div class="sources" id = "sourcesDropDown">
+                    <div class = "sourceOverflow">
+                        <div class = "source"><span class = "sourceNumber"><sup>[1]</sup></span><span class = "sourceAuthor">Osmond, Aaron. </span><span class = "sourceTitle">"A Practical Argument for Ending Compulsory Education." </span><span class = "sourceLocation">Agency Based Eduction, </span><span class = "sourceDate">October 14<sup>th</sup> 2016. <br></span><span class = "sourceHref"><a href = "https://www.agencybasededucation.org/issues/ending-compulsory-education/a-practical-argument-for-ending-compulsory-education/">https://www.agencybasededucation.org/issues/ending-compulsory-education/a-practical-argument-for-ending-compulsory-education/</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[2]</sup></span><span class = "sourceAuthor">Tessier, Kevin. </span><span class = "sourceTitle">"Should school be voluntary or mandatory, what are your thoughts?" </span><span class = "sourceLocation">Quora, </span><span class = "sourceDate">March 26<sup>th</sup> 2016. <br></span><span class = "sourceHref"><a href = "https://www.quora.com/Should-school-be-voluntary-or-mandatory-What-are-your-thoughts">https://www.quora.com/Should-school-be-voluntary-or-mandatory-What-are-your-thoughts</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[3]</sup></span><span class = "sourceAuthor">Illich, Ivan. </span><span class = "sourceTitle">"Deschooling Society" </span><span class = "sourceLocation">Deschooling Society, </span><span class = "sourceDate">1971. <br></span><span class = "sourceHref"><a href = "http://learning.media.mit.edu/courses/mas713/readings/DESCHOOLING.pdf">http://learning.media.mit.edu/courses/mas713/readings/DESCHOOLING.pdf</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[4]</sup></span><span class = "sourceAuthor">Public. </span><span class = "sourceTitle">"Compulsory Education Laws: Background" </span><span class = "sourceLocation">FindLaw, </span><span class = "sourceDate">Unknown <br></span><span class = "sourceHref"><a href = "https://education.findlaw.com/education-options/compulsory-education-laws-background.html">https://education.findlaw.com/education-options/compulsory-education-laws-background.html</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[5]</sup></span><span class = "sourceAuthor">Currie-Knight, Kevin. </span><span class = "sourceTitle">"Why is school compulsory?" </span><span class = "sourceLocation">Foundation for Economic Education, </span><span class = "sourceDate">June 29<sup>th</sup> 2016. <br></span><span class = "sourceHref"><a href = "https://fee.org/articles/why-is-school-compulsory/">https://fee.org/articles/why-is-school-compulsory/</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[6]</sup></span><span class = "sourceAuthor">Unknown. </span><span class = "sourceTitle">"10 meaningful pros and cons of mandatory military service" </span><span class = "sourceLocation">Connect Us Fund, </span><span class = "sourceDate">Unknown. <br></span><span class = "sourceHref"><a href = "https://connectusfund.org/10-meaningful-pros-and-cons-of-mandatory-military-service">https://connectusfund.org/10-meaningful-pros-and-cons-of-mandatory-military-service</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[7]</sup></span><span class = "sourceAuthor">De Gregorio, Nick. </span><span class = "sourceTitle">"Draft Time: This Is Why and How America Should Have Compulsory Military Service" </span><span class = "sourceLocation">The National Interest, </span><span class = "sourceDate">August 14<sup>th</sup> 2018. <br></span><span class = "sourceHref"><a href = "https://nationalinterest.org/feature/draft-time-why-and-how-america-should-have-compulsory-military-service-28747">https://nationalinterest.org/feature/draft-time-why-and-how-america-should-have-compulsory-military-service-28747</a></span></div>
+                    </div>
+                </div>
             </div>
             <div class="titleAction">
                 <div class="spacer"></div>
                 <div>Articles <span class = "selectArrow"> &#9660;</span></div>
                 <div class="spacer"></div>
+                <div class = "articles" id = "articlesDropDown">
+                    <div class = "articleOverflow">
+                            <div class = "article" onclick = "openArticle('t_1')"><span class = "articleName">Argument 1: </span><span class = "articleBody">Should school be mandatory?</span></div>
+                            <hr>
+                            <div class = "article" onclick = "openArticle('t_2')"><span class = "articleName">Argument 2: </span><span class = "articleBody">A practical argument for ending compulsory education.</span></div>
+                            <hr>
+                            <div class = "article" onclick = "openArticle('t_3')"><span class = "articleName">Argument 3: </span><span class = "articleBody">Why is school compulsory?</span></div>
+                            <hr>
+                            <div class = "article" onclick = "openArticle('b_1')"><span class = "articleName">Argument 4: </span><span class = "articleBody">The pros and cons of mandatory military service.</span></div>
+                            <hr>
+                            <div class = "article" onclick = "openArticle('b_2')"><span class = "articleName">Argument 5: </span><span class = "articleBody">Why compulsory military service is an outdated concept from a past generation.</span></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="documentBody">
@@ -232,6 +567,179 @@
                 
                 <!-- <img class = "backgroundImage" src = "public/images/hemingway.jpg"/> -->
             </ul>
+            <div class = "contentBoxes">
+                <div class="contentBoxParent">
+                    <div class = "contentBox" id  = "t_1" onclick = "contentClickFunction(this)">
+                        <div class = "contentContainer">
+                            <div class = "frontFace face">
+                                <div class = "contentTitle">Argument 1</div>
+                                <div class = "contentBody">
+                                    <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" class = "schoolSVG" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><g><path d="M94.7,67.8l-9-15.7c-0.4-0.7-1.2-1.2-2-1.2H67.5V40.5l2.3,0c1.1,0,2.1-0.5,2.6-1.5c0.7-1.2,0.4-2.8-0.6-3.7l-19.9-17     c-0.2-0.1-0.4-0.3-0.6-0.4v-5.8h6.8c0.7,0,1.3-0.6,1.3-1.3V6.1c0-0.7-0.6-1.3-1.3-1.3h-6.8V3.9c0-0.7-0.5-1.3-1.2-1.4     c-0.8-0.1-1.5,0.5-1.5,1.3v14.1c-0.2,0.1-0.4,0.2-0.6,0.4l-19.9,17c-1,0.9-1.3,2.4-0.6,3.7c0.5,0.9,1.5,1.5,2.6,1.5l2.3,0v10.4     H16.4c-0.8,0-1.6,0.4-2,1.2l-9,15.7c-0.9,1.6,0.2,3.5,2,3.5h1.8v23.9c0,1.3,1,2.3,2.3,2.3H43c0.6,0,1.2-0.5,1.2-1.2V78.3     c0-0.6,0.5-1.2,1.2-1.2h9.3c0.6,0,1.2,0.5,1.2,1.2v18.1c0,0.6,0.5,1.2,1.2,1.2h31.5c1.3,0,2.3-1,2.3-2.3V71.3h1.8     C94.4,71.3,95.5,69.3,94.7,67.8z M32.5,84.7c0,0.6-0.5,1.2-1.2,1.2H22c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2h9.3     c0.6,0,1.2,0.5,1.2,1.2V84.7z M50,56c-4.3,0-7.8-3.5-7.8-7.8c0-4.3,3.5-7.8,7.8-7.8c4.3,0,7.8,3.5,7.8,7.8     C57.8,52.5,54.3,56,50,56z M79.2,84.7c0,0.6-0.5,1.2-1.2,1.2h-9.3c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2H78     c0.6,0,1.2,0.5,1.2,1.2V84.7z"/><path d="M53.3,48.2l-2.1-0.9v-3.7c0-0.6-0.5-1.2-1.2-1.2c-0.6,0-1.2,0.5-1.2,1.2v4.5c0,0.5,0.3,0.9,0.7,1.1l2.8,1.2     c0.1,0.1,0.3,0.1,0.4,0.1c0.5,0,0.9-0.3,1.1-0.7C54.1,49.1,53.9,48.5,53.3,48.2z"/></g></g></switch></svg>
+                                </div>
+                            </div>
+                            <div class = "backFace face">
+                                <div class = "backTitle">Should school be mandatory?</div>
+                                <div class = "backBody">
+                                    <div class = "backSourceName">Article written by Kevin Tessier</div>
+                                    <div class="backBodyText">
+                                        <p>This article states that while school shouldn't be compulsory, it should still be heavily recommended and that "literacy and mathematical education to the point where you can easily handle reading, writing, and personal finances" should be mandatory.
+                                        I agree with this on a basic level, but don't believe that school shouldn't be mandatory to a certain age. I think society would eventually fail if education wasn't enforced, as to few people would invest the time to get properly educated. I think an acceptable 
+                                        compromise would be mandatory education to the age of 12, and then highly suggested and rewarded past that age.</p>
+                                        <p>
+                                            I think the other fundamental issue with changing from mandatory to non mandatory schooling is just the logistics of converting 15,563 schools nationally to a new system. This would be a monumental task that would likely take close to a decade. To acomplish this, a prime minister would
+                                            have to take up the task of converting to a new system, which would likely not be popular with the public at the time and therefore would not be something a Prime Minister would like to do.
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contentBoxParent">
+                    <div class = "contentBox" id  = "t_2" onclick = "contentClickFunction(this)">
+                        <div class = "contentContainer">
+                            <div class = "frontFace face">
+                                <div class = "contentTitle">Argument 2</div>
+                                <div class = "contentBody">
+                                    <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" class = "schoolSVG" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><g><path d="M94.7,67.8l-9-15.7c-0.4-0.7-1.2-1.2-2-1.2H67.5V40.5l2.3,0c1.1,0,2.1-0.5,2.6-1.5c0.7-1.2,0.4-2.8-0.6-3.7l-19.9-17     c-0.2-0.1-0.4-0.3-0.6-0.4v-5.8h6.8c0.7,0,1.3-0.6,1.3-1.3V6.1c0-0.7-0.6-1.3-1.3-1.3h-6.8V3.9c0-0.7-0.5-1.3-1.2-1.4     c-0.8-0.1-1.5,0.5-1.5,1.3v14.1c-0.2,0.1-0.4,0.2-0.6,0.4l-19.9,17c-1,0.9-1.3,2.4-0.6,3.7c0.5,0.9,1.5,1.5,2.6,1.5l2.3,0v10.4     H16.4c-0.8,0-1.6,0.4-2,1.2l-9,15.7c-0.9,1.6,0.2,3.5,2,3.5h1.8v23.9c0,1.3,1,2.3,2.3,2.3H43c0.6,0,1.2-0.5,1.2-1.2V78.3     c0-0.6,0.5-1.2,1.2-1.2h9.3c0.6,0,1.2,0.5,1.2,1.2v18.1c0,0.6,0.5,1.2,1.2,1.2h31.5c1.3,0,2.3-1,2.3-2.3V71.3h1.8     C94.4,71.3,95.5,69.3,94.7,67.8z M32.5,84.7c0,0.6-0.5,1.2-1.2,1.2H22c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2h9.3     c0.6,0,1.2,0.5,1.2,1.2V84.7z M50,56c-4.3,0-7.8-3.5-7.8-7.8c0-4.3,3.5-7.8,7.8-7.8c4.3,0,7.8,3.5,7.8,7.8     C57.8,52.5,54.3,56,50,56z M79.2,84.7c0,0.6-0.5,1.2-1.2,1.2h-9.3c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2H78     c0.6,0,1.2,0.5,1.2,1.2V84.7z"/><path d="M53.3,48.2l-2.1-0.9v-3.7c0-0.6-0.5-1.2-1.2-1.2c-0.6,0-1.2,0.5-1.2,1.2v4.5c0,0.5,0.3,0.9,0.7,1.1l2.8,1.2     c0.1,0.1,0.3,0.1,0.4,0.1c0.5,0,0.9-0.3,1.1-0.7C54.1,49.1,53.9,48.5,53.3,48.2z"/></g></g></switch></svg>
+                                </div>
+                            </div>
+                            <div class = "backFace face">
+                                <div class = "backTitle">A practical argument for ending compulsory education.</div>
+                                <div class = "backBody">
+                                    <div class = "backSourceName">Article written by Aaron Osmond</div>
+                                    <div class="backBodyText">
+                                        <p>
+                                            The premise of this article is that children learn better when taught by a direct relative versus when they're taught by someone they have no emotional connection to. It also states that, by letting someone else take control of your children's learning, you can disengage from their life comletely. 
+                                            While this is a valid point, I think it ignores the fact that many parents can't afford to spend a large portion of their week teaching someone else without pay. Many parents, for instance, are single and / or poor who need the income that they acquire during the time that would be spent teaching.
+                                        </p>
+                                        <p>
+                                            I think a fair compromise would be a government program that provided a small income to parents based on the amount of time per week they spend teaching their children. There are quite a few issues with this, but it seems like the best compromise of the matter for the suggested argument.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contentBoxParent">
+                    <div class = "contentBox" id  = "t_3" onclick = "contentClickFunction(this)">
+                        <div class = "contentContainer">
+                            <div class = "frontFace face">
+                                <div class = "contentTitle">Argument 3</div>
+                                <div class = "contentBody">
+                                    <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" class = "schoolSVG" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><g><path d="M94.7,67.8l-9-15.7c-0.4-0.7-1.2-1.2-2-1.2H67.5V40.5l2.3,0c1.1,0,2.1-0.5,2.6-1.5c0.7-1.2,0.4-2.8-0.6-3.7l-19.9-17     c-0.2-0.1-0.4-0.3-0.6-0.4v-5.8h6.8c0.7,0,1.3-0.6,1.3-1.3V6.1c0-0.7-0.6-1.3-1.3-1.3h-6.8V3.9c0-0.7-0.5-1.3-1.2-1.4     c-0.8-0.1-1.5,0.5-1.5,1.3v14.1c-0.2,0.1-0.4,0.2-0.6,0.4l-19.9,17c-1,0.9-1.3,2.4-0.6,3.7c0.5,0.9,1.5,1.5,2.6,1.5l2.3,0v10.4     H16.4c-0.8,0-1.6,0.4-2,1.2l-9,15.7c-0.9,1.6,0.2,3.5,2,3.5h1.8v23.9c0,1.3,1,2.3,2.3,2.3H43c0.6,0,1.2-0.5,1.2-1.2V78.3     c0-0.6,0.5-1.2,1.2-1.2h9.3c0.6,0,1.2,0.5,1.2,1.2v18.1c0,0.6,0.5,1.2,1.2,1.2h31.5c1.3,0,2.3-1,2.3-2.3V71.3h1.8     C94.4,71.3,95.5,69.3,94.7,67.8z M32.5,84.7c0,0.6-0.5,1.2-1.2,1.2H22c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2h9.3     c0.6,0,1.2,0.5,1.2,1.2V84.7z M50,56c-4.3,0-7.8-3.5-7.8-7.8c0-4.3,3.5-7.8,7.8-7.8c4.3,0,7.8,3.5,7.8,7.8     C57.8,52.5,54.3,56,50,56z M79.2,84.7c0,0.6-0.5,1.2-1.2,1.2h-9.3c-0.6,0-1.2-0.5-1.2-1.2v-6.4c0-0.6,0.5-1.2,1.2-1.2H78     c0.6,0,1.2,0.5,1.2,1.2V84.7z"/><path d="M53.3,48.2l-2.1-0.9v-3.7c0-0.6-0.5-1.2-1.2-1.2c-0.6,0-1.2,0.5-1.2,1.2v4.5c0,0.5,0.3,0.9,0.7,1.1l2.8,1.2     c0.1,0.1,0.3,0.1,0.4,0.1c0.5,0,0.9-0.3,1.1-0.7C54.1,49.1,53.9,48.5,53.3,48.2z"/></g></g></switch></svg>
+                                </div>
+                            </div>
+                            <div class = "backFace face">
+                                <div class="backTitle">Why is school compulsory?</div>
+                                <div class = "backBody">
+                                    <div class = "backSourceName">Article written by Kevin Currie-Knight</div>
+                                    <div class="backBodyText">
+                                        <p>
+                                                This article looks at the cultural aspects of schooling, rather than the physical aspects. In a society where the most asked question to young children is “What did you do in school today?”, and the first part of a resume that an employer looks at is the education section, phasing out
+                                                 mandatory schooling for all would be quite difficult. This portion I wholeheartedly agree with in terms of a statement, but I don’t think the idea that “We did it this way before, so we should continue doing it this way” is a good way to look at an issue. Rather, we should look at why
+                                                  we did it that way before, and see if those terms still apply to today’s society. 
+                                        </p>
+                                        <h2>Why we did it before</h2>
+                                        <p>
+                                                The first law requiring children to go to school was passed in Massachusetts in 1852. This law required every town to contain an elementary school that taught basic arithmetic and literacy. Before this point, education was provided by private schools run by churches. After Massachusetts
+                                                 precedent, many other states starting following suit. By 1917, every state had laws requiring compulsory education for children. The main purpose of these laws were to settle the public outcry against child labour. By providing free education, many children could now go to university, 
+                                                 and provide themselves with a higher quality of life. States did not enforce compulsory education very strongly until they realized the value of an educated workforce. By this time, education was compulsory up until 12th grade.
+                                        </p>
+                                        <h2>Do these ideas still apply now?</h2>
+                                        <p>
+                                                I think the value of having an educated workforce will never not be something a society should strive for. That being said, the fundamental principles on which compulsory education now exists are far different than they were when it was created. For instance, the idea that child labour
+                                                 will be exploited is no longer something the population needs to be worried about. Additionally, children now have a better understanding of what they want to do in life, and have access to more resources to find how to achieve that. 
+                                        </p>
+                                        <h2>Conclusion</h2>
+                                        <p>
+                                                So, keeping all the above information in mind, I think education should still be compulsory - but to a much more lenient extent. It may seem like the opposite of progress, going back to how something used to be done, but I honestly believe the increase in freedom would benefit a society. 
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contentBoxParent">
+                    <div class = "contentBox" id  = "b_1" onclick = "contentClickFunction(this)">
+                        <div class = "contentContainer">
+                            <div class = "frontFace face">
+                                <div class = "contentTitle">Argument 4</div>
+                                <div class = "contentBody">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class = "schoolSVG" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 269.067 311.49875000000003" style="enable-background:new 0 0 269.067 249.199;" xml:space="preserve"><g><path d="M253.762,145.363c0-32.365-26.329-58.695-58.694-58.695v-0.244h-93.414h-0.001c-2.544,0-5.045,0.183-7.502,0.502   c2.982,11.191,4.426,25.441,4.454,43.598c0,6.424-0.195,13.373-0.579,20.66c-0.389,7.324-6.349,13.084-13.637,13.258v13.092   c0,0.301-0.033,0.595-0.057,0.891h184.735v-7.334h-15.306V145.363z M215.52,171.09v-44.916h-31.5v44.916h-43.649v-25.727   c0-30.207,24.488-54.695,54.696-54.695s54.694,24.488,54.694,54.695v25.727H215.52z"/><path d="M48.621,235.792v1.044c0,6.83,5.537,12.363,12.363,12.363c6.828,0,12.365-5.533,12.365-12.363v-3.393   C67.979,234.07,55.096,235.527,48.621,235.792z"/><path d="M17.372,105.229c0.528-4.188,1.176-7.767,1.886-10.795v25.234H73.35V94.443c0.714,3.025,1.357,6.602,1.882,10.786   l15.572-4.325C89.14,89.086,86.44,81.006,83.22,75.17c-2.711-4.867-5.947-8.135-9.184-10.055c-3.201-1.918-6.23-2.391-8.062-2.385   c-0.118-0.004-0.233-0.018-0.354-0.018h-5.442v-5.586l-11.75,3.75v1.836h-4.25v-1.836l-11.75-3.75v5.586h-5.442   c-0.1,0-0.196,0.012-0.294,0.016c-0.004,0-0.008,0-0.012,0c-1.825-0.016-4.883,0.451-8.109,2.389   c-4.903,2.916-9.6,8.695-12.928,18.688C4.095,88.44,2.78,94.052,1.809,100.905L17.372,105.229z M26.881,99.09V88.771l6.826,2.225   l6.828-2.226V99.09H26.881z M65.73,99.09H52.076V88.771l6.826,2.225l6.828-2.226V99.09z M66.59,83.607v1.412v2.057l-7.688,2.506   l-7.687-2.506V85.02v-1.412H66.59z M26.02,85.02v-1.412h15.375v1.412v2.057l-7.688,2.506l-7.688-2.506V85.02z"/><path d="M19.258,233.442v3.394c0,6.83,5.537,12.363,12.363,12.363c6.828,0,12.365-5.533,12.365-12.363v-1.043   C37.511,235.526,24.628,234.07,19.258,233.442z"/><path d="M78.387,156.09c1.349,1.352,3.177,2.234,5.233,2.344c0.145,0.008,0.287,0.012,0.43,0.012c4.226,0,7.758-3.313,7.983-7.578   c0.39-7.408,0.569-14.164,0.569-20.334c-0.016-9.984-0.479-18.429-1.292-25.618l-15.632,4.341   c0.58,5.956,0.927,12.996,0.924,21.277c0,5.6-0.159,11.766-0.502,18.543c-0.787-0.568-1.729-0.934-2.751-1.02v-9.221v-9H19.258v9   v9.221c-1.023,0.086-1.964,0.451-2.751,1.02c-0.348-6.775-0.506-12.945-0.506-18.541c-0.014-8.283,0.336-15.324,0.92-21.281   l-15.625-4.339c-0.82,7.189-1.29,15.627-1.296,25.62c0.003,6.17,0.183,12.924,0.577,20.332c0.225,4.266,3.755,7.576,7.977,7.576   c0.144,0,0.289-0.004,0.434-0.012c2.057-0.107,3.885-0.992,5.233-2.344v21.445c0,2.881,2.216,5.24,5.037,5.476v46.407   c2.147,0.251,5.819,0.673,9.837,1.096c5.322,0.563,11.285,1.12,14.892,1.278v-66.924h4.635v66.923   c3.605-0.157,9.567-0.714,14.89-1.276c4.021-0.425,7.692-0.846,9.839-1.098V183.01c2.819-0.236,5.037-2.596,5.037-5.476V156.09z"/><path d="M49.974,56.711c10.681-1.753,18.83-11.02,18.83-22.197c0-1.526-0.154-3.016-0.443-4.457   c-3.629-1.048-16.766-4.732-22.057-4.732s-18.428,3.685-22.057,4.732c-0.289,1.441-0.443,2.931-0.443,4.457   c0,11.178,8.149,20.444,18.83,22.197c1.194,0.196,2.42,0.303,3.67,0.303S48.779,56.907,49.974,56.711z"/><path d="M46.304,20.75c6.167,0,21.584,6.25,21.584,6.25s0-9.212,0-15.551c0-0.707,0-1.381,0-2c0-6.168-21.584-6.938-21.584-6.938   S24.72,3.281,24.72,9.449c0,0.619,0,1.293,0,2c0,6.339,0,15.551,0,15.551S40.137,20.75,46.304,20.75z M46.303,16.291   c-1.91,0-3.532-1.195-4.186-2.875c-2.896-1.162-5.814-3.541-5.814-3.541s3.115,0.502,5.64,0.853   c0.479-1.969,2.244-3.437,4.36-3.437c2.118,0,3.882,1.469,4.36,3.437c2.525-0.352,5.64-0.853,5.64-0.853s-2.919,2.379-5.813,3.541   C49.837,15.096,48.214,16.291,46.303,16.291z"/><rect x="40.554" y="121.502" width="11.5" height="6.166"/><path d="M109.14,29.191c2.404,0,4.581-0.961,6.178-2.515c2.618,2.186,5.985,3.503,9.662,3.503c3.558,0,6.82-1.238,9.4-3.298   c2.218,2.041,5.168,3.298,8.42,3.298c6.879,0,12.457-5.576,12.457-12.455c0-6.877-5.578-12.455-12.457-12.455   c-0.859,0-1.697,0.087-2.507,0.253c1.155,2.134,1.812,4.576,1.812,7.173c0,4.278-1.788,8.132-4.648,10.878   c1.646-2.418,2.611-5.337,2.611-8.483c0-8.334-6.754-15.09-15.088-15.09c-4.057,0-7.731,1.609-10.443,4.213   c-2.045,1.963-3.529,4.494-4.215,7.342c-0.388-0.052-0.779-0.088-1.182-0.088c-4.895,0-8.863,3.969-8.863,8.863   C100.276,25.225,104.245,29.191,109.14,29.191z"/><path d="M217.921,57.388c1.881,2.175,4.652,3.556,7.752,3.556c5.664,0,10.256-4.592,10.256-10.256   c0-5.664-4.592-10.256-10.256-10.256c-0.068,0-0.135,0.009-0.203,0.01c0.067,0.645,0.105,1.299,0.105,1.961   C225.575,48.569,222.553,54.017,217.921,57.388z"/><path d="M179.528,61.533c1.908,0,3.641-0.739,4.941-1.939c1.686,0.856,3.587,1.349,5.607,1.349c2.543,0,4.906-0.768,6.875-2.078   c2.549,1.32,5.438,2.078,8.506,2.078c0.267,0,0.525-0.028,0.789-0.04c9.869-0.416,17.75-8.527,17.75-18.501   c0-9.97-7.881-18.079-17.75-18.495c-0.264-0.012-0.522-0.04-0.789-0.04c-7.268,0-13.539,4.191-16.578,10.278   c4.072,0.155,7.645,2.257,9.796,5.416c-2.233-2.144-5.259-3.468-8.599-3.468c-5.863,0-10.765,4.066-12.07,9.528   c0.49-0.104,0.999-0.161,1.521-0.161c4.029,0,7.297,3.268,7.297,7.297c0,0.25-0.013,0.496-0.037,0.739   c-0.371-3.682-3.48-6.556-7.26-6.556s-6.889,2.874-7.26,6.556c-0.024,0.243-0.037,0.489-0.037,0.739   C172.231,58.266,175.499,61.533,179.528,61.533z"/></g></svg>
+                                </div>
+                            </div>
+                            <div class = "backFace face">
+                                <div class="backTitle">The pros and cons of mandatory military service.</div>
+                                <div class = "backBody">
+                                    <div class = "backSourceName">Article written by Unknown</div>
+                                    <div class="backBodyText">
+                                        
+                                        <!-- <img src = "public/images/happinessMap.png" style = "width: 300px" /> -->
+                                        <h2>The pros:</h2>
+                                        <p>            
+                                            <ol>
+                                                <li>Promotes National Unity</li>
+                                                <li>Maintain Active Military Force</li>
+                                                <li>Ensures High Levels of Governmental Participation</li>
+                                                <li>Can Provide Useful Skills</li>
+                                                <li>Promote Equality Among Citizens</li>
+                                            </ol>                                    
+                                        </p>
+                                        <h2>The Cons:</h2>
+                                        <p>
+                                            <ol>
+                                                <li>Violates Free Will</li>
+                                                <li>Interferes with Other Forms of Education</li>
+                                                <li>Put Young People’s Lives at Risk</li>
+                                                <li>Compromises the Quality of Military Service</li>
+                                                <li>Not Everyone Is Fit for It</li>
+                                            </ol>     
+                                        </p>
+                                        <h2>My thoughts:</h2>
+                                        <p>
+                                            I think that while having a full militia of young and able people would be nice, allowing all children the chance to develop and reach adulthood is more important. As can be seen in figure 1, countries that enforce mandatory conscription, on average, have a lower quality of life (figure 2).
+                                            The other fundamental issue with forcing people to enroll in the military that I can't ignore is the violation of basic rights of freedom. 
+                                        </p>
+                                        <p>
+                                            However, I think there are times when conscription could be considered acceptable. Most people, I would say, value having general freedom over tyrany and wars sometimes need to be fought to protect those freedoms. If the military is too small, then the nation will fall to the hands of whoever has the 
+                                            largest army. In cases when national security is directly threatened, I think that conscription could be allowed.
+                                        </p>
+                                        <div style = "display: flex; justify-content: space-around; flex-direction: row">
+                                            <div class = "hoverImage">Figure 1<div class = "imageHovered"><img src = "public/images/conscriptionMap.png" style = "width: 300px" /></div></div>
+                                            <div class = "hoverImage">Figure 2<div class = "imageHovered"><img src = "public/images/happinessMap.png" style = "width: 300px" /></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contentBoxParent">
+                    <div class = "contentBox" id  = "b_2" onclick = "contentClickFunction(this)">
+                        <div class = "contentContainer">
+                            <div class = "frontFace face">
+                                <div class = "contentTitle">Argument 5</div>
+                                <div class = "contentBody">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class = "schoolSVG" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 269.067 311.49875000000003" style="enable-background:new 0 0 269.067 249.199;" xml:space="preserve"><g><path d="M253.762,145.363c0-32.365-26.329-58.695-58.694-58.695v-0.244h-93.414h-0.001c-2.544,0-5.045,0.183-7.502,0.502   c2.982,11.191,4.426,25.441,4.454,43.598c0,6.424-0.195,13.373-0.579,20.66c-0.389,7.324-6.349,13.084-13.637,13.258v13.092   c0,0.301-0.033,0.595-0.057,0.891h184.735v-7.334h-15.306V145.363z M215.52,171.09v-44.916h-31.5v44.916h-43.649v-25.727   c0-30.207,24.488-54.695,54.696-54.695s54.694,24.488,54.694,54.695v25.727H215.52z"/><path d="M48.621,235.792v1.044c0,6.83,5.537,12.363,12.363,12.363c6.828,0,12.365-5.533,12.365-12.363v-3.393   C67.979,234.07,55.096,235.527,48.621,235.792z"/><path d="M17.372,105.229c0.528-4.188,1.176-7.767,1.886-10.795v25.234H73.35V94.443c0.714,3.025,1.357,6.602,1.882,10.786   l15.572-4.325C89.14,89.086,86.44,81.006,83.22,75.17c-2.711-4.867-5.947-8.135-9.184-10.055c-3.201-1.918-6.23-2.391-8.062-2.385   c-0.118-0.004-0.233-0.018-0.354-0.018h-5.442v-5.586l-11.75,3.75v1.836h-4.25v-1.836l-11.75-3.75v5.586h-5.442   c-0.1,0-0.196,0.012-0.294,0.016c-0.004,0-0.008,0-0.012,0c-1.825-0.016-4.883,0.451-8.109,2.389   c-4.903,2.916-9.6,8.695-12.928,18.688C4.095,88.44,2.78,94.052,1.809,100.905L17.372,105.229z M26.881,99.09V88.771l6.826,2.225   l6.828-2.226V99.09H26.881z M65.73,99.09H52.076V88.771l6.826,2.225l6.828-2.226V99.09z M66.59,83.607v1.412v2.057l-7.688,2.506   l-7.687-2.506V85.02v-1.412H66.59z M26.02,85.02v-1.412h15.375v1.412v2.057l-7.688,2.506l-7.688-2.506V85.02z"/><path d="M19.258,233.442v3.394c0,6.83,5.537,12.363,12.363,12.363c6.828,0,12.365-5.533,12.365-12.363v-1.043   C37.511,235.526,24.628,234.07,19.258,233.442z"/><path d="M78.387,156.09c1.349,1.352,3.177,2.234,5.233,2.344c0.145,0.008,0.287,0.012,0.43,0.012c4.226,0,7.758-3.313,7.983-7.578   c0.39-7.408,0.569-14.164,0.569-20.334c-0.016-9.984-0.479-18.429-1.292-25.618l-15.632,4.341   c0.58,5.956,0.927,12.996,0.924,21.277c0,5.6-0.159,11.766-0.502,18.543c-0.787-0.568-1.729-0.934-2.751-1.02v-9.221v-9H19.258v9   v9.221c-1.023,0.086-1.964,0.451-2.751,1.02c-0.348-6.775-0.506-12.945-0.506-18.541c-0.014-8.283,0.336-15.324,0.92-21.281   l-15.625-4.339c-0.82,7.189-1.29,15.627-1.296,25.62c0.003,6.17,0.183,12.924,0.577,20.332c0.225,4.266,3.755,7.576,7.977,7.576   c0.144,0,0.289-0.004,0.434-0.012c2.057-0.107,3.885-0.992,5.233-2.344v21.445c0,2.881,2.216,5.24,5.037,5.476v46.407   c2.147,0.251,5.819,0.673,9.837,1.096c5.322,0.563,11.285,1.12,14.892,1.278v-66.924h4.635v66.923   c3.605-0.157,9.567-0.714,14.89-1.276c4.021-0.425,7.692-0.846,9.839-1.098V183.01c2.819-0.236,5.037-2.596,5.037-5.476V156.09z"/><path d="M49.974,56.711c10.681-1.753,18.83-11.02,18.83-22.197c0-1.526-0.154-3.016-0.443-4.457   c-3.629-1.048-16.766-4.732-22.057-4.732s-18.428,3.685-22.057,4.732c-0.289,1.441-0.443,2.931-0.443,4.457   c0,11.178,8.149,20.444,18.83,22.197c1.194,0.196,2.42,0.303,3.67,0.303S48.779,56.907,49.974,56.711z"/><path d="M46.304,20.75c6.167,0,21.584,6.25,21.584,6.25s0-9.212,0-15.551c0-0.707,0-1.381,0-2c0-6.168-21.584-6.938-21.584-6.938   S24.72,3.281,24.72,9.449c0,0.619,0,1.293,0,2c0,6.339,0,15.551,0,15.551S40.137,20.75,46.304,20.75z M46.303,16.291   c-1.91,0-3.532-1.195-4.186-2.875c-2.896-1.162-5.814-3.541-5.814-3.541s3.115,0.502,5.64,0.853   c0.479-1.969,2.244-3.437,4.36-3.437c2.118,0,3.882,1.469,4.36,3.437c2.525-0.352,5.64-0.853,5.64-0.853s-2.919,2.379-5.813,3.541   C49.837,15.096,48.214,16.291,46.303,16.291z"/><rect x="40.554" y="121.502" width="11.5" height="6.166"/><path d="M109.14,29.191c2.404,0,4.581-0.961,6.178-2.515c2.618,2.186,5.985,3.503,9.662,3.503c3.558,0,6.82-1.238,9.4-3.298   c2.218,2.041,5.168,3.298,8.42,3.298c6.879,0,12.457-5.576,12.457-12.455c0-6.877-5.578-12.455-12.457-12.455   c-0.859,0-1.697,0.087-2.507,0.253c1.155,2.134,1.812,4.576,1.812,7.173c0,4.278-1.788,8.132-4.648,10.878   c1.646-2.418,2.611-5.337,2.611-8.483c0-8.334-6.754-15.09-15.088-15.09c-4.057,0-7.731,1.609-10.443,4.213   c-2.045,1.963-3.529,4.494-4.215,7.342c-0.388-0.052-0.779-0.088-1.182-0.088c-4.895,0-8.863,3.969-8.863,8.863   C100.276,25.225,104.245,29.191,109.14,29.191z"/><path d="M217.921,57.388c1.881,2.175,4.652,3.556,7.752,3.556c5.664,0,10.256-4.592,10.256-10.256   c0-5.664-4.592-10.256-10.256-10.256c-0.068,0-0.135,0.009-0.203,0.01c0.067,0.645,0.105,1.299,0.105,1.961   C225.575,48.569,222.553,54.017,217.921,57.388z"/><path d="M179.528,61.533c1.908,0,3.641-0.739,4.941-1.939c1.686,0.856,3.587,1.349,5.607,1.349c2.543,0,4.906-0.768,6.875-2.078   c2.549,1.32,5.438,2.078,8.506,2.078c0.267,0,0.525-0.028,0.789-0.04c9.869-0.416,17.75-8.527,17.75-18.501   c0-9.97-7.881-18.079-17.75-18.495c-0.264-0.012-0.522-0.04-0.789-0.04c-7.268,0-13.539,4.191-16.578,10.278   c4.072,0.155,7.645,2.257,9.796,5.416c-2.233-2.144-5.259-3.468-8.599-3.468c-5.863,0-10.765,4.066-12.07,9.528   c0.49-0.104,0.999-0.161,1.521-0.161c4.029,0,7.297,3.268,7.297,7.297c0,0.25-0.013,0.496-0.037,0.739   c-0.371-3.682-3.48-6.556-7.26-6.556s-6.889,2.874-7.26,6.556c-0.024,0.243-0.037,0.489-0.037,0.739   C172.231,58.266,175.499,61.533,179.528,61.533z"/></g><</svg>
+                                </div>
+                            </div>
+                            <div class = "backFace face">
+                                <div class="backTitle">Why compulsory military service is an outdated concept from a past generation.</div>
+                                <div class = "backBody">
+                                    <div class = "backSourceName">Article written by Nick De Gregorio</div>
+                                    <div class="backBodyText">
+                                        The article sited for this argument explains why they think mandatory military service
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class = "documentCover">
 
@@ -239,6 +747,7 @@
     </div>
 </body>
 <script>
+    let blockOpen = [false, ""];
     var elem = document.body; // Make the body go full screen.
     document.addEventListener("keydown", function(e) {
       if (e.keyCode == 192) {
@@ -266,10 +775,55 @@
             dilema.classList.toggle("dropped");
             document.getElementById("dilemaTitle").innerHTML = dilema.classList.contains("dropped") ? "Dilema <span class = 'selectArrow upArrow'> &#9660;</span>" : "Dilema <span class = 'selectArrow'> &#9660;</span>";
         } else if (item === "sources") {
-
+            let sources = document.getElementById("sourcesDropDown");
+            sources.classList.toggle("dropped");
+            document.getElementById("sourcesTitle").innerHTML = sources.classList.contains("dropped") ? "Sources <span class = 'selectArrow upArrow'> &#9660;</span>" : "Sources <span class = 'selectArrow'> &#9660;</span>";
         } else {
-
+            let articles = document.getElementById("articlesDropDown");
+            articles.classList.toggle("dropped");
+            document.getElementById("articlesTitle").innerHTML = articles.classList.contains("dropped") ? "Articles <span class = 'selectArrow upArrow'> &#9660;</span>" : "Articles <span class = 'selectArrow'> &#9660;</span>";
         }
+    }
+    function contentClickFunction(element) {
+        if (blockOpen[0]) {
+            if (element.id == blockOpen[1]) {
+                document.getElementById(blockOpen[1]).classList.remove("contentClicked_top", "contentClicked", "contentClicked_bottom");
+                let contentBoxes = document.getElementsByClassName("contentBox");
+                for (var i = 0; i < contentBoxes.length; i++) {
+                    contentBoxes[i].classList.remove("lowOpacity");
+                }
+                blockOpen = [false, ""];
+            } else {
+                document.getElementById(blockOpen[1]).classList.remove("contentClicked_top", "contentClicked", "contentClicked_bottom");
+                element.classList.toggle("contentClicked");
+                if (element.id.split("_")[0] === "t") {
+                    element.classList.toggle("contentClicked_top");
+                } else {
+                    element.classList.toggle("contentClicked_bottom");
+                }
+                blockOpen = [true, element.id];
+            }
+            
+        } else {
+            let contentBoxes = document.getElementsByClassName("contentBox");
+            for (var i = 0; i < contentBoxes.length; i++) {
+                contentBoxes[i].classList.toggle("lowOpacity");
+            }
+            element.classList.toggle("contentClicked");
+            if (element.id.split("_")[0] === "t") {
+                element.classList.toggle("contentClicked_top");
+            } else {
+                element.classList.toggle("contentClicked_bottom");
+            }
+            blockOpen = [true, element.id];
+        }
+        
+        
+    }
+    function openArticle(article) {
+        contentClickFunction(document.getElementById(article));
+        document.getElementById("articlesDropDown").classList.remove("dropped");
+        document.getElementById("articlesTitle").innerHTML = "Articles <span class = 'selectArrow'> &#9660;</span>";
     }
 </script>
 </html>
