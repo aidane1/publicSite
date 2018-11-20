@@ -295,7 +295,7 @@ app.use(function(req, res, next) {
       next()
     } else {
       if (user.username != "AidanEglin") {
-        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.firstName} ${user.lastName} ${req.method} ${url.parse(req.url).pathname} at ${(new Date()).local()} \n -------------------END------------------- \n`, function(err) {
+        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.username} ${req.method} ${url.parse(req.url).pathname} at ${(new Date()).local()} \n -------------------END------------------- \n`, function(err) {
           if (err) {
             console.log(err);
           } else {
@@ -1333,6 +1333,7 @@ app.get("/admin/events", function(req ,res) {
 });
 
 app.post("/admin/events", urlencodedParser, function(req, res) {
+  console.log(req.body);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err) {
@@ -1357,7 +1358,9 @@ app.post("/admin/events", urlencodedParser, function(req, res) {
               timeArray[0] = (timeArray[0] == 0 ? 12 : timeArray[0]);
               time = timeArray[0].toString() + ":" + timeArray[1].toString() + " " + timeArray[2];
             }
+            
             Events.create({displayedEvent: true, school : user.school, time : time, longForm : req.body.longInfo || req.body.shortInfo, info : req.body.shortInfo, year : year, month : month, day : day, date : req.body.date, dayRolled: (req.body.dayRolled ? true : false), schoolSkipped: (req.body.schoolSkipped ? true : false)}, function(err, event) {
+              console.log(event);
               res.redirect("/admin/events");
             })
           } else {
@@ -1837,6 +1840,10 @@ function createArray(depth) {
     return returnArray;
   }
 }
+
+app.get("/englishProject", function(req, res) {
+  res.render("englishProject");
+});
 
 // function flattenDeep(arr1) {
 //   return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
