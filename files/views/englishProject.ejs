@@ -457,6 +457,31 @@
         .hoverImage:hover .imageHovered{
             display:block;
         }
+        .sitedSource {
+            font-size: 13px;
+            color: blue;
+        }
+        .finalContentBox {
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            z-index: 1000;
+            border-radius: 8px;
+            -webkit-box-shadow: 12px 13px 45px 3px rgba(0,0,0,0.75);
+            -moz-box-shadow: 12px 13px 45px 3px rgba(0,0,0,0.75);
+            box-shadow: 12px 13px 45px 3px rgba(0,0,0,0.75);
+            transition: all 1s linear;   
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .noOpacity {
+            visibility: hidden;
+            opacity: 0;
+        }
         
     
     </style>
@@ -528,6 +553,10 @@
                         <div class = "source"><span class = "sourceNumber"><sup>[6]</sup></span><span class = "sourceAuthor">Unknown. </span><span class = "sourceTitle">"10 meaningful pros and cons of mandatory military service" </span><span class = "sourceLocation">Connect Us Fund, </span><span class = "sourceDate">Unknown. <br></span><span class = "sourceHref"><a href = "https://connectusfund.org/10-meaningful-pros-and-cons-of-mandatory-military-service">https://connectusfund.org/10-meaningful-pros-and-cons-of-mandatory-military-service</a></span></div>
                         <hr>
                         <div class = "source"><span class = "sourceNumber"><sup>[7]</sup></span><span class = "sourceAuthor">De Gregorio, Nick. </span><span class = "sourceTitle">"Draft Time: This Is Why and How America Should Have Compulsory Military Service" </span><span class = "sourceLocation">The National Interest, </span><span class = "sourceDate">August 14<sup>th</sup> 2018. <br></span><span class = "sourceHref"><a href = "https://nationalinterest.org/feature/draft-time-why-and-how-america-should-have-compulsory-military-service-28747">https://nationalinterest.org/feature/draft-time-why-and-how-america-should-have-compulsory-military-service-28747</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[8]</sup></span><span class = "sourceAuthor">Pena, Charles .V. </span><span class = "sourceTitle">"A Bigger Military Is not the Solution to Terrorism" </span><span class = "sourceLocation">CATO institute, </span><span class = "sourceDate">September 20<sup>th</sup> 2001. <br></span><span class = "sourceHref"><a href = "https://www.cato.org/publications/commentary/bigger-military-is-not-solution-terrorism">https://www.cato.org/publications/commentary/bigger-military-is-not-solution-terrorism</a></span></div>
+                        <hr>
+                        <div class = "source"><span class = "sourceNumber"><sup>[9]</sup></span><span class = "sourceAuthor">Unknown. </span><span class = "sourceTitle">"Educated vs. Uneducated" </span><span class = "sourceLocation">READ Foundation, </span><span class = "sourceDate">April 3<sup>rd</sup> 2014. <br></span><span class = "sourceHref"><a href = "https://readfoundation.org.uk/blog/educated-vs-uneducated/">https://readfoundation.org.uk/blog/educated-vs-uneducated/</a></span></div>
                     </div>
                 </div>
             </div>
@@ -546,6 +575,8 @@
                             <div class = "article" onclick = "openArticle('b_1')"><span class = "articleName">Argument 4: </span><span class = "articleBody">The pros and cons of mandatory military service.</span></div>
                             <hr>
                             <div class = "article" onclick = "openArticle('b_2')"><span class = "articleName">Argument 5: </span><span class = "articleBody">Why compulsory military service is an outdated concept from a past generation.</span></div>
+                            <hr>
+                            <div class = "article" onclick = "openArticle('finalContentBox')"><span class = "articleName">Argument 6: </span><span class = "articleBody">The Conclusion</span></div>
                     </div>
                 </div>
             </div>
@@ -568,6 +599,25 @@
                 <!-- <img class = "backgroundImage" src = "public/images/hemingway.jpg"/> -->
             </ul>
             <div class = "contentBoxes">
+                <div class = "finalContentBox noOpacity" id = "finalContentBox" onclick="openArticle('finalContentBox')">
+                    <div class = "backTitle" >The Conclusion</div>
+                    <div class = "backBody">
+                        <div class="backBodyText">
+                            <h2>Initial Thoughts</h2>
+                            <p>
+                                I went in to this project with a fairly strong stance that schooling should be mandatory, and that mandatory military service was a violation of human rights. While I still stand fairly firmly on those topics, reading conflicting articles and actively trying to provide alternative viewpoints to 
+                                those articles has provided me with useful insight in to why some people would think differently than how I do. Enough insight, in fact, that I have changed some of my views to be more considerate of alternate perspectives.
+                            </p>
+                            <h2>Closing Arguments</h2>
+                            <p>
+                                As with all opinions, the one I have chosen is based completely on perspective, with no one answer being the "correct" one. That being said, I think I have made several valid points both for compulsory education, and against mandatory military service. If you still believe that making children recieve
+                                and education is a violation of human rights, then there is nothing left I can say that may change that. If you are still convinced that we need to force people between the ages of 21 and 23 to serve in the military, then power to you to argue that point. Opposing political viewpoints are not something that should 
+                                be discouraged, but rather something that should be celebrated and discussed. Without opposing viewpoints, we would never have unexpected successes when trying new things, because there would be nothing to make us try something new. There comes a point where viewpoints go from reasonable to extreme, but as long as 
+                                we can stay away from that line, our society will thrive regardless of who or what is in power. 
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <div class="contentBoxParent">
                     <div class = "contentBox" id  = "t_1" onclick = "contentClickFunction(this)">
                         <div class = "contentContainer">
@@ -582,9 +632,11 @@
                                 <div class = "backBody">
                                     <div class = "backSourceName">Article written by Kevin Tessier</div>
                                     <div class="backBodyText">
-                                        <p>This article states that while school shouldn't be compulsory, it should still be heavily recommended and that "literacy and mathematical education to the point where you can easily handle reading, writing, and personal finances" should be mandatory.
+                                        <h2>The Premise</h2>
+                                        <p>This article states that while school shouldn't be compulsory, it should still be heavily recommended and that "literacy and mathematical education to the point where you can easily handle reading, writing, and personal finances" should be mandatory.<span class = "sitedSource"><sup>[2]</sup></span>
                                         I agree with this on a basic level, but don't believe that school shouldn't be mandatory to a certain age. I think society would eventually fail if education wasn't enforced, as to few people would invest the time to get properly educated. I think an acceptable 
                                         compromise would be mandatory education to the age of 12, and then highly suggested and rewarded past that age.</p>
+                                        <h2>Difficulties</h2>
                                         <p>
                                             I think the other fundamental issue with changing from mandatory to non mandatory schooling is just the logistics of converting 15,563 schools nationally to a new system. This would be a monumental task that would likely take close to a decade. To acomplish this, a prime minister would
                                             have to take up the task of converting to a new system, which would likely not be popular with the public at the time and therefore would not be something a Prime Minister would like to do.
@@ -610,12 +662,18 @@
                                 <div class = "backBody">
                                     <div class = "backSourceName">Article written by Aaron Osmond</div>
                                     <div class="backBodyText">
+                                        <h2>The Suggestion</h2>
                                         <p>
-                                            The premise of this article is that children learn better when taught by a direct relative versus when they're taught by someone they have no emotional connection to. It also states that, by letting someone else take control of your children's learning, you can disengage from their life comletely. 
-                                            While this is a valid point, I think it ignores the fact that many parents can't afford to spend a large portion of their week teaching someone else without pay. Many parents, for instance, are single and / or poor who need the income that they acquire during the time that would be spent teaching.
+                                            The premise of this article is that children learn better when taught by a direct relative versus when they're taught by someone they have no emotional connection to<span class = "sitedSource"><sup>[1]</sup></span>. It also states that, by letting someone else take control of your children's learning, you can disengage from their life comletely.<span class = "sitedSource"><sup>[1]</sup></span> 
+                                            While this is a valid point, I think it ignores the fact that many parents can't afford to spend a large portion of their week teaching someone else without pay. Many parents, for instance, are single and / or poor who need the income that they acquire during the time that would be spent teaching. The second main point the article makes is that we need to change the 
+                                            public mindset on education being the most important thing for children to complete. Instead of focusing on education, it says, we should focus on growth and development.<span class = "sitedSource"><sup>[1]</sup></span> While this is all well and good, it ignores the fact that an educated society is surperior in every way to an uneducated one by both social standards and
+                                            physical standards. <span class = "sitedSource"><sup>[9]</sup></span>
                                         </p>
+                                        <h2>A Compromise</h2>
                                         <p>
-                                            I think a fair compromise would be a government program that provided a small income to parents based on the amount of time per week they spend teaching their children. There are quite a few issues with this, but it seems like the best compromise of the matter for the suggested argument.
+                                            I think a fair compromise would be a government program that provided a small income to parents based on the amount of time per week they spend teaching their children. There are quite a few issues with this, but it seems like the best compromise of the matter for the suggested argument. It could possibly be abused by claiming that you spent time teaching when in 
+                                            reality you didn't, but this could be accounted for by strict schedule checking and routine audits. To be frank, though, I don't think this would be a good idea. Many people simply are not fit to be teachers, and this would be reflected in the quality of education the children got. Aditionally, matching the teaching schedule of the children between the parents and the school
+                                            teachers would be quite a task.
                                         </p>
                                     </div>
                                 </div>
@@ -637,16 +695,17 @@
                                 <div class = "backBody">
                                     <div class = "backSourceName">Article written by Kevin Currie-Knight</div>
                                     <div class="backBodyText">
+                                        <h2>The Article</h2>
                                         <p>
-                                                This article looks at the cultural aspects of schooling, rather than the physical aspects. In a society where the most asked question to young children is “What did you do in school today?”, and the first part of a resume that an employer looks at is the education section, phasing out
-                                                 mandatory schooling for all would be quite difficult. This portion I wholeheartedly agree with in terms of a statement, but I don’t think the idea that “We did it this way before, so we should continue doing it this way” is a good way to look at an issue. Rather, we should look at why
+                                                This article looks at the cultural aspects of schooling, rather than the physical aspects. In a society where the most asked question to young children is “What did you do in school today?”<span class = "sitedSource"><sup>[5]</sup></span>, and the first part of a resume that an employer looks at is the education section, phasing out
+                                                 mandatory schooling for all would be quite difficult.<span class = "sitedSource"><sup>[3]</sup></span> This portion I wholeheartedly agree with in terms of a statement, but I don’t think the idea that “We did it this way before, so we should continue doing it this way” is a good way to look at an issue. Rather, we should look at why
                                                   we did it that way before, and see if those terms still apply to today’s society. 
                                         </p>
                                         <h2>Why we did it before</h2>
                                         <p>
-                                                The first law requiring children to go to school was passed in Massachusetts in 1852. This law required every town to contain an elementary school that taught basic arithmetic and literacy. Before this point, education was provided by private schools run by churches. After Massachusetts
-                                                 precedent, many other states starting following suit. By 1917, every state had laws requiring compulsory education for children. The main purpose of these laws were to settle the public outcry against child labour. By providing free education, many children could now go to university, 
-                                                 and provide themselves with a higher quality of life. States did not enforce compulsory education very strongly until they realized the value of an educated workforce. By this time, education was compulsory up until 12th grade.
+                                                The first law requiring children to go to school was passed in Massachusetts in 1852.<span class = "sitedSource"><sup>[4]</sup></span> This law required every town to contain an elementary school that taught basic arithmetic and literacy. Before this point, education was provided by private schools run by churches. After Massachusetts
+                                                 precedent, many other states starting following suit. By 1917, every state had laws requiring compulsory education for children.<span class = "sitedSource"><sup>[4]</sup></span> The main purpose of these laws were to settle the public outcry against child labour. By providing free education, many children could now go to university, 
+                                                 and provide themselves with a higher quality of life. States did not enforce compulsory education very strongly until they realized the value of an educated workforce. By this time, education was compulsory up until 12th grade.<span class = "sitedSource"><sup>[4]</sup></span>
                                         </p>
                                         <h2>Do these ideas still apply now?</h2>
                                         <p>
@@ -655,7 +714,8 @@
                                         </p>
                                         <h2>Conclusion</h2>
                                         <p>
-                                                So, keeping all the above information in mind, I think education should still be compulsory - but to a much more lenient extent. It may seem like the opposite of progress, going back to how something used to be done, but I honestly believe the increase in freedom would benefit a society. 
+                                                So, keeping all the above information in mind, I think education should still be compulsory - but to a much more lenient extent. It may seem like the opposite of progress, going back to how something used to be done, but I honestly believe the increase in freedom would benefit a society. We now have access to specific and indepentant methods of learning
+                                                through the internet. We no longer need to go to a specific school to become knowledgeable on a subject. 
                                         </p>
                                     </div>
                                 </div>
@@ -679,7 +739,7 @@
                                     <div class="backBodyText">
                                         
                                         <!-- <img src = "public/images/happinessMap.png" style = "width: 300px" /> -->
-                                        <h2>The pros:</h2>
+                                        <h2>The pros<span class = "sitedSource"><sup>[6]</sup></span>:</h2>
                                         <p>            
                                             <ol>
                                                 <li>Promotes National Unity</li>
@@ -689,7 +749,7 @@
                                                 <li>Promote Equality Among Citizens</li>
                                             </ol>                                    
                                         </p>
-                                        <h2>The Cons:</h2>
+                                        <h2>The Cons<span class = "sitedSource"><sup>[6]</sup></span>:</h2>
                                         <p>
                                             <ol>
                                                 <li>Violates Free Will</li>
@@ -706,11 +766,13 @@
                                         </p>
                                         <p>
                                             However, I think there are times when conscription could be considered acceptable. Most people, I would say, value having general freedom over tyrany and wars sometimes need to be fought to protect those freedoms. If the military is too small, then the nation will fall to the hands of whoever has the 
-                                            largest army. In cases when national security is directly threatened, I think that conscription could be allowed.
+                                            largest army. In cases when national security is directly threatened, I think that conscription could be allowed and celebrated, as a method of repaying our country for all of the freedoms it gives us.
                                         </p>
                                         <div style = "display: flex; justify-content: space-around; flex-direction: row">
+                                            <div>|</div>
                                             <div class = "hoverImage">Figure 1<div class = "imageHovered"><img src = "public/images/conscriptionMap.png" style = "width: 300px" /></div></div>
                                             <div class = "hoverImage">Figure 2<div class = "imageHovered"><img src = "public/images/happinessMap.png" style = "width: 300px" /></div></div>
+                                            <div>|</div>
                                         </div>
                                     </div>
                                 </div>
@@ -730,9 +792,24 @@
                             <div class = "backFace face">
                                 <div class="backTitle">Why compulsory military service is an outdated concept from a past generation.</div>
                                 <div class = "backBody">
+                                    
                                     <div class = "backSourceName">Article written by Nick De Gregorio</div>
                                     <div class="backBodyText">
-                                        The article sited for this argument explains why they think mandatory military service
+                                        <h2>Reasoning</h2>
+                                        <p>
+                                            The article cited for this argument explains why they think mandatory military service is a necessity that will unify a country. They raise several valid points, such as the all time low of citizens that have served in the military (7.3%), and the fact that the military is now seen as an expendable commodity
+                                             - not as real humans with friends and families. Additionally, mandatory military service is less of a burden to the tax base during a time of war than conscription is. All of this ignores the fact, however, that when not in a time of war countries with mandatory military service (generally starting at age 21
+                                             and lasting 2 years) have a smaller tax base due to the fact that the majority of the developing population is serving.
+                                        </p>
+                                        <p>
+                                            It also quotes increased terrorist attacks in Europe as a prime reason to increase military force, to demolish terrorism once and for all. Unfortunately, this has been repeatedly proven to not be true. An increased military offence against terrorism can only assist to a point, after which it will only lead
+                                                to fewer but more violent terrorist attacks.<span class = "sitedSource"><sup>[8]</sup></span>
+                                        </p>
+                                        <h2>Conclusion</h2>
+                                        <p>
+                                                The benefits of mandatory military service simply do not outway the issues with it. The weakened economy, the violations of freedom, and the lack of a productive young working class simply are not worth it. I can understand the perspective that is being viewed when mandatory service is suggested, but the 
+                                                fact is that it simply is not worth it.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -748,6 +825,13 @@
 </body>
 <script>
     let blockOpen = [false, ""];
+    let openedArticles = {
+        t_1 : false,
+        t_2 : false,
+        t_3 : false, 
+        b_1 : false,
+        b_2 : false
+    };
     var elem = document.body; // Make the body go full screen.
     document.addEventListener("keydown", function(e) {
       if (e.keyCode == 192) {
@@ -785,6 +869,7 @@
         }
     }
     function contentClickFunction(element) {
+        openedArticles[element.id] = true;
         if (blockOpen[0]) {
             if (element.id == blockOpen[1]) {
                 document.getElementById(blockOpen[1]).classList.remove("contentClicked_top", "contentClicked", "contentClicked_bottom");
@@ -793,6 +878,15 @@
                     contentBoxes[i].classList.remove("lowOpacity");
                 }
                 blockOpen = [false, ""];
+                let allOpened = true;
+                for (var key in openedArticles) {
+                    if (!openedArticles[key]) {
+                        allOpened = false;
+                    }
+                }
+                if (allOpened) {
+                    openArticle("finalContentBox");
+                }
             } else {
                 document.getElementById(blockOpen[1]).classList.remove("contentClicked_top", "contentClicked", "contentClicked_bottom");
                 element.classList.toggle("contentClicked");
@@ -821,9 +915,20 @@
         
     }
     function openArticle(article) {
-        contentClickFunction(document.getElementById(article));
-        document.getElementById("articlesDropDown").classList.remove("dropped");
-        document.getElementById("articlesTitle").innerHTML = "Articles <span class = 'selectArrow'> &#9660;</span>";
+        if (article == "finalContentBox") {
+            let contentBoxes = document.getElementsByClassName("contentBox");
+            for (var i = 0; i < contentBoxes.length; i++) {
+                contentBoxes[i].classList.toggle("lowOpacity");
+            }
+            document.getElementById(article).classList.toggle("noOpacity");
+            document.getElementById("articlesDropDown").classList.remove("dropped");
+            document.getElementById("articlesTitle").innerHTML = "Articles <span class = 'selectArrow'> &#9660;</span>";
+        } else {
+            contentClickFunction(document.getElementById(article));
+            document.getElementById("articlesDropDown").classList.remove("dropped");
+            document.getElementById("articlesTitle").innerHTML = "Articles <span class = 'selectArrow'> &#9660;</span>";
+        }
+        
     }
 </script>
 </html>
