@@ -1845,6 +1845,9 @@ app.get("/englishProject", function(req, res) {
   res.render("englishProject");
 });
 
+app.get("/socialsProject", function(req, res) {
+  res.render("socialsProject");
+});
 // function flattenDeep(arr1) {
 //   return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
 // }
@@ -2297,20 +2300,37 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
     return (a.firstName > b.firstName ? -1 : 1);
   });
   try {
-    if (req.body.username && req.body.password && req.body.schoolChoice) {
+    if (req.body.username && req.body.schoolChoice && req.body.realPassword) {
       let school = await School.findOne({name : req.body.schoolChoice}); 
       let schools = await School.find({});
       schools.sort(function(a,b) {
         return (a.firstName > b.firstName ? -1 : 1);
       });
-      let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password, school.schoolDistrict || "sd83");
-      let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password, "SEM 1 ", school.schoolDistrict);
+      let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password || "_", school.schoolDistrict || "sd83");
+      let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password || "_", "SEM 1 ", school.schoolDistrict);
+      let userObject = {
+        firstName: "_",
+        lastName: "_",
+        username: req.body.username,
+        password: req.body.realPassword,
+        courses: [],
+        colors: {
+          bgColor: "rgb(79, 49, 48)",
+          textColor: "rgb(216, 215, 143)",
+          infoColor: "rgb(117, 55, 66)",
+          buttonColor: "rgb(170, 80, 66)",
+          borderColor:"rgb(216, 189, 138)"
+        },
+        font: "/public/fonts/Evogria.otf",
+        email: req.body.username,
+        school: school._id
+      }
       if (userInfo[0]) {
-        let userObject = {
+        userObject = {
           firstName : userInfo[2][0] + userInfo[2].substring(1,userInfo[2].length).toLowerCase(),
           lastName : userInfo[3][0] + userInfo[3].substring(1,userInfo[3].length).toLowerCase(),
           username : req.body.username,
-          password: req.body.password,
+          password: req.body.realPassword,
           courses : schedule,
           colors: {
             bgColor: "rgb(79, 49, 48)",
@@ -2323,39 +2343,21 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
           email: req.body.username,
           school: school._id
         }
-        try {
-          User.create(userObject,function(error, user) {
-            if (error) {
-              console.log(error);
-              res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
-            } else {
-              //sets the session and cookie to current user ID
-              let mailOptions = {
-                from: "pvsstudents@gmail.com",
-                to: "aidaneglin@gmail.com",
-                subject: "user signup",
-                text: "User " + user.username + " has signed up! (" + user.firstName + " " + user.lastName + ")"
-              }
-              transporter.sendMail(mailOptions, function(error, info) {
-                if (error) {
-                    console.log(error)
-                  res.redirect("/")
-                } else {
-
-                }
-              });
-              req.session.userId = user._id;
-              res.cookie("sessionID", req.session.userId);
-              res.redirect("/tutorial");
-            }
-          });
-        } catch(e) {
-          console.log(e);
-
-          
-        }
-      } else {
-        res.render("signup", {schoolNames : schools, error : "Error : user not found. please make sure that your log in credentials are correct", data: [req.body.username, "", ""]});
+      }
+      try {
+        User.create(userObject,function(error, user) {
+          if (error) {
+            console.log(error);
+            res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
+          } else {
+            //sets the session and cookie to current user ID
+            req.session.userId = user._id;
+            res.cookie("sessionID", req.session.userId);
+            res.redirect("/tutorial");
+          }
+        });
+      } catch(e) {
+        console.log(e); 
       }
     }
   } catch(e) {
