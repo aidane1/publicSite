@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href='https://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .titleBar {
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: black;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            z-index: 5;
+            user-select: none;
+        }
+        .documentBody {
+            width: 100%;
+            height: calc(100% - 100px);
+            position: absolute;
+            top: 100px;
+            left: 0;
+        }
+        .documentCover {
+            width: 100%;
+            height: calc(100% - 100px);
+            position: absolute;
+            top: 100px;
+            left: 0;
+            background: radial-gradient(rgba(255,0,0, 0.1), rgba(0,0,0, 0.6),rgba(0,0,0, 0.3));
+        }
+        .spacer {
+            flex-grow: 1;
+        }
+        .imagesBackground {
+            position: absolute;
+            width: 100%;
+            top: 0px;
+            left: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-flow: dense;
+            list-style: none;
+            padding: 0;
+            margin-top: 0;
+            opacity: 0.8;
+        }
+        
+        .titleName {
+            font-size: 45px;
+            color: white;
+            font-family: Arizonia;
+        }
+        .imagesBackground li.landscape {
+            grid-column-end: span 2;
+        }
+        .backgroundImage {
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+   
+        .titleIcon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(to right bottom,red,rgba(0,0,0,1), rgba(0,0,0,0));
+        }
+        .contentBoxes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px 150px 20px 150px;
+            z-index: 2;
+        }
+        .contentBoxParent {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .lowOpacity {
+            opacity: 0.1;
+        }
+        .contentBox {
+            width: 600px;
+            height: 600px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transform: scaleX(1);
+            perspective: 1000;
+            /* font-size: 20px; */
+            transition: all 0.8s ease-out;
+            top: 0px;
+            left: 0px;
+            user-select: none;
+            
+        }
+        .contentContainer {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: all 0.8s ease-out;
+        }
+
+ 
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            overflow-y: hidden;
+            background-color: white;
+            padding: 2px 5px 2px 5px;
+            border-radius: 10px;
+        }
+        .backFace {
+            display: block;
+            transform: rotateY(180deg);
+            box-sizing: border-box;
+            padding: 10px;
+            text-align: center;
+            overflow: auto;
+            height: 100%;
+            text-align: left;
+        }
+        .contentBody {
+            width: 100%;
+            overflow-y: hidden;
+            transition: all 1s ease-out;
+            font-weight: 900;
+            text-align: center;
+            font-size: 22px;
+        }
+        .socialMedia {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+        .logoImage {
+            width: 25px;
+            height: 25px;
+            position: relative;
+            top: 7px;
+            margin-right: 5px;
+        }
+        .marginer {
+            margin: 0px 20px 0px 15px;
+        }
+
+        .noOpacity {
+            visibility: hidden;
+            opacity: 0;
+        }
+        .mainBoxHolder {
+            z-index: 10000;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .contentBox:hover .contentContainer {
+            transform: rotateY(180deg);
+        }
+        .faceHeader {
+            font-size: 25px;
+            border-bottom: 1px solid black;
+            font-weight: 900;
+            text-align: center;
+            padding: 5px;
+        }
+        .subjectHeader {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
+        br {
+            
+        }
+        
+    
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="titleBar">
+            <div class="titleIcon">
+            </div>
+            <div class="titleName">
+                <div class="spacer"></div>
+                Aidan Eglin
+                <div class="spacer"></div>
+                <div class = "socialMedia">
+                    <img class = "logoImage" src = "public/images/snapchat.svg" />: AidanEglin <span class = "marginer">|</span><img class = "logoImage" src = "public/images/instagram.svg" />: @AidanEglin
+                </div>
+            </div>
+        </div>
+        <div class="documentBody">
+            <ul class="imagesBackground">
+                <li><img class = "backgroundImage" src = "public/images/hemingway.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_1.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_2.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_3.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_4.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_5.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_6.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_7.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_8.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_9.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_10.jpg"/></li>
+                <li><img class = "backgroundImage" src = "public/images/b_w_11.jpeg"/></li>
+            </ul>
+            
+        </div>
+        <div class = "mainBoxHolder">
+            <div class = "contentBoxParent">
+                <div class="contentBox">
+                    <div class="contentContainer">
+                        <div class="frontFace face">
+                            <div class="faceHeader">Facts and Figures : Extreme Poverty</div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Poverty And Hunger: 
+                                </div>
+                                <div class = "subjectBody">
+                                    - It is estimated that 60% of chronically Hungry people are women
+                                    <br>
+                                    - women make up 43% of the agricultural labour force in developing countries
+                                    <br>
+                                    - almost 70% of women in south asia work in agriculture
+                                    <br>
+                                    - less than 20% of the worlds landholders are women
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Education:
+                                </div>
+                                <div class="subjectBody">
+                                    - Women make up more than two-thirds of the worlds 796 million illiterate people
+                                    <br>
+                                    - only 39% of rural girls attend school
+                                    <br>
+                                    - Every aditional year of primary school increases a girls' eventual wages by 10-20%
+                                    <br>
+                                    - In Cambodia, 48% of rural women are illiterate compared to 14% of rural men.
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Diseases: 
+                                </div>
+                                <div class="subjectBody">
+                                    - Rural women understand less about how HIV spreads compared to urban women.
+                                    <br>
+                                    - Figures from 25 countries indicate the margins of understanding between the two to be between 20 and 50 percent.
+                                    <br>
+                                    - HIV exacerbates property insecurity, especially for widows whose husbands have died from AIDS related causes.
+                                    <br>
+                                    - Women and girls account for 66 to 90 percent of all AIDS care givers.
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Eviornmental Sustainability:
+                                </div>
+                                <div class="subjectBody">
+                                    <br>
+                                    - There is still far less access to clean water in rural communities than in urban areas in developing countries.
+                                    <br>
+                                    - Due to more women relying on natural resources to produce an income, degrading the enviornment will have a direct impact on them.
+                                    <br>
+                                    - Due to being considered second class citizens, women have a significantly more difficult time getting help after natural disasters.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="backFace face">
+                            <div class="faceHeader">Facts and Figures : Our Minority</div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Poverty And Hunger: 
+                                </div>
+                                <div class = "subjectBody">
+                                    - 13% of canadians live in a state of food insecurity, versus 72% internationaly. Of this 13%, 50% are women.
+                                    <br>
+                                    - Women make up 28.7% of Canada's agricultural work force.
+                                    <br>
+                                    - 0.5% of Canadian women work in agriculture.
+                                    <br>
+                                    - 39.5% of Canadian women are landholders.
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Education:
+                                </div>
+                                <div class="subjectBody">
+                                    - Less than 0.5% of women in Canada are illiterate. 
+                                    <br>
+                                    - 98.5% of Canadian women have attended or are attending school.
+                                    <br>
+                                    - In Canada, the ratio of illiterate men to women is almost exactly 1 to 1.
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    - Diseases: 
+                                </div>
+                                <div class="subjectBody">
+                                    - Both rural and urban women can get an understanding of how HIV spreads in school.
+                                    <br>
+                                    - Figures from 25 countries indicate the margins of understanding between the two to be between 20 and 50 percent.
+                                    <br>
+                                    - You can live a decent life with HIV in Canada due to advancement of medication.
+                                    <br>
+                                    - Approximately 68% of all caregivers in canada are women.
+                                </div>
+                            </div>
+                            <div class="subject">
+                                <div class="subjectHeader">
+                                    Eviornmental Sustainability:
+                                </div>
+                                <div class="subjectBody">
+                                    <br>
+                                    - Both rural and urban communities have access to a bounty of fresh and clean water in Canada.
+                                    <br>
+                                    - Women can pick any job they would like, and as such are not reliant on natural resources to produce an income.
+                                    <br>
+                                    - Women can get help for any issues they face from qualified professionals in Canada, meaning they don't have to resort to dangerous methods.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "documentCover">
+
+        </div>
+    </div>
+</body>
+<script>
+
+    var elem = document.body; // Make the body go full screen.
+    document.addEventListener("keydown", function(e) {
+      if (e.keyCode == 192) {
+        requestFullScreen(elem);
+      } else if (e.keyCode == 13) {
+        getInfo();
+      }
+    })
+    function requestFullScreen(element) {
+      // Supports most browsers and their versions.
+      var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+      if (requestMethod) { // Native full screen.
+          requestMethod.call(element);
+      } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+          var wscript = new ActiveXObject("WScript.Shell");
+          if (wscript !== null) {
+              wscript.SendKeys("{F11}");
+          }
+      }
+    }
+    
+</script>
+</html>
