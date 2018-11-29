@@ -3324,8 +3324,12 @@ app.get("/users/:user/schedule-colours", function(req, res) {
               Course.find({school: user.school, _id : user.courses}, function(err, courses) {
                 let classesForBlocks = blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName);
                 console.log(classesForBlocks);
-                for (var key in classesForBlocks) {
-                  classesForBlocks[key] = [classesForBlocks[key], user.scheduleColours[key] || "#FFFFFF"];
+                for  (var key in classesForBlocks) {
+                  let color = "#FFFFFF";
+                  if (user.scheduleColours) {
+                    color = user.scheduleColours[key] || "#FFFFFF";
+                  }
+                  classesForBlocks[key] = [classesForBlocks[key], color];
                 }
                 res.render("scheduleColours", {blocks : classesForBlocks, user: req.params.user, colours: user.colors, font: holidayFont(user.font)});
               });
