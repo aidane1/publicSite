@@ -3323,6 +3323,7 @@ app.get("/users/:user/schedule-colours", function(req, res) {
             } else {
               Course.find({school: user.school, _id : user.courses}, function(err, courses) {
                 let classesForBlocks = blockNamesObject(school.blockNames, courses, user.blockNames, school.spareName);
+                console.log(classesForBlocks);
                 for (var key in classesForBlocks) {
                   classesForBlocks[key] = [classesForBlocks[key], user.scheduleColours[key] || "#FFFFFF"];
                 }
