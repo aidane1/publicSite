@@ -549,34 +549,38 @@ async function getHomework(username, password, district) {
 }
 //semester is in the form SEM1 or SEM2
 async function getSchedule(username, password, semester, district) {
-  let loginCredentials = await getLoginCredentials(username, password, district);
-  await login(loginCredentials[0], loginCredentials[1], district);
-  let scheduleBody = await getScheduleBody(loginCredentials[1], district);
-  let compiledSchedule = await compileScheduleInfo(scheduleBody, semester, district);
-  let names = compiledSchedule.map(x => ["Mr." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Ms." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Mme." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase()]);
-  let blocks = compiledSchedule.map(x => ["A", "B", "C", "D", "E"][(parseInt(x[2])-1)/2]);
-  let classes = compiledSchedule.map(x => x[0].substring(0,2).toLowerCase());
-  let userCourses = [];
-  for (var i = 0; i < names.length; i++) {
-    let currentCourse = await Course.find({$and: [{teacher : names[i]}, {block : blocks[i]}]});
-    if (currentCourse.length != 0) {
-      if (currentCourse.length === 1) {
-        userCourses.push(currentCourse[0]._id);
-      } else {
-        let found = false;
-        for (var j = 0; j < currentCourse.length; j++) {
-          if (currentCourse.course.substring(0,2).toLowerCase() === classes[i] && !found) {
-            found = true;
-            userCourses.push(currentCourse[j]._id);
+  try {
+    let loginCredentials = await getLoginCredentials(username, password, district);
+    await login(loginCredentials[0], loginCredentials[1], district);
+    let scheduleBody = await getScheduleBody(loginCredentials[1], district);
+    let compiledSchedule = await compileScheduleInfo(scheduleBody, semester, district);
+    let names = compiledSchedule.map(x => ["Mr." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Ms." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase(), "Mme." + x[1][2].toUpperCase() + x[1].substring(2, x[1].length-1).substring(1).toLowerCase()]);
+    let blocks = compiledSchedule.map(x => ["A", "B", "C", "D", "E"][(parseInt(x[2])-1)/2]);
+    let classes = compiledSchedule.map(x => x[0].substring(0,2).toLowerCase());
+    let userCourses = [];
+    for (var i = 0; i < names.length; i++) {
+      let currentCourse = await Course.find({$and: [{teacher : names[i]}, {block : blocks[i]}]});
+      if (currentCourse.length != 0) {
+        if (currentCourse.length === 1) {
+          userCourses.push(currentCourse[0]._id);
+        } else {
+          let found = false;
+          for (var j = 0; j < currentCourse.length; j++) {
+            if (currentCourse.course.substring(0,2).toLowerCase() === classes[i] && !found) {
+              found = true;
+              userCourses.push(currentCourse[j]._id);
+            }
           }
-        }
-        if (!found) {
-          userCourses.push(currentCourse[0]);
+          if (!found) {
+            userCourses.push(currentCourse[0]);
+          }
         }
       }
     }
-  }
-  return userCourses;
+    return userCourses;
+  } catch(e) {
+    return [];
+  }  
 }
 
 async function getHistoryBody(cookies, district) {
@@ -1848,39 +1852,8 @@ app.get("/englishProject", function(req, res) {
 app.get("/socialsProject", function(req, res) {
   res.render("socialsProject");
 });
-// function flattenDeep(arr1) {
-//   return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
-// }
 
-// function radixSort(array, magnitude) {
-//   let newArray = createArray(magnitude);
-//   for (var i = 0; i < array.length; i++) {
-//     let newNum = array[i].toString();
-//     if (newNum.length != magnitude-1) {
-//       let newString = "";
-//       for (var j = 0; j < magnitude-1-newNum.length; j++) {
-//         newString += "0";
-//       }
-//       newNum = newString + newNum;
-//     }
-//     let placeString = "newArray[";
-//     for (var j = 0; j < newNum.length-1; j++) {
-//       placeString += newNum[j] + "][";
-//     }
-//     placeString += newNum[newNum.length-1] + "] = parseInt(newNum)";
-//     eval(placeString);
-//   }
-//   return flattenDeep(newArray);
-// }
-// console.log(radixSort(makeRandomArray(10000000, 1000000), 7));
 
-// function makeRandomArray(length, max) {
-//   let array = [];
-//   for (var i = 0; i < length; i++) {
-//     array.push(Math.floor(Math.random()*max));
-//   }
-//   return array;
-// }
 
 // you just made BIG changes, so go through all this again when you aren't tired and make sure nothing is broken. pls.
 app.get("/", async (req, res, next) => {
@@ -2299,21 +2272,38 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
   schools.sort(function(a,b) {
     return (a.firstName > b.firstName ? -1 : 1);
   });
-  try {
-    if (req.body.username && req.body.schoolChoice && req.body.realPassword) {
-      let school = await School.findOne({name : req.body.schoolChoice}); 
-      let schools = await School.find({});
-      schools.sort(function(a,b) {
-        return (a.firstName > b.firstName ? -1 : 1);
-      });
-      let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password || "_", school.schoolDistrict || "sd83");
-      let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password || "_", "SEM 1 ", school.schoolDistrict);
-      let userObject = {
-        firstName: "_",
-        lastName: "_",
-        username: req.body.username,
+  if (req.body.username && req.body.schoolChoice && req.body.realPassword) {
+    let school = await School.findOne({name : req.body.schoolChoice}); 
+    let schools = await School.find({});
+    schools.sort(function(a,b) {
+      return (a.firstName > b.firstName ? -1 : 1);
+    });
+    let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password || "_", school.schoolDistrict || "sd83");
+    let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password || "_", "SEM 1 ", school.schoolDistrict);
+    let userObject = {
+      firstName: "_",
+      lastName: "_",
+      username: req.body.username,
+      password: req.body.realPassword,
+      courses: [],
+      colors: {
+        bgColor: "rgb(79, 49, 48)",
+        textColor: "rgb(216, 215, 143)",
+        infoColor: "rgb(117, 55, 66)",
+        buttonColor: "rgb(170, 80, 66)",
+        borderColor:"rgb(216, 189, 138)"
+      },
+      font: "/public/fonts/Evogria.otf",
+      email: req.body.username,
+      school: school._id
+    }
+    if (userInfo[0] && userInfo[1] && userInfo[2] && userInfo[3]) {
+      userObject = {
+        firstName : userInfo[2][0] + userInfo[2].substring(1,userInfo[2].length).toLowerCase(),
+        lastName : userInfo[3][0] + userInfo[3].substring(1,userInfo[3].length).toLowerCase(),
+        username : req.body.username,
         password: req.body.realPassword,
-        courses: [],
+        courses : schedule,
         colors: {
           bgColor: "rgb(79, 49, 48)",
           textColor: "rgb(216, 215, 143)",
@@ -2324,25 +2314,6 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
         font: "/public/fonts/Evogria.otf",
         email: req.body.username,
         school: school._id
-      }
-      if (userInfo[0]) {
-        userObject = {
-          firstName : userInfo[2][0] + userInfo[2].substring(1,userInfo[2].length).toLowerCase(),
-          lastName : userInfo[3][0] + userInfo[3].substring(1,userInfo[3].length).toLowerCase(),
-          username : req.body.username,
-          password: req.body.realPassword,
-          courses : schedule,
-          colors: {
-            bgColor: "rgb(79, 49, 48)",
-            textColor: "rgb(216, 215, 143)",
-            infoColor: "rgb(117, 55, 66)",
-            buttonColor: "rgb(170, 80, 66)",
-            borderColor:"rgb(216, 189, 138)"
-          },
-          font: "/public/fonts/Evogria.otf",
-          email: req.body.username,
-          school: school._id
-        }
       }
       try {
         User.create(userObject,function(error, user) {
@@ -2359,10 +2330,9 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
       } catch(e) {
         console.log(e); 
       }
+    } else {
+      res.render("signup", {error: "Error : I'm fuckin bad lol", schoolNames : schools, data : ["", "", ""]});
     }
-  } catch(e) {
-    console.log(e);
-    res.render("signup", {error: "Error : username is already is use. please try again", schoolNames : schools, data : ["", "", ""]});
   }
 });
 
