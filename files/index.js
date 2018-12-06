@@ -2315,23 +2315,23 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
         email: req.body.username,
         school: school._id
       }
-      try {
-        User.create(userObject,function(error, user) {
-          if (error) {
-            console.log(error);
-            res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
-          } else {
-            //sets the session and cookie to current user ID
-            req.session.userId = user._id;
-            res.cookie("sessionID", req.session.userId);
-            res.redirect("/tutorial");
-          }
-        });
-      } catch(e) {
-        console.log(e); 
-      }
     } else {
-      res.render("signup", {error: "Error : I'm fuckin bad lol", schoolNames : schools, data : ["", "", ""]});
+      // res.render("signup", {error: "Error : I'm fuckin bad lol", schoolNames : schools, data : ["", "", ""]});
+    }
+    try {
+      User.create(userObject,function(error, user) {
+        if (error) {
+          console.log(error);
+          res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
+        } else {
+          //sets the session and cookie to current user ID
+          req.session.userId = user._id;
+          res.cookie("sessionID", req.session.userId);
+          res.redirect("/tutorial");
+        }
+      });
+    } catch(e) {
+      console.log(e); 
     }
   }
 });
