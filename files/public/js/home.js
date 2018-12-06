@@ -117,7 +117,7 @@ function choosePhoto(id) {
 }
 function submitNotes(id, element,name) {
   let noteEnter = document.getElementById("addNoteEnter_" + id);
-  document.getElementById("addNotesHeader_" + id).innerHTML = "Add  " + name + ` note: <img src = 'public/images/camera.svg' class = 'cameraIcon' onclick = "choosePhoto('${id}')"/><input id = 'cameraSelect_${id}' style = 'display: none' type = 'file' accept = 'image/*' capture = 'enviornment'>`;
+  document.getElementById("addNotesHeader_" + id).innerHTML = "Add  " + name + ` note: <img src = '/public/images/camera.svg' class = 'cameraIcon' onclick = "choosePhoto('${id}')"/><input id = 'cameraSelect_${id}' style = 'display: none' type = 'file' accept = 'image/*' capture = 'enviornment'>`;
   noteEnter.style.display = "block";
   for (var i = 0; i < 10; i++) {
     let noteLine = document.createElement("div");
