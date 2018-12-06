@@ -115,9 +115,65 @@ function choosePhoto(id) {
   let input = document.getElementById("cameraSelect_" + id);
   input.click();
 }
+function fileChanged(id) {
+  let files = document.getElementById("cameraSelect_" + id);
+  let curFiles = files.files[0];
+  let image = document.createElement("img");
+  image.src = window.URL.createObjectURL(curFiles);
+  let imageHolder = document.createElement("div", 1.0);
+  imageHolder.className = "noteImage";
+  imageHolder.appendChild(image);
+  imageHolder.style.opacity = "0.6";
+
+  
+  document.getElementById("allNoteImages_" + id).appendChild(imageHolder);
+
+
+  let formData = new FormData();
+  formData.append("file", curFiles);
+  formData.append("text", "yeeter");
+  for (var [key, value] of formData.entries()) { 
+    console.log(key, value);
+  }
+  let loadRequest;
+  if (window.XMLHttpRequest) {
+    // code for modern browsers
+    loadRequest = new XMLHttpRequest();
+  } else {
+    // code for old IE browsers
+    loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  loadRequest.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      imageHolder.style.opacity = "1";
+      let response = (JSON.parse(this.responseText));
+      imageHolder.innerHTML += `<div class = "removeImageNote" onclick = "removeNoteImage('${response._id}', this)"></div>`;
+    }
+  }
+  loadRequest.open("POST", "/postHomeworkImage?id=" + id, true);
+  loadRequest.send(formData); 
+}
+function removeNoteImage(id, element) {
+  let loadRequest;
+  if (window.XMLHttpRequest) {
+    // code for modern browsers
+    loadRequest = new XMLHttpRequest();
+  } else {
+    // code for old IE browsers
+    loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  loadRequest.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      element.parentElement.parentElement.removeChild(element.parentElement);
+    }
+  }
+  loadRequest.open("GET", "/postHomework?action=removeNote&id=" + id, true);
+  loadRequest.send(); 
+}
 function submitNotes(id, element,name) {
   let noteEnter = document.getElementById("addNoteEnter_" + id);
-  document.getElementById("addNotesHeader_" + id).innerHTML = "Add  " + name + ` note: <img src = '/public/images/camera.svg' class = 'cameraIcon' onclick = "choosePhoto('${id}')"/><input id = 'cameraSelect_${id}' style = 'display: none' type = 'file' accept = 'image/*' capture = 'enviornment'>`;
+  document.getElementById("addNotesHeader_" + id).innerHTML = "Add  " + name + ` note: <img src = '/public/images/camera.svg' class = 'cameraIcon' onclick = "choosePhoto('${id}')"/><input onchange = 'fileChanged("${id}")' id = 'cameraSelect_${id}' style = 'display: none' type = 'file' accept = 'image/*' capture = 'enviornment'>`;
+
   noteEnter.style.display = "block";
   for (var i = 0; i < 10; i++) {
     let noteLine = document.createElement("div");
@@ -135,7 +191,7 @@ function submitNotes(id, element,name) {
     spacer2.style.flexGrow = "1";
     addNote.appendChild(spacer1);
     addNote.innerHTML += "+";
-  addNote.appendChild(spacer2);
+    addNote.appendChild(spacer2);
     addNote.setAttribute("onclick", `submitNote('${id}', this)`)
     addNote.contentEditable = false;
     noteLine.appendChild(addNote);

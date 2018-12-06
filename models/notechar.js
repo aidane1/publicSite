@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 
 
 const NoteSchema = new Schema({
+    noteType: {
+        type: String,
+        default: "text",
+    },
     text: {
         type: String
     },

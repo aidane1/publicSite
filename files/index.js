@@ -224,13 +224,6 @@ let path = require("path");
 
 let tesseract = require("node-tesseract");
 
-// tesseract.process(__dirname + "/public/images/randomText.jpg",{}, function(err, text) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(text);
-//   }
-// })
 
 let storage = multer.diskStorage({
   destination: __dirname + "/public/schoolLogos/",
@@ -239,8 +232,16 @@ let storage = multer.diskStorage({
   }
 })
 
-let upload = multer({storage : storage}).single("faviconFile");
+let notesStorage = multer.diskStorage({
+  destination: __dirname + "/public/notesImages/",
+  filename: function(rew, file, cb) {
+    console.log("got this far");
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+  }
+});
 
+let upload = multer({storage : storage}).single("faviconFile");
+let notesUpload = multer({storage: notesStorage});
 
 
 let contents = fs.readFileSync("../eVariables/variables.json");
@@ -1543,7 +1544,6 @@ app.get("/admin/photos", function(req, res) {
 });
 
 app.post("/admin/photos", function(req, res) {
-
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
@@ -1554,8 +1554,6 @@ app.post("/admin/photos", function(req, res) {
             if (err) {
               console.log(err);
             } else {
-
-              // fs.writeFileSync(__dirname + "/public/favicons/57x57_" + req.file.filename);
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(72,72).toFile(__dirname + "/public/schoolLogos/72x72_" + req.file.filename, function(err) {});
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(57,57).toFile(__dirname + "/public/schoolLogos/57x57_" + req.file.filename, function(err) {});
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(114,114).toFile(__dirname + "/public/schoolLogos/114x114_" + req.file.filename, function(err) {});
@@ -1563,23 +1561,13 @@ app.post("/admin/photos", function(req, res) {
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(128,128).toFile(__dirname + "/public/schoolLogos/128x128_" + req.file.filename, function(err) {});
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(192,192).toFile(__dirname + "/public/schoolLogos/192x192_" + req.file.filename, function(err) {});
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(512,512).toFile(__dirname + "/public/schoolLogos/512x512_" + req.file.filename, function(err) {});
-
-
-
               sharp(__dirname + "/public/schoolLogos/" + req.file.filename).resize(64,64).toFile(__dirname + "/public/schoolLogos/64x64_" + req.file.filename, function(err) {
                 School.findOneAndUpdate({_id : user.school}, {favicon : req.file.filename}).then(function() {
                   res.redirect("/admin/photos");
                 });
               });
-
-
-
-
-
-
             }
           });
-
         } else {
           res.redirect("/admin");
         }
@@ -1588,8 +1576,6 @@ app.post("/admin/photos", function(req, res) {
   } else {
     res.redirect("/login");
   }
-
-
 });
 
 app.get("/admin/information", function(req, res) {
@@ -2198,6 +2184,7 @@ app.get("/postHomework", function(req, res) {
             res.send("");
           } else {
             let notesOjbect = {
+              noteType: "text",
               text: req.query.text,
               writtenBy: user.username,
               forCourse: course._id,
@@ -2212,6 +2199,58 @@ app.get("/postHomework", function(req, res) {
         });
       }
     })
+  } else if (req.session.userId && req.query.action == "removeNote" && req.query.id) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (err || user == null) {
+        res.send("");
+      } else {
+        Notes.findOneAndRemove({writtenBy : user.username, _id : req.query.id}).then(function(note) {
+          res.send(JSON.stringify(note));
+        });
+      }
+    })
+  } else {
+    res.send("");
+  }
+});
+
+app.post("/postHomeworkImage", function(req, res) {
+  // console.log(req)
+  
+  if (req.session.userId) {
+    notesUpload.single("file")(req, res, function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("1");
+        User.findOne({_id : req.session.userId}, function(err, user) {
+          if (err || user == null) {
+            res.send("");
+          } else {
+            console.log("2");
+            Course.findOne({_id : req.query.id}, function(err, course) {
+              if (err || course == null) {
+                res.send("");
+              } else {
+                console.log("3");
+                let notesOjbect = {
+                  noteType: "image",
+                  text: req.file.filename,
+                  writtenBy: user.username,
+                  forCourse: course._id,
+                  date: (new Date()).local()
+                }
+                Notes.create(notesOjbect, function(err, note) {
+                  User.findOneAndUpdate({_id : user._id}, {$push: {notes: note._id}}).then(function() {
+                    res.send(JSON.stringify(note));
+                  });
+                });
+              }
+            });
+          }
+        })
+      }
+    });
   } else if (req.session.userId && req.query.action == "removeNote" && req.query.id) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {

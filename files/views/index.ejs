@@ -781,6 +781,23 @@
       .pushNotifications,.wideScreen {
         display:none
       }
+      .removeImageNote {
+        position: absolute;
+        bottom: -10px;
+        right: -15px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: black;
+      }
+      .removeImageNote::after {
+        content: "X";
+        font-size: 22px;
+        color: white;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 5%);
+      }
       .soonEvent {
         font-size:15px;
         border-radius:10px;
@@ -851,6 +868,30 @@
       }
       .change {
         background-color: initial;
+      }
+      .allNoteImages {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        border-bottom: 1px solid black;
+      }
+      .displayedNoteImages {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        /* border-bottom: 1px solid black; */
+      }
+      .noteImage {
+        margin-top: 10px;
+        width: 40%;
+        position: relative;
+      }
+      .noteImage img {
+        width: 100%;
       }
       @media screen and (max-width:320px) {
         .infoBox {
@@ -1334,8 +1375,21 @@
         <% for (var j = 0; j < allNotes[notesKeys[i]].notes.length; j++) { %>
           <div class = "dayBox">
             <div class = "dayHeader"><%=allNotes[notesKeys[i]].notes[j][0]%></div>
+            <div class = "displayedNoteImages">
+              <% for (var k = 1; k < allNotes[notesKeys[i]].notes[j].length; k++) { %>
+                <% if (allNotes[notesKeys[i]].notes[j][k].noteType == "image") { %>
+                  <div class = "noteImage">
+                    <img src = "/public/notesImages/<%=allNotes[notesKeys[i]].notes[j][k].text%>"/>
+                  </div>
+                <% } %>
+              <% } %>
+            </div>
+            
+
             <% for (var k = 1; k < allNotes[notesKeys[i]].notes[j].length; k++) { %>
-              <div class = "dayNote"> - <%=allNotes[notesKeys[i]].notes[j][k].text%></div>
+              <% if (allNotes[notesKeys[i]].notes[j][k].noteType == "text") { %>
+                <div class = "dayNote"> - <%=allNotes[notesKeys[i]].notes[j][k].text%></div>
+              <% } %>
             <% } %>
           </div>
         <% } %>
@@ -1344,11 +1398,25 @@
     <% for (var key in notes) { %>
         <div class = "addNoteEnter" id = "addNoteEnter_<%=key%>">
           <div class = "notesHeader" id = "addNotesHeader_<%=key%>">Add Note: </div>
+          <div class = "allNoteImages" id = "allNoteImages_<%=key%>">
+            <% for (var i = 0; i < notes[key].length; i++) { %>
+              <% if (notes[key][i].noteType == "image") { %>
+                <div class = "noteImage">
+                  <img src = "/public/notesImages/<%=notes[key][i].text%>" id = "noteImage_<%=notes[key][i]._id%>" />
+                  <div class = "removeImageNote" onclick = "removeNoteImage('<%=notes[key][i]._id%>', this)">
+                    
+                  </div>
+                </div>
+              <% } %>
+            <% } %>
+          </div>
           <% for (var i = 0; i < notes[key].length; i++) { %>
-            <div class="noteLineFilled">
-              <div class = "removeNote" onclick = "removeNote('<%=notes[key][i]._id%>', this)"><div class = "spacer" style = "flex-grow: 1"></div>X<div class = "spacer" style = "flex-grow: 1"></div></div>
-              <span class = "editableNoteLine"><%=notes[key][i].text%></span>
-            </div>
+            <% if (notes[key][i].noteType == "text") { %>
+              <div class="noteLineFilled">
+                <div class = "removeNote" onclick = "removeNote('<%=notes[key][i]._id%>', this)"><div class = "spacer" style = "flex-grow: 1"></div>X<div class = "spacer" style = "flex-grow: 1"></div></div>
+                <span class = "editableNoteLine"><%=notes[key][i].text%></span>
+              </div>
+            <% } %>
           <% } %>
         </div>
     <% } %>
