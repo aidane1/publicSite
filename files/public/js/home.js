@@ -274,3 +274,7 @@ function removeNote(id, element) {
   loadRequest.open("GET", "/postHomework?action=removeNote&id=" + id, true);
   loadRequest.send(); 
 }
+
+function enlargeNote(element) {
+  element.classList.toggle("enlargedNote");
+}

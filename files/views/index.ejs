@@ -893,6 +893,13 @@
       .noteImage img {
         width: 100%;
       }
+      .enlargedNote {
+        width: 90%;
+        height: 90%;
+        position: fixed;
+        top: 2.5%;
+        left: 5%;
+      }
       @media screen and (max-width:320px) {
         .infoBox {
           padding:3px;
@@ -1378,7 +1385,7 @@
             <div class = "displayedNoteImages">
               <% for (var k = 1; k < allNotes[notesKeys[i]].notes[j].length; k++) { %>
                 <% if (allNotes[notesKeys[i]].notes[j][k].noteType == "image") { %>
-                  <div class = "noteImage">
+                  <div class = "noteImage" onclick = "enlargeNote(this)">
                     <img src = "/public/notesImages/<%=allNotes[notesKeys[i]].notes[j][k].text%>"/>
                   </div>
                 <% } %>
