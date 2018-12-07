@@ -899,6 +899,7 @@
         position: fixed;
         top: 10%;
         left: 0%;
+        z-index: 5000;
       }
       @media screen and (max-width:320px) {
         .infoBox {
@@ -1257,18 +1258,7 @@
             </button>
           </div>
         <% } else if (order[key] == "Schedule" && !offLine) { %>
-          <!-- <div id = "schedule" class = "schedule box" name = "schedule">
-            <div class = "scheduleHolder">
-              <div class = "header"><h1>Schedule and other</h1></div>
-              <div class = "spacer"></div>
-              <div class = "scheduleHref unselectable"><a href = "/schedule">My Schedule</a></div>
-              <div class = "spacer"></div>
-              <div class = "scheduleHref unselectable"><a href = "/view-LC">LC Schedule</a></div>
-              <div class = "spacer"></div>
-              <div class = "scheduleHref unselectable"><a href=  "/users/<%=username%>">Account</a></div>
-              <div class = "spacer"></div>
-            </div>
-          </div> -->
+
         <% } else if (order[key] == "Resources" && !offLine) { %>
           <div id = "resources" class = "resources box" name = "resources">
             <div class = "header" style = "margin-bottom: 15px"><h1>Resources</h1></div>
@@ -1430,7 +1420,6 @@
     
     <div class = "box wideScreen" id = "wideScreen">
       <div class = "header"><h1>Redirects</h1></div>
-      <!-- <div class = "redirectHref"><a href = "/chatroom">Chatroom</a></div> -->
       <div class = "redirectHref"><a href = "/questions">Discussion</a></div>
       <div class = "redirectHref"><a href = "/logout">Logout</a></div>
     </div>
@@ -1499,11 +1488,6 @@
         }
         xmlhttp.open("POST", "/alerts");
         xmlhttp.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-        // xmlhttp.onreadystatechange = function() {
-        //   if (this.readyState == 4 && this.status == 200) {
-        //
-        //   }
-        // }
         xmlhttp.send(encodeURI("delete=" + deleteMessage));
       }
       function loadAlerts() {
