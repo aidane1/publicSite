@@ -1320,7 +1320,7 @@
             <br>
             <br>
             <% if (theHomeworkGiven[1][i].assignment != "") { %>
-                <%=theHomeworkGiven[1][i].date.toDateString()%>
+                <%=theHomeworkGiven[1][i].date ? theHomeworkGiven[1][i].date.toDateString() : ""%>
                 <br>
                 <%=theHomeworkGiven[1][i].assignment%>
                 <br>

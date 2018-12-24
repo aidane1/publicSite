@@ -13,7 +13,7 @@ const NoteSchema = new Schema({
         type: String
     },
     writtenBy: {
-        type: String
+        type: Schema.Types.ObjectId,
     },
     date: {
         type: Date

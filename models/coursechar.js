@@ -14,9 +14,6 @@ const CourseSchema = new Schema({
   course: {
     type: String,
   },
-  homework: {
-    type: Array,
-  },
   code: {
     type: String
   },

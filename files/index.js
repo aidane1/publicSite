@@ -208,6 +208,8 @@ let Code = require("../models/createcodeschar.js");
 
 let Notes = require("../models/notechar.js");
 
+let Assignments = require("../models/assignmentchar.js");
+
 let webpush = require("web-push");
 
 let schedule = require("node-schedule");
@@ -1877,8 +1879,10 @@ app.get("/", async (req, res, next) => {
         if (skippedDays.map(x => x.date.getTime()).indexOf((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())).getTime()) !== -1) {
           schoolSkippedToday = true;
         }
-        let userNotes = await Notes.find({$and: [{writtenBy: user.username}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
+        let userNotes = await Notes.find({$and: [{writtenBy: user._id}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
         let allNotes = await Notes.find({forCourse: user.courses});
+
+        // let assignments = await Assignments.find({forCourse: user.courses});
         let viewNotesDisplay = [1, "nothing"];
         if (courses.length) {
           viewNotesDisplay = [courses[0]._id || 1, courses[0].course];
@@ -1965,10 +1969,15 @@ app.get("/", async (req, res, next) => {
         let courseCodes = [];
         let daysArray = [];
         //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
-        courses.forEach(function(course) {
-          courseCodes.push(course.code);
-          homeworkList.push([course.course, course.homework, course.block, course.teacher, course._id])
-        });
+        for (var i = 0; i < courses.length; i++) {
+          courseCodes.push(courses[i].code);
+          let currentAssignments = await Assignments.find({forCourse: courses[i]._id});
+          let currentHomework = [courses[i].course, currentAssignments, courses[i].block, courses[i].teacher, courses[i]._id];
+          homeworkList.push(currentHomework);
+        }
+        
+
+        console.log(homeworkList[2][1][0]);
         //gets the order of todays blocks from a function
         //also accounts for time offsets due to pro-D days
 
@@ -2186,14 +2195,12 @@ app.get("/postHomework", function(req, res) {
             let notesOjbect = {
               noteType: "text",
               text: req.query.text,
-              writtenBy: user.username,
+              writtenBy: user._id,
               forCourse: course._id,
-              date: (new Date()).local()
+              date: (new Date()).local(),
             }
             Notes.create(notesOjbect, function(err, note) {
-              User.findOneAndUpdate({_id : user._id}, {$push: {notes: note._id}}).then(function() {
-                res.send(JSON.stringify(note));
-              });
+              res.send(JSON.stringify(note));
             });
           }
         });
@@ -2204,7 +2211,7 @@ app.get("/postHomework", function(req, res) {
       if (err || user == null) {
         res.send("");
       } else {
-        Notes.findOneAndRemove({writtenBy : user.username, _id : req.query.id}).then(function(note) {
+        Notes.findOneAndRemove({writtenBy : user._id, _id : req.query.id}).then(function(note) {
           res.send(JSON.stringify(note));
         });
       }
@@ -2661,15 +2668,18 @@ app.post("/submit", urlencodedParser, function(req, res) {
 
         //makes a homework object
         let homeworkObject = {
-          submittedBy: req.body.submittedBy,
-          confirmed: "F",
-          page: req.body.page,
+          submittedBy: req.session.userId,
+          confirmed: false,
           assignment: profanityFilter(req.body.assignment),
           notes: profanityFilter(req.body.notes),
-          questions: profanityFilter(req.body.questions),
           due: profanityFilter(req.body.due),
-          date: (new Date()).local()
+          date: (new Date()).local(),
+          forCourse: mongoose.Types.ObjectId(req.body.courseID),
         }
+
+        Assignments.create({submittedBy: req.session.userId, assignment: profanityFilter(req.body.assignment), confirmed: false, notes: profanityFilter(req.body.notes), due: req.body.due, forCourse: req.body.courseID, date: (new Date()).local()}, function(err, assignment) {
+          res.redirect("/");
+        });
         //if the user is a teacher or an admin, let them submit it as confirmed.
         if (err || !user) {
 
@@ -2677,9 +2687,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
           homeworkObject.confirmed = "T";
         }
         //adds the homework to the course
-        Course.findOneAndUpdate({school: user.school, _id : mongoose.Types.ObjectId(req.body.courseID)}, {$push:{homework : homeworkObject}}).then(function() {
-          res.redirect("/");
-        });
+        
       })
 
 
