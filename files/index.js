@@ -2135,45 +2135,16 @@ app.post("/", urlencodedParser, function(req,res) {
 
 
         let course = req.body.removedHomework.split("_")[0];
-        let index = parseInt(req.body.removedHomework.split("_")[1]);
-
+        let index = (req.body.removedHomework.split("_")[1]);
+        print(index);
+        print(course);
 
         //finds the corrosponding course
-        Course.findOne({school : user.school, _id : course}, function(err, theCourse) {
-          if (err) {
-            //if an error occurs at this point, redirect to home
+        if (user.permissions == "admin") {
+          Assignments.findOneAndRemove({forCourse: course, _id : index}, function(err, removed) {
             res.redirect("/");
-          } else {
-
-            //makes sure the course exists, and isn't empty
-            if(theCourse != null && theCourse != "" && theCourse.course) {
-              //declares homework variable for later use
-              let homework;
-              //if the homework was submitted by the person who clicked remove, or the person who clicked remove is an admin,
-              //continue with the delete process
-              if (theCourse.homework[index].submittedBy == user.username || user.permissions === "admin") {
-                //homework is stored as an array of objects in the string. If that array length is one, then there's only one course that could be being removed
-                //therefore, we just set the homework array to empty.
-                if (theCourse.homework.length === 1) {
-                  theCourse.homework = [];
-                } else {
-                  //if the array isn't empty, we splice it at the index of the homework that is being removed. we remove one item at that index, which is the removed homework.
-                  theCourse.homework.splice(index, 1);
-                }
-                //finds and updates the courses homework, and then redirects to home
-                Course.findOneAndUpdate({_id : theCourse.id}, {$set: {homework : theCourse.homework}}).then(function() {
-                  res.redirect("/");
-                });
-              } else {
-                res.redirect("/");
-              }
-
-            } else {
-              //if the course doesn't exist, which could only happen if some tampered with it client side, just redirect to home.
-              res.redirect("/");
-            }
-          }
-        });
+          })
+        }
       }
     })
   } else {

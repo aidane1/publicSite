@@ -1334,7 +1334,7 @@
                   <span style = "color: #f41616">confirmed: &#10006;</span>
                 <% } %>
                 <% if (permissions === "admin" || theHomeworkGiven[1][i].submittedBy == username) { %>
-                  <div class = "remove" onclick = "removeFunction('<%=theHomeworkGiven[4]%>', '<%=i%>')">
+                  <div class = "remove" onclick = "removeFunction('<%=theHomeworkGiven[4]%>', '<%=theHomeworkGiven[1][i]._id%>')">
                     remove
                   </div>
                 <% } %>
