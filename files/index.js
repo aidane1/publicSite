@@ -2136,8 +2136,8 @@ app.post("/", urlencodedParser, function(req,res) {
 
         let course = req.body.removedHomework.split("_")[0];
         let index = (req.body.removedHomework.split("_")[1]);
-        print(index);
-        print(course);
+        console.log(index);
+        console.log(course);
 
         //finds the corrosponding course
         if (user.permissions == "admin") {
