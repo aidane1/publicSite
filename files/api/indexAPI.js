@@ -30,9 +30,11 @@ let server = app.listen(15651, function() {
     console.log("listening for requests");
 });
 app.get("/getNotes", async function(req, res) {
+  console.log(req.query.courseID);
   if (req.query.courseID) {
     try {
-      let courseNotes = await Notes.find({_id : req.query.forCourse});
+      let courseNotes = await Notes.find({forCourse : req.query.courseID});
+      console.log(courseNotes);
       res.send(courseNotes);
     } catch(e) {
       res.send([]);
