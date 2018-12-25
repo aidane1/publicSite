@@ -11,6 +11,7 @@ let User = require(__dirname + "/models/userchar.js");
 let Course = require(__dirname + "/models/coursechar.js");
 let Event = require(__dirname + "/models/eventschar.js");
 let Assignments = require(__dirname + "/models/assignmentchar.js");
+let Notes = require(__dirname + "/models/notechar.js");
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/users", {useNewUrlParser: true});
@@ -28,12 +29,20 @@ let app = express();
 let server = app.listen(15651, function() {
     console.log("listening for requests");
 });
-
+app.get("/getNotes", async function(req, res) {
+  if (req.query.courseID) {
+    try {
+      let courseNotes = await Notes.find({_id : req.query.forCourse});
+      res.send(courseNotes);
+    } catch(e) {
+      res.send([]);
+    }
+  }
+});
 app.get("/getAssignments", async function(req,res) {
   if (req.query.courseID) {
     try {
       let courseAssignments = await Assignments.find({forCourse: req.query.courseID});
-      console.log(courseAssignments);
       res.send(courseAssignments);
     } catch(e) {
       console.log(e);
