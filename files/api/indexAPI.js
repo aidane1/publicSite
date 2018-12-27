@@ -29,6 +29,24 @@ let app = express();
 let server = app.listen(15651, function() {
     console.log("listening for requests");
 });
+app.post("/retrieveAssignments", urlencodedParser, async function(req, res) {
+  try {
+    if (req.query.courseID) {
+      if (req.body.retrievedIDs) {
+        let newIds = JSON.parse(req.body.retrievedIDs);
+        let newAssignments = await Assignments.find({$and: [{forCourse: req.query.courseID}, {_id : {$not: {$in: newIds}}}]});
+        res.send(newAssignments);
+      } else {
+        res.send([]);
+      }
+    } else {
+      res.send([]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([]);
+  }
+});
 
 app.post("/retrieveNotes", urlencodedParser, async function(req, res) {
   try {
@@ -53,7 +71,6 @@ app.post("/retrieveNotes", urlencodedParser, async function(req, res) {
     console.log(e);
     res.send([]);
   }
-  
 });
 
 app.get("/getNotes", async function(req, res) {
