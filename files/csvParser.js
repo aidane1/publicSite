@@ -146,28 +146,31 @@ let mapVal = {
   for (var i = 1; i < output.length; i++) {
 
     let currentFirstName = output[i][2].replace(/\s/g,'');
-    currentFirstName = currentFirstName[0].toUpperCase() + currentFirstName.substring(1, currentFirstName.length).toLowerCase();
     let currentLastName = output[i][1].replace(/\s/g,'');
-    currentLastName = currentLastName[0].toUpperCase() + currentLastName.substring(1, currentLastName.length).toLowerCase();
     let currentTeacherCode = output[i][0].replace(/\s/g,'');
-    let currentCode = output[i][3].replace(/\s/g,'');
-    let currentTeacher = await Teachers.findOne({$and: [{firstName: currentFirstName}, {lastName: currentLastName}, {teacherCode: currentTeacherCode}]});
-    let currentSchool = schoolMap[output[i][11]];
-    let currentSemester = "";
-    for (var j = 0; j < currentSchool.semesters.length; j++) {
-      if (currentSchool.semesters[j].name == output[i][8]) {
-        currentSemester = currentSchool.semesters[j]._id;
+    if (currentFirstName && currentLastName && currentTeacherCode) {
+      currentFirstName = currentFirstName[0].toUpperCase() + currentFirstName.substring(1, currentFirstName.length).toLowerCase();
+      
+      currentLastName = currentLastName[0].toUpperCase() + currentLastName.substring(1, currentLastName.length).toLowerCase();
+      
+      let currentCode = output[i][3].replace(/\s/g,'');
+      let currentTeacher = await Teachers.findOne({$and: [{firstName: currentFirstName}, {lastName: currentLastName}, {teacherCode: currentTeacherCode}]});
+      let currentSchool = schoolMap[output[i][11]];
+      let currentSemester = "";
+      for (var j = 0; j < currentSchool.semesters.length; j++) {
+        if (currentSchool.semesters[j].name == output[i][8]) {
+          currentSemester = currentSchool.semesters[j]._id;
+        }
+      }
+      if (currentSchool && currentSemester) {
+        let currentCategory = await Categories.findOne({$and: [{shortCode: output[i][4].replace(/\s/g,'')}, {school: currentSchool._id}]});
+        if (currentCategory != null && currentTeacher != null) {
+          courseList.push({school: currentSchool._id, course: currentSchool.courseCodes[currentCode] || currentCode, category: currentCategory._id, code: currentCode, teacher: currentTeacher._id, semester: currentSemester, block: mapVal[output[i][7]] || output[i][7]});
+        } else {
+
+        }  
       }
     }
-    if (currentSchool && currentSemester) {
-      let currentCategory = await Categories.findOne({$and: [{shortCode: output[i][4].replace(/\s/g,'')}, {school: currentSchool._id}]});
-      if (currentCategory != null && currentTeacher != null) {
-        courseList.push({school: currentSchool._id, course: currentSchool.courseCodes[currentCode] || currentCode, category: currentCategory._id, code: currentCode, teacher: currentTeacher._id, semester: currentSemester, block: mapVal[output[i][7]] || output[i][7]});
-      } else {
-
-      }  
-    }
-    
   }  
   for (var i = 0; i < courseList.length; i++) {
     let foundCourse = await Course.findOne({$and: [{code: courseList[i].code}, {teacher: courseList[i].teacher}, {semester: courseList[i].semester}, {block: courseList[i].block}]});
