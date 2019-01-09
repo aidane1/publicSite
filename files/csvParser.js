@@ -99,7 +99,7 @@ parser(input, {comment: '#'}, async function(err, output) {
         endDate = new Date(endDate[0], parseInt(endDate[1])-1, parseInt(endDate[2]));
         // let semester = await Semesters.create({name: currentSemester, startDate: startDate, endDate: endDate});
         // await School.findOneAndUpdate({_id : currentSchool._id}, {$push: {semesters: semester._id}});
-        schoolMap[output[i][11]].semesters.push(semester);
+        // schoolMap[output[i][11]].semesters.push(semester);
       }
     }
   }
