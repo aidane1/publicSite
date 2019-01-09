@@ -30,7 +30,8 @@ const EventSchema = new Schema({
     type: String
   },
   school : {
-    type : Schema.Types.ObjectId
+    type : Schema.Types.ObjectId,
+    ref: 'School',
   },
   schoolSkipped: {
     type: Boolean

@@ -9,7 +9,8 @@ const CourseSchema = new Schema({
     type: String,
   },
   teacher: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Teacher",
   },
   course: {
     type: String,
@@ -18,11 +19,16 @@ const CourseSchema = new Schema({
     type: String
   },
   school: {
-    type : Schema.Types.ObjectId
+    type : Schema.Types.ObjectId,
+    ref: "School",
   },
   category: {
-    type: String,
-    default: ""
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  semester: {
+    type: Schema.Types.ObjectId,
+    ref: "Semester"
   }
 });
 

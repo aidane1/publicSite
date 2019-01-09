@@ -21,7 +21,7 @@ const postSchema = new Schema({
   body: {
     type: String
   },
-  comments: [{type: Schema.Types.ObjectId, ref: Comment}]
+  comments: [{type: Schema.Types.ObjectId, ref: "Comment"}]
 });
 
 

@@ -20,7 +20,6 @@ const UserSchema = new Schema({
   },
   username: {
     type: String,
-    unique: true,
     required: true
   },
   password: {
@@ -28,7 +27,7 @@ const UserSchema = new Schema({
     required: true,
   },
   courses: {
-    type: [Schema.Types.ObjectId],
+    type: [{type: Schema.Types.ObjectId, ref: "Course"}],
   },
   reputation: {
     type: Number,
@@ -101,11 +100,11 @@ const UserSchema = new Schema({
   scheduleColours : {
     type: Object
   },
-  // notes: {
-  //   type: [Schema.Types.ObjectId]
-  // },
   anonPosts: {
     type: Array
+  },
+  studentID: {
+    type: String
   }
 });
 
@@ -113,13 +112,13 @@ const UserSchema = new Schema({
 
 
 
-UserSchema.statics.authenticate = (name, password) => {
+UserSchema.statics.authenticate = (name, password, school) => {
 
   return new Promise((resolve, reject) => {
     User.findOne({ username: name }).exec((err, user) => {
       if (err) {
         reject(err);
-      } else if (!user) {
+      } else if (!user || user.school != school) {
         reject("user not found");
       } else {
         bcrypt.compare(password, user.password, (err, result) => {

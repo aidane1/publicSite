@@ -14,12 +14,14 @@ const NoteSchema = new Schema({
     },
     writtenBy: {
         type: Schema.Types.ObjectId,
+        ref: "User",
     },
     date: {
         type: Date
     },
     forCourse: {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        ref: "Course"
     }
 });
 

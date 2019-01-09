@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const AssignmentSchema = new Schema({
     submittedBy: {
         type: Schema.Types.ObjectId,
+        ref: "User",
     },
     confirmed: {
         type: Boolean,
@@ -25,6 +26,7 @@ const AssignmentSchema = new Schema({
     },
     forCourse: {
         type: Schema.Types.ObjectId,
+        ref: "Course",
     },
 });
 

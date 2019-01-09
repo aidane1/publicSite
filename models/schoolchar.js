@@ -40,14 +40,8 @@ const SchoolSchema = new Schema({
   courseCodes: {
     type: Object
   },
-  teachers: {
-    type: Array
-  },
   masterAccount: {
     type: Schema.Types.ObjectId
-  },
-  categories: {
-    type: Array
   },
   scheduleType: {
     type: Number,
@@ -75,6 +69,9 @@ const SchoolSchema = new Schema({
   favicon: {
     type: String
   },
+  semesters: {
+    type: [{type: Schema.Types.ObjectId, ref: "Semester"}],
+  },
   spareName: {
     type: String,
     default: "Spare"
@@ -85,6 +82,17 @@ const SchoolSchema = new Schema({
   },
   schoolDistrict: {
     type: String
+  },
+  dayTitles: {
+    type: Array,
+    default: [{day1: "Monday", day2: "Tuesday", day3: "Wednesday", day4: "Thursday", day5: "Friday"}],
+  },
+  adminChanges: {
+    type: Array,
+    default: [],
+  },
+  schoolId: {
+    type: String,
   }
 });
 
