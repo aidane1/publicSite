@@ -53,6 +53,7 @@ parser(input, {comment: '#'}, async function(err, output) {
   let currentTeacher = {firstName: "", lastName: "", teacherCode: "", prefix: "Mr. ", school: ""};
   for (var i = 1; i < output.length; i++) {
     let currentFirstName = output[i][2].replace(/\s/g,'');
+    console.log(currentFirstName);
     currentFirstName = currentFirstName[0].toUpperCase() + currentFirstName.substring(1, currentFirstName.length).toLowerCase();
     let currentLastName = output[i][1].replace(/\s/g,'');
     currentLastName = currentLastName[0].toUpperCase() + currentLastName.substring(1, currentLastName.length).toLowerCase();
