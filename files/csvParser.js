@@ -47,7 +47,7 @@ parser(input, {comment: '#'}, async function(err, output) {
     }
   }
   
-  // console.log(output);
+  console.log(output);
   
   let teacherList = [];
   let currentTeacher = {firstName: "", lastName: "", teacherCode: "", prefix: "Mr. ", school: ""};
@@ -71,7 +71,7 @@ parser(input, {comment: '#'}, async function(err, output) {
   for (var i = 0; i < teacherList.length; i++) {
     let foundTeacher = await Teachers.findOne({$and: [{school: teacherList[i].school}, {firstName: teacherList[i].firstName}, {lastName: teacherList[i].lastName}]});
     if (foundTeacher == null) {
-      await Teachers.create(teacherList[i]);
+      // await Teachers.create(teacherList[i]);
     }
   }
 
@@ -92,8 +92,8 @@ parser(input, {comment: '#'}, async function(err, output) {
         let endDate = output[i][10].match(/.{1,2}/g);
         endDate[0] = parseInt("20" + endDate[0]);
         endDate = new Date(endDate[0], parseInt(endDate[1])-1, parseInt(endDate[2]));
-        let semester = await Semesters.create({name: currentSemester, startDate: startDate, endDate: endDate});
-        await School.findOneAndUpdate({_id : currentSchool._id}, {$push: {semesters: semester._id}});
+        // let semester = await Semesters.create({name: currentSemester, startDate: startDate, endDate: endDate});
+        // await School.findOneAndUpdate({_id : currentSchool._id}, {$push: {semesters: semester._id}});
         schoolMap[output[i][11]].semesters.push(semester);
       }
     }
@@ -125,7 +125,7 @@ parser(input, {comment: '#'}, async function(err, output) {
     let foundCategory = await Categories.findOne({$and: [{school: categoryList[i].school}, {shortCode: categoryList[i].shortCode}]});
     // console.log(foundCategory);
     if (foundCategory == null) {
-      await Categories.create(categoryList[i]);
+      // await Categories.create(categoryList[i]);
     }
   }
 
@@ -167,7 +167,7 @@ let mapVal = {
   for (var i = 0; i < courseList.length; i++) {
     let foundCourse = await Course.findOne({$and: [{code: courseList[i].code}, {teacher: courseList[i].teacher}, {semester: courseList[i].semester}, {block: courseList[i].block}]});
     if (foundCourse == null) {      
-      await Course.create(courseList[i]);
+      // await Course.create(courseList[i]);
     }
   }
 
