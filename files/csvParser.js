@@ -17,7 +17,7 @@ let Teachers = require("../models/teacherchar.js");
 let Categories = require("../models/categorychar.js");
 let Semesters = require("../models/semesterchar.js");
 
-let input = fs.readFileSync("master.csv");
+let input = fs.readFileSync("/home/schoolFiles/master.csv");
 
 mongoose.connect("mongodb://127.0.0.1:27017/users", {useNewUrlParser: true});
 
