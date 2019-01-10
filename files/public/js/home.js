@@ -124,17 +124,9 @@ function fileChanged(id) {
   imageHolder.className = "noteImage";
   imageHolder.appendChild(image);
   imageHolder.style.opacity = "0.6";
-
-  
   document.getElementById("allNoteImages_" + id).appendChild(imageHolder);
-
-
   let formData = new FormData();
-  formData.append("file", curFiles);
-  formData.append("text", "yeeter");
-  for (var [key, value] of formData.entries()) { 
-    console.log(key, value);
-  }
+  formData.append("file", image);
   let loadRequest;
   if (window.XMLHttpRequest) {
     // code for modern browsers
