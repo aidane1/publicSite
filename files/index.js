@@ -2728,6 +2728,7 @@ app.get("/", async function(req, res) {
       schoolSkipped.sort((a,b) => a.date.getTime() > b.date.getTime());
       let eventsObject = {};
 
+      console.log(events);
 
       
       {
@@ -2809,7 +2810,7 @@ app.get("/", async function(req, res) {
         }
       }
 
-
+      console.log(eventsObject);
       let monthLengths = [];
       let monthNames = [];
       let currentMonthDate = startDate.clone();
