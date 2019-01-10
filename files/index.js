@@ -1524,7 +1524,18 @@ app.post("/updateManyCourse", urlencodedParser, async function(req, res) {
 });
 
 app.get("/teacher/:id", async function(req, res) {
-
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    let teacher = await Teachers.findOne({_id : req.params.id});
+    if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+      let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+      res.render("teacherdashboard/teacherDashboard", {courses: courses, teacher: teacher});
+    } else {
+      res.redirect("/dashboard");
+    }
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/send_nudes", function(req,res) {
@@ -2875,7 +2886,7 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
 
-        res.render("redesign/index", {favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
 
       }

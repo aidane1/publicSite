@@ -71,6 +71,7 @@
           overflow-y: hidden;
           justify-content: space-evenly;
           background-color: rgb(240,240,240);
+          position: relative;
       }
       .homeHeader {
           width: 100%;
@@ -321,13 +322,78 @@
     .empty {
         opacity: 0.3;
     }
-
+    .calendarPopUp {
+        width: calc(100% - 20px);
+        height: calc(100% - 50px);
+        background-color: white;
+        position: absolute;
+        left: 10px;
+        top: calc(100% + 20px);
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        transition: top 0.3s linear;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        /* overflow: hidden; */
+    }
+    .removePopUp {
+        width: 50px;
+        background-color: grey;
+        position: relative;
+        top: -20px;
+        height: 5px;
+        border-radius: 5px;
+        margin: auto;
+        margin-top: 10px;
+    }
+    .dateTitle {
+        width: 100%;
+        font-size: 20px;
+        text-align: center;
+    }
+    .eventBody {
+        width: 100%;
+        border: 5px solid #bbb;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    .eventBodyTime {
+        background-color: #bbb;
+        padding-right: 3px;
+    }
+    .eventBodyInfo {
+        flex-grow: 1;
+        background-color: #b2ffbc;
+        overflow-x: auto;
+        padding-left: 5px;
+        color: #277230;
+    }
     @media screen and (max-height: 520px) {
         .homeHeader {
             display: none;
         }
         .backdrop {
             height: 100%;
+        }
+    }
+    @media screen and (min-width: 768px) {
+        .backdrop {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+            background-color: rgb(240,240,240);
+            overflow-y: auto;
+            
+        }
+        .bodyTile {
+            width: 350px;
+            height: 500px;
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgb(210,210,210);
         }
     }
     
@@ -461,7 +527,11 @@
                                             <% }  else { %>
                                                 <% let today = eventMap[`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`]; %>
                                                 <% if (today) { %>
-                                                    <div class="calendarDay">
+                                                    <% let events = [] %>
+                                                    <% for (var l = 0; l < today[3].length; l++) { %>
+                                                        <% events.push({time: today[3][l].time, info: today[3][l].info}); %>
+                                                    <% } %>
+                                                    <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '<%=JSON.stringify(events)%>')">
                                                         <div class="dayDate">
                                                             <%= todayDate.getDate()%>
                                                         </div>
@@ -473,7 +543,7 @@
                                                         </div>
                                                     </div>
                                                 <% } else { %>
-                                                    <div class="calendarDay empty">
+                                                    <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', [])">
                                                         <div class="dayDate">
                                                             <%= todayDate.getDate()%>
                                                         </div>
@@ -508,12 +578,61 @@
                     <% } %>
                     <div style = "width: 1px; height: 300px"></div>
                 </div>
+                <div class="calendarPopUp" id = "calendarPopUp">
+                    <div class="removePopUp" onclick = "removePopUp()"></div>
+                    <div class="dateTitle" id = "dateTitle"></div>
+                    <div id = "eventsHolder"></div>
+                </div>
             </div>
         </div>
     </div>
   </body>
   <script>
       
+    function extendCalendarPopup(dateString, events) {
+// 
+        // console.log(events);
+
+        events = JSON.parse(events);
+        
+        let popup = document.getElementById("calendarPopUp");
+        popup.style.top = "50px";
+        var myNode = document.getElementById("eventsHolder");
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+        for (var i = 0; i < events.length; i++) {
+            let event = document.createElement("div");
+            event.className = "eventBody";
+            let time = document.createElement("div");
+            time.className = "eventBodyTime";
+            let info = document.createElement("div");
+            info.className = "eventBodyInfo";
+            time.innerHTML = events[i].time;
+            info.innerHTML = events[i].info;
+            event.appendChild(time);
+            event.appendChild(info);
+            myNode.appendChild(event);
+        }
+        if (events.length == 0) {
+            let event = document.createElement("div");
+            event.className = "eventBody";
+            let time = document.createElement("div");
+            time.className = "eventBodyTime";
+            let info = document.createElement("div");
+            info.className = "eventBodyInfo";
+            time.innerHTML = "";
+            info.innerHTML = "No Events!";
+            event.appendChild(time);
+            event.appendChild(info);
+            myNode.appendChild(event);
+        }
+        document.getElementById("dateTitle").innerHTML = dateString;
+    }
+    function removePopUp() {
+        let popup = document.getElementById("calendarPopUp");
+        popup.style.top = "calc(100% + 20px)";
+    }
     
     let backdrop = document.getElementById("backdrop");
     let bodies = document.getElementById("calendarBodies");

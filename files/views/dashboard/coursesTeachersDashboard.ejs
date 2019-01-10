@@ -496,7 +496,7 @@
                     </div>
                     <div class="teachersBody">
                         <% for (var i = 0; i < teachers.length; i++) { %>
-                            <div class="teacher" id = "teacher_<%=teachers[i]._id%>">
+                            <div class="teacher" onclick = "window.location = '/teacher/<%=teachers[i]._id%>'" id = "teacher_<%=teachers[i]._id%>">
                                 <div class="teacherProperty"><%=teachers[i].firstName%></div>
                                 <div class="teacherProperty"><%=teachers[i].lastName%></div>
                                 <div class="teacherProperty"><%=teachers[i].prefix%></div>
@@ -590,33 +590,35 @@
 
 
     function removeTeacher(id) {
-        let loadRequest;
-        if (window.XMLHttpRequest) {
-            // code for modern browsers
-            loadRequest = new XMLHttpRequest();
-        } else {
-            // code for old IE browsers
-            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        loadRequest.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                let response = JSON.parse(this.responseText);
-                
-                if (response[0] === true) {
-                    let removedEvent = document.getElementById("teacher_" + response[1]._id);
-                    removedEvent.parentNode.removeChild(removedEvent);
+        if (confirm("are you sure you would like to remove this teacher?")) {
+            let loadRequest;
+            if (window.XMLHttpRequest) {
+                // code for modern browsers
+                loadRequest = new XMLHttpRequest();
+            } else {
+                // code for old IE browsers
+                loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            loadRequest.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let response = JSON.parse(this.responseText);
                     
-                } else {
-                    let error = document.getElementById("errorPopDown");
-                    error.innerText = "Error: " + response[1];
-                    error.classList.add("errorDown");
-                    errorExtened = true;
+                    if (response[0] === true) {
+                        let removedEvent = document.getElementById("teacher_" + response[1]._id);
+                        removedEvent.parentNode.removeChild(removedEvent);
+                        
+                    } else {
+                        let error = document.getElementById("errorPopDown");
+                        error.innerText = "Error: " + response[1];
+                        error.classList.add("errorDown");
+                        errorExtened = true;
+                    }
                 }
             }
-        }
 
-        loadRequest.open("GET", "/removeTeacher?removedId=" + id, true);
-        loadRequest.send(); 
+            loadRequest.open("GET", "/removeTeacher?removedId=" + id, true);
+            loadRequest.send(); 
+        }
     }
     function sendNewteacher(teacherData) {
         let sendString = "";

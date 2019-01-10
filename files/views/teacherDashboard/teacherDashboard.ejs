@@ -34,6 +34,7 @@
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
+            overflow-y: auto;
         }
         .bodyRight {
             /* width: calc(100% - 250px); */
@@ -175,57 +176,21 @@
             <div class="sideBarTitle">
                     <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
-            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+            <div class="sideBarOverview">
                 <div class="overViewMain">
-                    School Overview
+                    Courses Overview
                 </div>
             </div> 
-            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
-                <div class="sideBarMain">
-                    Master Schedule
-                </div>
-                <div class="sideBarSecondary">
-                    Edit and view the master schedule
-                </div>                
-            </div>
-            <div class="sideBarTopic" onclick = "expandCoursesBar(this)" >
-                <div class="sideBarMain">
-                    Courses
-                </div>
-                <div class="sideBarSecondary" id = "courseSecondary">
-                    Add, edit, and remove courses
-                </div>        
-                <div class = "expandingCourses" id = "expandingCourses">
-                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
-                        Categories
+            <% for (var i = 0; i < courses.length; i++) { %>
+                <div class="sideBarTopic">
+                    <div class="sideBarMain">
+                        <%=courses[i].course%>
                     </div>
-                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
-                        Teachers
-                    </div>
-                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
-                        Courses
-                    </div>
-                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
-                        Codes
+                    <div class="sideBarSecondary">
+                        <%=courses[i].semester.name%>, block <%=courses[i].block%>
                     </div>
                 </div>
-            </div>
-            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
-                <div class="sideBarMain">
-                    Events
-                </div>
-                <div class="sideBarSecondary">
-                    Add, edit, and remove events
-                </div>                
-            </div>
-            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
-                <div class="sideBarMain">
-                    Configure
-                </div>
-                <div class="sideBarSecondary">
-                    Change information displays
-                </div>                
-            </div>
+            <% } %> 
         </div>
         <div class="bodyRight">
             <div class = "bodyUpperSection">
@@ -234,7 +199,7 @@
                 </div>
                 <div class="secondaryBar">
                     <div class="barTitle">
-                        Course
+                        <%=teacher.firstName%> <%=teacher.lastName%>
                     </div>
                 </div>
             </div>
