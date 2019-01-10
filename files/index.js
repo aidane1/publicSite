@@ -2814,7 +2814,7 @@ app.get("/", async function(req, res) {
         }
       }
 
-      console.log(eventsObject);
+      // console.log(eventsObject);
       let monthLengths = [];
       let monthNames = [];
       let currentMonthDate = startDate.clone();
