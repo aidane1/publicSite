@@ -39,7 +39,7 @@ async function main() {
                 newCourses.push(currentCourse._id);
             };
         }
-        console.log(newCourses);
+        await User.findOneAndUpdate({_id : users[i]._id}, {$set: {courses: newCourses}});
     }
 }
 main();
