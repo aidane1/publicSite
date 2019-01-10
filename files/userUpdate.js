@@ -3,6 +3,7 @@ let mongoose = require("mongoose");
 let fs = require("fs");
 let User = require("../models/userchar.js");
 let Course = require("../models/coursechar.js");
+let oldCourse = require("../models/oldcourseschema.js");
 let Song = require("../models/songchar.js");
 let Events = require("../models/eventschar");
 let Texts = require("../models/textchar.js");
@@ -31,7 +32,7 @@ async function main() {
 
     let users = await User.find({username: "AidanEglin"});
     for (var i = 0; i < users.length; i++) {
-        let currentCourses = await Course.find({_id : users[i].courses});
+        let currentCourses = await oldCourse.find({_id : users[i].courses});
         let newCourses = [];
         for (var j = 0; j < currentCourses.length; j++) {
             console.log(currentCourses[j]);
