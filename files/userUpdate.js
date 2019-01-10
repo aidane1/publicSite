@@ -29,7 +29,7 @@ mongoose.connection.once("open", function() {
 
 async function main() {
 
-    let users = await User.find({username: "AidanEglin"});
+    let users = await User.find({});
     for (var i = 0; i < users.length; i++) {
         let currentCourses = await Course.find({_id : users[i].courses});
         let newCourses = [];
