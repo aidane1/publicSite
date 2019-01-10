@@ -2721,12 +2721,8 @@ app.get("/", async function(req, res) {
 
       let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, "LC's");
       let events = await Events.find({school: user.school}).sort({date: "ascending"});
-      console.log(events);
-      events.sort((a,b) => a.date.getTime() > b.date.getTime());
-      let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
-      offSetEvents.sort((a,b) => a.date.getTime() > b.date.getTime());
-      let schoolSkipped = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]});
-      schoolSkipped.sort((a,b) => a.date.getTime() > b.date.getTime());
+      let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]}).sort({date: "ascending"});;
+      let schoolSkipped = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]}).sort({date: "ascending"});;
       let eventsObject = {};
 
 
