@@ -28,18 +28,9 @@ mongoose.connection.once("open", function() {
 });
 
 async function main() {
-
     let users = await User.find({});
     for (var i = 0; i < users.length; i++) {
-        let currentCourses = await Course.find({_id : users[i].courses});
-        let newCourses = [];
-        for (var j = 0; j < currentCourses.length; j++) {
-            let currentCourse = await Course.findOne({$and: [{school: "5c36528ba2301f5fd713cdb1"}, {teacher: currentCourses[j].teacher}, {block: currentCourses[j].block}]});
-            if (currentCourse) {
-                newCourses.push(currentCourse._id);
-            };
-        }
-        await User.findOneAndUpdate({_id : users[i]._id}, {$set: {courses: newCourses}});
+        await User.findOneAndUpdate({_id : users[i]._id}, {$set: {school: "5c36528ba2301f5fd713cdb1"}});
     }
 }
 main();
