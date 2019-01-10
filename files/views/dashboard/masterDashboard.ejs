@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            height: 50%;
+            min-height: 400px;
+            background-color: rgb(18, 135, 222);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            background-color: red;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            color: white;
+        }
+        .schedules {
+            width: 60%;
+            min-width: 500px;
+            margin: auto;
+            margin-top: 50px;
+        }
+        .schedule {
+            width: 100%;
+            margin-bottom: 50px;
+            background-color: white;
+            /* height: 700px; */
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            display: inline-flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .scheduleDay {
+            width: 20%;
+            /* height: 100%; */
+            border-right: 1px solid black;
+        }
+        .scheduleDayTitle {
+            width: 100%;
+            height: 30px;
+            border-bottom: 1px solid black;
+            text-align: center;
+            font-size: 18px;
+            outline: none;
+            padding: 5px;
+            /* background-color: white; */
+        }
+        .scheduleDayBlock {
+            border-bottom: 1px solid black;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            cursor: pointer;
+            /* height: 350px; */
+            /* background-color: white; */
+        }
+        .scheduleDayTime {
+            width: 100%;
+            text-align: center;
+        }
+        .scheduleDayBlockSelect {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+        .blockSelect {
+            width: 100%;
+            font-size: 16px;
+        }
+        .enterButton {
+            width: 100%;
+            height: 20px;
+            text-align: center;
+            background-color: red;
+            color: white;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .extendedScheduleBar {
+            width: 250px;
+            height: calc(100% - 140px);
+            position: fixed;
+            top: 140px;
+            left: -250px;
+            background-color: rgb(28, 35, 46);
+            transition: left 0.2s ease-out;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
+        }
+        .extended {
+            left: 0;
+        }
+        .sideStartTime {
+            margin-top: 20px;
+            color: white;
+        }
+        .sideEndTime {
+            margin-top: 20px;
+            color: white;
+        }
+        .optionsHolder {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 5px 10px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            border-top: 1px solid rgb(56, 70, 90);
+        }
+        .optionsHolder select {
+            height: 100%;
+            flex-grow: 1;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            outline: none;
+        }
+        .sideBlockSelect {
+            color: white;
+        }
+        .sideBlockSelector {
+            height: 100%;
+            flex-grow: 1;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            outline: none;
+        }
+        .icon {
+            width: 30px;
+            height: 30px;
+        }
+        .icon img {
+            width: 30px;
+            height: 30px;
+            position: relative;
+            top: 2px;
+        }
+        .submitChanges {
+            width: 150px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 10px;
+            background-color: #446cb2;
+            margin: auto;
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            appearance: none;
+            cursor: pointer;
+            flex-grow: 0;
+        }
+        .expandingCourses {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic">
+                <div class="sideBarMain" style = "color: rgb(67,181,245);">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "expandCoursesBar(this)" >
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "courseSecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingCourses" id = "expandingCourses">
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove events
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+
+            </div>
+            <div class = "bodyLowerSection">
+
+            </div>
+            <div class="overPage">
+                <!-- <div class="topBar">
+
+                </div> -->
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        PVSS (sd83)
+                    </div>
+                </div>
+                <div class = "schedules">
+                    <% if (school.constantBlocks) { %>
+                        <% for (var i = 0; i < school.constantBlockSchedule.schedule.length; i++) { %>
+                            <div class="schedule">
+                                <% for (var key in school.constantBlockSchedule.schedule[i]) { %>
+                                    <div class="scheduleDay">
+                                        <div class="scheduleDayTitle" contenteditable="true">
+                                            Day 1
+                                        </div>
+                                        <% for (var j = 0; j < school.constantBlockSchedule.schedule[i][key].length; j++) { %>
+                                            <div class="scheduleDayBlock"  onclick="toggleSideBar(<%=i%>, '<%=key%>', <%=j%>)" style = "background-color: <%=colorMap[school.constantBlockSchedule.schedule[i][key][j][0]]%>">
+                                                <div class = "scheduleDayBlockSelect">
+                                                    
+                                                    <%= school.constantBlockSchedule.schedule[i][key][j][0] %>
+                                                </div>
+                                                <div class="scheduleDayTime">
+                                                    <%= (school.constantBlockSchedule.blockSchedule[j][0]-1)%12+1 %>:<%= school.constantBlockSchedule.blockSchedule[j][1] %>
+                                                    -
+                                                    <%= (school.constantBlockSchedule.blockSchedule[j][2]-1)%12+1 %>:<%= school.constantBlockSchedule.blockSchedule[j][3].toString().length == 1 ? "0" + school.constantBlockSchedule.blockSchedule[j][3].toString() : school.constantBlockSchedule.blockSchedule[j][3].toString() %>
+                                                </div>
+                                                <!-- <div class = "enterButton" onclick = "updateFunction(this, 0, 1, 0)">Update</div> -->
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class = "extendedScheduleBar" id = "extendedScheduleBar">
+            <div class="spaceItem">
+                <div class = "sideBlockSelect" id = "sideBlockSelect">
+                    Block
+                    <div class="optionsHolder">
+                        <div class="icon">
+                            <img src = "/public/icons/blockIcon.svg" />
+                        </div>
+                        <select id = "sideBlockSelector" onchange="">
+                            <% school.blockNames.sort()%>
+                            <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                                <option value = "[<%=school.blockNames[i][0]%>, <%=school.blockNames[i][1]%>]"><%=school.blockNames[i][0]%> (<%=school.blockNames[i][1]%>)</option>
+                            <% } %> 
+                        </select>
+                    </div>
+                </div>  
+            </div>
+            <div class="spaceItem">
+                <div class = "sideStartTime" id = "sideStartTime">
+                    Start Time (hour : minute)
+                    <div class = "optionsHolder">
+                        <div class="icon">
+                            <img src = "/public/icons/timeIcon.svg" />
+                        </div>
+                        <select id = "startHourSelect">
+                            <option value="" selected disabled>Hour</option><option value="0">12 AM</option><option value="1">01 AM</option><option value="2">02 AM</option><option value="3">03 AM</option><option value="4">04 AM</option><option value="5">05 AM</option><option value="6">06 AM</option><option value="7">07 AM</option><option value="8">08 AM</option><option value="9">09 AM</option><option value="10">10 AM</option><option value="11">11 AM</option><option value="12">12 PM</option><option value="13">01 PM</option><option value="14">02 PM</option><option value="15">03 PM</option><option value="16">04 PM</option><option value="17">05 PM</option><option value="18">06 PM</option><option value="19">07 PM</option><option value="20">08 PM</option><option value="21">09 PM</option><option value="22">10 PM</option><option value="23">11 PM</option>
+                        </select>
+                        <select id = "startMinuteSelect">
+                            <option value="" selected disabled>Minute</option><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="spaceItem">
+                <div class = "sideEndTime" id = "sideStartTime">
+                    Start Time (hour : minute)
+                    <div class = "optionsHolder">
+                        <div class="icon">
+                            <img src = "/public/icons/timeIcon.svg" />
+                        </div>
+                        <select id = "endHourSelect">
+                            <option value="" selected disabled>Hour</option><option value="0">12 AM</option><option value="1">01 AM</option><option value="2">02 AM</option><option value="3">03 AM</option><option value="4">04 AM</option><option value="5">05 AM</option><option value="6">06 AM</option><option value="7">07 AM</option><option value="8">08 AM</option><option value="9">09 AM</option><option value="10">10 AM</option><option value="11">11 AM</option><option value="12">12 PM</option><option value="13">01 PM</option><option value="14">02 PM</option><option value="15">03 PM</option><option value="16">04 PM</option><option value="17">05 PM</option><option value="18">06 PM</option><option value="19">07 PM</option><option value="20">08 PM</option><option value="21">09 PM</option><option value="22">10 PM</option><option value="23">11 PM</option>
+                        </select>
+                        <select id = "endMinuteSelect">
+                            <option value="" selected disabled>Minute</option><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="spaceItem">
+                <div class = "submitChanges" id = "submitChanges" onclick = "submitBlockChanges(0, 'day1', 0)">
+                    Submit Changes
+                </div> 
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let coursesExpanded = false;
+    function expandCoursesBar(element) {
+        let courses = document.getElementById("expandingCourses");
+        let courseSecondary = document.getElementById("courseSecondary");
+        if (coursesExpanded) {
+            courses.style.maxHeight = "0px";
+            coursesExpanded = false;
+            element.className = "sideBarTopic";
+            courseSecondary.style.visibility = "visible";
+        } else {
+            courses.style.maxHeight = "150px";
+            coursesExpanded = true;
+            element.className = "expandedTopic";
+            courseSecondary.style.visibility = "hidden";
+        }
+    }
+    function sendToServer(path, info) {
+        let formData = new FormData();
+        for (var key in info) {
+            if (info[key]) {
+                formData.append(key, info[key]);
+            }
+        }
+        console.log(formData);
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+            
+            }
+        }
+        loadRequest.open("POST", path, true);
+        loadRequest.send(formData); 
+    }
+
+    function updateFunction(blockElement, schedule, day, block) {
+
+    }
+    function toggleSideBar(schedule, day, block) {
+        document.getElementById("extendedScheduleBar").classList.toggle("extended");
+        document.getElementById("submitChanges").setAttribute("onclick", `submitBlockChanges(${schedule}, '${day}', ${block})`);
+    }
+
+    function submitBlockChanges(schedule, day, block) { 
+        var block = document.getElementById("sideBlockSelector").value;
+        var startTimeHour = document.getElementById("startHourSelect").value;
+        var startTimeMinute = document.getElementById("startMinuteSelect").value;
+        var endTimeHour = document.getElementById("endHourSelect").value;
+        var endTimeMinute = document.getElementById("endMinuteSelect").value;
+        let postMap = {
+            schedule: schedule,
+            day: day,
+            block: block,
+            startTime: [startTimeHour, startTimeMinute],
+            endTime: [endTimeHour, endTimeMinute],
+            block: block,
+        };
+        sendToServer("/updateBlock", postMap);
+    }
+</script>
+</html>

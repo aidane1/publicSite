@@ -241,26 +241,23 @@
       <button type = "button" class = "later"><a href = "/">later</a></button>
       <div class = "courseHolder" id = "courseHolder">
         <% for (var j = 0; j < categories.length; j++) { %>
-          <% if (categories[j]) { %>
-
-            <div class = "course" onclick = "expandFunction(this)">
-              <%=categories[j]%>
-              <div class = "courseContent">
-                Click on a class to select it as one of yours
-                <br>
-                Click on the header to close
-                <% for (var i = 0; i < courses.length; i++) { %>
-                  <% if (courses[i].category == categories[j]) { %>
-                    <div class = "courseName <%=courses[i].block%>" id = "<%=courses[i]._id%>" onclick = "addCourse(this, '<%=courses[i].block%>', '<%=courses[i].course%>')">
-                      <%=courses[i].teacher%>'s
-                      <%=courses[i].course%>
-                      (<%=courses[i].block%> block)
-                    </div>
-                  <% } %>
+          <div class = "course" onclick = "expandFunction(this)">
+            <%=categories[j].category%>
+            <div class = "courseContent">
+              Click on a class to select it as one of yours
+              <br>
+              Click on the header to close
+              <% for (var i = 0; i < courses.length; i++) { %>
+                <% if (courses[i].category.toString() == categories[j]._id.toString()) { %>
+                  <div class = "courseName <%=courses[i].block%>" id = "<%=courses[i]._id%>" onclick = "addCourse(this, '<%=courses[i].block%>', '<%=courses[i].course%>')">
+                    <%=courses[i].teacher.prefix%><%=courses[i].teacher.lastName%>'s
+                    <%=courses[i].course%>
+                    (<%=courses[i].block%> block)
+                  </div>
                 <% } %>
-              </div>
+              <% } %>
             </div>
-          <% } %>
+          </div>
         <% } %>
         <!-- <div class = "course" onclick = "expandFunction(this)">
           Other

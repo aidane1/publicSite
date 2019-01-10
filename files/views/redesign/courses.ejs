@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta name = "description" content = "The PVSS student website. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
+    <meta charset = "utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <meta name = "theme-color" content = "orange" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel = "manifest" href = "public/manifests/home.json  " />
+    <title>PVSS student website | Course Select</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        
+    </script>
+    <script>
+
+
+    </script>
+    <style>
+      @font-face {
+          font-family: SF;
+          src: url("/public/fonts/SF-Pro-Display-Regular.otf");
+      }
+      * {
+          font-family: sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          box-sizing: border-box;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .backdrop {
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgb(240,240,240);
+          /* display: flex; */
+          /* flex-direction: column; */
+          /* flex-wrap: nowrap; */
+      }
+      .expandingBar {
+          max-height: 50px;
+          overflow: hidden;
+          transition: max-height 0.3s ease-in;
+      }
+      .expandingTitle {
+          height: 50px;
+          color: black;
+          border-bottom: 1px solid rgb(210,210,210);
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          align-items: center;
+          padding-left: 10px;
+          padding-right: 10px;
+          justify-content: space-between;
+      }
+      .expandingChild {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: white;
+          color: black;
+      }
+      .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .coursesDisplayColumn {
+            width: 150px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+            border-top: 1px solid rgb(210,210,210);
+            border-left: 1px solid rgb(210,210,210);
+            border-right: 1px solid rgb(210,210,210);
+        }
+        .displayItem {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid rgb(210,210,210);
+            font-size: 20px;
+            background-color: white;
+        }
+        .displayItemFilled {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid rgb(210,210,210);
+            font-size: 20px;
+            background-color: white;
+        }
+        .semesterPicker {
+            width: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            border-bottom: 1px solid rgb(210,210,210);
+            margin-bottom: 20px;
+            /* margin-top: 10px; */
+            /* box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); */
+            /* -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); */
+        }
+        .semester {
+            padding: 20px 0px;
+            flex-grow: 1;
+            text-align: center;
+            border-right: 1px solid rgb(210,210,210);
+            color: rgba(238,110,115,0.7);
+        }
+        .last {
+            border: none !important;
+        }
+        .selected {
+            /* color: red; */
+            color: #ee6e73;
+            border-bottom: 2px solid #ee6e73;
+            background-color: rgba(238,110,115,0.2);
+        }
+        a {
+            text-decoration: none;
+            color: rgba(238,110,115,0.7);
+        }
+        .submitAll {
+            width: 120px;
+            text-align: center;
+            margin: auto;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-radius: 7px;
+            border: 1px solid orange;
+            margin-bottom: 20px;
+            color: orange;
+        }
+        .fa-times-circle {
+            color: red;
+        }
+    
+      
+    </style>
+  </head>
+  <body>
+      <div class="backdrop">
+          <div class="semesterPicker">
+            <% for (var i = 0; i < school.semesters.length; i++) { %>
+                <% if (school.semesters[i]._id.toString() == selectedSemester) { %>
+                    <div class="semester selected"><%=school.semesters[i].name%></div>
+                <% } else { %>
+                    <div class="semester"><a href="/courses?semester=<%=school.semesters[i]._id%>"><%=school.semesters[i].name%></a></div>
+                <% } %>
+            <% } %>
+          </div>
+        <% for (var j = 0; j < categories.length; j++) { %>
+            <div class = "expandingBar" expanded="false">
+                <div class="expandingTitle" onclick = "expandFunction(this.parentNode)">
+                    <div class = 'iconBubble' style = "background: <%-icons[categories[j].category.toLowerCase()] != null ? icons[categories[j].category.toLowerCase()][1] : icons['other'][1]%>">
+                        <%-icons[categories[j].category.toLowerCase()] != null ? icons[categories[j].category.toLowerCase()][0] : icons['other'][0]%>
+                    </div>
+                    <div class="titleTitle">
+                        <%=categories[j].category%>
+                    </div>
+                    <div class="titleArrow">
+                        &#9660;
+                    </div>
+                </div>
+                <% for (var i = 0; i < courses.length; i++) { %>
+                    <% if (disallowed.indexOf(courses[i].block) < 0) { %>
+                        <% if (courses[i].category.toString() == categories[j]._id.toString()) { %>
+                            <div class = "expandingChild <%=courses[i].block%>" onclick = "addCourse('<%=courses[i].block%>', '<%=courses[i]._id%>', '<%=courses[i].course%>')">
+                                <%=courses[i].teacher.prefix%><%=courses[i].teacher.lastName%>'s
+                                <%=courses[i].course%>
+                                (<%=courses[i].block%> block)
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <% if (courses[i].category.toString() == categories[j]._id.toString()) { %>
+                            <div class = "expandingChild <%=courses[i].block%>" style = "display: none" onclick = "addCourse('<%=courses[i].block%>', '<%=courses[i]._id%>', '<%=courses[i].course%>')">
+                                <%=courses[i].teacher.prefix%><%=courses[i].teacher.lastName%>'s
+                                <%=courses[i].course%>
+                                (<%=courses[i].block%> block)
+                            </div>
+                        <% } %>
+                    <% } %>
+                <% } %>
+            </div>
+        <% } %>
+        <div class="coursesDisplayColumn">
+            <% school.blockNames.sort((a,b) => a[0].localeCompare(b[0]))%>
+            <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                <% if (school.blockNames[i][1] == "changing") { %>
+                    <% if (userCourses[school.blockNames[i][0]]) { %>
+                        <div class="displayItemFilled" id = "block_<%=school.blockNames[i][0]%>" block = "<%=school.blockNames[i][0]%>">
+                            <%= userCourses[school.blockNames[i][0]].course %>
+                            <br>
+                            <i class="far fa-times-circle" onclick = "removeCourse('<%=school.blockNames[i][0]%>')"></i>
+                        </div>
+                    <% } else { %>
+                        <div class="displayItem" id = "block_<%=school.blockNames[i][0]%>">
+                            <%=school.blockNames[i][0]%>
+                        </div>  
+                    <% } %>                    
+                <% } %>
+            <% } %>
+        </div>
+        <div class="submitAll" onclick = "submitAll()">
+            OK
+        </div>
+      </div>
+  </body>
+  <script>
+    let sendObject = {
+
+    }
+    function addCourse(block, id, name) {
+        sendObject[block] = id;
+        let sameBlocks = document.getElementsByClassName(block);
+        for (var i = 0; i < sameBlocks.length; i++) {
+            sameBlocks[i].style.display = "none";
+        }
+        document.getElementById("block_" + block).innerHTML = name + `<br><i class="far fa-times-circle" onclick = "removeCourse('${block}')"></i>`;
+        document.getElementById("block_" + block).className  = "displayItemFilled";
+    }
+    function removeCourse(block) {
+        sendObject[block] = "";
+        let sameBlocks = document.getElementsByClassName(block);
+        for (var i = 0; i < sameBlocks.length; i++) {
+            sameBlocks[i].style.display = "block";
+        }
+        document.getElementById("block_" + block).innerHTML = block;
+        document.getElementById("block_" + block).className  = "displayItem";
+    }
+    function expandFunction(element) {
+       if (element.getAttribute("expanded") == "true") {
+        element.setAttribute("expanded", "false");
+        element.style.maxHeight = "50px"
+        element.children[0].children[2].innerHTML = "&#9660;";
+       } else {
+        element.setAttribute("expanded", "true");
+        element.style.maxHeight = (element.children.length*40+10).toString() + "px";
+        element.children[0].children[2].innerHTML = "&#9650;";
+       }
+    }
+
+    function submitAll() {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/courses?semester=<%=selectedSemester%>";
+        for (var key in sendObject) {
+            let input = document.createElement("input");
+            input.type = "hidden";
+            input.value = sendObject[key];
+            input.name = key;
+            form.appendChild(input);
+        }
+        document.body.appendChild(form);
+        console.log(form);
+        form.submit();
+    }
+  </script>
+</html>

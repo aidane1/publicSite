@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            flex-grow: 0;
+            background-color: rgb(3, 155, 229);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            /* background-color: red; */
+            color: rgba(255,255,255,0.6);
+            padding: 10px;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .teacherHolderMain {
+            width: 95%;
+            /* height: 500px; */
+            background-color: rgb(242,242,242);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+        .createTeacherBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createTeacher {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .teacherCategoriesBar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 12px;
+        }
+        .teacherCategory {
+            width: 30%;
+            font-size: 13px;
+            color: #666;
+            padding-left: 3px;
+        }
+        .teachersBody {
+            width: 100%;
+            /* height: 400px; */
+            background-color: white;
+        }
+        .teacher {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .teacherProperty {
+            width: 30%;
+            padding-right: 10px;
+            font-size: 13px;
+            padding-left: 5px;
+        }
+        .teacher:hover {
+            background-color: #f5f5f5;
+        }
+        .editteacher {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .teacher:hover .editteacher {
+            visibility: visible;
+        }
+        .editDelete {
+            width: 100px;
+            height: 75px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
+            padding-top: 10px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .expandingBlock {
+            width: 100%;
+            /* height: 200px; */
+            /* padding-top: 50px; */
+            /* padding-bottom: 25px; */
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            
+        }
+ 
+        .createTeacherBlock {
+            width: 30%;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            width: 100%;
+            /* height: 200px; */
+        }
+        .addInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+            
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .createCreation {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        .cancelCreation:hover {
+            background-color: #ddd;
+        }
+        .notAllowed {
+            background-color:  #ddd !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+        }
+        #errorPopDown {
+            padding: 20px;
+            background-color: rgb(241,80,79);
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px;
+            -webkit-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            transition: top 0.2s ease-out
+        }
+        .errorDown {
+            top: 100px !important;
+            cursor: pointer;
+        }
+        .expandingteachers {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .optionsHolder {
+            width: 90%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .optionsHolder select {
+            height: 100%;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 20px;
+            outline: none;
+        }
+        .createOtherPrefix {
+            visibility: hidden;
+            flex-grow: 1;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+                <div class="sideBarMain">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="expandedTopic" onclick = "expandteachersBar(this)">
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "teacherSecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingteachers" id = "expandingteachers" style = "max-height: 400px">
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'"  style = "color: rgb(67,181,245);">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove events
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        Teachers
+                    </div>
+                </div>
+            </div>
+            <div class = "bodyLowerSection" id = "bodyLowerSection">
+                <div class="teacherHolderMain">
+                    <div class="createTeacherBar">
+                        <div class="createTeacher" id="createTeacher" onclick = "makeNewTeacher()">
+                            NEW TEACHER
+                        </div>
+                    </div>
+                    <div class="teacherCategoriesBar">
+                        <div class="teacherCategory">First Name</div>
+                        <div class="teacherCategory">Last Name</div>
+                        <div class="teacherCategory">Prefix</div>
+                    </div>
+                    <div class="expandingBlock" id = "expandingBlock">
+                        <div class="container">
+                            <div class="createTeacherDate createTeacherBlock">
+                                <!-- <input type="text" name = "teacherDate" value="1/1/2018" class = "addInput" /> -->
+                                <input type="text" id = "addFirst" class = "addInput"/>
+                            </div>
+                            <div class="createTeacherShortDescription createTeacherBlock">
+                                <input type="text" id = "addLast" class = "addInput">
+                            </div>
+                            <div class="createTeacherTime createTeacherBlock">
+                                <div class="optionsHolder">
+                                    <select id = "sideBlockSelector" onchange="checkIfOther()">
+                                        <option value = "Mr. ">Mr. </option>
+                                        <option value = "Mrs. ">Mrs. </option>
+                                        <option value = "Ms. ">Ms. </option>
+                                        <option value = "Mme. ">Mme. </option>
+                                        <option value = "_">Other</option>
+                                    </select>
+                                    <input type="text" class = "createOtherPrefix" id = "otherPrefix">
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="buttonsRow">
+                            <div class="buttonRowButton createCreation" id = "createOrEdit" onclick="getNewTeacherInfo()">Create</div>
+                            <div class="buttonRowButton cancelCreation" onclick = "closeNewTeacher()">Cancel</div>
+                        </div>                 
+                    </div>
+                    <div class="teachersBody">
+                        <% for (var i = 0; i < teachers.length; i++) { %>
+                            <div class="teacher" id = "teacher_<%=teachers[i]._id%>">
+                                <div class="teacherProperty"><%=teachers[i].firstName%></div>
+                                <div class="teacherProperty"><%=teachers[i].lastName%></div>
+                                <div class="teacherProperty"><%=teachers[i].prefix%></div>
+                                <i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)">
+                                    <div class="editDelete">
+                                        <div class="edit" onclick = 'getTeacher("<%=teachers[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeTeacher('<%=teachers[i]._id%>')">Delete</div>
+                                    </div>
+                                </i>
+                            </div>
+                        <% } %>
+                        <% if (teachers.length == 0) { %>
+                            <div class="teacher">
+                                No teachers yet
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "errorPopDown">
+        test error!
+    </div>
+</body>
+<script>
+    errorExtened = false;
+    
+    document.onclick = function(e) {
+        if (errorExtened) {
+            document.getElementById("errorPopDown").classList.remove("errorDown");
+            errorExtened = false;
+        }
+    }
+    let teachersExpanded = true;
+    function expandteachersBar(element) {
+        let teachers = document.getElementById("expandingteachers");
+        let teacherSecondary = document.getElementById("teacherSecondary");
+        if (teachersExpanded) {
+            teachers.style.maxHeight = "0px";
+            teachersExpanded = false;
+            element.className = "sideBarTopic";
+            teacherSecondary.style.visibility = "visible";
+        } else {
+            teachers.style.maxHeight = "150px";
+            teachersExpanded = true;
+            element.className = "expandedTopic";
+            teacherSecondary.style.visibility = "hidden";
+        }
+    }
+    function checkIfOther() {
+        let val = document.getElementById("sideBlockSelector").value;
+        if (val === "_") {
+            document.getElementById("otherPrefix").style.visibility = "visible";
+        } else {
+            document.getElementById("otherPrefix").style.visibility = "hidden";
+        }
+    }
+
+    function getTeacher(id) {
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                if (response._id != null) {
+                    document.getElementById("addFirst").value = response.firstName;
+                    document.getElementById("addLast").value = response.lastName;
+                    document.getElementById("sideBlockSelector").selectedIndex = (["Mr. ", "Mrs. ", "Ms. ", "Mme. "].indexOf(response.prefix)+4)%4;
+                } else {
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response.error;
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+        editNewTeacher(id);
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.add("notAllowed");
+
+        loadRequest.open("GET", "/getTeacher?teacherId=" + id, true);
+        loadRequest.send(); 
+    }
+
+
+    function removeTeacher(id) {
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                
+                if (response[0] === true) {
+                    let removedEvent = document.getElementById("teacher_" + response[1]._id);
+                    removedEvent.parentNode.removeChild(removedEvent);
+                    
+                } else {
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response[1];
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+
+        loadRequest.open("GET", "/removeTeacher?removedId=" + id, true);
+        loadRequest.send(); 
+    }
+    function sendNewteacher(teacherData) {
+        let sendString = "";
+        for (var key in teacherData) {
+            sendString += key;
+            sendString += "=";
+            sendString += teacherData[key];
+            sendString += "&";
+        }
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                
+                if (response[0] === true) {
+                    closeNewTeacher();
+                    let createButton = document.getElementById("createTeacher");
+                    createButton.classList.remove("notAllowed");
+                    let teacher = document.createElement("div");
+                    teacher.className = "teacher";
+                    teacher.id = "teacher_" + response[1]._id;
+                    let teacherString = `<div class="teacherProperty">${response[1].firstName}</div><div class="teacherProperty">${response[1].lastName}</div><div class="teacherProperty">${response[1].prefix}</div><i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = 'getTeacher("${response[1]._id}")'>Edit</div><div class="delete" onclick = "removeTeacher('${response[1]._id}')">Delete</div></div></i>`;
+                    teacher.innerHTML = teacherString;
+                    document.getElementsByClassName("teachersBody")[0].appendChild(teacher);
+                } else {
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response[1];
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.add("notAllowed");
+
+        loadRequest.open("POST", "/addTeacher", true);
+        loadRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        loadRequest.send(sendString); 
+    }
+    function sendTeacherEdit(teacherData) {
+        let sendString = "";
+        for (var key in teacherData) {
+            sendString += key;
+            sendString += "=";
+            sendString += teacherData[key];
+            sendString += "&";
+        }
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                if (response[0] === true) {
+                    closeNewTeacher();
+                    let teacher = document.getElementById("teacher_" + response[1]._id);
+                    teacher.children[0].innerText = response[1].firstName;
+                    teacher.children[1].innerText = response[1].lastName;
+                    teacher.children[2].innerText = response[1].prefix;
+                    let createButton = document.getElementById("createTeacher");
+                    createButton.classList.remove("notAllowed");
+                } else {
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response[1];
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.add("notAllowed");
+
+        loadRequest.open("POST", "/editTeacher", true);
+        loadRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        loadRequest.send(sendString); 
+    }
+    function editTeacherInfo(id) {
+        let first = document.getElementById("addFirst").value;
+        let last = document.getElementById("addLast").value;
+        let prefix = document.getElementById("sideBlockSelector").value;
+        if (prefix == "_") {
+            prefix = document.getElementById("otherPrefix").value;
+        }
+        sendTeacherEdit({id: id,first: first, last: last, prefix: prefix});
+    }
+    function getNewTeacherInfo() {
+        let first = document.getElementById("addFirst").value;
+        let last = document.getElementById("addLast").value;
+        let prefix = document.getElementById("sideBlockSelector").value;
+        if (prefix == "_") {
+            prefix = document.getElementById("otherPrefix").value;
+        }
+        sendNewteacher({first: first, last: last, prefix: prefix});
+    }
+    function openEdit(element) {
+        element.children[0].style.display = "flex";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function editNewTeacher(id) {
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.add("notAllowed");
+        let button = document.getElementById("createOrEdit");
+        button.innerText = "Edit";
+        button.setAttribute("onclick", `editTeacherInfo('${id}')`);
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px"; 
+    }
+    function makeNewTeacher() {
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.add("notAllowed");
+        let button = document.getElementById("createOrEdit");
+        button.innerText = "Create";
+        button.setAttribute("onclick", `getNewTeacherInfo()`);
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px";
+    }
+    function closeNewTeacher() {
+        let expandingBlock = document.getElementById("expandingBlock");
+        let createButton = document.getElementById("createTeacher");
+        createButton.classList.remove("notAllowed");
+        expandingBlock.style.maxHeight = "0px";
+    }
+    function clickFunction(element) {
+        element.classList.toggle("checked");
+        element.innerHTML = !element.classList.contains("checked") ? "" : "&#10003;";
+    }
+
+</script>
+<script>
+</script>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            flex-grow: 0;
+            background-color: rgb(3, 155, 229);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            /* background-color: red; */
+            color: rgba(255,255,255,0.6);
+            padding: 10px;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .categoryHolderMain {
+            width: 95%;
+            /* height: 500px; */
+            background-color: rgb(242,242,242);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+        .createCategoryBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createCategory {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .categoryCategoriesBar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 12px;
+        }
+        .categoryCategory {
+            width: 90%;
+            font-size: 13px;
+            color: #666;
+            padding-left: 3px;
+        }
+        .categorysBody {
+            width: 100%;
+            /* height: 400px; */
+            background-color: white;
+        }
+        .category {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .categoryProperty {
+            width:90%;
+            padding-right: 10px;
+            font-size: 13px;
+            padding-left: 5px;
+        }
+        .category:hover {
+            background-color: #f5f5f5;
+        }
+        .editcategory {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .category:hover .editcategory {
+            visibility: visible;
+        }
+        .editDelete {
+            width: 100px;
+            height: 75px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
+            padding-top: 10px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .expandingBlock {
+            width: 100%;
+            /* height: 200px; */
+            /* padding-top: 50px; */
+            /* padding-bottom: 25px; */
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            
+        }
+ 
+        .createCategoryBlock {
+            width: 16%;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            width: 100%;
+            /* height: 200px; */
+        }
+        .addInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+            
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .cancelCreation {
+
+        }
+        .createCreation {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        .cancelCreation:hover {
+            background-color: #ddd;
+        }
+        .customCheckBox {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .checked {
+            background-color: rgb(3, 155, 229);
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none;
+        }
+        .notAllowed {
+            background-color:  #ddd !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+        }
+        #errorPopDown {
+            padding: 20px;
+            background-color: rgb(241,80,79);
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px;
+            -webkit-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            transition: top 0.2s ease-out
+        }
+        .errorDown {
+            top: 100px !important;
+            cursor: pointer;
+        }
+        .expandingcategorys {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+                <div class="sideBarMain">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="expandedTopic" onclick = "expandcategorysBar(this)">
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "categorySecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingcategorys" id = "expandingcategorys" style = "max-height: 400px">
+                    <div class="expandedLink"  style = "color: rgb(67,181,245);">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove categorys
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        Categories
+                    </div>
+                </div>
+            </div>
+            <div class = "bodyLowerSection" id = "bodyLowerSection">
+                <div class="categoryHolderMain">
+                    <div class="createCategoryBar">
+                        <div class="createCategory" id="createCategory" onclick = "makeNewcategory()">
+                            NEW CATEGORY
+                        </div>
+                    </div>
+                    <div class="categoryCategoriesBar">
+                        <div class="categoryCategory">Category</div>
+                    </div>
+                    <div class="expandingBlock" id = "expandingBlock">
+                        <div class="container">
+                            <div class="createCategoryDate createCategoryBlock">
+                                <input type="text" id = "addCategory" class = "addInput"/>
+                            </div>
+                        </div>
+                        <div class="buttonsRow">
+                            <div class="buttonRowButton createCreation" id = "editOrDelete" onclick="getNewcategoryInfo()">Create</div>
+                            <div class="buttonRowButton cancelCreation" onclick = "closeNewCategory()">Cancel</div>
+                        </div>                 
+                    </div>
+                    <div class="categorysBody">
+                        <% for (var i = 0; i < categories.length; i++) { %>
+                            <div class="category" id = "category_<%=categories[i]._id%>">
+                                <div class="categoryProperty"><%=categories[i].category%></div>
+                                <i class="fas fa-ellipsis-v editcategory" onclick = "openEdit(this)">
+                                    <div class="editDelete">
+                                        <div class="edit" onclick = 'getCategory("<%=categories[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeCategory('<%=categories[i]._id%>')">Delete</div>
+                                    </div>
+                                </i>
+                            </div>
+                        <% } %>
+                        <% if (categories.length == 0) { %>
+                            <div class="category">
+                                No categorys yet
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "errorPopDown">
+        test error!
+    </div>
+</body>
+<script>
+    errorExtened = false;
+    
+    document.onclick = function(e) {
+        if (errorExtened) {
+            document.getElementById("errorPopDown").classList.remove("errorDown");
+            errorExtened = false;
+        }
+    }
+    let categorysExpanded = true;
+
+    function expandcategorysBar(element) {
+        let categorys = document.getElementById("expandingcategorys");
+        let categorySecondary = document.getElementById("categorySecondary");
+        if (categorysExpanded) {
+            categorys.style.maxHeight = "0px";
+            categorysExpanded = false;
+            element.className = "sideBarTopic";
+            categorySecondary.style.visibility = "visible";
+        } else {
+            categorys.style.maxHeight = "150px";
+            categorysExpanded = true;
+            element.className = "expandedTopic";
+            categorySecondary.style.visibility = "hidden";
+        }
+    }
+
+
+    function getCategory(id) {
+        sendGetRequest("id=" + id, "/getCategory", function(response) {
+            let createButton = document.getElementById("createCategory");
+            createButton.classList.add("notAllowed");
+            let expandingBlock = document.getElementById("expandingBlock");
+            expandingBlock.style.maxHeight = "400px";
+            if (response[0] == true) {
+                let editOrDelete = document.getElementById("editOrDelete");
+                editOrDelete.innerText = "Edit";
+                editOrDelete.setAttribute("onclick", `editCategory('${id}')`);
+                document.getElementById("addCategory").value = response[1].category;
+            }
+        });
+    }
+    function editCategory(id) {
+        let category = document.getElementById("addCategory").value;
+        let sendString = "id="  + id + "&category=" + category;
+        sendPostRequest(sendString, "/editCategory", function(response) {
+            if (response[0] != false) {
+                let codeElement = document.getElementById("category_"  + id);
+                codeElement.children[0].innerText = response[1].category;
+                let expandingBlock = document.getElementById("expandingBlock");
+                let createButton = document.getElementById("createCategory");
+                createButton.classList.remove("notAllowed");
+                expandingBlock.style.maxHeight = "0px";
+            }
+        });
+    }
+    function removeCategory(id) {
+        sendGetRequest("id=" + id, "/removeCategory", function(response) {
+            if (response[0]) {
+                let codeElement = document.getElementById("category_"  +response[1]);
+                codeElement.parentNode.removeChild(codeElement);
+            } else {
+                // let error = document.getElementById("errorPopDown");
+                // error.innerText = "Error: " + response[1];
+                // error.classList.add("errorDown");
+                // errorExtened = true;
+            }
+        });
+    }
+    function getNewcategoryInfo() {
+        let category = document.getElementById("addCategory").value;
+        let createButton = document.getElementById("createCategory");
+        createButton.classList.add("notAllowed");
+        sendPostRequest("category=" + category, "/addCategory", function(response) {
+            let createButton = document.getElementById("createCategory");
+            createButton.classList.remove("notAllowed");
+            if (response[0] === true) {
+                document.getElementById("addCategory").value = "";
+                closeNewCategory();
+                let category = document.createElement("div");
+                category.innerHTML = `<div class="category" id = "category_${response[1]._id}"><div class="categoryProperty">${response[1].category}</div><i class="fas fa-ellipsis-v editcategory" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = 'getCategory("${response[1]._id}")'>Edit</div><div class="delete" onclick = "removecategory('${response[1]._id}')">Delete</div></div></i></div>`;
+                document.getElementsByClassName("categorysBody")[0].appendChild(category);
+            } else {
+                // let error = document.getElementById("errorPopDown");
+                // error.innerText = "Error: " + response[1];
+                // error.classList.add("errorDown");
+                // errorExtened = true;
+            }
+        });
+    }
+    function openEdit(element) {
+        element.children[0].style.display = "flex";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function makeNewcategory() {
+        let createButton = document.getElementById("createCategory");
+        createButton.classList.add("notAllowed");
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px";
+        let editOrDelete = document.getElementById("editOrDelete");
+        editOrDelete.innerText = "Create";
+        editOrDelete.setAttribute("onclick", `getNewcategoryInfo()`);
+    }
+    function closeNewCategory() {
+        let expandingBlock = document.getElementById("expandingBlock");
+        let createButton = document.getElementById("createCategory");
+        createButton.classList.remove("notAllowed");
+        expandingBlock.style.maxHeight = "0px";
+    }
+    function clickFunction(element) {
+        element.classList.toggle("checked");
+        element.innerHTML = !element.classList.contains("checked") ? "" : "&#10003;";
+    }
+
+</script>
+<script>
+</script>
+</html>

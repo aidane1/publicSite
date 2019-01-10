@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta name = "description" content = "The PVSS student website. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
+    <meta charset = "utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <meta name = "theme-color" content = "orange" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name = "apple-mobile-web-app-status-bar-style" content = "#FC7753">
+    <meta name = "apple-mobile-web-app-title" content = "PVSS">
+    <link rel = "manifest" href = "public/manifests/home.json  " />
+    <title>PVSS student website | Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        
+    </script>
+    <script>
+
+
+    </script>
+    <style>
+      @font-face {
+          font-family: SF;
+          src: url("/public/fonts/SF-Pro-Display-Regular.otf");
+      }
+      * {
+          box-sizing: border-box;
+          font-family: sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .homeHolder {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          overflow: hidden;
+      }
+      .backdrop {
+        height: calc(100% - 70px);
+        /* flex-grow: 1; */
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: auto;
+      }
+      .bodyTile {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          overflow-y: hidden;
+          justify-content: space-evenly;
+          background-color: rgb(240,240,240);
+      }
+      .homeHeader {
+          width: 100%;
+          height: 70px;
+          background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+      }
+      .homeRow {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          padding: 0px 20px;
+          align-items: center;
+      }
+      .displayText {
+          color: white;
+          font-size: 24px;
+      }
+      #scheduleTile {
+          /* background-color: red; */
+      }
+      #homeTile {
+          /* background-color: blue; */
+          /* background: linear-gradient(to bottom, #ddd, #999) !important; */
+      }
+      #coursesTile {
+          /* background-color: black; */
+          justify-content: start;
+      }
+      #calendarTile {
+          /* background-color: purple; */
+          justify-content: start;
+      }
+      .dayHeader {
+          width: 100%;
+          text-align: center;
+          /* color: #00358c */
+      }
+      .accountIcon {
+          width: 30px;
+          height: 30px;
+          margin-top: 10px;
+      }
+      .accountIcon img {
+          width: 100%;
+          height: 100%;
+      }
+    .refreshIcon {
+          width: 30px;
+          height: 30px;
+          margin-top: 10px;
+    }
+    .eventsHolder {
+          width: 100%;
+          height: 50px;
+          overflow: auto;
+    }
+    .eventBlock {
+          width: 90%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: white;
+          /* background: #f5ffe2; */
+          text-align: center;
+          margin: auto;
+          margin-top: 5px;
+          margin-bottom: 10px;
+          border-radius: 5px;
+          font-size: 18px;
+          border: 1px solid rgb(210,210,210);
+    }
+    .blockHolder {
+        width: 100%;
+        height: 50px;
+    }
+    .classBlock {
+        width: 90%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: white;
+        text-align: center;
+        margin: auto;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 18px;
+        border: 1px solid rgb(210,210,210);
+    }
+    .blockHeader {
+        width: 100%;
+        text-align: center;
+        font-size: 22px;
+    }
+    .dayTitle {
+        font-size: 30px;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        color: black;
+        font-weight: 300;
+    }
+    .dayHolder {
+        width: 100%;
+        border-bottom: 1px solid rgb(210,210,210);
+        border-top: 1px solid rgb(210,210,210);
+        overflow-y: auto;
+    }
+    .dayBlock {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        background-color: white;
+        
+    }
+    .dayIcon {
+        width: 50px;
+        height: 50px;
+    }
+    .iconBubble {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        margin-left: 7.5px;
+        margin-top: 7.5px;
+        background-color: green;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
+    .dayClass {
+        width: calc(100% - 50px);
+        border-bottom: 1px solid rgb(210,210,210);
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding-right: 10px;
+    }
+    .bottomClass {
+        width: calc(100% - 50px);
+        /* border-bottom: 1px solid rgb(210,210,210); */
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding-right: 10px;
+    }
+    .teacherClassBlock {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+    .teacherName {
+        font-style: italic;
+        font-size: 11px;
+        /* font-weight: 300; */
+        color: grey;
+    }
+    .className {
+        font-size: 18px;
+    }
+    .timeBlock {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-wrap: nowrap;
+        font-size: 18px;
+    }
+    .calendarTitleBar {
+        width: 100%;
+        /* height: 30px; */
+        font-size: 28px;
+        font-weight: 300;
+        margin-top: 10px;
+    }
+    .calendarDaysBar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        /* padding: 0px 20px; */
+        color: orange;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+    .calendarBodies {
+        width: 100%;
+        overflow-x: auto;
+        height: 380px;
+        /* padding: 10px; */
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .calendarTile {
+        width: calc(100% - 20px);
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+        /* height: 100%; */
+        min-height: 360px;
+        border: 1px solid rgb(210,210,210);
+        background-color: white;
+    }
+    .calendarRow {
+        width: 100%;
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        /* border-bottom: 1px solid black; */
+    }
+    .calendarDay {
+        min-width: 14.28%;
+        flex-grow: 1;
+        text-align: center;
+        font-size: 13px;
+        padding-top: 5px;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+    }
+    .boxTitle {
+        font-size: 10px;
+    }
+    .dayEvent {
+        width: 6px;
+        height: 6px;
+        background-color: grey;
+        border-radius: 50%;
+        margin: auto;
+    }
+    .empty {
+        opacity: 0.3;
+    }
+
+    @media screen and (max-height: 520px) {
+        .homeHeader {
+            display: none;
+        }
+        .backdrop {
+            height: 100%;
+        }
+    }
+    
+      
+    </style>
+  </head>
+  <body>
+      <div class="homeHolder">
+        <div class="homeHeader">
+            <div class="homeRow">
+                <div class="accountIcon"><img src = "/public/icons/accountIcon.svg" /></div>
+                <div class="displayText">Home</div>
+                <div class="refreshIcon"></div>
+            </div>
+        </div>
+        <div class = "backdrop" id = "backdrop">
+            <!-- <div id = "scheduleTile" class="bodyTile"></div> -->
+            <div id = "homeTile" href = "#homeTile" class="bodyTile">
+                <div class="dayHeader" style="font-size: 40px">
+                    <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>
+                </div>
+                <div class="eventsHolder">
+                    <% for (var i = 0; i < soonEvents.length; i++) { %>
+                        <div class="eventBlock"><%=soonEvents[i].time%> : <%=soonEvents[i].info%></div>
+                    <% } %>
+                    <% if (soonEvents.length == 0) { %>
+                        <div class="eventBlock" style = "margin-top: 0; margin-bottom: 0">No Upcoming Events!</div>
+                    <% } %>
+                    
+                </div>
+                <div id="currentBlock" class = "blockHolder">
+                    <div class="blockHeader">Current Class: </div>
+                    <div class="classBlock">
+                        <%=currentBlock[0]%> : <%=currentBlock[1].course%>
+                    </div>
+                </div>
+                <div id="nextBlock" class = "block">
+                    <div class="blockHeader">Next Class: </div>
+                    <div class="classBlock"><%=nextBlock[0]%> : <%=nextBlock[1].course%></div>
+                </div>
+            </div>
+            <div id = "coursesTile" class="bodyTile">
+                <div class="dayTitle"><a href = "/courses" style = "text-decoration: none; color: black">Today</a></div>
+                <div class="dayHolder">
+                    <% for (var i = 0; i < courses.length; i++) { %>
+                        <% if (i == courses.length-1) { %>
+                            <div class="dayBlock">
+                                <div class="dayIcon">
+                                    <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                        <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
+                                    </div>
+                                </div>
+                                <div class="bottomClass">
+                                    <div class="teacherClassBlock">
+                                        <div class="className"><%=courses[i][1].course%></div>
+                                        <div class="teacherName"><%=courses[i][1].teacher%></div>
+                                    </div>
+                                    <div class="timeBlock">
+                                        <%=courses[i][0]%>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="dayBlock">
+                                <div class="dayIcon">
+                                        <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                        <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
+                                    </div>
+                                </div>
+                                <div class="dayClass">
+                                    <div class="teacherClassBlock">
+                                        <div class="className"><%=courses[i][1].course%></div>
+                                        <div class="teacherName"><%=courses[i][1].teacher%></div>
+                                    </div>
+                                    <div class="timeBlock">
+                                        <%=courses[i][0]%>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <div id = "calendarTile" class="bodyTile">
+                <div class="calendarTitleBar">
+                    <div id="calendarMonth">
+                        <%=monthNames[0]%>
+                    </div>
+                    <div class="backForthArrows">
+                        <div class="arrowLeft">
+
+                        </div>
+                        <div class="arrowRight">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="calendarDaysBar">
+                    <div class="calendarDayTitle">Sun</div>
+                    <div class="calendarDayTitle">Mon</div>
+                    <div class="calendarDayTitle">Tue</div>
+                    <div class="calendarDayTitle">Wed</div>
+                    <div class="calendarDayTitle">Thu</div>
+                    <div class="calendarDayTitle">Fri</div>
+                    <div class="calendarDayTitle">Sat</div>
+                </div>
+                <div class="calendarBodies" id = "calendarBodies">
+                    <%let initialOffset = offset%>
+                    <% for (var i = 0; i < monthLengths.length; i++) { %>
+                        <% let currentMonth = (new Date(startDate[0], startDate[1]+i, 1)).getMonth()%>
+                        <% let pastDue = true%>
+                        <div class="calendarTile" month="<%=monthNames[i]%>">
+                            <% for (var j = 0; j < 6; j++) { %>
+                                <div class="calendarRow">
+                                    <% for (var k = 0; k < 7; k++) { %>
+                                        <% if (j*7 + k >= initialOffset) { %>
+                                            <% let previousDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset-1)%>
+                                            <% let todayDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset)%>
+                                            <% if (todayDate.getMonth() > currentMonth) { %>
+                                                <div class="calendarDay empty">
+                                                    <div class="dayDate">
+                                                        <%= todayDate.getDate()%>
+                                                    </div>
+                                                    <div class="boxTitle">
+        
+                                                    </div>
+                                                    <div class="dayEvent" style = "visibility: hidden">
+        
+                                                    </div>
+                                                </div>
+                                            <% }  else { %>
+                                                <% let today = eventMap[`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`]; %>
+                                                <% if (today) { %>
+                                                    <div class="calendarDay">
+                                                        <div class="dayDate">
+                                                            <%= todayDate.getDate()%>
+                                                        </div>
+                                                        <div class="boxTitle">
+                                                            <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                        </div>
+                                                        <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
+                                                            
+                                                        </div>
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="calendarDay empty">
+                                                        <div class="dayDate">
+                                                            <%= todayDate.getDate()%>
+                                                        </div>
+                                                        <div class="boxTitle">
+            
+                                                        </div>
+                                                        <div class="dayEvent" style = "visibility: hidden">
+            
+                                                        </div>
+                                                    </div>
+                                                <% } %>
+                                            <% } %>
+                                        <% } else { %>
+                                            <div class="calendarDay empty">
+                                                <div class="dayDate">
+                                                    <% let oldDate = new Date(startDate[0], startDate[1]+i, 0) %>
+                                                    <%= oldDate.getDate()-initialOffset+j*7+k+1%>
+                                                </div>
+                                                <div class="boxTitle">
+
+                                                </div>
+                                                <div class="dayEvent" style = "visibility: hidden">
+
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                    <% } %>
+                                </div>    
+                            <% } %>
+                        </div>
+                        <% initialOffset = (initialOffset + monthLengths[i])%7%>
+                    <% } %>
+                    <div style = "width: 1px; height: 300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+  <script>
+      
+    
+    let backdrop = document.getElementById("backdrop");
+    let bodies = document.getElementById("calendarBodies");
+    let width = window.innerWidth;
+    backdrop.addEventListener("touchend", function(touch) {
+        $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 100);
+    });
+    //change month name;
+    bodies.addEventListener("touchmove", function(touch) {
+        let child = document.getElementsByClassName("calendarTile")[Math.round(bodies.scrollLeft/(width))].getAttribute("month");
+        document.getElementById("calendarMonth").innerText = child;
+    })
+    bodies.addEventListener("touchend", function(touch) {
+        let child = document.getElementsByClassName("calendarTile")[Math.round(bodies.scrollLeft/(width))].getAttribute("month");
+        document.getElementById("calendarMonth").innerText = child;
+        $("#calendarBodies").animate({scrollLeft: Math.round(bodies.scrollLeft/(width))*(width)}, 100);
+    });
+    window.onload = function() {
+        let child = document.getElementsByClassName("calendarTile")[4].getAttribute("month");
+        document.getElementById("calendarMonth").innerText = child;
+        $("#calendarBodies").animate({scrollLeft: Math.round(4)*(width)}, 100);
+    }
+  </script>
+</html>

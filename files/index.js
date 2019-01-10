@@ -210,6 +210,12 @@ let Notes = require("../models/notechar.js");
 
 let Assignments = require("../models/assignmentchar.js");
 
+let Teachers = require("../models/teacherchar.js");
+
+let Categories = require("../models/categorychar.js");
+
+let Semesters = require("../models/semesterchar.js");
+
 let webpush = require("web-push");
 
 let schedule = require("node-schedule");
@@ -338,21 +344,35 @@ let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
+
+function EmptyCourse(spare, block) {
+  this.course = spare;
+  this.teacher = "Free";
+  this.block = block;
+  this.category = {
+    category: "other",
+    shortCode: "other",
+  };
+}
+
 function blockNamesObject(blocks, courses, courseNames, spareName) {
   let blockObject = {};
   for (var i = 0; i  < blocks.length; i++) {
     if (blocks[i][1] === "changing") {
-      blockObject[blocks[i][0]] = spareName;
+      blockObject[blocks[i][0]] = new EmptyCourse(spareName, blocks[i][0]);
     } else {
-      blockObject[blocks[i][0]] = blocks[i][0]
+      blockObject[blocks[i][0]] = new EmptyCourse(blocks[i][0], blocks[i][0]);
     }
   }
   for (var i = 0; i < courses.length; i++) {
-    blockObject[courses[i].block] = courses[i].course;
+    courses[i] = JSON.parse(JSON.stringify(courses[i]));
+    let teacher = courses[i].teacher.prefix + courses[i].teacher.lastName;
+    courses[i].teacher = teacher;
+    blockObject[courses[i].block] = courses[i];
   } 
   let parsedNames = JSON.parse(JSON.stringify(courseNames));
   for (var key in parsedNames) {
-    blockObject[key] = parsedNames[key];
+    blockObject[key].course = parsedNames[key];
   }
   return blockObject;
 }
@@ -686,6 +706,826 @@ function pushUsers(userList, data) {
 //     }
 //   });
 // });
+
+app.get("/diseases", async function(req, res) {
+  res.render("socials/diseases");
+});
+
+let iconMap = {
+  "science": ['<i style = "color: black" class="fas fa-flask"></i>', "#81c784", "black"],
+  "language": ['<i style = "color: black" class="fas fa-book"></i>', "#89cff0", "black"],
+  "english": ['<i style = "color: black" class="fas fa-book"></i>', "#d256ff", "black"],
+  "french": ['<i style = "color: black" class="fas fa-book"></i>', "#e57373", "black"],
+  "math": ['<i style = "color: black" class="fas fa-calculator"></i>', "#c94322", "black"],
+  "socials": ['<i style = "color: black" class="fas fa-map-marked-alt"></i>', "#FFF176", "black"],
+  "social studies": ['<i style = "color: black" class="fas fa-map-marked-alt"></i>', "#FFF176", "black"],
+  "trades": ['<i style = "color: black" class="fas fa-wrench"></i>', "#aaa", "black"],
+  "auto": ['<i style = "color: black" class="fas fa-car"></i>', "#aaa", "black"],
+  "other": ['<i style = "color: black" class="fas fa-question"></i>', "#ffffff", "black"],
+  "accounting": ['<i style = "color: black" class="fas fa-coins"></i>', "orange", "black"],
+  "career and planning": ['<i style = "color: black" class="fas fa-briefcase"></i>', "#ffd400", "black"],
+  "physical education": ['<i style = "color: white" class="fas fa-basketball-ball"></i>', "black", "white"],
+  "special ed": ['<i style = "color: black" class="fas fa-rainbow"></i>', "#738678", "black"],
+  "fine arts": ['<i style = "color: black" class="fas fa-paint-brush"></i>', "white", "black"],
+  "info tech.": ['<i style = "color: black" class="fas fa-tv"></i>', "#52c97a", "black"],
+  "na": ['<i style = "color: black" class="fas fa-tv"></i>', "#5e4ee8"],
+  "applied skills": ['<i style = "color: black" class="fas fa-cogs"></i>', "orange", "black"],
+} 
+
+function makeColorMap(blockNames) {
+  let colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+  let colorMap = {};
+  for (var i = 0; i < blockNames.length; i++) {
+    if (blockNames[i][1] == "changing") {
+      colorMap[blockNames[i][0]] = colorArray[i];
+    } else {
+      colorMap[blockNames[i][0]] = "#ffffff";
+    }
+  }
+  return colorMap;
+}
+
+app.post("/changeDayTitles", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.schedule && req.body.day && req.body.text) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let names = school.dayTitles;
+        names[parseInt(req.body.schedule)][req.body.day] = req.body.text;
+        await School.findOneAndUpdate({_id : user.school}, {$set: {dayTitles: names}});
+        // await School.findOneAndUpdate({_id : user.school}, {$push: {adminChanges: `${user.username} changed the title of ${req.body.day} for schedule ${req.body.schedule} to ${req.body.text}`}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } else {
+      res.send(false);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send(false);
+  }
+});
+app.post("/updateConstantBlock", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.schedule && req.body.day && req.body.block && req.body.changedBlockBlock && req.body.changedBlockConst) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let schedule = school.constantBlockSchedule.schedule;
+        if (schedule[parseInt(req.body.schedule)][req.body.day][parseInt(req.body.block)] != null) {
+          schedule[parseInt(req.body.schedule)][req.body.day][parseInt(req.body.block)] = [req.body.changedBlockBlock, req.body.changedBlockConst];
+          await School.findOneAndUpdate({_id : user.school}, {$set: {"constantBlockSchedule.schedule" : schedule}});
+          await School.findOneAndUpdate({_id : user.school}, {$push: {adminChanges: `${user.username} changed the block of block ${req.body.block} on ${req.body.day} for schedule ${req.body.schedule} to ${req.body.changedBlockBlock}`}});
+          let colorMap = makeColorMap(school.blockNames);
+          res.send([true, colorMap[req.body.changedBlockBlock], req.body.changedBlockBlock]);
+        }
+      } else {
+        res.send([false, null, null]);
+      }
+    } else {
+      res.send([false, null, null]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, null, null]);
+  }   
+
+});
+app.post("/removeConstantBlock", urlencodedParser, async function(req,res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let times = school.constantBlockSchedule.blockSchedule;
+        let schedule = school.constantBlockSchedule.schedule;
+        if (times.length > 1) {
+          times.pop();
+          for (var i = 0; i < schedule.length; i++) {
+            for (var key in schedule[i]) {
+              schedule[i][key].pop();
+            }
+          }
+          await School.findOneAndUpdate({_id : user.school}, {$set : {constantBlockSchedule : {blockSchedule: times, schedule: schedule}}});
+          await School.findOneAndUpdate({_id : user.school}, {$push: {adminChanges: `${user.username} removed a block from the constant block schedule`}});
+          res.send([true, ``]);
+        } else {
+          res.send([false, "At least one block must remain at all times"]);
+        }
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "User must be logged in to make changes"]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/appendConstantBlock", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let times = school.constantBlockSchedule.blockSchedule;
+        let schedule = school.constantBlockSchedule.schedule;
+        let colorMap = makeColorMap(school.blockNames);
+        times.push([9,10,10,12]);
+        for (var i = 0; i < schedule.length; i++) {
+          for (var key in schedule[i]) {
+            schedule[i][key].push(school.blockNames.sort()[0]);
+          }
+        }
+        let newBlock = times.length;
+        
+        await School.findOneAndUpdate({_id : user.school}, {$set : {constantBlockSchedule : {blockSchedule: times, schedule: schedule}}});
+        await School.findOneAndUpdate({_id : user.school}, {$push: {adminChanges: `${user.username} added a block to the constant block schedule`}});
+        res.send([true, colorMap[school.blockNames[0][0]], school.blockNames[0][0], newBlock]);
+      } else {
+        res.send([false,null, "User must be an admin to submit changes to the master schedule", 0]);
+      }
+    } else {
+      res.send([false,null, "User must be logged in to make changes", 0]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false,null, "An unknown error occured. Please refresh and try again", 0]);
+  }
+});
+app.post("/updateConstantTime", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.block && req.body.startHour && req.body.startMinute && req.body.endHour && req.body.endMinute) {
+      if (parseInt(req.body.startHour)*60 + parseInt(req.body.startMinute) < parseInt(req.body.endHour)*60 + parseInt(req.body.endMinute)) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          let school = await School.findOne({_id : user.school});
+          let times = school.constantBlockSchedule.blockSchedule;
+          if (times[parseInt(req.body.block)] != null) {
+            times[parseInt(req.body.block)] = [parseInt(req.body.startHour), parseInt(req.body.startMinute), parseInt(req.body.endHour), parseInt(req.body.endMinute)];
+            await School.findOneAndUpdate({_id : user.school}, {$set : {"constantBlockSchedule.blockSchedule" : times}});
+            await School.findOneAndUpdate({_id : user.school}, {$push: {adminChanges: `${user.username} changed the time of block ${req.body.block} to ${(parseInt(req.body.startHour)-1)%12+1}:${req.body.startMinute.length == 1 ? "0" + req.body.startMinute : req.body.startMinute} - ${(parseInt(req.body.endHour)-1)%12+1}:${req.body.endMinute.length == 1 ? "0" + req.body.endMinute : req.body.endMinute}`}});
+            res.send([true, `${(parseInt(req.body.startHour)-1)%12+1}:${req.body.startMinute.length == 1 ? "0" + req.body.startMinute : req.body.startMinute} - ${(parseInt(req.body.endHour)-1)%12+1}:${req.body.endMinute.length == 1 ? "0" + req.body.endMinute : req.body.endMinute}`]);
+          } else {
+            res.send([false, "Block does not exist"]);
+          }
+        } else {
+          res.send([false, "User must be an admin to submit changes to the master schedule"])
+        }
+      } else {
+        res.send([false, "The end of a block must occur after the start"]);
+      }
+    } else {
+      res.send([false, "All time fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/updateBlock", urlencodedParser, async function(req, res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user.permissions == admin) {
+      let school = await School.findOne({_id : user.school});
+      // let schoolSchedule = school
+    } else {
+
+    }
+  } else {
+
+  }
+});
+app.get("/dashboard/courses/courses", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        let courses = await Course.find({school : school._id}).populate("category").populate("teacher").populate("semester");
+        courses.sort((a,b) => a.course.localeCompare(b.course));
+        let teachers = await Teachers.find({school: school._id});
+        let categories = await Categories.find({school: school._id});
+        res.render("dashboard/coursesCoursesDashboard", {categories: categories, school: school, courses: courses, teachers: teachers});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/removeCourse", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        await Course.findOneAndRemove({_id : req.query.id});
+        res.send([true, req.query.id])
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/addCourse", urlencodedParser, async function(req, res) {
+  console.log(req.body);
+  try {
+    if (req.session.userId && req.body.course && req.body.teacher && req.body.block && req.body.semester && req.body.category) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          let school = await School.findOne({_id : user.school});
+          let newCourse = {
+            course: req.body.course.split("_")[1],
+            code: req.body.course.split("_")[0],
+            teacher: req.body.teacher,
+            block: req.body.block,
+            school: school._id,
+            category: req.body.category,
+            semester: req.body.semester,
+          };
+          Course.create(newCourse, async function(err, course) {
+            if (err || course == null) {
+              res.send([false, "An error in the creation process occured. please refresh and try again."]);
+            } else {
+              course = await Course.findOne({_id : course._id}).populate("teacher").populate("category").populate("semester");
+              console.log(course);
+              res.send([true, course]);
+            }
+          });
+        } else {
+          res.send([false, "User must be an admin to submit changes to the master schedule"])
+        }
+    } else {
+      res.send([false, "All event fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/getCourse", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let course = await Course.findOne({_id: req.query.id});
+        if (course != null) {
+          res.send([true, course]);
+        } else {
+          res.send([false, "Course not found"]);
+        }
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/dashboard/courses/categories", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let categories = await Categories.find({school: school._id});
+        res.render("dashboard/coursesCategoriesDashboard", {school: school, categories: categories});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/editTeacher", urlencodedParser, async function(req, res) {
+  console.log(req.body);
+  try {
+    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        await Teachers.findOneAndUpdate({_id : req.body.id}, {$set: {firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix}});
+        res.send([true, {firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix, _id: req.body.id}]);
+      } else {
+        res.send([false, "User must be an admin to submit changes to the teacher list"])
+      }
+    } else {
+      res.send([false, "All teacher fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/dashboard/courses/teachers", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let courses = await Course.find({school : school._id});
+        let teachers = await Teachers.find({school: school._id});
+        res.render("dashboard/coursesTeachersDashboard", {teachers: teachers, school: school, courses: courses});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/configure", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        res.render("dashboard/configureDashboard", {school: school});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/courses/codes", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        res.render("dashboard/courseCodeDashboard", {school: school});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/addCode", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.code && req.body.course) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let courseCodes = school.courseCodes;
+        courseCodes[req.body.code] = req.body.course;
+        await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: courseCodes}});
+        await Course.updateMany({$and: [{school: school._id}, {code: req.body.code}]}, {$set: {code: req.body.code, course: req.body.course}});
+        res.send([true, {code: req.body.code, course: req.body.course}])
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "All code fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/removeCode", async function(req,res) {
+  try {
+    if (req.session.userId && req.query.code) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let courseCodes = school.courseCodes;
+        delete courseCodes[req.query.code];
+        await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: courseCodes}});
+        res.send([true, req.query.code])
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/getCode", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.code) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let courseCodes = school.courseCodes;
+        if (courseCodes[req.query.code]) {
+          res.send([true, {course: courseCodes[req.query.code], code: req.query.code}]);
+        } else {
+          res.send([false, "code not found"]);
+        }
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/editCode", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.code && req.body.course && req.body.original) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let courseCodes = school.courseCodes;
+        delete courseCodes[req.body.original];  
+        courseCodes[req.body.code] = req.body.course;
+        await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: courseCodes}});
+        await Course.updateMany({$and: [{school: school._id}, {code: req.body.code}]}, {$set: {code: req.body.code, course: req.body.course}});
+        res.send([true, {code: req.body.code, course: req.body.course}]);
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/addTeacher", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.first && req.body.last && req.body.prefix) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let school = await School.findOne({_id : user.school});
+        let teacherObject = {
+          firstName: req.body.first[0].toUpperCase() + req.body.first.substring(1, req.body.first.length).toLowerCase(),
+          lastName: req.body.last[0].toUpperCase() + req.body.last.substring(1, req.body.last.length).toLowerCase(),
+          prefix: req.body.prefix,
+          school: school._id,
+        };
+        Teachers.create(teacherObject, async function(err, teacher) {
+          if (err || teacher == null) {
+            res.send([false, "An error occured in the teacher making process. Please try again."])
+          } else {
+            await School.findOneAndUpdate({_id : school._id}, {$push: {teachers: teacher}});
+            res.send([true, teacher]);
+          }
+        });
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "All teacher fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/getTeacher", async function(req, res) {
+  try {
+    if (req.query.teacherId) {
+      let teacher = await Teachers.findOne({_id : req.query.teacherId});
+      if (teacher != null) {
+        res.send(teacher);
+      } else {
+        res.send({error: "No teacher found under that Id"});
+      }
+    } else {
+      res.send({error: "Please specify an teacher Id"});
+    } 
+  } catch(e) {
+    res.send({error: "An unknown error occured"});
+  }
+});
+app.get("/removeTeacher", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.removedId) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          Teachers.findOneAndRemove({_id : req.query.removedId}, function(err, teacher) {
+            if (err || teacher == null) {
+              res.send([false, "Something went wrong in the removal process. Please try again"]);
+            } else {
+              res.send([true, teacher]);
+            }
+          });
+        } else {
+          res.send([false, "User must be an admin to submit changes to the master schedule"])
+        }
+    } else {
+      res.send([false, "All event fields must be filled in"])
+    }
+  } catch(e) {
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/dashboard", function(req, res) {
+  res.render("dashboard/dashboard");
+});
+app.get("/dashboard/masterSchedule", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let colorMap = makeColorMap(school.blockNames);
+        if (school.constantBlocks) {
+          res.render("dashboard/constantMasterDashboard", {school : school, colorMap: colorMap});
+        } else {
+          res.render("dashboard/masterDashboard", {school : school, colorMap: colorMap});
+        }
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/courses", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let courses = await Course.find({school: school._id});
+          res.render("dashboard/courseDashboard.ejs", {school : school, courses: courses});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/events", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let events = await Events.find({school: school._id});
+        events.sort(function(a,b) {
+          return a.date.getTime() - b.date.getTime();
+        });
+        for (var i = 0; i < events.length; i++) {
+          events[i].dateString = moment(events[i].date).format("MMMM Do YYYY");
+        }
+          res.render("dashboard/eventDashboard.ejs", {school : school, events: events});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.post("/addEvent", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.date && req.body.info && req.body.time && req.body.schoolSkipped && req.body.dayRolled && req.body.eventDisplayed) {
+        req.body.date = new Date(req.body.date);
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          let newEvent = {
+            year: req.body.date.getFullYear(),
+            month: req.body.date.getMonth(),
+            day: req.body.date.getDate(),
+            time: req.body.time,
+            info: req.body.info,
+            date: req.body.date,
+            longForm: req.body.info,
+            school: user.school,
+            schoolSkipped: req.body.schoolSkipped,
+            dayRolled: req.body.dayRolled,
+            displayedEvent: req.body.eventDisplayed,
+          }
+          Events.create(newEvent, function(err, event) {
+            if (err || event == null) {
+              res.send[false, "An error in the event creation process occured. please try again."];
+            } else {
+              event = JSON.parse(JSON.stringify(event));
+              event.dateString = moment(event.date).format("MMMM Do YYYY");
+              console.log(event);
+              res.send([true, event]);
+            }
+          });
+        } else {
+          res.send([false, "User must be an admin to submit changes to the master schedule"])
+        }
+    } else {
+      res.send([false, "All event fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/removeEvent", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.removedId) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          Events.findOneAndRemove({_id : req.body.removedId}, function(err, event) {
+            if (err || event == null) {
+              res.send([false, "Something went wrong in the removal process. Please try again"]);
+            } else {
+              res.send([true, event]);
+            }
+          });
+        } else {
+          res.send([false, "User must be an admin to submit changes to the master schedule"])
+        }
+    } else {
+      res.send([false, "All event fields must be filled in"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/getEvent", async function(req, res) {
+  try {
+    if (req.query.eventId) {
+      let event = await Events.findOne({_id : req.query.eventId});
+      if (event != null) {
+        res.send(event);
+      } else {
+        res.send({});
+      }
+    } else {
+      res.send({});
+    } 
+  } catch(e) {
+    res.send({});
+  }
+});
+app.post("/addCategory", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.category) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          let category = await Categories.create({category: req.body.category, shortCode: req.body.category, school: user.school});
+          res.send([true, category]);
+        } else {
+          res.send([false, "User must be an admin to submit changes to categories"])
+        }
+    } else {
+      res.send([false, "A category must be specified"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/removeCategory", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        await Categories.findOneAndRemove({_id : req.query.id});
+        res.send([true, req.query.id])
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.get("/getCategory", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let category = await Categories.findOne({_id: req.query.id});
+        if (category != null) {
+          res.send([true, category]);
+        } else {
+          res.send([false, "Category not found"]);
+        }
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+app.post("/editCategory", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.category && req.body.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        await Categories.findOneAndUpdate({_id : req.body.id}, {$set: {category: req.body.category}});
+        res.send([true, {id: req.body.id, category: req.body.category}]);
+      } else {
+        res.send([false, "User must be an admin to submit changes to the master schedule"])
+      }
+    } else {
+      res.send([false, "A code must be presented to remove"])
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again"]);
+  }
+});
+
+app.post("/updateManyCourse", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.old && req.body.new && req.body.property) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null) {
+        let property = req.body.property;
+        if (property == "addCourse") {
+          await Course.updateMany({$and: [{school: user.school}, {course: req.body.old}]}, {$set: {code: req.body.new.split("_")[0], course: req.body.new.split("_")[1]}});
+          res.redirect("/dashboard/courses/courses");
+        } else if (property == "teacherSelector") {
+          res.redirect("/dashboard/courses/courses");
+        } else if (property == "blockSelector") {
+          await Course.updateMany({$and: [{school: user.school}, {block: req.body.old}]}, {$set: {block: req.body.new}});
+          res.redirect("/dashboard/courses/courses");
+        } else if (property == "semesterSelector") {
+          let semester = await Semesters.findOne({$and: [{school: user.school}, {name: req.body.old}]});
+          if (semester) {
+            await Course.updateMany({$and: [{school: user.school}, {semester: semester._id}]}, {$set: {semester: req.body.new}});
+            res.redirect("/dashboard/courses/courses");
+          } else {
+            res.redirect("/dashboard/courses/courses");
+          }
+        } else if (property == "categorySelector") {
+          let category = await Categories.findOne({$and: [{school: user.school}, {category: req.body.old}]});
+          if (category) {
+            await Course.updateMany({$and: [{school: user.school}, {category: category._id}]}, {$set: {category: req.body.new}});
+            res.redirect("/dashboard/courses/courses");
+          } else {
+            res.redirect("/dashboard/courses/courses");
+          }
+        } else {
+          res.redirect("/dashboard/courses/courses");
+        }
+      } else {
+        res.redirect("/dashboard/courses/courses");
+      }
+    } else {
+      res.redirect("/dashboard/courses/courses");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/dashboard/courses/courses");
+  }
+  
+});
+
+app.get("/teacher/:id", async function(req, res) {
+
+});
 
 app.get("/send_nudes", function(req,res) {
   res.sendFile(__dirname + "/public/html/sendNudes.html");
@@ -1819,6 +2659,7 @@ app.get("/home", function(req, res) {
   res.sendFile(__dirname + "/public/html/home.html");
 });
 
+
 function createArray(depth) {
   if (depth == 1) {
     return new Array(10);
@@ -1841,10 +2682,216 @@ app.get("/socialsProject", function(req, res) {
   res.render("socialsProject");
 });
 
+function timeToString(time) {
+  return `${(time[0]-1)%12+1}:${time[1].toString().length == 1 ? "0" + time[1].toString() : time[1].toString()} - ${(time[2]-1)%12+1}:${time[3].toString().length == 1 ? "0" + time[3].toString() : time[3].toString()}`;
+}
+
+function daysInMonth (month, year) {
+  return new Date(year, month, 0).getDate();
+}
+
+function calculateSemesters(semesterList, date) {
+  let goodSemesterList = [];
+  for (var i = 0; i < semesterList.length; i++) {
+    if (semesterList[i].startDate.getTime() < date.getTime() && semesterList[i].endDate > date.getTime()) {
+      goodSemesterList.push(semesterList[i]._id);
+    }
+  }
+  return goodSemesterList;
+}
+
+app.get("/", async function(req, res) {
+  let currentDate = (new Date()).local();
+  // let currentDate = new Date(2019, 0, 11, 10,14);
+  let startDate = moment([2018, 8, 3]);
+  let endDate = moment([2019, 5, 30]);
+  let yearLength = endDate.diff(startDate, "days");
+  res.cookie("path", "/");
+  if (req.session.userId) {
+    try {
+      
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school}).populate("semesters");
+
+      let currentSemesters = calculateSemesters(school.semesters, currentDate);
+      let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+      let weekCount = school.constantBlocks ? school.constantBlockSchedule.schedule.length : school.blockOrder.length;
 
 
-// you just made BIG changes, so go through all this again when you aren't tired and make sure nothing is broken. pls.
-app.get("/", async (req, res, next) => {
+
+      let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, "LC's");
+      let events = await Events.find({school: user.school});
+      events.sort((a,b) => a.date.getTime() > b.date.getTime());
+      let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
+      offSetEvents.sort((a,b) => a.date.getTime() > b.date.getTime());
+      let schoolSkipped = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]});
+      schoolSkipped.sort((a,b) => a.date.getTime() > b.date.getTime());
+      let eventsObject = {};
+
+
+      
+      {
+        let currentDayDay = 0;
+        let currentDayWeek = 0;
+        let currentIndex = 0;
+        let currentSkippedIndex = 0;
+        let currentEventIndex = 0;
+        let currentReminderIndex = 0;
+        let currentDate = startDate.clone();
+        for (var i = 0; i < yearLength; i++) {
+          //what the current 'day' is, if the 'day' value is displayed,,if there is an event on that day, and all the reminders for that day
+          let currentDayArray = [[0,0], true, false, [], []];
+          currentDate.add(1, "days");
+          if (currentDate.day() == 0 || currentDate.day() == 6) {
+            currentDayArray[1] = false;
+            currentDayArray[2] = false;
+          }
+          while(currentEventIndex < events.length && moment([events[currentEventIndex].date.getFullYear(), events[currentEventIndex].date.getMonth(), events[currentEventIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (events[currentEventIndex].date.getFullYear() == currentDate.year() && events[currentEventIndex].date.getMonth() == currentDate.month() && events[currentEventIndex].date.getDate() == currentDate.date() && events[currentEventIndex].displayedEvent) {
+              currentDayArray[3].push(events[currentEventIndex]);
+              currentDayArray[2] = true;
+            }
+            currentEventIndex++;
+          }
+          while(currentSkippedIndex < schoolSkipped.length && moment([schoolSkipped[currentSkippedIndex].date.getFullYear(), schoolSkipped[currentSkippedIndex].date.getMonth(), schoolSkipped[currentSkippedIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (schoolSkipped[currentSkippedIndex].date.getFullYear() == currentDate.year() && schoolSkipped[currentSkippedIndex].date.getMonth() == currentDate.month() && schoolSkipped[currentSkippedIndex].date.getDate() == currentDate.date()) {
+              currentDayArray[1] = false;
+            }
+            currentSkippedIndex++;
+          }
+          while(currentIndex < offSetEvents.length &&  moment([offSetEvents[currentIndex].date.getFullYear(), offSetEvents[currentIndex].date.getMonth(), offSetEvents[currentIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (offSetEvents[currentIndex].date.getFullYear() == currentDate.year() && offSetEvents[currentIndex].date.getMonth() == currentDate.month() && offSetEvents[currentIndex].date.getDate() == currentDate.date()) {
+              currentDayArray[1] = false;
+            }
+            //rolls the day
+            currentDayDay -= 1;
+            while (currentDayDay < 0) {
+              currentDayWeek -= 1;
+              currentDayDay += 5;
+            }
+            while (currentDayDay > 4) {
+              currentDayWeek += 1;
+              currentDayDay -= 5;
+            }
+            while (currentDayWeek < 0) {
+              currentDayWeek += weekCount;
+            }
+            while (currentDayWeek > weekCount-1) {
+              currentDayWeek-= weekCount;
+            }
+            //makes sure it isnt negative
+            
+            //takes it mod 5 to be a day of the week
+            currentIndex++;
+          }
+          currentDayArray[0] = [currentDayWeek, currentDayDay];
+
+          eventsObject[`${currentDate.year()}_${currentDate.month()}_${currentDate.date()}`] = currentDayArray;
+          if (currentDate.day() != 0 && currentDate.day() != 6) {
+            currentDayDay += 1;
+            while (currentDayDay < 0) {
+              currentDayWeek -= 1;
+              currentDayDay += 5;
+            }
+            while (currentDayDay > 4) {
+              currentDayWeek += 1;
+              currentDayDay -= 5;
+            }
+            while (currentDayWeek < 0) {
+              currentDayWeek += weekCount;
+            }
+            while (currentDayWeek > weekCount-1) {
+              currentDayWeek-= weekCount;
+            }
+          } else {
+            currentDayArray[1] = false;
+          }
+        }
+      }
+
+
+      let monthLengths = [];
+      let monthNames = [];
+      let currentMonthDate = startDate.clone();
+      let initialOffset = moment([startDate.year(), startDate.month()]).weekday();
+      
+      for (var i = 0; i < endDate.diff(startDate, "months")+1; i++) {
+        monthLengths.push(daysInMonth(currentMonthDate.month()+1, currentMonthDate.year()));
+        monthNames.push(currentMonthDate.format("MMMM YYYY"));
+        currentMonthDate.add(1, "months");
+      }
+
+      let today = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`];
+      
+      let soonEvents = [];
+      
+      
+
+      let dayOffSetToday = dayOffset(offSetEvents, new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+
+      
+      let currentClass = ["current", new EmptyCourse("Nothing!", "A")];
+      let foundCurrent = false;
+      let nextClass = ["next", new EmptyCourse("Nothing!", "A")];
+      let foundNext = false;
+      
+      if (today) {
+        let todayEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`][3]
+        let tommorowEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`][3];
+        soonEvents = todayEvents.concat(tommorowEvents);
+        let currentSchedule = school.constantBlocks ? school.constantBlockSchedule.schedule[today[0][0]]["day" + (today[0][1]+1).toString()] : school.blockOrder[today[0][0]]["day" + (today[0][1]+1).toString()];
+
+        let dayBlockList = [];
+
+        if (currentDate.getDay() != 0 && currentDate.getDay() != 6) {
+          if (school.constantBlocks) {
+
+            let times = school.constantBlockSchedule.blockSchedule;
+            for (var i = 0; i < currentSchedule.length; i++) {
+              if (!foundNext && times[i][0]*60 + times[i][1] > currentDate.getHours()*60 + currentDate.getMinutes()) {
+                nextClass = [timeToString(times[i]), blockMap[currentSchedule[i][0]]];
+                foundNext = true;
+                if (i > 0) {
+                  foundCurrent = true;
+                  currentClass =[timeToString(times[i-1]), blockMap[currentSchedule[i-1][0]]];
+                } else {
+                  foundCurrent = true;
+                  currentClass = ["current", new EmptyCourse("Nothing!", "A")];
+                }
+              }
+              if (i == currentSchedule.length-1 && !foundCurrent && (times[i][2]*60 + times[i][3] > currentDate.getHours()*60 + currentDate.getMinutes())) {
+                currentClass =[timeToString(times[i]), blockMap[currentSchedule[i][0]]];
+              }
+              dayBlockList.push([timeToString(times[i]), blockMap[currentSchedule[i][0]]]);
+            }
+            if (currentSchedule.length == 0) {
+
+              dayBlockList = [["", new EmptyCourse("LC's", "A")]]; 
+            }
+          }
+        } else {
+          let empty = new EmptyCourse("No Courses!", "A");
+          dayBlockList = [["", empty]];
+        }
+
+        res.render("redesign/index", {today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+      } else {
+
+      }
+      
+      
+    } catch(e) {
+      console.log(e);
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+  
+});
+
+
+app.get("/newIndex", async (req, res, next) => {
 
 
   let currentDate = (new Date()).local();
@@ -1879,9 +2926,12 @@ app.get("/", async (req, res, next) => {
         if (skippedDays.map(x => x.date.getTime()).indexOf((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())).getTime()) !== -1) {
           schoolSkippedToday = true;
         }
+        let courseIds = [];
+        for (var i = 0; i < courses.length; i++) {
+          courseIds.push(courses[i]._id);
+        }
         let userNotes = await Notes.find({$and: [{writtenBy: user._id}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
-        let allNotes = await Notes.find({forCourse: user.courses});
-
+        let allNotes = await Notes.find({forCourse: courseIds});
         // let assignments = await Assignments.find({forCourse: user.courses});
         let viewNotesDisplay = [1, "nothing"];
         if (courses.length) {
@@ -1900,12 +2950,14 @@ app.get("/", async (req, res, next) => {
             notes: []
           };
         }
+
         for (var i = 0; i < userNotes.length; i++) {
           notesObject[userNotes[i].forCourse].push(userNotes[i]);
         }
         for (var i = 0; i < allNotes.length; i++) {
           allNotesObject[allNotes[i].forCourse].notes.push(allNotes[i]);
         }
+
         for (var key in allNotesObject) {
           allNotesObject[key].notes.sort((a,b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
           let setterDate = allNotesObject[key].notes[0] ? allNotesObject[key].notes[0].date : false;
@@ -1977,7 +3029,6 @@ app.get("/", async (req, res, next) => {
         }
         
 
-        console.log(homeworkList[2][1][0]);
         //gets the order of todays blocks from a function
         //also accounts for time offsets due to pro-D days
 
@@ -2121,7 +3172,7 @@ app.get("/", async (req, res, next) => {
     res.redirect("/login");
   }
 });
-//the only purpose of this function as of right now is to delete user submitted homework
+
 app.post("/", urlencodedParser, function(req,res) {
   //makes sure the user has a session
   if (req.session.userId && req.body.removedHomework) {
@@ -2136,8 +3187,6 @@ app.post("/", urlencodedParser, function(req,res) {
 
         let course = req.body.removedHomework.split("_")[0];
         let index = (req.body.removedHomework.split("_")[1]);
-        console.log(index);
-        console.log(course);
 
         //finds the corrosponding course
         if (user.permissions == "admin") {
@@ -2244,31 +3293,48 @@ app.post("/postHomeworkImage", function(req, res) {
   }
 });
 
-app.get("/login", function(req, res) {
-  res.render("login", {error: ""});
+app.get("/login", async function(req, res) {
+  try {
+    let schools = await School.find({});
+    schools.sort(function(a,b) {
+      return (a.firstName > b.firstName ? -1 : 1);
+    });
+    res.render("redesign/login", {schools: schools, error: ""});
+  } catch(e) {
+    console.log(e);
+    res.redirect("/signup");
+  }
+  
+  // res.render("login", {error: ""});
 })
 
 app.post("/login", urlencodedParser, async (req, res, next) => {
 
+  let schools = await School.find({});
+  schools.sort(function(a,b) {
+    return (a.firstName > b.firstName ? -1 : 1);
+  });
   //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
-  if (req.body.logname && req.body.logword && stringTest(req.body.logname) && stringTest(req.body.logword)) {
+  if (req.body.username && req.body.password && req.body.school && stringTest(req.body.school) && stringTest(req.body.username) && stringTest(req.body.password)) {
+    
     //try to find the user in the database. if that doesn't work, tell them their information was incorrect.
     try {
       // asyncronous function. returns the user if the info was correct, throws an error if it wasn't.
-      let response = await User.authenticate(req.body.logname, req.body.logword);
+      let response = await User.authenticate(req.body.username, req.body.password, req.body.school);
       //sets the session and cookie to the current user ID
       req.session.userId = response._id;
+
       res.cookie("sessionID", response._id);
       //redirects to the cookie path, or to home if the user doesn't have path cookies
       res.redirect(req.cookies.path || "/");
     } catch(e) {
       console.log(e);
       // tells the user their info was incorrect
-      res.render("login", {error : "Username or Password incorrect. Please try again."});
+      res.render("redesign/login", {schools: schools, error: "username or password incorrect. Please try again."});
     }
   } else {
     //asks the user not to enter special characters.
-    res.render("login", {error: "Please don't enter special characters"});
+    res.render("redesign/login", {schools: schools, error: "Please fill in all fields with alphanumeric characters"});
   }
 });
 
@@ -2278,9 +3344,7 @@ app.get("/signup", function(req, res) {
     schools.sort(function(a,b) {
       return (a.firstName > b.firstName ? -1 : 1);
     });
-    
-
-    res.render("signup", {error : "", data : [ "", "", ""], schoolNames : schools});
+    res.render("redesign/signup", {schools: schools, error: ""});
   })
 });
 
@@ -2289,130 +3353,187 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
   schools.sort(function(a,b) {
     return (a.firstName > b.firstName ? -1 : 1);
   });
-  if (req.body.username && req.body.schoolChoice && req.body.realPassword) {
-    let school = await School.findOne({name : req.body.schoolChoice}); 
-    let schools = await School.find({});
-    schools.sort(function(a,b) {
-      return (a.firstName > b.firstName ? -1 : 1);
-    });
-    let userInfo = await getUserInfo(req.body.username.toLowerCase(), req.body.password || "_", school.schoolDistrict || "sd83");
-    let schedule = await getSchedule(req.body.username.toLowerCase(),  req.body.password || "_", "SEM 1 ", school.schoolDistrict);
-    let userObject = {
-      firstName: "_",
-      lastName: "_",
-      username: req.body.username,
-      password: req.body.realPassword,
-      courses: [],
-      colors: {
-        bgColor: "rgb(79, 49, 48)",
-        textColor: "rgb(216, 215, 143)",
-        infoColor: "rgb(117, 55, 66)",
-        buttonColor: "rgb(170, 80, 66)",
-        borderColor:"rgb(216, 189, 138)"
-      },
-      font: "/public/fonts/Evogria.otf",
-      email: req.body.username,
-      school: school._id
-    }
-    if (userInfo[0] && userInfo[1] && userInfo[2] && userInfo[3]) {
-      userObject = {
-        firstName : userInfo[2][0] + userInfo[2].substring(1,userInfo[2].length).toLowerCase(),
-        lastName : userInfo[3][0] + userInfo[3].substring(1,userInfo[3].length).toLowerCase(),
-        username : req.body.username,
-        password: req.body.realPassword,
-        courses : schedule,
-        colors: {
-          bgColor: "rgb(79, 49, 48)",
-          textColor: "rgb(216, 215, 143)",
-          infoColor: "rgb(117, 55, 66)",
-          buttonColor: "rgb(170, 80, 66)",
-          borderColor:"rgb(216, 189, 138)"
-        },
-        font: "/public/fonts/Evogria.otf",
-        email: req.body.username,
-        school: school._id
+  if (req.body.username && req.body.password && req.body.school) {
+    let school = await School.findOne({_id : req.body.school}); 
+    if (school) {
+      let user = await User.findOne({$and: [{school: req.body.school}, {username: req.body.username}]});
+      if (user == null) {
+        if (school != null) {
+          //TODO: function to autofill users courses when they sign up
+          let userObject = {
+            firstName: "_",
+            lastName: "_",
+            username: req.body.username,
+            password: req.body.password,
+            studentID: req.body.studentID || "",
+            courses: [],
+            colors: {
+              bgColor: "rgb(79, 49, 48)",
+              textColor: "rgb(216, 215, 143)",
+              infoColor: "rgb(117, 55, 66)",
+              buttonColor: "rgb(170, 80, 66)",
+              borderColor:"rgb(216, 189, 138)"
+            },
+            font: "/public/fonts/Evogria.otf",
+            email: req.body.username,
+            school: school._id
+          }
+          try {
+            User.create(userObject,function(error, user) {
+              if (error) {
+                res.render("redesign/signup", {schools: schools, error: "An error occured. Please try again"});
+              } else {
+                req.session.userId = user._id;
+                res.cookie("sessionID", req.session.userId);
+                res.redirect("/courses");
+              }
+            });
+          } catch(e) {
+            res.render("redesign/signup", {schools: schools, error: "An error occured. Please try again"});
+          }
+        }
+      } else {
+        res.render("redesign/signup", {schools: schools,error: "User already exists. Please try again."});
       }
     } else {
-      // res.render("signup", {error: "Error : I'm fuckin bad lol", schoolNames : schools, data : ["", "", ""]});
+      res.render("redesign/signup", {schools: schools, error: "School not found."});
     }
-    try {
-      User.create(userObject,function(error, user) {
-        if (error) {
-          console.log(error);
-          res.render("signup", {error : "Username is already being used. Please try again.", schoolNames : schools, data : ["", req.body.firstName, req.body.lastName]});
-        } else {
-          //sets the session and cookie to current user ID
-          req.session.userId = user._id;
-          res.cookie("sessionID", req.session.userId);
-          res.redirect("/tutorial");
-        }
-      });
-    } catch(e) {
-      console.log(e); 
-    }
+  } else {
+    res.render("redesign/signup", {schools: schools, error: "Please complete all fields"});
   }
 });
 
-app.get("/courses", function(req, res) {
+app.get("/courses", async function(req, res) {
     res.cookie("path", "/courses");
-    if (req.session.userId) {
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        if (err) {
-          console.log(err);
-          res.redirect("/login");
-        } else {
-          Course.find({school : user.school}, function(err, courses) {
-            if (err || courses == null) {
-              console.log(err);
-              res.redirect("/login");
-            } else {
-              School.findOne({_id : user.school}, function(err, school) {
-                console.log(school.categories);
-                if (school.categories) {
+    try {
+      if (req.session.userId) {
+        let user = await User.findOne({_id : req.session.userId});
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        let selectedSemester = req.query.semester || school.semesters[0]._id;
 
-                  courses.sort(function(a,b) {
-                    return (a.teacher > b.teacher ? 1 : -1);
-                  });
-                  res.render("addCourses", {schoolName : school.name, categories: school.categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
-                } else {
-                  res.render("addCourses", {schoolName : school.name, categories: [""], colours: user.colors, font: holidayFont(user.font), courses : courses});
-                }
+        let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: selectedSemester}]}).populate("category").populate("teacher");
+        
+        let courses = await Course.find({$and: [{semester: selectedSemester}, {school: user.school}]}).populate("teacher");
 
-              })
-            }
-          });
+        let categories = await Categories.find({school: school._id});
+        let userCourses = blockNamesObject([], allowedUserCourses, {}, "LC's");
+        console.log(userCourses);
+        let disallowedBlocks = [];
+        for (var key in userCourses) {
+          disallowedBlocks.push(key);
         }
-      });
+        courses.sort(function(a,b) {
+          return (a.teacher > b.teacher ? 1 : -1);
+        });
+        res.render("redesign/courses", {disallowed: disallowedBlocks, selectedSemester: selectedSemester, userCourses: userCourses, categories: categories, courses: courses, school: school, icons: iconMap});
+        // res.render("addCourses", {schoolName : school.name, categories: categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
+
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      console.log(e);
+      res.redirect("/login");
+    }
+    // try {
+    //   if (req.session.userId) {
+    //     let user = await User.findOne({_id : req.session.userId});
+    //     let courses = await Course.find({school: user.school}).populate("teacher");
+    //     let school = await School.findOne({_id : user.school});
+    //     let categories = await Categories.find({school: school._id});
+    //     console.log(courses[0].category.toString() == categories[0]._id);
+    //     console.log(categories[0]._id);
+    //     courses.sort(function(a,b) {
+    //       return (a.teacher > b.teacher ? 1 : -1);
+    //     });
+    //     res.render("addCourses", {schoolName : school.name, categories: categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
+
+    //   } else {
+    //     res.redirect("/login");
+    //   }
+    // } catch(e) {
+    //   res.redirect("/login");
+    // }
+});
+
+
+app.get("/getUserCourses", async function(req, res) {
+  if (req.query.user) {
+
+  } else {
+
+  }
+});
+
+app.post("/courses", urlencodedParser, async function(req, res) {
+
+  try {
+    if (req.session.userId && req.query.semester) {
+      let user = await User.findOne({_id: req.session.userId}).populate({path: "courses", populate: {path: "semester"}});
+      let school = await School.findOne({_id : user.school}).populate("semesters");
+      
+
+      if (user) {
+        let userBlock = {
+
+        }
+        for (var i = 0; i < school.semesters.length; i++) {
+          userBlock[school.semesters[i]._id.toString()] = {};
+        }
+        for (var i = 0; i < user.courses.length; i++) {
+          userBlock[user.courses[i].semester._id.toString()][user.courses[i].block] = user.courses[i]._id;
+        }
+        for (var key in req.body) {
+          if (req.body[key] == "") {
+            delete userBlock[req.query.semester][key];
+          } else {
+            let currentCourse = await Course.findOne({_id : req.body[key]});
+            if (currentCourse) {
+              userBlock[currentCourse.semester.toString()][currentCourse.block] = currentCourse._id.toString();
+            }
+          }
+        }
+        let newCourseObject = []
+        for (var key in userBlock) {
+          for (var newKey in userBlock[key]) {
+            newCourseObject.push(userBlock[key][newKey]);
+          }
+        }
+        await User.findOneAndUpdate({_id :  req.session.userId}, {$set: {courses: newCourseObject}});
+        res.redirect("/");
+      } else {
+        res.redirect("/login");
+      }
     } else {
       res.redirect("/login");
     }
-});
-
-app.post("/courses", urlencodedParser, function(req, res) {
-  //makes sure they have a session ID and that the body object is a course.
-  if (req.session.userId && req.body.coursesID) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      if (err || user == null) {
-        console.log(err);
-        res.redirect("/");
-      } else {
-        console.log(req.body.coursesID);
-        Course.find({school : user.school, _id : req.body.coursesID}, function(err, courses) {
-          console.log(courses);
-          if (err || courses == null) {
-            console.log(err);
-            res.redirect("/");
-          } else {
-            User.findOneAndUpdate({_id : req.session.userId}, {courses : courses, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
-              res.redirect("/");
-            });
-          }
-        });
-      }
-    })
-  } else {
-    res.redirect("/");
+  } catch(e) {
+    console.log(e);
+    res.redirect("/login");
   }
+  // if (req.session.userId && req.body.coursesID) {
+  //   User.findOne({_id : req.session.userId}, function(err, user) {
+  //     if (err || user == null) {
+  //       console.log(err);
+  //       res.redirect("/");
+  //     } else {
+  //       console.log(req.body.coursesID);
+  //       Course.find({school : user.school, _id : req.body.coursesID}, function(err, courses) {
+  //         console.log(courses);
+  //         if (err || courses == null) {
+  //           console.log(err);
+  //           res.redirect("/");
+  //         } else {
+  //           User.findOneAndUpdate({_id : req.session.userId}, {courses : courses, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
+  //             res.redirect("/");
+  //           });
+  //         }
+  //       });
+  //     }
+  //   })
+  // } else {
+  //   res.redirect("/");
+  // }
 });
 
 app.get("/add", function(req, res) {

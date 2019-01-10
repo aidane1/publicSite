@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Diseases Of Poverty</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <style>
+        * {
+            font-family: sans-serif;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        .navBar {
+            width: 100%;
+            height: 50px;
+            background-color: #343a40;
+        }
+        .headerBar {
+            width: 100%;
+            background-color: #fff;
+            padding-bottom: 50px;
+        }
+        .body {
+            width: 100%;
+            /* height: 500px; */
+            position: relative;
+            background-color:  rgb(248,249,250);
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer {
+            width: 100%;
+            height: 70px;
+            background-color: #343a40;
+        }
+        .diseaseTitle {
+            font-size: 40px;
+            font-weight: 300;
+            text-align: center;
+            margin-top: 90px;
+        }
+        .diseaseSecondary {
+            font-size: 14px;
+            text-align: center;
+            width: 50%;
+            margin: auto;
+            min-width: 500px;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+        .bodyTile {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            left: 0px;
+            transition: left 0.6s ease-in-out, opacity 0.6s linear;
+            opacity: 1;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 30px;
+            -webkit-box-shadow: 0px 4px 34px -10px rgba(0,0,0,0.75);
+            -moz-box-shadow: 0px 4px 34px -10px rgba(0,0,0,0.75);
+            box-shadow: 0px 4px 34px -10px rgba(0,0,0,0.75);
+            cursor: pointer;
+        }
+        
+        .tileImage {
+            width: 100%;
+            height: 50%;
+            background-color: rgb(86,89,92);
+        }
+        .tileImage img {
+            height: 100%;
+            display: block;
+            margin: auto;
+        }
+        .tileBottom {
+            width: 100%;
+            height: 50%;
+            background-color: white;
+        }
+        .tileImageTitle {
+            width: 100%;
+            text-align: center;
+            font-size: 23px;
+        }
+        .tileDescription {
+            width: 100%;
+            padding: 5px;
+            font-size: 12px;
+            font-weight: 300;
+            text-align: center;
+        }
+        .viewButton {
+            width: 60px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: orange;
+            border: 1px solid orange;
+            text-align: center;
+            font-size: 12px;
+        }
+        .heroImage {
+            border: 1px solid #ddd;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            transition: left 0.6s linear, top 0.6s linear, height 0.6s linear, transform 0.6s linear;
+            height: 200px;
+            transform: translateX(-50%);
+        }
+        .transitionTextBox {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            opacity: 0;
+            transition: opacity 0.6s linear;
+            font-size: 22px;
+            padding: 15px;
+        }
+        .navName {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 25px;
+            color: white;
+            padding-left: 50px;
+        }
+        .transitionTitleBox {
+            position: absolute;
+            font-size: 25px;
+            bottom: 100px;
+            left: 0;
+        }
+        .transitionTextBox h1 {
+            font-size: 40px;
+            font-weight: 300;
+            
+        }
+        .transitionTextBox h2 {
+            font-size: 25px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="bodyMain">
+        <div class="navBar">
+            <div class="navName">
+                Aidan Eglin
+            </div>
+        </div>
+        <div class="headerBar">
+            <div class="diseaseTitle">
+                Diseases Of Poverty
+            </div>
+            <div class="diseaseSecondary">
+                Diseases of poverty are diseases that are more prevalent in the low-income population. 
+                They include infectious diseases as well as diseases related to malnutrition and poor 
+                health behaviors. The World Health Report, 2002 states that diseases of poverty account 
+                for 45% of the disease burden in the countries with high poverty rate which are preventable 
+                or treatable with exciting interventions. Diseases of poverty are often co-morbid and ubiquitous
+                 with malnutrition.
+            </div>
+        </div>
+        <div class="body" id = "body">
+
+            
+            <div class="transitionTextBox" id = "transitionTextBox">
+                    <div class="transitionTitleBox" id = "transitionTitleBox">
+                        Aids
+                    </div>
+                    
+                    
+                        <h1>Header 1: </h2>
+                        <h2>Sub-Header 1: </h3>
+                        <p>
+                            <h5>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultrices purus vitae mattis venenatis. Morbi venenatis, tortor consectetur posuere posuere, mi leo consectetur nisl, eu accumsan diam ligula eget nisl. Proin ut euismod arcu. Sed vel diam neque. Curabitur id felis at nisi iaculis dictum vitae sit amet sapien. Praesent eget condimentum turpis. Quisque ultricies eleifend metus quis convallis. Sed ac nisl at mi eleifend posuere. Morbi elementum ac erat at feugiat.
+                            </h5>
+                        </p>
+                        
+                        <h2>Sub-Header 2: </h2>
+                        <p>
+                            <h5>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultrices purus vitae mattis venenatis. Morbi venenatis, tortor consectetur posuere posuere, mi leo consectetur nisl, eu accumsan diam ligula eget nisl. Proin ut euismod arcu. Sed vel diam neque. Curabitur id felis at nisi iaculis dictum vitae sit amet sapien. Praesent eget condimentum turpis. Quisque ultricies eleifend metus quis convallis. Sed ac nisl at mi eleifend posuere. Morbi elementum ac erat at feugiat.
+                            </h5>  
+                        </p>
+                        
+                    
+            </div>
+            <div class="bodyTile" onclick = "moveLeft(this)" id = "tile_0">
+                <div class="tileImage">
+                    <img src="/public/images/aids.jpg" />
+                </div>
+                <div class="tileBottom">
+                    <div class="tileImageTitle">
+                        HIV/Aids
+                    </div>
+                    <div class="tileDescription">
+                            HIV is a virus spread through certain body fluids. It attacks the body’s immune system,
+                            specifically T cells. Over time, HIV can destroy so many T
+                            cells that the body can’t fight off infections and disease. These special cells 
+                            help the immune system fight off infections. Untreated, HIV opens your body up to attack from outside diseases.
+                    </div>
+                </div>
+            </div>
+            <div class="bodyTile"  onclick = "moveLeft(this)" id = "tile_1">
+                <div class="tileImage">
+                    <img src="/public/images/leprosy.jpg" />
+                </div>
+                <div class="tileBottom">
+                    <div class="tileImageTitle">
+                        Leprosy
+                    </div>
+                    <div class="tileDescription">
+                            Leprosy, also known as Hansen’s disease, is a chronic infectious disease caused by Mycobacterium leprae. 
+                            The disease mainly affects the skin, the peripheral nerves, mucosal surfaces of the upper respiratory 
+                            tract and the eyes. Leprosy is known to occur at all ages ranging from early infancy to very old age.
+                    </div>
+                </div>
+            </div>
+            <div class="bodyTile"  onclick = "moveLeft(this)" id = "tile_2">
+                <div class="tileImage">
+                    <img src="/public/images/noma.jpg" />
+                </div>
+                <div class="tileBottom">
+                    <div class="tileImageTitle">
+                        Noma
+                    </div>
+                    <div class="tileDescription">
+                        Noma is a malnutrition based disease that propegates through the body as a gangrenous infection. It disfigures the face of survivors 
+                        permanently and has a 90% fatality rate.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+
+        </div>
+    </div>
+</body>
+<script>
+    function reset(element, parent) {
+        element.parentNode.removeChild(element);
+        let transitionBox = document.getElementById("transitionTextBox");
+        transitionBox.style.opacity = "0";
+        window.setTimeout( function() {
+            document.getElementById(parent).style.opacity = "1";
+            document.getElementById(parent).children[0].children[0].style.display = "block";
+        }, 30);
+        
+        let tiles = document.getElementsByClassName("bodyTile");
+        for (var i = 0; i < tiles.length; i++) {
+                tiles[i].style.left = "0px";
+        }
+    }
+    let info = {
+        "tile_0": ["Aids"],
+        "tile_1": ["Leprosy"],
+        "tile_2": ["Noma"],
+    }
+    function moveLeft(element) {
+        let image = element.children[0].children[0].cloneNode(false);
+        element.children[0].children[0].style.display = "none";
+        image.style.left = (element.offsetLeft + 150).toString() + "px";
+        image.style.top = element.offsetTop.toString() + "px";
+        image.setAttribute("onclick", `reset(this, '${element.id}')`);
+        image.className = "heroImage";
+        document.getElementById("body").appendChild(image);
+        let transitionBox = document.getElementById("transitionTextBox");
+        let transitionTitle = document.getElementById("transitionTitleBox");
+        transitionTitle.innerHTML = info[element.id][0];
+        transitionBox.style.paddingLeft = ((image.width/image.height*300) + 22).toString() + "px";
+        window.setTimeout( function() {
+            transitionBox.style.opacity = "1";
+            image.style.left = "0px";
+            image.style.top = "0px";
+            image.style.transform = "none";
+            image.style.height = "300px";
+            image.addEventListener("transitionend", function(trans) {
+                // image.style.position = "relative";
+            });
+            element.style.opacity = "0";
+        }, 30);
+        
+        let tiles = document.getElementsByClassName("bodyTile");
+        for (var i = 0; i < tiles.length; i++) {
+            if (tiles[i] != element) {
+                tiles[i].style.left = window.innerWidth.toString() + "px";
+                // tiles[i].style.left = "2500px";
+            }
+            
+        }
+    }
+
+</script>
+</html> 

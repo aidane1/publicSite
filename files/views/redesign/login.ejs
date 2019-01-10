@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta name = "description" content = "The PVSS student website. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
+    <meta charset = "utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <meta name = "theme-color" content = "orange" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel = "manifest" href = "public/manifests/home.json  " />
+    <title>PVSS student website | Login</title>
+    <script>
+      window.onload = function() {
+        if (navigator.cookieEnabled) {
+
+        } else {
+          document.getElementById("error").innerHTML = "This website uses cookies to store your session data, and nothing else. please enable them to continue.";
+        }
+      }
+
+    </script>
+    <style>
+      
+      * {
+          box-sizing: border-box;
+          font-family: sans-serif;
+      }
+      html, body {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          /* background: linear-gradient(to bottom left, rgb(255,102,0), rgb(153,0,51)); */
+          background: linear-gradient(to bottom left, #ffc371, #ff5f6d);
+          /* background: #ddd; */
+      }
+      .backdrop {
+          width: 100%;
+          height: 100%;
+          max-width: 400px;
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          justify-content: space-evenly;
+          margin: auto;
+      }
+      .logoBox {
+          width: 100%;
+          margin-top: 50px;
+      }
+      .logoImage {
+          width: 50%;
+          display: block;
+          margin: auto;
+      }
+      .textInputs {
+          width: 100%;
+          margin-top: 50px;
+      }
+      .inputHolder {
+          width: 90%;
+          height: 40px;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          margin: auto;
+          margin-top: 10px;
+      }
+      .textInputs input {
+        flex-grow: 1;
+        height: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: rgba(0,0,0,0);
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+        font-size: 22px;
+        display: block;
+        font-weight: 300;
+        font-size: 20px;
+        border-radius: 0;
+        padding-left: 5px;
+        
+      }
+      .iconHolder {
+          width: 40px;
+          height: 40px;
+          /* position: relative; */
+      }
+      .iconHolder img {
+          width: 30px;
+          height: 30px;
+          position: relative;
+          top: 4px;
+      }
+      .textInputs input::placeholder {
+          color: black;
+          font-weight: 300;
+          font-size: 20px;
+      }
+      .schoolInput {
+            width: 90%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            /* border-bottom: 1px solid black; */
+        }
+        .schoolRoll {
+            height: 100%;
+            flex-grow: 1;
+            font-size: 21px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: rgba(0,0,0,0);
+            color: black;
+            text-align: right;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            outline: none;
+        }
+        .loginButton {
+            width: 90%;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            margin-left: auto;
+            margin-right: auto;
+            
+            /* background: linear-gradient(to right, #c33764, #1d2671); */
+            border-radius: 7px;
+        }
+        .signup {
+            width: 100%;
+            text-align: center;
+            
+        }
+        .signup a {
+            /* color: rgb(0,130,209); */
+            color: rgb(153,0,51);
+            text-decoration: none;
+            margin-bottom: 70px;
+        }
+        .error {
+            position: absolute;
+            width: 75%;
+            max-width: 500px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: #ffcccc;
+            color: #c10303;
+            font-size: 18px;
+            border: 1px solid #d10c0c;
+            border-radius: 10px;
+            left: 50%;
+            top: -200px;
+            transform: translateX(-50%);
+            text-align: center;
+            transition: top 0.4s ease-out;
+        }
+        .extended {
+            
+        }
+        .pure-material-button-contained {
+            position: relative;
+            display: inline-block;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 4px;
+            padding: 0 16px;
+            min-width: 64px;
+            height: 36px;
+            vertical-align: middle;
+            text-align: center;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+            /* background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243)); */
+            background-color: #775fff;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 36px;
+            overflow: hidden;
+            outline: none;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .pure-material-button-contained::-moz-focus-inner {
+            border: none;
+        }
+
+        /* Overlay */
+        .pure-material-button-contained::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* Ripple */
+        .pure-material-button-contained::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            padding: 50%;
+            width: 32px; /* Safari */
+            height: 32px; /* Safari */
+            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1);
+            transition: opacity 1s, transform 0.5s;
+        }
+
+        /* Hover, Focus */
+        .pure-material-button-contained:hover,
+        .pure-material-button-contained:focus {
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        .pure-material-button-contained:hover::before {
+            opacity: 0.08;
+        }
+
+        .pure-material-button-contained:focus::before {
+            opacity: 0.24;
+        }
+
+        .pure-material-button-contained:hover:focus::before {
+            opacity: 0.3;
+        }
+
+        /* Active */
+        .pure-material-button-contained:active {
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        }
+
+        .pure-material-button-contained:active::after {
+            opacity: 0.32;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0s;
+        }
+
+        /* Disabled */
+        .pure-material-button-contained:disabled {
+            color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+            background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.12);
+            box-shadow: none;
+            cursor: initial;
+        }
+
+        .pure-material-button-contained:disabled::before {
+            opacity: 0;
+        }
+
+        .pure-material-button-contained:disabled::after {
+            opacity: 0;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="error <%=error ? 'extended' : ''%>">
+        <%=error%>
+    </div>
+    <div class = "backdrop">
+        <div class="logoBox">
+                <img src = "/public/images/logo_transparent.png"  class = "logoImage" />
+        </div>
+        <form class="textInputs" action = "/login" method = "POST" id = "form">
+            
+            <div class="inputHolder">
+                <div class="iconHolder">
+                    <img src = "/public/icons/username.svg" />
+                </div>
+                <input type="username" name = "username" class = "username" placeholder = "Username">
+            </div>
+            
+            <div class="inputHolder">
+                <div class="iconHolder">
+                    <img src = "/public/icons/password.svg" />
+                </div>
+                <input type="password" name = "password" class = "password" placeholder="Password">
+            </div>
+            <div class="schoolInput">
+                <select class = "schoolRoll" name = "school" dir = "rtl">
+                    <% for (var i = 0; i < schools.length; i++) { %>
+                        <option value = "<%=schools[i]._id%>"><%=schools[i].name%></option>
+                    <% } %>
+                    
+                </select>
+            </div>
+        </form>
+        <!-- <div class="loginButton pure-material-button-contained" onclick = "document.getElementById('form').submit()">
+            LOGIN
+        </div> -->
+        <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Login</button>
+        <div class="signup"><a href = "/signup">Sign Up</a></div>
+    </div>
+  </body>
+  <script>
+      let extended = false;
+      document.onclick = function() {
+          if (extended) {
+            let extend = document.getElementsByClassName("extended");
+            if (extend && extend[0]) {
+                extended = false;
+                extend[0].style.top = "-200px";
+            }
+          }
+      }
+      window.onload = function() {
+        let extend = document.getElementsByClassName("extended");
+        if (extend && extend[0]) {
+            extended = true;
+            setTimeout(function() {
+                extend[0].style.top = "100px";
+            }, 30);
+        }
+      }
+  
+  </script>
+</html>

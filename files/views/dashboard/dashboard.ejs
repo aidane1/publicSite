@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            height: 50%;
+            min-height: 400px;
+            background-color: rgb(18, 135, 222);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: rgb(67,181,245);
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+            color: rgba(255,255,255,0.6);
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            /* background-color: red; */
+            margin-top: 50px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .expandingCourses {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'">
+                <div class="sideBarMain">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "expandCoursesBar(this)" >
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "courseSecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingCourses" id = "expandingCourses">
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove events
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+
+            </div>
+            <div class = "bodyLowerSection">
+
+            </div>
+            <div class="overPage">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        PVSS (sd83)
+                    </div>
+                </div>
+                <div class="mainBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let coursesExpanded = false;
+    function expandCoursesBar(element) {
+        let courses = document.getElementById("expandingCourses");
+        let courseSecondary = document.getElementById("courseSecondary");
+        if (coursesExpanded) {
+            courses.style.maxHeight = "0px";
+            coursesExpanded = false;
+            element.className = "sideBarTopic";
+            courseSecondary.style.visibility = "visible";
+        } else {
+            courses.style.maxHeight = "150px";
+            coursesExpanded = true;
+            element.className = "expandedTopic";
+            courseSecondary.style.visibility = "hidden";
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            flex-grow: 0;
+            background-color: rgb(3, 155, 229);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            /* background-color: red; */
+            color: rgba(255,255,255,0.6);
+            padding: 10px;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .eventHolderMain {
+            width: 95%;
+            /* height: 500px; */
+            background-color: rgb(242,242,242);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .createEventBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createEvent {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .eventCategoriesBar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 12px;
+        }
+        .eventCategory {
+            width: 16%;
+            font-size: 13px;
+            color: #666;
+            padding-left: 3px;
+        }
+        .eventsBody {
+            width: 100%;
+            /* height: 400px; */
+            background-color: white;
+        }
+        .event {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .eventProperty {
+            width: 16%;
+            padding-right: 10px;
+            font-size: 13px;
+            padding-left: 5px;
+        }
+        .event:hover {
+            background-color: #f5f5f5;
+        }
+        .editEvent {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .event:hover .editEvent {
+            visibility: visible;
+        }
+        .editDelete {
+            width: 100px;
+            height: 75px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
+            padding-top: 10px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .expandingBlock {
+            width: 100%;
+            /* height: 200px; */
+            /* padding-top: 50px; */
+            /* padding-bottom: 25px; */
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            
+        }
+ 
+        .createEventBlock {
+            width: 16%;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            width: 100%;
+            /* height: 200px; */
+        }
+        .addInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+            
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .cancelCreation {
+
+        }
+        .createCreation {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        .cancelCreation:hover {
+            background-color: #ddd;
+        }
+        .customCheckBox {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .checked {
+            background-color: rgb(3, 155, 229);
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none;
+        }
+        .notAllowed {
+            background-color:  #ddd !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+        }
+        #errorPopDown {
+            padding: 20px;
+            background-color: rgb(241,80,79);
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px;
+            -webkit-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            transition: top 0.2s ease-out
+        }
+        .errorDown {
+            top: 100px !important;
+            cursor: pointer;
+        }
+        .expandingCourses {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+                <div class="sideBarMain">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "expandCoursesBar(this)" >
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "courseSecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingCourses" id = "expandingCourses">
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain"  style = "color: rgb(67,181,245);">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove events
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        Events
+                    </div>
+                </div>
+            </div>
+            <div class = "bodyLowerSection" id = "bodyLowerSection">
+                <div class="eventHolderMain">
+                    <div class="createEventBar">
+                        <div class="createEvent" id="createEvent" onclick = "makeNewEvent()">
+                            NEW EVENT
+                        </div>
+                    </div>
+                    <div class="eventCategoriesBar">
+                        <div class="eventCategory">Date</div>
+                        <div class="eventCategory">Info</div>
+                        <div class="eventCategory">Time</div>
+                        <div class="eventCategory">School Skipped</div>
+                        <div class="eventCategory">Day Rolled</div>
+                        <div class="eventCategory">Event Displayed</div>
+                    </div>
+                    <div class="expandingBlock" id = "expandingBlock">
+                        <div class="container">
+                            <div class="createEventDate createEventBlock">
+                                <!-- <input type="text" name = "eventDate" value="1/1/2018" class = "addInput" /> -->
+                                <input type="date" id = "addDate" class = "addInput"/>
+                            </div>
+                            <div class="createEventShortDescription createEventBlock">
+                                <input type="text" id = "addInfo" class = "addInput">
+                            </div>
+                            <div class="createEventTime createEventBlock">
+                                <input type="time" id = "addTime" class = "addInput">
+                            </div>
+                            <div class = "createEventSchoolSkipped createEventBlock">
+                                <div class="customCheckBox" id = "schoolSkipped" onclick = "clickFunction(this)"></div>
+                            </div>
+                            <div class="createEventDayRolled createEventBlock">
+                                <div class="customCheckBox" id = "dayRolled" onclick = "clickFunction(this)"></div>
+                            </div>
+                            <div class="createEventEventShown createEventBlock">
+                                <div class="customCheckBox checked" id = "eventDisplayed" onclick = "clickFunction(this)">&#10003;</div>
+                            </div>
+                        </div>
+                        <div class="buttonsRow">
+                            <div class="buttonRowButton createCreation" onclick="getNewEventInfo()">Create</div>
+                            <div class="buttonRowButton cancelCreation" onclick = "closeNewEvent()">Cancel</div>
+                        </div>                 
+                    </div>
+                    <div class="eventsBody">
+                        <% for (var i = 0; i < events.length; i++) { %>
+                            <div class="event" id = "event_<%=events[i]._id%>">
+                                <!-- <div class="eventDate"></div>
+                                .event -->
+                                <div class="eventProperty"><%=events[i].dateString%></div>
+                                <div class="eventProperty"><%=events[i].info%></div>
+                                <div class="eventProperty"><%=events[i].time%></div>
+                                <div class="eventProperty"><%=events[i].schoolSkipped ? "yes" : "no" %></div>
+                                <div class="eventProperty"><%=events[i].dayRolled ? "yes" : "no"%></div>
+                                <div class="eventProperty"><%=events[i].displayedEvent ? "yes" : "no"%></div>
+                                <i class="fas fa-ellipsis-v editEvent" onclick = "openEdit(this)">
+                                    <div class="editDelete">
+                                        <div class="edit" onclick = 'getEvent("<%=events[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeEvent('<%=events[i]._id%>')">Delete</div>
+                                    </div>
+                                </i>
+                            </div>
+                        <% } %>
+                        <% if (events.length == 0) { %>
+                            <div class="evnet">
+                                No events yet
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "errorPopDown">
+        test error!
+    </div>
+</body>
+<script>
+    errorExtened = false;
+    
+    document.onclick = function(e) {
+        if (errorExtened) {
+            document.getElementById("errorPopDown").classList.remove("errorDown");
+            errorExtened = false;
+        }
+    }
+    let coursesExpanded = false;
+    function expandCoursesBar(element) {
+        let courses = document.getElementById("expandingCourses");
+        let courseSecondary = document.getElementById("courseSecondary");
+        if (coursesExpanded) {
+            courses.style.maxHeight = "0px";
+            coursesExpanded = false;
+            element.className = "sideBarTopic";
+            courseSecondary.style.visibility = "visible";
+        } else {
+            courses.style.maxHeight = "150px";
+            coursesExpanded = true;
+            element.className = "expandedTopic";
+            courseSecondary.style.visibility = "hidden";
+        }
+    }
+
+    function getEvent(id) {
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                console.log(response);
+                if (response._id != null) {
+                    response.date = new Date(response.date);
+                    let hour = 0;
+                    let minute = 0;
+                    response.time = response.time.split(":").join(" ").split(" ");
+                    if (response[2] == "PM") {
+                        hour += 12;
+                    }
+                    hour += parseInt(response.time[0]);
+                    minute += parseInt(response.time[1]);
+
+                    document.getElementById("addDate").value = response.date.getFullYear().toString() + "-" + (response.date.getMonth().toString().length == 1 ? "0" + response.date.getMonth().toString() : response.date.getMonth().toString()) + "-" + response.date.getDate().toString();
+                    document.getElementById("addInfo").value = response.info;
+                    document.getElementById("addTime").value = hour.toString() + ":" + minute.toString();
+                    document.getElementById("schoolSkipped").classList.remove("checked");
+                    response.schoolSkipped ? clickFunction(document.getElementById("schoolSkipped")) : false;
+                    document.getElementById("dayRolled").classList.remove("checked");
+                    response.dayRolled ? clickFunction(document.getElementById("dayRolled")) : false;
+                    document.getElementById("eventDisplayed").classList.remove("checked");
+                    response.displayedEvent ? clickFunction(document.getElementById("eventDisplayed")) : false;
+                } else {
+                    // let error = document.getElementById("errorPopDown");
+                    // error.innerText = "Error: " + response[1];
+                    // error.classList.add("errorDown");
+                    // errorExtened = true;
+                }
+            }
+        }
+        makeNewEvent();
+        let createButton = document.getElementById("createEvent");
+        createButton.classList.add("notAllowed");
+        loadRequest.open("GET", "/getEvent?eventId=" + id, true);
+        loadRequest.send(); 
+    }
+    function removeEvent(id) {
+        let sendString = "removedId=" + id;
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                if (response[0] === true) {
+                    let removedEvent = document.getElementById("event_" + response[1]._id);
+                    removedEvent.parentNode.removeChild(removedEvent);
+                } else {
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response[1];
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+        loadRequest.open("POST", "/removeEvent", true);
+        loadRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        loadRequest.send(sendString); 
+    }
+    function sendNewEvent(eventData) {
+        let sendString = "";
+        for (var key in eventData) {
+            sendString += key;
+            sendString += "=";
+            sendString += eventData[key];
+            sendString += "&";
+        }
+        let loadRequest;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            loadRequest = new XMLHttpRequest();
+        } else {
+            // code for old IE browsers
+            loadRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        loadRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(this.responseText);
+                let createButton = document.getElementById("createEvent");
+                createButton.classList.remove("notAllowed");
+                if (response[0] === true) {
+                    document.getElementById("addDate").value = "";
+                    document.getElementById("addInfo").value = "";
+                    document.getElementById("addTime").value = "";
+                    document.getElementById("schoolSkipped").classList.remove("checked");
+                    document.getElementById("dayRolled").classList.remove("checked");
+                    document.getElementById("eventDisplayed").classList.add("checked");
+                    closeNewEvent();
+                    let event = document.createElement("div");
+                    let propertyList = `<div class="eventProperty">${response[1].dateString}</div><div class="eventProperty">${response[1].info}</div><div class="eventProperty">${response[1].time}</div><div class="eventProperty">${response[1].schoolSkipped ? "yes" : "no"}</div><div class="eventProperty">${response[1].dayRolled ? "yes" : "no"}</div><div class="eventProperty">${response[1].displayedEvent ? "yes" : "no"}</div><i class="fas fa-ellipsis-v editEvent" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete">Delete</div></div></i>`;
+                    event.className = "event";
+                    event.innerHTML = propertyList;
+                    document.getElementsByClassName("eventsBody")[0].appendChild(event);
+                } else {
+                    
+                    let error = document.getElementById("errorPopDown");
+                    error.innerText = "Error: " + response[1];
+                    error.classList.add("errorDown");
+                    errorExtened = true;
+                }
+            }
+        }
+
+        let createButton = document.getElementById("createEvent");
+        createButton.classList.add("notAllowed");
+
+        loadRequest.open("POST", "/addEvent", true);
+        loadRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        loadRequest.send(sendString); 
+    }
+    function getNewEventInfo() {
+        let date = document.getElementById("addDate").value;
+        date = date.split("-");
+        console.log(date);
+        date = new Date(date[0],(parseInt(date[1])-1).toString(), date[2]);
+        let info = document.getElementById("addInfo").value;
+        let time = document.getElementById("addTime").value;
+        time = time.split(":");
+        time[0] = parseInt(time[0]);
+        time.push(time[0] >= 12 ? "PM" : "AM");
+        time = `${time[0]}:${time[1]} ${time[2]}`;
+        let schoolSkipped = document.getElementById("schoolSkipped").classList.contains("checked");
+        let dayRolled = document.getElementById("dayRolled").classList.contains("checked");
+        let eventDisplayed = document.getElementById("eventDisplayed").classList.contains("checked");
+        sendNewEvent({date: date, info: info, time: time, schoolSkipped: schoolSkipped, dayRolled: dayRolled, eventDisplayed, eventDisplayed});
+    }
+    function openEdit(element) {
+        element.children[0].style.display = "flex";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function makeNewEvent() {
+        let createButton = document.getElementById("createEvent");
+        createButton.classList.add("notAllowed");
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px";
+    }
+    function closeNewEvent() {
+        let expandingBlock = document.getElementById("expandingBlock");
+        let createButton = document.getElementById("createEvent");
+        createButton.classList.remove("notAllowed");
+        expandingBlock.style.maxHeight = "0px";
+    }
+    function clickFunction(element) {
+        element.classList.toggle("checked");
+        element.innerHTML = !element.classList.contains("checked") ? "" : "&#10003;";
+    }
+
+</script>
+<script>
+</script>
+</html>

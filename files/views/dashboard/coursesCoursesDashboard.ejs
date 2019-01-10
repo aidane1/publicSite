@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            flex-grow: 0;
+            background-color: rgb(3, 155, 229);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            /* background-color: red; */
+            color: rgba(255,255,255,0.6);
+            padding: 10px;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .courseHolderMain {
+            width: 95%;
+            /* height: 500px; */
+            background-color: rgb(242,242,242);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+        .createCourseBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createCourse {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .courseCategoriesBar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 12px;
+        }
+        .courseCategory {
+            width: 19%;
+            font-size: 13px;
+            color: #666;
+            padding-left: 3px;
+            cursor: pointer;
+        }
+        .courseCategory:hover {
+            /* background-color: #aaa; */
+        }
+        .coursesBody {
+            width: 100%;
+            /* height: 400px; */
+            background-color: white;
+        }
+        .course {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .courseProperty {
+            width: 19%;
+            padding-right: 10px;
+            font-size: 13px;
+            padding-left: 5px;
+        }
+        .course:hover {
+            background-color: #f5f5f5;
+        }
+        .editcourse {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .course:hover .editcourse {
+            visibility: visible;
+        }
+        .editDelete {
+            width: 100px;
+            height: 75px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
+            padding-top: 10px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .expandingBlock {
+            width: 100%;
+            /* height: 200px; */
+            /* padding-top: 50px; */
+            /* padding-bottom: 25px; */
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            
+        }
+ 
+        .createCourseBlock {
+            width: 19%;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            width: 100%;
+            /* height: 200px; */
+        }
+        .addInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+            
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .cancelCreation {
+
+        }
+        .createCreation {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        .cancelCreation:hover {
+            background-color: #ddd;
+        }
+        .customCheckBox {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .checked {
+            background-color: rgb(3, 155, 229);
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none;
+        }
+        .notAllowed {
+            background-color:  #ddd !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+        }
+        #errorPopDown {
+            padding: 20px;
+            background-color: rgb(241,80,79);
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px;
+            -webkit-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            transition: top 0.2s ease-out
+        }
+        .errorDown {
+            top: 100px !important;
+            cursor: pointer;
+        }
+        .expandingCourses {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .optionsHolder {
+            width: 90%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .optionsHolder select {
+            height: 100%;
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 20px;
+            outline: none;
+        }
+        .editMany {
+            color: black;
+            float: right;
+            padding: 10px 8px;
+            /* background-color: rgb(3,155,229); */
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            /* -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26); */
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .editMany:hover {
+            background-color: #ddd;
+        }
+        #editManyBlock {
+            height: 100%;
+            max-width: 0px;
+            overflow: hidden;
+            transition: max-width 0.5s linear;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
+        }
+        .editManyProp {
+            /* height: 100%; */
+            /* width: 33.3%; */
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            font-size: 15px;
+            color: grey;
+        }        
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+                <div class="overViewMain">
+                    School Overview
+                </div>
+            </div> 
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+                <div class="sideBarMain">
+                    Master Schedule
+                </div>
+                <div class="sideBarSecondary">
+                    Edit and view the master schedule
+                </div>                
+            </div>
+            <div class="expandedTopic" onclick = "expandCoursesBar(this)">
+                <div class="sideBarMain">
+                    Courses
+                </div>
+                <div class="sideBarSecondary" id = "courseSecondary">
+                    Add, edit, and remove courses
+                </div>        
+                <div class = "expandingCourses" id = "expandingCourses" style = "max-height: 400px">
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                        Categories
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                        Teachers
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'" style = "color: rgb(67,181,245);">
+                        Courses
+                    </div>
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                        Codes
+                    </div>
+                </div>
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+                <div class="sideBarMain">
+                    Events
+                </div>
+                <div class="sideBarSecondary">
+                    Add, edit, and remove events
+                </div>                
+            </div>
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+                <div class="sideBarMain">
+                    Configure
+                </div>
+                <div class="sideBarSecondary">
+                    Change information displays
+                </div>                
+            </div>
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        Courses
+                    </div>
+                </div>
+            </div>
+            <div class = "bodyLowerSection" id = "bodyLowerSection">
+                <div class="courseHolderMain">
+                    <form class="createCourseBar" method = "POST" action = "/updateManyCourse">
+                        <div class="createCourse" id="createCourse" onclick = "makeNewcourse()">
+                            NEW COURSE
+                        </div>
+                        
+                        <div class="editMany" onclick = "editMany()" id = "editMany">
+                            EDIT MANY
+                        </div>
+                        <div class="editManyBlock" id = "editManyBlock">
+                            <input type = "submit" value = "UPDATE" class="createCourse" style = "margin-top: 0" onclick = "submitEditMany()">
+                            
+                            <div class="propertyMatch editManyProp">
+                                Property to edit:
+                                <div class="optionsHolder" onchange = "updateEditMany()">
+                                    <select id = "editManyMaster" name = "property">
+                                        <option value = "addCourse">Course</option>
+                                        <option value = "blockSelector">Block</option>
+                                        <option value = "semesterSelector">Semester</option>
+                                        <option value = "categorySelector">Category</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="findProperty editManyProp">
+                                Old value:
+                                <input type="text" class = "addInput" id = "findReplaceValue" name = "old"/>
+                            </div>
+                            <div class="replaceProperty editManyProp" id = "replaceProperty">
+                                New value:
+                                <div class="optionsHolder">
+                                    <select id = "editManyPropertyReplace" name = "new">
+                                        <% for (var key in school.courseCodes) { %>
+                                            <option id = "<%=school.courseCodes[key].split(' ').join('')%>" value="<%=key%>_<%=school.courseCodes[key]%>"><%=school.courseCodes[key]%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="courseCategoriesBar">
+                        <div class="courseCategory" onclick = "sortList(0)" >Course</div>
+                        <div class="courseCategory" onclick = "sortList(1)" >Teacher</div>
+                        <div class="courseCategory" onclick = "sortList(2)" >Block</div>
+                        <div class="courseCategory" onclick = "sortList(3)" >Semester</div>
+                        <div class="courseCategory" onclick = "sortList(4)" >Category</div>
+                        
+                    </div>
+                    <div class="expandingBlock" id = "expandingBlock">
+                        <div class="container">
+                            <div class="createCourseDate createCourseBlock">
+                                <div class="optionsHolder">
+                                    <select id = "addCourse">
+                                        <% for (var key in school.courseCodes) { %>
+                                            <option id = "<%=school.courseCodes[key].split(' ').join('')%>" value="<%=key%>_<%=school.courseCodes[key]%>"><%=school.courseCodes[key]%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="createteacherTime createCourseBlock">
+                                <div class="optionsHolder">
+                                    <select id = "teacherSelector">
+                                        <% teachers.sort((a,b) => a.lastName.localeCompare(b.lastName))%>
+                                        <% for (var i = 0;  i < teachers.length; i++) { %>
+                                            <option id = "<%=teachers[i]._id%>" value="<%=teachers[i]._id%>"><%=teachers[i].prefix%><%=teachers[i].lastName%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="createteacherTime createCourseBlock">
+                                <div class="optionsHolder">
+                                    <select id = "blockSelector">
+                                        <% for (var i = 0; i < school.blockNames.sort().length; i++) { %>
+                                            <% if (school.blockNames[i][1] == "changing") { %>
+                                                <option id = "<%=school.blockNames[i][0]%>" value="<%=school.blockNames[i][0]%>"><%=school.blockNames[i][0]%></option>    
+                                            <% } %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="createteacherTime createCourseBlock">
+                                <div class="optionsHolder">
+                                    <select id = "semesterSelector">
+                                        <% for (var i = 0; i < school.semesters.length; i++) { %>
+                                            <option id = "<%=school.semesters[i]._id%>" value = "<%=school.semesters[i]._id%>"><%=school.semesters[i].name%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="createteacherTime createCourseBlock">
+                                <div class="optionsHolder">
+                                    <select id = "categorySelector">
+                                        <% categories.sort((a,b) => a.category.localeCompare(b.category)) %>
+                                        <% for (var i = 0; i < categories.length; i++) { %>
+                                            <option id = "<%=categories[i]._id%>" value = "<%=categories[i]._id%>"><%=categories[i].category%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="buttonsRow">
+                            <div class="buttonRowButton createCreation" id = "editOrCreate" onclick="getNewCourseInfo()">Create</div>
+                            <div class="buttonRowButton cancelCreation" onclick = "closeNewcourse()">Cancel</div>
+                        </div>                 
+                    </div>
+                    <div class="coursesBody" id = "courses">
+                        <% for (var i = 0; i < courses.length; i++) { %>
+                            <div class="course" id = "course_<%=courses[i]._id%>">
+                                <div class="courseProperty"><%=courses[i].course%></div>
+                                <div class="courseProperty"><%=courses[i].teacher.prefix%> <%=courses[i].teacher.lastName%></div>
+                                <div class="courseProperty"><%=courses[i].block%></div>
+                                <div class="courseProperty"><%=courses[i].semester.name%></div>
+                                <div class="courseProperty"><%=courses[i].category.category%></div>
+                                
+                                <i class="fas fa-ellipsis-v editcourse" onclick = "openEdit(this)">
+                                    <div class="editDelete">
+                                        <div class="edit" onclick = 'getCourse("<%=courses[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeCourse('<%=courses[i]._id%>')">Delete</div>
+                                    </div>
+                                </i>
+                            </div>
+                        <% } %>
+                        <% if (courses.length == 0) { %>
+                            <div class="course">
+                                No courses yet
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "errorPopDown">
+        test error!
+    </div>
+</body>
+<script>
+    errorExtened = false;
+    
+    document.onclick = function(e) {
+        if (errorExtened) {
+            document.getElementById("errorPopDown").classList.remove("errorDown");
+            errorExtened = false;
+        }
+    }
+    let coursesExpanded = true;
+    function expandCoursesBar(element) {
+        let courses = document.getElementById("expandingCourses");
+        let courseSecondary = document.getElementById("courseSecondary");
+        if (coursesExpanded) {
+            courses.style.maxHeight = "0px";
+            coursesExpanded = false;
+            element.className = "sideBarTopic";
+            courseSecondary.style.visibility = "visible";
+        } else {
+            courses.style.maxHeight = "150px";
+            coursesExpanded = true;
+            element.className = "expandedTopic";
+            courseSecondary.style.visibility = "hidden";
+        }
+    }
+    function updateEditMany() {
+        let value = document.getElementById("editManyMaster").value;
+        let old = document.getElementById(value);
+        if (old) {
+            let newSelector = old.parentNode.cloneNode(true);
+            newSelector.id = "editManyPropertyReplace";
+            newSelector.children[0].name = "new";
+            let children = newSelector.children;
+            for (var i = 0; i < children.length; i++) {
+                children[i].id = "";
+            }
+            document.getElementById("replaceProperty").replaceChild(newSelector, document.getElementById("replaceProperty").children[0])
+        }
+        
+    }
+    function submitEditMany() {
+        // let property = document.getElementById("editManyMaster").value;
+        // let replaceProp = document.getElementById("findReplaceValue").value;
+        // let replacementVal = document.getElementById("editManyPropertyReplace").value;
+    }
+    function editMany() {
+        document.getElementById("editManyBlock").style.maxWidth = "100%";
+        document.getElementById("editMany").innerText = "CLOSE";
+        document.getElementById("editMany").setAttribute("onclick", "closeEditMany()");
+    }
+    function closeEditMany() {
+        document.getElementById("editManyBlock").style.maxWidth = "0px";
+        document.getElementById("editMany").innerText = "EDIT MANY";
+        document.getElementById("editMany").setAttribute("onclick", "editMany()");
+    }
+    function getCourse(id) {
+        sendGetRequest("id=" + id, "/getCourse", function(response) {
+            let createButton = document.getElementById("createCourse");
+            createButton.classList.add("notAllowed");
+            let expandingBlock = document.getElementById("expandingBlock");
+            expandingBlock.style.maxHeight = "400px";
+            if (response[0] == true) {
+                let editOrDelete = document.getElementById("editOrCreate");
+                editOrDelete.innerText = "Edit";
+                editOrDelete.setAttribute("onclick", `editCategory('${id}')`);
+                let courseSelect = document.getElementById(response[1].course.split(" ").join(""));
+                let teacherSelect = document.getElementById(response[1].teacher);
+                let blockSelect = document.getElementById(response[1].block);
+                let semesterSelect = document.getElementById(response[1].semester);
+                let categorySelect = document.getElementById(response[1].category);
+                courseSelect ? courseSelect.selected = true : false;
+                teacherSelect ? teacherSelect.selected = true : false;
+                blockSelect ? blockSelect.selected = true : false;
+                semesterSelect ? semesterSelect.selected = true : false;
+                categorySelect ? categorySelect.selected = true : false;
+            }
+        });
+    }
+    function editCategory(id) {
+        let course = document.getElementById("addCourse").value;
+        let teacher = document.getElementById("teacherSelector").value;    
+        let block = document.getElementById("blockSelector").value;
+        let semester = document.getElementById("semesterSelector").value;
+        let category = document.getElementById("categorySelector").value;
+        let sendString = `course=${course}&teacher=${teacher}&block=${block}&semester=${semester}&category=${category}`;
+        sendPostRequest(sendString, "/editCourse", function(response) {
+            if (response[0] != false) {
+                let courseElement = document.getElementById("course_"  + id);
+                courseElement.children[0].innerText = response[1].course;
+                courseElement.children[1].innerText = response[1].teacher.prefix + response[1].teacher.lastName;
+                courseElement.children[2].innerText = response[1].teacher.prefix + response[1].teacher.lastName;
+                courseElement.children[3].innerText = response[1].semester.name;
+                courseElement.children[4].innerText = response[1].category.category;
+                let expandingBlock = document.getElementById("expandingBlock");
+                let createButton = document.getElementById("createCourse");
+                createButton.classList.remove("notAllowed");
+                expandingBlock.style.maxHeight = "0px";
+            }
+        });
+    }
+    function removeCourse(id) {
+        sendGetRequest("id=" + id, "/removeCourse", function(response) {
+            if (response[0]) {
+                let courseElement = document.getElementById("course_"  +response[1]);
+                courseElement.parentNode.removeChild(courseElement);
+            } else {
+                // let error = document.getElementById("errorPopDown");
+                // error.innerText = "Error: " + response[1];
+                // error.classList.add("errorDown");
+                // errorExtened = true;
+            }
+        });
+    }
+    
+    function getNewCourseInfo() {
+        let course = document.getElementById("addCourse").value;
+        let teacher = document.getElementById("teacherSelector").value;    
+        let block = document.getElementById("blockSelector").value;
+        let semester = document.getElementById("semesterSelector").value;
+        let category = document.getElementById("categorySelector").value;
+        let sendString = `course=${course}&teacher=${teacher}&block=${block}&semester=${semester}&category=${category}`;
+        sendPostRequest(sendString, "/addCourse", function(response) {
+            console.log(response);
+            if (response[0]) {
+                let course = document.createElement("div");
+                course.className = "course";
+                course.id = "course" + response[1].code;
+                let createString = `<div class="courseProperty"><${response[1].course}</div><div class="courseProperty">${response[1].teacher.prefix}${response[1].teacher.lastName}</div><div class="courseProperty">${response[1].block}</div><div class="courseProperty">${response[1].semester.name}</div><div class="courseProperty">${response[1].category.category}</div><i class="fas fa-ellipsis-v editcourse" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = 'getcourse("${response[1]._id}")'>Edit</div><div class="delete" onclick = "removecourse('${response[1]._id}')">Delete</div></div></i>`;
+                course.innerHTML = createString;
+                document.getElementsByClassName("coursesBody")[0].appendChild(course);
+            } else {
+                // let error = document.getElementById("errorPopDown");
+                // error.innerText = "Error: " + response[1];
+                // error.classList.add("errorDown");
+                // errorExtened = true;
+            }
+        });
+    }
+    let currentSort = [0,0];
+    function sortList(position) {
+        if (currentSort[0] == position) {
+            currentSort[1] = (currentSort[1]+1)%2;
+        } else {
+            currentSort[1] = 0;
+        }
+        currentSort[0] = position;
+        console.log(currentSort);
+        let courses = Array.prototype.slice.call(document.getElementById("courses").children, 0);
+        courses.sort(function(a,b) {
+            if (currentSort[1] == 1) {
+                return b.children[position].innerText.localeCompare(a.children[position].innerText);
+            } else {
+                return a.children[position].innerText.localeCompare(b.children[position].innerText);
+            }
+            
+        });
+        for (var i = 0; i < courses.length; i++) {
+            document.getElementById("courses").appendChild(courses[i]);
+        }
+    }
+    function openEdit(element) {
+        element.children[0].style.display = "flex";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function makeNewcourse() {
+        let createButton = document.getElementById("createCourse");
+        createButton.classList.add("notAllowed");
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px";
+    }
+    function closeNewcourse() {
+        let expandingBlock = document.getElementById("expandingBlock");
+        let createButton = document.getElementById("createCourse");
+        createButton.classList.remove("notAllowed");
+        expandingBlock.style.maxHeight = "0px";
+    }
+    function clickFunction(element) {
+        element.classList.toggle("checked");
+        element.innerHTML = !element.classList.contains("checked") ? "" : "&#10003;";
+    }
+
+</script>
+<script>
+</script>
+</html>
