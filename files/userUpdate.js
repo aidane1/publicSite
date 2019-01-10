@@ -3,7 +3,6 @@ let mongoose = require("mongoose");
 let fs = require("fs");
 let User = require("../models/userchar.js");
 let Course = require("../models/coursechar.js");
-let oldCourse = require("../models/oldcourseschema.js");
 let Song = require("../models/songchar.js");
 let Events = require("../models/eventschar");
 let Texts = require("../models/textchar.js");
@@ -32,12 +31,10 @@ async function main() {
 
     let users = await User.find({username: "AidanEglin"});
     for (var i = 0; i < users.length; i++) {
-        let currentCourses = await oldCourse.find({_id : users[i].courses});
+        let currentCourses = await Course.find({_id : users[i].courses});
         let newCourses = [];
         for (var j = 0; j < currentCourses.length; j++) {
-            console.log(currentCourses[j]);
-            let currentTeacher = await Teachers.findOne({$and: [{school: "5ba9b63a6a4d061e77936950"}, {lastName: currentCourses[j].teacher.split(".")[1]}]});
-            let currentCourse = await Course.findOne({$and: [{school: "5ba9b63a6a4d061e77936950"}, {teacher: currentTeacher._id}, {block: currentCourses[j].block}]});
+            let currentCourse = await Course.findOne({$and: [{school: "5ba9b63a6a4d061e77936950"}, {teacher: currentCourses[j].block}, {block: currentCourses[j].block}]});
             console.log(currentCourse);
             newCourses.push(currentCourse._id);
         }
