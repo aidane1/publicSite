@@ -437,7 +437,7 @@
                                         <% if (j*7 + k >= initialOffset) { %>
                                             <% let previousDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset-1)%>
                                             <% let todayDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset)%>
-                                            <% if (todayDate.getMonth() > currentMonth) { %>
+                                            <% if (todayDate.getMonth() > currentMonth || (currentMonth == 11 && todayDate.getMonth() == 0)) { %>
                                                 <div class="calendarDay empty">
                                                     <div class="dayDate">
                                                         <%= todayDate.getDate()%>
