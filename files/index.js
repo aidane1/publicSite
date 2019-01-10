@@ -2728,7 +2728,6 @@ app.get("/", async function(req, res) {
       schoolSkipped.sort((a,b) => a.date.getTime() > b.date.getTime());
       let eventsObject = {};
 
-      console.log(events);
 
       
       {
@@ -2761,6 +2760,10 @@ app.get("/", async function(req, res) {
             currentSkippedIndex++;
           }
           while(currentIndex < offSetEvents.length &&  moment([offSetEvents[currentIndex].date.getFullYear(), offSetEvents[currentIndex].date.getMonth(), offSetEvents[currentIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            console.log(offSetEvents[currentIndex]);
+            console.log(offSetEvents[currentIndex].date.getFullYear());
+            console.log(offSetEvents[currentIndex].date.getMonth());
+            console.log(offSetEvents[currentIndex].date.getDate());
             if (offSetEvents[currentIndex].date.getFullYear() == currentDate.year() && offSetEvents[currentIndex].date.getMonth() == currentDate.month() && offSetEvents[currentIndex].date.getDate() == currentDate.date()) {
               currentDayArray[1] = false;
             }
