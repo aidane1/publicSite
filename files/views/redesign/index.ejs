@@ -510,7 +510,7 @@
     let bodies = document.getElementById("calendarBodies");
     let width = window.innerWidth;
     backdrop.addEventListener("touchend", function(touch) {
-        $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 100);
+        $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 200);
     });
     //change month name;
     bodies.addEventListener("touchmove", function(touch) {
@@ -520,7 +520,7 @@
     bodies.addEventListener("touchend", function(touch) {
         let child = document.getElementsByClassName("calendarTile")[Math.round(bodies.scrollLeft/(width))].getAttribute("month");
         document.getElementById("calendarMonth").innerText = child;
-        $("#calendarBodies").animate({scrollLeft: Math.round(bodies.scrollLeft/(width))*(width)}, 100);
+        $("#calendarBodies").animate({scrollLeft: Math.round(bodies.scrollLeft/(width))*(width)}, 150);
     });
     window.onload = function() {
         let child = document.getElementsByClassName("calendarTile")[4].getAttribute("month");
