@@ -34,7 +34,7 @@ async function main() {
         let currentCourses = await Course.find({_id : users[i].courses});
         let newCourses = [];
         for (var j = 0; j < currentCourses.length; j++) {
-            let currentCourse = await Course.findOne({$and: [{school: "5ba9b63a6a4d061e77936950"}, {teacher: currentCourses[j].block}, {block: currentCourses[j].block}]});
+            let currentCourse = await Course.findOne({$and: [{school: "5ba9b63a6a4d061e77936950"}, {teacher: currentCourses[j].teacher}, {block: currentCourses[j].block}]});
             console.log(currentCourse);
             newCourses.push(currentCourse._id);
         }
