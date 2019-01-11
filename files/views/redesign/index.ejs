@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
+    <!DOCTYPE html>
+    <html lang="en" dir="ltr">
+    <head>
     <meta name = "description" content = "The PVSS student website. View your courses, schedule, resources, and more here. Made by a PVSS student for PVSS students." />
     <meta charset = "utf-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
@@ -29,30 +29,30 @@
 
     </script>
     <style>
-      @font-face {
-          font-family: SF;
-          src: url("/public/fonts/SF-Pro-Display-Regular.otf");
-      }
-      * {
-          box-sizing: border-box;
-          font-family: sans-serif;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-      }
-      html, body {
+        @font-face {
+            font-family: SF;
+            src: url("/public/fonts/SF-Pro-Display-Regular.otf");
+        }
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
         width: 100%;
         height: 100%;
         margin: 0;
         padding: 0;
-      }
-      .homeHolder {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          flex-wrap: nowrap;
-          overflow: hidden;
-      }
-      .backdrop {
+        }
+        .homeHolder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+        .backdrop {
         height: calc(100% - 70px);
         /* flex-grow: 1; */
         display: flex;
@@ -61,89 +61,89 @@
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: auto;
-      }
-      .bodyTile {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          flex-wrap: nowrap;
-          overflow-y: hidden;
-          justify-content: space-evenly;
-          background-color: rgb(240,240,240);
-          position: relative;
-      }
-      .homeHeader {
-          width: 100%;
-          height: 70px;
-          background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
-      }
-      .homeRow {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: row;
-          flex-wrap: nowrap;
-          justify-content: space-between;
-          padding: 0px 20px;
-          align-items: center;
-      }
-      .displayText {
-          color: white;
-          font-size: 24px;
-      }
-      #scheduleTile {
-          /* background-color: red; */
-      }
-      #homeTile {
-          /* background-color: blue; */
-          /* background: linear-gradient(to bottom, #ddd, #999) !important; */
-      }
-      #coursesTile {
-          /* background-color: black; */
-          justify-content: start;
-      }
-      #calendarTile {
-          /* background-color: purple; */
-          justify-content: start;
-      }
-      .dayHeader {
-          width: 100%;
-          text-align: center;
-          /* color: #00358c */
-      }
-      .accountIcon {
-          width: 30px;
-          height: 30px;
-          margin-top: 10px;
-      }
-      .accountIcon img {
-          width: 100%;
-          height: 100%;
-      }
+        }
+        .bodyTile {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow-y: hidden;
+            justify-content: space-evenly;
+            background-color: rgb(240,240,240);
+            position: relative;
+        }
+        .homeHeader {
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        #scheduleTile {
+            /* background-color: red; */
+        }
+        #homeTile {
+            /* background-color: blue; */
+            /* background: linear-gradient(to bottom, #ddd, #999) !important; */
+        }
+        #coursesTile {
+            /* background-color: black; */
+            justify-content: start;
+        }
+        #calendarTile {
+            /* background-color: purple; */
+            justify-content: start;
+        }
+        .dayHeader {
+            width: 100%;
+            text-align: center;
+            /* color: #00358c */
+        }
+        .accountIcon {
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .accountIcon img {
+            width: 100%;
+            height: 100%;
+        }
     .refreshIcon {
-          width: 30px;
-          height: 30px;
-          margin-top: 10px;
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
     }
     .eventsHolder {
-          width: 100%;
-          height: 50px;
-          overflow: auto;
+            width: 100%;
+            height: 50px;
+            overflow: auto;
     }
     .eventBlock {
-          width: 90%;
-          padding-top: 10px;
-          padding-bottom: 10px;
-          background-color: white;
-          /* background: #f5ffe2; */
-          text-align: center;
-          margin: auto;
-          margin-top: 5px;
-          margin-bottom: 10px;
-          border-radius: 5px;
-          font-size: 18px;
-          border: 1px solid rgb(210,210,210);
+            width: 90%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: white;
+            /* background: #f5ffe2; */
+            text-align: center;
+            margin: auto;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            border: 1px solid rgb(210,210,210);
     }
     .blockHolder {
         width: 100%;
@@ -368,6 +368,56 @@
         padding-left: 5px;
         color: #277230;
     }
+    .scheduleBodies {
+        width: 100%;
+        height: calc(100% - 70px);
+        overflow-y: auto;
+        padding-bottom: 20px;
+    }
+    .schedule {
+        /* width: 95%; */
+        width: 100%;
+        height: 100%;
+        overflow-x: auto;
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        margin: auto;
+        margin-bottom: 20px;
+    }
+    .scheduleDay {
+        display: inline-block;
+        /* border-right: 1px solid black; */
+        /* width: 20%; */
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* flex-wrap: nowrap; */
+    }
+    .scheduleTitle {
+        /* width: 100%; */
+        text-align: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 20px;
+        border-bottom: 1px solid black;
+        
+    }
+    .scheduleBlock {
+        width: 150px;
+        /* height: 150px; */
+        height: 120px;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        background-color: white;
+    }
+    .scheduleBlock div {
+        margin-top: 5px;
+        text-align: center;
+    }
     @media screen and (max-height: 520px) {
         .homeHeader {
             display: none;
@@ -396,12 +446,12 @@
             border: 1px solid rgb(210,210,210);
         }
     }
-    
-      
+
+        
     </style>
-  </head>
-  <body>
-      <div class="homeHolder">
+    </head>
+    <body>
+        <div class="homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
                 <div class="accountIcon"><img src = "/public/icons/accountIcon.svg" /></div>
@@ -410,7 +460,28 @@
             </div>
         </div>
         <div class = "backdrop" id = "backdrop">
-            <!-- <div id = "scheduleTile" class="bodyTile"></div> -->
+            <div id = "scheduleTile" class="bodyTile">
+                <div class="scheduleBodies">
+                    <% for (var i = 0; i < readSchedule.length; i++) { %>
+                        <div class="schedule">
+                            <% for (var key in readSchedule[i]) { %>
+                                <div class="scheduleDay">
+                                    <div class="scheduleTitle">
+                                        <%=titles[i][key]%>
+                                    </div>
+                                    <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
+                                        <div class="scheduleBlock" style = "background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                            <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
+                                            <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                            <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
             <div id = "homeTile" href = "#homeTile" class="bodyTile">
                 <div class="dayHeader" style="font-size: 40px">
                     <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>
@@ -588,7 +659,12 @@
     </div>
   </body>
   <script>
-      
+    var isChromium = window.chrome;
+    var winNav = window.navigator;
+    var vendorName = winNav.vendor;
+    var isOpera = typeof window.opr !== "undefined";
+    var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
+    var isIOSChrome = winNav.userAgent.match("CriOS");
     function extendCalendarPopup(dateString, events) {
 // 
         // console.log(events);
@@ -638,7 +714,9 @@
     let bodies = document.getElementById("calendarBodies");
     let width = window.innerWidth;
     backdrop.addEventListener("touchend", function(touch) {
-        $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 200);
+        if (!isIOSChrome) {
+            $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 200);
+        }
     });
     //change month name;
     bodies.addEventListener("touchmove", function(touch) {
@@ -651,6 +729,7 @@
         $("#calendarBodies").animate({scrollLeft: Math.round(bodies.scrollLeft/(width))*(width)}, 150);
     });
     window.onload = function() {
+        backdrop.scrollLeft = window.innerWidth;
         let child = document.getElementsByClassName("calendarTile")[4].getAttribute("month");
         document.getElementById("calendarMonth").innerText = child;
         $("#calendarBodies").animate({scrollLeft: Math.round(4)*(width)}, 100);

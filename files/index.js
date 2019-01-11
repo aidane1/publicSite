@@ -730,6 +730,9 @@ let iconMap = {
   "info tech.": ['<i style = "color: black" class="fas fa-tv"></i>', "#52c97a", "black"],
   "na": ['<i style = "color: black" class="fas fa-tv"></i>', "#5e4ee8"],
   "applied skills": ['<i style = "color: black" class="fas fa-cogs"></i>', "orange", "black"],
+  "art": ['', ""],
+  "courses": ['', ""],
+
 } 
 
 function makeColorMap(blockNames) {
@@ -2711,6 +2714,27 @@ function calculateSemesters(semesterList, date) {
   return goodSemesterList;
 }
 
+function makeReadableSchedule(constant, schedule, blockMap) {
+  let blockSchedule = [];
+  if (constant) {
+    for (var i = 0; i < schedule.schedule.length; i++) {      
+      let currentSchedule = {};
+      for (var key in schedule.schedule[i])  {
+        let currentDay = [];
+        for (var j = 0; j < schedule.schedule[i][key].length; j++) {
+          currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse("LC's", schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j])]);
+        }
+        currentSchedule[key] = currentDay;
+      }
+      blockSchedule.push(currentSchedule);
+    }
+  } else {
+
+  }
+  return blockSchedule;
+}
+
+
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2019, 0, 11, 10,14);
@@ -2737,6 +2761,8 @@ app.get("/", async function(req, res) {
       let eventsObject = {};
 
 
+      let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap));
+      let colorMap = makeColorMap(school.blockNames);
       
       {
         let currentDayDay = 0;
@@ -2821,7 +2847,6 @@ app.get("/", async function(req, res) {
         }
       }
 
-      // console.log(eventsObject);
       let monthLengths = [];
       let monthNames = [];
       let currentMonthDate = startDate.clone();
@@ -2839,7 +2864,7 @@ app.get("/", async function(req, res) {
       
       
 
-      let dayOffSetToday = dayOffset(offSetEvents, new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+      
 
       
       let currentClass = ["current", new EmptyCourse("Nothing!", "A")];
@@ -2886,7 +2911,7 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
 
-        res.render("redesign/index", {moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
 
       }
@@ -2900,6 +2925,29 @@ app.get("/", async function(req, res) {
     res.redirect("/login");
   }
   
+});
+
+app.get("/account", async function(req, res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user != null) {
+      res.render("redesign/account", {icons: iconMap});
+    } 
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.get("/events", async function(req,res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user != null) {
+      let events = await Events.find({school: user.school}).sort({"date": "ascending"});
+      res.render("redesign/events", {icons: iconMap, events: events});
+    } 
+  } else {
+    res.redirect("/login");
+  }
 });
 
 
