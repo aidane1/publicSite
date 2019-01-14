@@ -92,7 +92,12 @@
         }
         .homeHeader {
             width: 100%;
-            height: 90px;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .bottomTabBar {
+            width: 100%;
+            height: 40px;
             background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
         }
         .homeRow {
@@ -471,7 +476,7 @@
         }
         @media screen and (max-height: 520px) {
             .homeHeader {
-                height: 40px;
+                height: 0px;
             }
             .homeRow {
                 display: none;
@@ -510,12 +515,12 @@
                 <div class="displayText">Home</div>
                 <div class="refreshIcon"></div>
             </div>
-            <div class="homeTabView">
+            <!-- <div class="homeTabView">
                 <div class="tab" onclick = "moveTab(0)"><i class="fas fa-calendar-week"></i>Schedule</div>
                 <div class="tab selectedTab" onclick = "moveTab(1)"><i class="fas fa-home"></i>Home</div>
                 <div class="tab" onclick = "moveTab(2)"><i class="far fa-list-alt"></i>Courses</div>
                 <div class="tab noBorder" onclick = "moveTab(3)"><i class="fas fa-calendar-alt"></i>Calendar</div>
-            </div>
+            </div> -->
         </div>
         <div class = "backdrop" id = "backdrop">
             <div id = "scheduleTile" class="bodyTile">
@@ -719,6 +724,14 @@
                     <div id = "eventsHolder"></div>
                 </div>
             </div>
+        </div>
+        <div class="bottomTabBar">
+                <div class="homeTabView">
+                    <div class="tab" onclick = "moveTab(0)"><i class="fas fa-calendar-week"></i>Schedule</div>
+                    <div class="tab selectedTab" onclick = "moveTab(1)"><i class="fas fa-home"></i>Home</div>
+                    <div class="tab" onclick = "moveTab(2)"><i class="far fa-list-alt"></i>Courses</div>
+                    <div class="tab noBorder" onclick = "moveTab(3)"><i class="fas fa-calendar-alt"></i>Calendar</div>
+                </div>
         </div>
     </div>
   </body>
