@@ -2870,8 +2870,8 @@ app.get("/course/:id", async function(req, res) {
 });
 
 app.get("/", async function(req, res) {
-  // let currentDate = (new Date()).local();
-  let currentDate = new Date(2019, 0, 11, 10,14);
+  let currentDate = (new Date()).local();
+  // let currentDate = new Date(2019, 0, 11, 10,14);
   let startDate = moment([2018, 8, 3]);
   let endDate = moment([2019, 5, 30]);
   let yearLength = endDate.diff(startDate, "days");
