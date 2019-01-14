@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <style>
         * {
             font-family: "Roboto", sans-serif;
@@ -176,11 +177,51 @@
             border-bottom: 1px solid rgb(56, 70, 90);
             cursor: pointer;
         }
+        .openSideBar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            opacity: 0.5;
+            display: none;
+            z-index: 100;
+            cursor: pointer;
+        }
+        .extendedBar {
+            left: 0px !important;
+        }
+        @media screen and (max-width: 1000px) {
+            .barLeft {
+                /* display: none; */
+                transition: left 0.2s linear;
+                position: absolute;
+                top: 0px;
+                left: -250px;
+                z-index: 5;
+            }
+            .openSideBar {
+                display: block;
+            }
+            .topBar {
+                visibility: hidden;
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .mainBody {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="openSideBar" onclick = "openSideBar()">
+        <i class="fas fa-bars"></i>
+    </div>
     <div class = "background">
-        <div class="barLeft">
+        <div class="barLeft" id = "barLeft">
             <div class="sideBarTitle">
                     <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
@@ -281,6 +322,11 @@
             element.className = "expandedTopic";
             courseSecondary.style.visibility = "hidden";
         }
+    }
+    function openSideBar() {
+        let bar = document.getElementById("barLeft");
+        console.log(bar);
+        bar.classList.toggle("extendedBar");
     }
 </script>
 </html>
