@@ -134,6 +134,26 @@
             -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
             -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
             box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            overflow: auto;
+            padding: 10px;
+        }
+        .recentActivity {
+            width: 100%;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid grey;
+            display: flex;
+            flex-direction: row;
+            font-size: 16px;
+        }
+        .recentUser {
+            color: red; 
+        }
+        .recentInfo {
+            color: blue;
+        }
+        .recentDate {
+            color: black;
         }
         .expandingCourses {
             max-height: 0px;
@@ -233,7 +253,13 @@
                     </div>
                 </div>
                 <div class="mainBody">
-
+                    <% for (var i = recent.length-1; i > (recent.length-100 > 0 ? recent.length-100 : -1); i--) { %>
+                        <div class="recentActivity">
+                            <div class="recentUser"><%=recent[i].user%> </div>&nbsp;
+                            <div class="recentInfo"><%=recent[i].info%> on </div>&nbsp;
+                            <div class="recentDate"><%=recent[i].dateString%> </div>&nbsp;                            
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>

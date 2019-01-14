@@ -302,25 +302,47 @@ app.use(express.static(__dirname));
 
 app.use(cookieParser());
 
-app.use(function(req, res, next) {
 
-  User.findOne({_id : req.session.userId}, function(err, user) {
-    if (err || user == null) {
-      next()
+function logSchool(school, info) {
+  fs.readFile(__dirname + "/public/logins/" + school.toString() + ".json", function(err, data) {
+    if (err) {
+      let data = [info];
+      data = JSON.stringify(data);
+      fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", data, function(err) {
+        if (err) {
+          console.log(err);
+        }
+      })
     } else {
-      if (user.username != "AidanEglin") {
-        fs.appendFile(__dirname + "/public/text/logins.txt", `${user.username} ${req.method} ${url.parse(req.url).pathname} at ${(new Date()).local()} \n -------------------END------------------- \n`, function(err) {
-          if (err) {
-            console.log(err);
-          } else {
-
-          }
-        })
-      }
+      let json = JSON.parse(data);
+      json.push(info);
+      fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", JSON.stringify(json), function(err){
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  });
+}
+app.use(async function(req, res, next) {
+  let validPaths = ["/", "/account", "/courses"];
+  try {
+    if (validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let date = (new Date()).local();
+      let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+      let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
+      let data = {user: user.username, dateString: formatted, info: info};
+      logSchool(user.school, data);
+      next();
+    } else {
       next();
     }
-  })
-
+  } catch(e) {
+    console.log(e);
+    next();
+  }
+  
 });
 
 app.enable('trust proxy');
@@ -1264,8 +1286,30 @@ app.get("/removeTeacher", async function(req, res) {
     res.send([false, "An unknown error occured. Please refresh and try again"]);
   }
 });
-app.get("/dashboard", function(req, res) {
-  res.render("dashboard/dashboard");
+app.get("/dashboard", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let recentActivity = [];
+        fs.readFile(__dirname + "/public/logins/" + user.school.toString() + ".json", function(err, data) {
+          if (err) {
+            res.render("dashboard/dashboard", {recent: []});
+          } else {
+            recentActivity = JSON.parse(data);
+            res.render("dashboard/dashboard", {recent: recentActivity});
+          }
+        });
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
 });
 app.get("/dashboard/masterSchedule", async function(req, res) {
   if (req.session.userId) {
@@ -1320,7 +1364,7 @@ app.get("/dashboard/events", async function(req, res) {
         for (var i = 0; i < events.length; i++) {
           events[i].dateString = moment(events[i].date).format("MMMM Do YYYY");
         }
-          res.render("dashboard/eventDashboard.ejs", {school : school, events: events});
+          res.render("dashboard/eventDashboard", {school : school, events: events});
       } else {
         res.redirect("/login");
       }
@@ -2869,6 +2913,21 @@ app.get("/course/:id", async function(req, res) {
   
 });
 
+app.get("/monitorUsage", async function(req, res) {
+  try {
+    if (req.query.id && req.query.page) {
+      let user = await User.findOne({_id : req.query.id});
+      let date = (new Date()).local();
+      let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+      let data = {user: user.username, dateString: formatted, info: `exited page ${req.query.page}`};
+      logSchool(user.school, data);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send(false);
+  }
+  res.send(true);
+});
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2019, 0, 11, 10,14);
@@ -2928,10 +2987,6 @@ app.get("/", async function(req, res) {
             currentSkippedIndex++;
           }
           while(currentIndex < offSetEvents.length &&  moment([offSetEvents[currentIndex].date.getFullYear(), offSetEvents[currentIndex].date.getMonth(), offSetEvents[currentIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
-            console.log(offSetEvents[currentIndex]);
-            console.log(offSetEvents[currentIndex].date.getFullYear());
-            console.log(offSetEvents[currentIndex].date.getMonth());
-            console.log(offSetEvents[currentIndex].date.getDate());
             if (offSetEvents[currentIndex].date.getFullYear() == currentDate.year() && offSetEvents[currentIndex].date.getMonth() == currentDate.month() && offSetEvents[currentIndex].date.getDate() == currentDate.date()) {
               currentDayArray[1] = false;
             }
@@ -3044,11 +3099,11 @@ app.get("/", async function(req, res) {
           let empty = new EmptyCourse("No Courses!", "A");
           dayBlockList = [["", empty]];
         }
-        res.render("redesign/index", {colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];
-        res.render("redesign/index", {colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: [[0,0], false, false, [], []], currentBlock: currentClass, nextBlock: nextClass, soonEvents: [], offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: [[0,0], false, false, [], []], currentBlock: currentClass, nextBlock: nextClass, soonEvents: [], offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       }
     } catch(e) {
       console.log(e);

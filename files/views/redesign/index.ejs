@@ -502,7 +502,7 @@
         }
     </style>
     </head>
-    <body>
+    <body onunload="unload()">
         <div class="homeHolder" id = "homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
@@ -723,9 +723,11 @@
     </div>
   </body>
   <script>
-    document.addEventListener("mousemove", function(mouse) {
-        // document.getElementById("homeHolder").classList.add("animateLeft");
-    });
+    function unload() {
+        var request = new XMLHttpRequest();
+        request.open('GET', '/monitorUsage?page=/&id=<%=userId%>', true);
+        request.send(null);
+    }
     function extendCalendarPopup(dateString, events) {
 // 
         
