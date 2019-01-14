@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <title><%=course.course%></title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .backdrop {
+            width: 100%;
+            height: 100%;
+            background-color: rgb(240,240,240);
+        }
+        .homeHeader {
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .iconRow {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            margin-left: 7.5px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .courseInfo {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid rgb(210,210,210);
+            border-bottom: 1px solid rgb(210,210,210);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="backdrop">
+        <div class="homeHeader">
+            <div class="homeRow">
+                <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
+                <div class="displayText"><%=course.course%></div>
+                <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
+            </div>
+        </div>
+        <div class="courseInfo">
+            <div class="class iconRow">
+                <div class="iconBubble"></div>
+            </div>
+            <div class="teacher iconRow"></div>
+            <div class="block iconRow last"></div>
+        </div>
+    </div>
+</body>
+</html>

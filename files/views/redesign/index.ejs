@@ -39,12 +39,29 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
         }
         html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .animateLeft {
+            animation: slideLeft 0.3s linear 1;
+            animation-fill-mode: forwards;
+        }
+        @keyframes slideLeft {
+            0% {
+                right: 0px;
+            }
+
+            100% {
+                right: 50%;
+            }
         }
         .homeHolder {
+            position: fixed;
+            top: 0px;
+            right: 0px;
             width: 100%;
             height: 100%;
             display: flex;
@@ -53,14 +70,14 @@
             overflow: hidden;
         }
         .backdrop {
-        height: calc(100% - 70px);
-        /* flex-grow: 1; */
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: auto;
+            height: calc(100% - 70px);
+            /* flex-grow: 1; */
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: auto;
         }
         .bodyTile {
             width: 100%;
@@ -121,22 +138,39 @@
             width: 100%;
             height: 100%;
         }
-    .refreshIcon {
-            width: 30px;
-            height: 30px;
-            margin-top: 10px;
-    }
-    .eventsHolder {
+        .refreshIcon {
+                width: 30px;
+                height: 30px;
+                margin-top: 10px;
+        }
+        .eventsHolder {
+                width: 100%;
+                height: 50px;
+                overflow: auto;
+        }
+        .eventBlock {
+                width: 90%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                background-color: white;
+                /* background: #f5ffe2; */
+                text-align: center;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                font-size: 18px;
+                border: 1px solid rgb(210,210,210);
+        }
+        .blockHolder {
             width: 100%;
             height: 50px;
-            overflow: auto;
-    }
-    .eventBlock {
+        }
+        .classBlock {
             width: 90%;
             padding-top: 10px;
             padding-bottom: 10px;
             background-color: white;
-            /* background: #f5ffe2; */
             text-align: center;
             margin: auto;
             margin-top: 5px;
@@ -144,343 +178,332 @@
             border-radius: 5px;
             font-size: 18px;
             border: 1px solid rgb(210,210,210);
-    }
-    .blockHolder {
-        width: 100%;
-        height: 50px;
-    }
-    .classBlock {
-        width: 90%;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: white;
-        text-align: center;
-        margin: auto;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        font-size: 18px;
-        border: 1px solid rgb(210,210,210);
-    }
-    .blockHeader {
-        width: 100%;
-        text-align: center;
-        font-size: 22px;
-    }
-    .dayTitle {
-        font-size: 30px;
-        width: 100%;
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        text-decoration: none;
-        color: black;
-        font-weight: 300;
-    }
-    .dayHolder {
-        width: 100%;
-        border-bottom: 1px solid rgb(210,210,210);
-        border-top: 1px solid rgb(210,210,210);
-        overflow-y: auto;
-    }
-    .dayBlock {
-        width: 100%;
-        height: 50px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        background-color: white;
-        
-    }
-    .dayIcon {
-        width: 50px;
-        height: 50px;
-    }
-    .iconBubble {
-        width: 35px;
-        height: 35px;
-        border-radius: 8px;
-        margin-left: 7.5px;
-        margin-top: 7.5px;
-        background-color: green;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        justify-content: center;
-    }
-    .dayClass {
-        width: calc(100% - 50px);
-        border-bottom: 1px solid rgb(210,210,210);
-        height: 50px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        padding-right: 10px;
-    }
-    .bottomClass {
-        width: calc(100% - 50px);
-        /* border-bottom: 1px solid rgb(210,210,210); */
-        height: 50px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        padding-right: 10px;
-    }
-    .teacherClassBlock {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex-wrap: nowrap;
-    }
-    .teacherName {
-        font-style: italic;
-        font-size: 11px;
-        /* font-weight: 300; */
-        color: grey;
-    }
-    .className {
-        font-size: 18px;
-    }
-    .timeBlock {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex-wrap: nowrap;
-        font-size: 18px;
-    }
-    .calendarTitleBar {
-        width: 100%;
-        /* height: 30px; */
-        font-size: 28px;
-        font-weight: 300;
-        margin-top: 10px;
-    }
-    .calendarDaysBar {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        /* padding: 0px 20px; */
-        color: orange;
-        font-size: 13px;
-        margin-top: 10px;
-    }
-    .calendarBodies {
-        width: 100%;
-        overflow-x: auto;
-        height: 380px;
-        /* padding: 10px; */
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-    }
-    .calendarTile {
-        width: calc(100% - 20px);
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 10px;
-        /* height: 100%; */
-        min-height: 360px;
-        border: 1px solid rgb(210,210,210);
-        background-color: white;
-    }
-    .calendarRow {
-        width: 100%;
-        height: 60px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        /* border-bottom: 1px solid black; */
-    }
-    .calendarDay {
-        min-width: 14.28%;
-        flex-grow: 1;
-        text-align: center;
-        font-size: 13px;
-        padding-top: 5px;
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
-    }
-    .boxTitle {
-        font-size: 10px;
-    }
-    .dayEvent {
-        width: 6px;
-        height: 6px;
-        background-color: grey;
-        border-radius: 50%;
-        margin: auto;
-    }
-    .empty {
-        opacity: 0.3;
-    }
-    .calendarPopUp {
-        width: calc(100% - 20px);
-        height: calc(100% - 50px);
-        background-color: white;
-        position: absolute;
-        left: 10px;
-        top: calc(100% + 20px);
-        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-        transition: top 0.3s linear;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        /* overflow: hidden; */
-    }
-    .removePopUp {
-        width: 50px;
-        background-color: grey;
-        position: relative;
-        top: -20px;
-        height: 5px;
-        border-radius: 5px;
-        margin: auto;
-        margin-top: 10px;
-    }
-    .dateTitle {
-        width: 100%;
-        font-size: 20px;
-        text-align: center;
-    }
-    .eventBody {
-        width: 100%;
-        border: 5px solid #bbb;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-    }
-    .eventBodyTime {
-        background-color: #bbb;
-        padding-right: 3px;
-    }
-    .eventBodyInfo {
-        flex-grow: 1;
-        background-color: #b2ffbc;
-        overflow-x: auto;
-        padding-left: 5px;
-        color: #277230;
-    }
-    .scheduleBodies {
-        width: 100%;
-        height: calc(100% - 70px);
-        overflow-y: auto;
-        padding-bottom: 20px;
-    }
-    .schedule {
-        /* width: 95%; */
-        width: 100%;
-        height: 100%;
-        overflow-x: auto;
-        
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        margin: auto;
-        margin-bottom: 20px;
-    }
-    .scheduleDay {
-        display: inline-block;
-        /* border-right: 1px solid black; */
-        /* width: 20%; */
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* flex-wrap: nowrap; */
-    }
-    .scheduleTitle {
-        /* width: 100%; */
-        text-align: center;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        font-size: 20px;
-        border-bottom: 1px solid black;
-        
-    }
-    .scheduleBlock {
-        width: 110px;
-        height: 80px;
-        /* height: 150px; */
-        /* height: 120px; */
-        border-bottom: 1px solid black;
-        border-right: 1px solid black;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        background-color: white;
-        font-size: 12px;
-    }
-    .scheduleBlock div {
-        margin-top: 5px;
-        text-align: center;
-    }
-    .homeTabView {
-        width: 100%;
-        height: 40px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        border-top: 1px solid rgba(255,255,255,0.5);
-        /* background-color: black; */
-    }
-    .tab {
-        width: 25%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        color: white;
-        border-right: 1px solid rgba(255,255,255,0.5);
-        font-size: 10px;
-    }
-    .selectedTab {
-        background-color: rgba(255,255,255,0.4);
-    }
-    .noBorder  {
-        border: none !important;
-    }
-    @media screen and (max-height: 520px) {
-        .homeHeader {
-            display: none;
         }
-        .backdrop {
-            height: 100%;
+        .blockHeader {
+            width: 100%;
+            text-align: center;
+            font-size: 22px;
         }
-    }
-    @media screen and (min-width: 768px) {
-        .backdrop {
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-evenly;
-            background-color: rgb(240,240,240);
-            overflow-y: auto;
-            
-        }
-        .bodyTile {
-            width: 350px;
-            height: 500px;
-            margin-left: 50px;
-            margin-right: 50px;
+        .dayTitle {
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
             margin-top: 10px;
             margin-bottom: 10px;
-            border: 1px solid rgb(210,210,210);
+            text-decoration: none;
+            color: black;
+            font-weight: 300;
         }
-    }
-
-        
+        .dayHolder {
+            width: 100%;
+            border-bottom: 1px solid rgb(210,210,210);
+            border-top: 1px solid rgb(210,210,210);
+            overflow-y: auto;
+        }
+        .dayBlock {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            background-color: white;
+            
+        }
+        .dayIcon {
+            width: 50px;
+            height: 50px;
+        }
+        .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            margin-left: 7.5px;
+            margin-top: 7.5px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .dayClass {
+            width: calc(100% - 50px);
+            border-bottom: 1px solid rgb(210,210,210);
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .bottomClass {
+            width: calc(100% - 50px);
+            /* border-bottom: 1px solid rgb(210,210,210); */
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .teacherClassBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+        .teacherName {
+            font-style: italic;
+            font-size: 11px;
+            /* font-weight: 300; */
+            color: grey;
+        }
+        .className {
+            font-size: 18px;
+        }
+        .timeBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+            font-size: 18px;
+        }
+        .calendarTitleBar {
+            width: 100%;
+            /* height: 30px; */
+            font-size: 28px;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+        .calendarDaysBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            /* padding: 0px 20px; */
+            color: orange;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .calendarBodies {
+            width: 100%;
+            overflow-x: auto;
+            height: 380px;
+            /* padding: 10px; */
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+        .calendarTile {
+            width: calc(100% - 20px);
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 10px;
+            /* height: 100%; */
+            min-height: 360px;
+            border: 1px solid rgb(210,210,210);
+            background-color: white;
+        }
+        .calendarRow {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            /* border-bottom: 1px solid black; */
+        }
+        .calendarDay {
+            min-width: 14.28%;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 13px;
+            padding-top: 5px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
+        }
+        .boxTitle {
+            font-size: 10px;
+        }
+        .dayEvent {
+            width: 6px;
+            height: 6px;
+            background-color: grey;
+            border-radius: 50%;
+            margin: auto;
+        }
+        .empty {
+            opacity: 0.3;
+        }
+        .calendarPopUp {
+            width: calc(100% - 20px);
+            height: calc(100% - 50px);
+            background-color: white;
+            position: absolute;
+            left: 10px;
+            top: calc(100% + 20px);
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            transition: top 0.3s linear;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            /* overflow: hidden; */
+        }
+        .removePopUp {
+            width: 50px;
+            background-color: grey;
+            position: relative;
+            top: -20px;
+            height: 5px;
+            border-radius: 5px;
+            margin: auto;
+            margin-top: 10px;
+        }
+        .dateTitle {
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+        }
+        .eventBody {
+            width: 100%;
+            border: 5px solid #bbb;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .eventBodyTime {
+            background-color: #bbb;
+            padding-right: 3px;
+        }
+        .eventBodyInfo {
+            flex-grow: 1;
+            background-color: #b2ffbc;
+            overflow-x: auto;
+            padding-left: 5px;
+            color: #277230;
+        }
+        .scheduleBodies {
+            width: 100%;
+            height: calc(100% - 70px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+        .schedule {
+            /* width: 95%; */
+            width: 100%;
+            height: 100%;
+            overflow-x: auto;
+            
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+        .scheduleDay {
+            display: inline-block;
+            /* border-right: 1px solid black; */
+            /* width: 20%; */
+            /* display: flex; */
+            /* flex-direction: column; */
+            /* flex-wrap: nowrap; */
+        }
+        .scheduleTitle {
+            /* width: 100%; */
+            text-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 20px;
+            border-bottom: 1px solid black;
+            
+        }
+        .scheduleBlock {
+            width: 110px;
+            height: 80px;
+            min-height: 50px;
+            /* height: 150px; */
+            /* height: 120px; */
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            background-color: white;
+            font-size: 12px;
+        }
+        .scheduleBlock div {
+            margin-top: 5px;
+            text-align: center;
+        }
+        .homeTabView {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.5);
+            /* background-color: black; */
+        }
+        .tab {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            border-right: 1px solid rgba(255,255,255,0.5);
+            font-size: 10px;
+        }
+        .selectedTab {
+            background-color: rgba(255,255,255,0.4);
+        }
+        .noBorder  {
+            border: none !important;
+        }
+        .fa-chevron-right {
+            margin-left: 10px;
+            color: orange;
+        }
+        @media screen and (max-height: 520px) {
+            .homeHeader {
+                height: 40px;
+            }
+            .homeRow {
+                display: none;
+            }
+            .backdrop {
+                height: calc(100% - 40px);
+            }
+        }
+        @media screen and (min-width: 768px) {
+            .backdrop {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-evenly;
+                background-color: rgb(240,240,240);
+                overflow-y: auto;
+                
+            }
+            .bodyTile {
+                width: 350px;
+                height: 500px;
+                margin-left: 50px;
+                margin-right: 50px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                border: 1px solid rgb(210,210,210);
+            }
+        }
     </style>
     </head>
     <body>
-        <div class="homeHolder">
+        <div class="homeHolder" id = "homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
                 <div class="accountIcon"><img src = "/public/icons/accountIcon.svg" /></div>
@@ -505,9 +528,11 @@
                                         <%=titles[i][key]%>
                                     </div>
                                     <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                        <div class="scheduleBlock" style = "background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
                                             <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
-                                            <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                            <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
+                                                <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                            <% } %>
                                             <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
                                         </div>
                                     <% } %>
@@ -547,6 +572,7 @@
                     <% for (var i = 0; i < courses.length; i++) { %>
                         <% if (i == courses.length-1) { %>
                             <div class="dayBlock">
+                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course/${courses[i][1]._id}'` : `` %>"> -->
                                 <div class="dayIcon">
                                     <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -559,11 +585,13 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
+                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
                                     </div>
                                 </div>
                             </div>
                         <% } else { %>
                             <div class="dayBlock">
+                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course/${courses[i][1]._id}'` : `` %>"> -->
                                 <div class="dayIcon">
                                         <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -576,6 +604,7 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
+                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
                                     </div>
                                 </div>
                             </div>
@@ -694,15 +723,12 @@
     </div>
   </body>
   <script>
-    var isChromium = window.chrome;
-    var winNav = window.navigator;
-    var vendorName = winNav.vendor;
-    var isOpera = typeof window.opr !== "undefined";
-    var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
-    var isIOSChrome = winNav.userAgent.match("CriOS");
+    document.addEventListener("mousemove", function(mouse) {
+        // document.getElementById("homeHolder").classList.add("animateLeft");
+    });
     function extendCalendarPopup(dateString, events) {
 // 
-        // console.log(events);
+        
 
         events = JSON.parse(events);
         
@@ -749,9 +775,7 @@
     let bodies = document.getElementById("calendarBodies");
     let width = window.innerWidth;
     backdrop.addEventListener("touchend", function(touch) {
-        if (!isIOSChrome) {
-            // $("#backdrop").animate({scrollLeft: Math.round(backdrop.scrollLeft/width)*width}, 200);
-        }
+        
     });
     function moveTab(index) {
         let tabs = document.getElementsByClassName("tab");

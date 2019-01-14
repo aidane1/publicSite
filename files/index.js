@@ -230,7 +230,9 @@ let multer  = require('multer');
 
 let path = require("path");
 
-let tesseract = require("node-tesseract");
+// let tesseract = require("node-tesseract");
+
+let fileParser = require("express-fileupload");
 
 
 let storage = multer.diskStorage({
@@ -282,6 +284,9 @@ let urlencodedParser = bodyParser.urlencoded({extended: false});
 let app = express();
 
 app.set("view engine", "ejs");
+
+
+app.use(fileParser());
 
 app.use(session({
   secret: contents.secret,
@@ -349,6 +354,7 @@ function EmptyCourse(spare, block) {
   this.course = spare;
   this.teacher = "Free";
   this.block = block;
+  this.isReal = false;
   this.category = {
     category: "other",
     shortCode: "other",
@@ -368,6 +374,7 @@ function blockNamesObject(blocks, courses, courseNames, spareName) {
     courses[i] = JSON.parse(JSON.stringify(courses[i]));
     let teacher = courses[i].teacher.prefix + courses[i].teacher.lastName;
     courses[i].teacher = teacher;
+    courses[i].isReal = true;
     blockObject[courses[i].block] = courses[i];
   } 
   let parsedNames = JSON.parse(JSON.stringify(courseNames));
@@ -1538,6 +1545,107 @@ app.get("/teacher/:id", async function(req, res) {
     }
   } else {
     res.redirect("/login");
+  }
+});
+
+app.get("/teacher/:id/:course/overview", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
+        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+        if (course != null && course.teacher.toString() == teacher._id.toString()) {
+          res.render("teacherdashboard/teacherOverview", {course: course, courses: courses, teacher: teacher});
+        } else {
+          res.redirect("/teacher/" + req.query.id);
+        }
+      } else {
+        res.redirect("/dashboard");
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    res.redirect("/teacher/" + req.query.id);
+  }
+});
+
+app.get("/teacher/:id/:course/assignments", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
+        let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
+        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+        if (course != null && course.teacher.toString() == teacher._id.toString()) {
+          res.render("teacherdashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
+        } else {
+          res.redirect("/teacher/" + req.query.id);
+        }
+      } else {
+        res.redirect("/dashboard");
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    res.redirect("/teacher/" + req.query.id);
+  }
+});
+
+app.post("/uploadTeacherFile", async function(req, res) {
+  let assignment = req.files.filepond;
+  let extension = assignment.name.split(".")[assignment.name.split(".").length-1];
+  let name = (new Date()).getTime().toString() + "." + extension;
+  assignment.mv(__dirname + "/public/assignments/" + name, function(err) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    } else {
+      assignment.name = name;
+      res.send(name);
+    }
+  });
+});
+
+app.post("/uploadAssignment/:teacher/:course", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.type && req.body.info && req.body.notes && req.body.due && req.params.course) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await User.findOne({_id: req.params.teacher});
+      let confirmed = false;
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        confirmed = true;
+      }
+      let assignment = {
+        confirmed: confirmed, 
+        submittedBy: user._id,
+        type: req.body.type,
+        assignment: req.body.info,
+        notes: req.body.notes,
+        due: req.body.due,
+        date: (new Date()).local(),
+        forCourse: req.params.course,
+      }
+      Assignments.create(assignment, function(err, assignment) {
+        console.log(assignment);
+        if (err) {
+          console.log(err);
+          res.send([false, "An unknown error occured. Please try again."]);
+        } else {
+          res.send([true, assignment]);
+        }
+      }); 
+    } else {
+      res.send([false, "please fill in all input fields"]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please try again."]);
   }
 });
 
@@ -2722,7 +2830,8 @@ function makeReadableSchedule(constant, schedule, blockMap) {
       for (var key in schedule.schedule[i])  {
         let currentDay = [];
         for (var j = 0; j < schedule.schedule[i][key].length; j++) {
-          currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse("LC's", schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j])]);
+          console.log(schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1]);
+          currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse("LC's", schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j]), (schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1])*1.3]);
         }
         currentSchedule[key] = currentDay;
       }
@@ -2734,10 +2843,35 @@ function makeReadableSchedule(constant, schedule, blockMap) {
   return blockSchedule;
 }
 
+app.get("/course/:id", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id :req.session.userId});
+      if (user != null) {
+        let course = await Course.findOne({_id : req.params.id});
+        if (course != null) {
+          let notes = await Notes.find({forCourse : course._id});
+          let assignments = await Assignments.find({forCourse : course._id});
+          res.render("redesign/courseInfo", {iconMap: iconMap, course: course, notes: notes, assignments: assignments});
+        } else {
+          res.redirect("/");
+        }
+      } else {
+        res.redirect("/login");
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/login");
+  }
+  
+});
 
 app.get("/", async function(req, res) {
-  let currentDate = (new Date()).local();
-  // let currentDate = new Date(2019, 0, 11, 10,14);
+  // let currentDate = (new Date()).local();
+  let currentDate = new Date(2019, 0, 11, 10,14);
   let startDate = moment([2018, 8, 3]);
   let endDate = moment([2019, 5, 30]);
   let yearLength = endDate.diff(startDate, "days");
@@ -2873,8 +3007,8 @@ app.get("/", async function(req, res) {
       let foundNext = false;
       
       if (today) {
-        let todayEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`][3]
-        let tommorowEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`][3];
+        let todayEvents = today[3]
+        let tommorowEvents = today[3];
         soonEvents = todayEvents.concat(tommorowEvents);
         let currentSchedule = school.constantBlocks ? school.constantBlockSchedule.schedule[today[0][0]]["day" + (today[0][1]+1).toString()] : school.blockOrder[today[0][0]]["day" + (today[0][1]+1).toString()];
 
@@ -2910,13 +3044,12 @@ app.get("/", async function(req, res) {
           let empty = new EmptyCourse("No Courses!", "A");
           dayBlockList = [["", empty]];
         }
-
         res.render("redesign/index", {colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
-
+        let empty = new EmptyCourse("No Courses!", "A");
+        dayBlockList = [["", empty]];
+        res.render("redesign/index", {colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: [[0,0], false, false, [], []], currentBlock: currentClass, nextBlock: nextClass, soonEvents: [], offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       }
-      
-      
     } catch(e) {
       console.log(e);
       res.redirect("/login");

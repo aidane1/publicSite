@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .barLeft {
+            width: 250px;
+            height: 100%;
+            background-color: rgb(28, 35, 46);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow-y: auto;
+        }
+        .bodyRight {
+            /* width: calc(100% - 250px); */
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        .bodyUpperSection {
+            width: 100%;
+            flex-grow: 0;
+            background-color: rgb(18, 135, 222);
+            margin: 0;
+            padding: 0;
+        }
+        .bodyLowerSection {
+            width: 100%;
+            flex-grow: 1;   
+            background-color: rgb(231,235,237);
+        }
+        .overPage {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        
+        .barTitle {
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+        .sideBarTitle {
+            width: 100%;
+            height: 140px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .headerLogo {
+            width: 100%;
+        }
+
+        .sideBarTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .sideBarTopic:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .sideBarMain {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .sideBarSecondary {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .sideBarOverview {
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgb(56, 70, 90);
+            border-bottom: 1px solid rgb(56, 70, 90);
+        }
+        .sideBarOverview:hover {
+            background-color: rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .topBar {
+            width: 100%;
+            height: 50px;
+            /* background-color: red; */
+            color: rgba(255,255,255,0.6);
+            padding: 10px;
+        }
+        .secondaryBar {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .mainBody {
+            width: 60%;
+            height: 400px;
+            background-color: white;
+            margin: auto;
+            border-radius: 10px;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+        }
+        .eventHolderMain {
+            width: 95%;
+            height: 500px;
+            background-color: rgb(231,235,237);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 10px;
+            margin: auto;
+        }
+        .expandingCourseBlock {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.2s linear;
+        }
+        .expandedLink {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .expandedLink:hover {
+            background-color: rgb(56, 70, 90);
+        }
+        .expandedTopic {
+            width: 100%;
+            padding: 20px;
+            border-bottom: 1px solid rgb(56, 70, 90);
+            cursor: pointer;
+        }
+        .assignmentsHolderMain {
+            width: 95%;
+            /* height: 500px; */
+            background-color: rgb(242,242,242);
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+        .createAssignmentBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createAssignment {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .assignmentCategoriesBar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 12px;
+        }
+        .assignmentCategory {
+            width: 19%;
+            font-size: 13px;
+            color: #666;
+            padding-left: 3px;
+            cursor: pointer;
+        }
+        .expandingBlock {
+            width: 100%;
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            
+        }
+        .createAssignmentBlock {
+            width: 19%;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+        .assignmentsBody {
+            width: 100%;
+            /* height: 400px; */
+            background-color: white;
+        }
+        .assignment {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .assignmentProperty {
+            width: 19%;
+            padding-right: 10px;
+            font-size: 13px;
+            padding-left: 5px;
+        }
+        .assignment:hover {
+            background-color: #f5f5f5;
+        }
+        .editAssignment {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .assignment:hover .editcourse {
+            visibility: visible;
+        }
+        .editDelete {
+            width: 100px;
+            height: 75px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
+            padding-top: 10px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .cancelCreation {
+
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+            
+        }
+        .createCreation {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        .cancelCreation:hover {
+            background-color: #ddd;
+        }
+        .addInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
+        .optionsHolder {
+            width: 90%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .optionsHolder select {
+            height: 100%;
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 20px;
+            outline: none;
+        }
+        .notAllowed {
+            background-color:  #ddd !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+        }
+        .filepond--panel-root {
+            background-color: #fff;
+        }
+        .filepond--root {
+            /* max-height: 1000px; */
+        }
+        #errorPopDown {
+            padding: 20px;
+            background-color: rgb(241,80,79);
+            font-size: 18px;
+            color: white;
+            border-radius: 10px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px;
+            -webkit-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            box-shadow: -9px 10px 36px 0px rgba(0,0,0,0.75);
+            transition: top 0.2s ease-out
+        }
+        .errorDown {
+            top: 100px !important;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class = "background">
+        <div class="barLeft">
+            <div class="sideBarTitle">
+                    <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+            </div>
+            <div class="sideBarOverview">
+                <div class="overViewMain">
+                    Courses Overview
+                </div>
+            </div> 
+            <% for (var i = 0; i < courses.length; i++) { %>
+                <div class="sideBarTopic" expanded = "false" onclick = "expandSideBar(this)">
+                    <div class="sideBarMain">
+                        <%=courses[i].course%>
+                    </div>
+                    <div class="sideBarSecondary">
+                        <%=courses[i].semester.name%>, block <%=courses[i].block%>
+                    </div>
+                    <div class="expandingCourseBlock">
+                        <div class="expandedLink" onclick = "window.location = '/teacher/<%=teacher._id%>/<%=courses[i]._id%>/overview'">
+                            Overview
+                        </div>
+                        <div class="expandedLink" onclick = "window.location = '/teacher/<%=teacher._id%>/<%=courses[i]._id%>/assignments'">
+                            Assignments
+                        </div>
+                        <div class="expandedLink" onclick = "window.location = '/teacher/<%=teacher._id%>/<%=courses[i]._id%>/notes'">
+                            Notes
+                        </div>
+                    </div>
+                </div>
+            <% } %> 
+        </div>
+        <div class="bodyRight">
+            <div class = "bodyUpperSection">
+                <div class="topBar">
+                    PVSS (sd83)
+                </div>
+                <div class="secondaryBar">
+                    <div class="barTitle">
+                        <%=course.course%> <%=course.semester.name%> Block <%=course.block%>
+                    </div>
+                </div>
+            </div>
+            <div class = "bodyLowerSection">
+                <div class="assignmentsHolderMain">
+                    <div class="createAssignmentBar">
+                        <div class="createAssignment" id = "createAssignment" onclick = "makeNewAssignment()">
+                            NEW ASSIGNMENT
+                        </div>
+                    </div>
+                    <div class="assignmentCategoriesBar">
+                        <div class="assignmentCategory">Submitted By</div>
+                        <div class="assignmentCategory">Type</div>
+                        <div class="assignmentCategory">Assignment</div>
+                        <div class="assignmentCategory">Notes</div>
+                        <div class="assignmentCategory">Due</div>
+                    </div>
+                    <div class="expandingBlock" id = "expandingBlock">
+                        <div class="container">
+                            <div class="createAssignmentBlock">
+                                <!-- <input type="text" class = "addInput"> -->
+                                
+                                <input type = "text" class = "addInput" value = "~Me~" readonly="true">
+                            </div>
+                            <div class="createAssignmentBlock">
+                                <div class="optionsHolder">
+                                    <select id = "assignmentType" onchange = "fileSwitch(this.value)">
+                                        <option value = "text">Text</option>
+                                        <option value = "File">File</option>
+                                    </select>
+                                    <input type = "text" placeholder = "Name..." style = "display: none" class = "addInput" id = "assignmentName">
+                                </div>
+                            </div>
+                            <div class="createAssignmentBlock">
+                                <input type="text" class = "addInput" id = "assignmentInfo">
+                                <div id="filePondHolder" style = "display: none">
+                                    <input type = "file" class = "filepond" id = "assignmentFile">
+                                </div>
+                            </div>
+                            <div class="createAssignmentBlock">
+                                <input type="text" class = "addInput" id = "assignmentNotes">
+                            </div>
+                            <div class="createAssignmentBlock">
+                                <input type="text" class = "addInput" id =  "assignmentDue">
+                            </div>
+                        </div>
+                        <div class="buttonsRow">
+                                <div class="buttonRowButton createCreation" id = "editOrCreate" onclick="getNewAssignmentInfo()">Create</div>
+                                <div class="buttonRowButton cancelCreation" onclick = "closeNewAssignment()">Cancel</div>
+                        </div>
+                    </div>
+                    <div class="assignmentsBody">
+                        <% for (var i =0 ; i < assignments.length; i++) { %>
+                            <div class="assignment">
+                                <div class="assignmentProperty"><%=assignments[i].submittedBy.username%></div>
+                                <div class="assignmentProperty"><%=assignments[i].type%></div>
+                                <div class="assignmentProperty">
+                                    <% if (assignments[i].type == "text") { %>
+                                        <%=assignments[i].assignment%>
+                                    <% } else { %>
+                                        <a href = '/public/assignments/<%=assignments[i].assignment.split("_")[assignments[i].assignment.split("_").length-1]%>'><%=assignments[i].assignment.split("_").slice(0, assignments[i].assignment.split("_").length-1).join("_")%></a>
+                                    <% } %> 
+                                    
+                                </div>
+                                <div class="assignmentProperty"><%=assignments[i].notes%></div>
+                                <div class="assignmentProperty"><%=assignments[i].due%></div>
+                                <i class="fas fa-ellipsis-v editAssignment" onclick = "openEdit(this)">
+                                    <div class="editDelete">
+                                        <div class="edit" onclick = 'getCourse("<%=courses[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeCourse('<%=courses[i]._id%>')">Delete</div>
+                                    </div>
+                                </i>
+                            </div>
+                        <% } %>
+                        <% if (assignments.length == 0) { %>
+                            <div class="assignment">
+                                No assignments yet
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "errorPopDown">
+        test error!
+    </div>
+</body>
+<script>
+    let fileName = "";
+    let inputElement = document.getElementById("assignmentFile");
+    FilePond.setOptions({
+        server: "/uploadTeacherFile",
+    })
+    let pond = FilePond.create(inputElement);
+    pond.on("processfile", function(err, file) {
+        // console.log(file.serverId);
+        fileName = file.serverId;
+    });
+</script>
+<script>
+    function fileSwitch(value) {
+        if (value == "text") {
+            document.getElementById("assignmentInfo").style.display = "block";
+            document.getElementById("filePondHolder").style.display = "none";
+            document.getElementById("assignmentName").style.display = "none";
+        } else {
+            document.getElementById("assignmentInfo").style.display = "none";
+            document.getElementById("filePondHolder").style.display = "block";
+            document.getElementById("assignmentName").style.display = "block";
+        }
+    }
+    function getNewAssignmentInfo() {
+        let sendable = true;
+        let type = document.getElementById("assignmentType").value;
+        let info = "";
+        if (type == "text") {
+            info = document.getElementById("assignmentInfo").value;
+        } else {
+            if (fileName) {
+                info = document.getElementById("assignmentName").value + "_" + fileName;
+            } else {
+                sendable = false;
+                let error = document.getElementById("errorPopDown");
+                error.innerText = "Error: " + response[1];
+                error.classList.add("errorDown");
+                errorExtened = true;
+            }
+        }
+        let notes = document.getElementById("assignmentNotes").value;
+        let due = document.getElementById("assignmentDue").value;
+        if (sendable) {
+            let sendString = "type=" + type + "&info=" + info + "&notes=" + notes + "&due=" + due;
+            sendPostRequest(sendString, "/uploadAssignment/<%=course.teacher%>/<%=course._id%>", function(response) {
+                fileName = "";
+            });
+        }
+    }
+    function expandSideBar(element) {
+        let expanded = element.getAttribute("expanded");
+        if (expanded == "false") {
+            element.children[2].style.maxHeight = "150px";
+            element.className = "expandedTopic";
+            element.children[1].style.visibility = "hidden";
+            element.setAttribute("expanded", "true");
+        } else {
+            element.children[2].style.maxHeight = "0px";
+            element.className = "sideBarTopic";
+            element.children[1].style.visibility = "visible";
+            element.setAttribute("expanded", "false");
+            
+        }
+    }
+    function makeNewAssignment() {
+        let createButton = document.getElementById("createAssignment");
+        createButton.classList.add("notAllowed");
+        let expandingBlock = document.getElementById("expandingBlock");
+        expandingBlock.style.maxHeight = "400px";
+    }
+    function closeNewAssignment() {
+        let expandingBlock = document.getElementById("expandingBlock");
+        let createButton = document.getElementById("createAssignment");
+        createButton.classList.remove("notAllowed");
+        expandingBlock.style.maxHeight = "0px";
+    }
+</script>
+</html>
