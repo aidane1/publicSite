@@ -27,6 +27,17 @@
             height: 100%;
             padding: 0;
             margin: 0;
+            overflow: hidden;
+        }
+        .bodyMain {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            /* overflow: hidden; */
         }
         .navBar {
             width: 100%;
@@ -47,6 +58,7 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
+            z-index: 100;
         }
         .footer {
             width: 100%;
@@ -57,7 +69,7 @@
             font-size: 40px;
             font-weight: 300;
             text-align: center;
-            margin-top: 90px;
+            margin-top: 30px;
         }
         .diseaseSecondary {
             font-size: 14px;
@@ -132,6 +144,7 @@
         .transitionTextBox {
             width: 100%;
             height: 100%;
+            /* overflow-y: scroll; */
             position: absolute;
             right: 0px;
             top: 0px;
@@ -139,6 +152,17 @@
             transition: opacity 0.6s linear;
             font-size: 22px;
             padding: 15px;
+            
+            /* z-index: 100; */
+        }
+        .transitionTextBody {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 1000;
+            overflow-y: scroll;
         }
         .navName {
             height: 100%;
@@ -164,10 +188,23 @@
             font-size: 25px;
             font-weight: 300;
         }
+        .extraImages {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .extraImages img {
+            /* width: 250px; */
+            /* max-height: 400px; */
+            height: 300px;
+            margin: 20px 50px;
+        }
     </style>
 </head>
 <body>
-    <div class="bodyMain">
+    <div class="bodyMain" id = "bodyMain">
         <div class="navBar">
             <div class="navName">
                 Aidan Eglin
@@ -191,26 +228,69 @@
             
             <div class="transitionTextBox" id = "transitionTextBox">
                     <div class="transitionTitleBox" id = "transitionTitleBox">
-                        Aids
+                        <!-- Aids -->
                     </div>
-                    
-                    
-                        <h1>Header 1: </h2>
-                        <h2>Sub-Header 1: </h3>
+                    <div class="transitionTextBody" id = "transitionTextBody">
+                        <h1>Noma: </h2>
+                        <h2>Location: </h3>
                         <p>
                             <h5>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultrices purus vitae mattis venenatis. Morbi venenatis, tortor consectetur posuere posuere, mi leo consectetur nisl, eu accumsan diam ligula eget nisl. Proin ut euismod arcu. Sed vel diam neque. Curabitur id felis at nisi iaculis dictum vitae sit amet sapien. Praesent eget condimentum turpis. Quisque ultricies eleifend metus quis convallis. Sed ac nisl at mi eleifend posuere. Morbi elementum ac erat at feugiat.
+                                <ul>
+                                    <li> - SouthEastern Asia</li>
+                                    <li> - Northern Africa</li>
+                                    <li> - Sub-Saharan Africa</li>
+                                    <li> - Pre-industrialization Europe and North America</li>
+                                </ol>
                             </h5>
                         </p>
                         
-                        <h2>Sub-Header 2: </h2>
+                        <h2>Causes: </h2>
                         <p>
                             <h5>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultrices purus vitae mattis venenatis. Morbi venenatis, tortor consectetur posuere posuere, mi leo consectetur nisl, eu accumsan diam ligula eget nisl. Proin ut euismod arcu. Sed vel diam neque. Curabitur id felis at nisi iaculis dictum vitae sit amet sapien. Praesent eget condimentum turpis. Quisque ultricies eleifend metus quis convallis. Sed ac nisl at mi eleifend posuere. Morbi elementum ac erat at feugiat.
+                                Noma is a combination of many pre-processing factors that cumulates in gangrenous infection of the face.
+                                <br>
+                                Some these factors include
+                                <ul>
+                                    <li> - malnutrition</li>
+                                    <li> - poor oral hygene</li>
+                                    <li> - unsafe drinking water</li>
+                                    <li> - proximity to unkempt livestock</li>
+                                    <li> - past infections</li>
+                                    <li> - smoking</li>
+                                </ul>
                             </h5>  
                         </p>
+                        <h2>Symptoms: </h2>
+                        <p>
+                            <h5>
+                                The mucous membranes of the mouth develop ulcers, and rapid, painless tissue degeneration ensues, which can degrade tissues of the bones in the face.
+
+                            </h5>  
+                        </p>
+                        <h2>Cures: </h2>
+                        <p>
+                            <h5>
+                                    The progression of Noma can be slowed with antibiotics and improved nutrition, but the physical effects are permanent and irriversable. They can be limited
+                                    through plastic surgery and other cosmetic reconstructions.
+                            </h5>  
+                        </p>
+                        <h2>Effects: </h2>
+                        <p>
+                            <h5>
+                                Noma is a morbid disease with a high mortality rate, killing 9 of every 10 that become infected. Those that do survive are permanently scared, barring extreme surgery to
+                                remove the damage.
+
+                            </h5>  
+                        </p>
+                        <h6><a href = "_blank" id = "caseStudyLink">Link To Case Study</a></h6>
+                        <div class="extraImages">
+                            <img src="/public/images/noma1.jpeg" alt=""/>
+                            <img src="/public/images/noma2.jpeg" alt=""/>
+                            <img src="/public/images/noma3.png" alt=""/>
+                            <img src="/public/images/noma4.jpeg" alt=""/>
+                        </div>
                         
-                    
+                    </div>
             </div>
             <div class="bodyTile" onclick = "moveLeft(this)" id = "tile_0">
                 <div class="tileImage">
@@ -264,6 +344,169 @@
     </div>
 </body>
 <script>
+    let aidsString = `<h1>Aids: </h2>
+                        <h2>Location: </h3>
+                        <p>
+                            <h5>
+                                <ul>
+                                    <li> - Universal</li>
+                                    <li> - Predominantly found in Southern Africa</li>
+                                    <li> - Can be found and transmitted anywhere in the world</li>
+                                </ol>
+                            </h5>
+                        </p>
+                        
+                        <h2>Causes: </h2>
+                        <p>
+                            <h5>
+                                HIV is caused by a virus. It can spread through sexual contact or blood, or from mother to child during pregnancy, childbirth or breast-feeding.
+                            </h5>  
+                        </p>
+                        <h2>Symptoms: </h2>
+                        <p>
+                            <h5>
+                                Most people infected by HIV develop a flu-like illness within a month or two after the virus enters the body. This illness, known as primary or acute HIV infection, may last for a few weeks. Possible signs and symptoms include fever, headache, muscle aches and pain, rash, and swollen lymph glands
+                            </h5>  
+                        </p>
+                        <h2>Cures: </h2>
+                        <p>
+                            <h5>
+                                There's no cure for HIV/AIDS, but there are medications that can dramatically slow the progression of the disease. These drugs have reduced AIDS deaths in many developed nations.
+                            </h5>  
+                        </p>
+                        <h2>Effects: </h2>
+                        <p>
+                            <h5>
+                                HIV infection weakens your immune system, making you much more likely to develop numerous infections and certain types of cancers. Common infections include Tuberculosis, Cytomegalovirus (herpes), Cryptococcal meningitis, and Toxoplasmosis
+
+                            </h5>  
+                        </p>
+                        <h6><a href = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4105092/" id = "caseStudyLink">Aids Case Study</a></h6>
+                        <div class="extraImages">
+                            <img src="/public/images/aids1.jpg" alt=""/>
+                            <img src="/public/images/aids2.jpg" alt=""/>
+                            <img src="/public/images/aids3.jpg" alt=""/>
+                            <img src="/public/images/aids4.png" alt=""/>
+                        </div>`;
+    let leprosyString = `<h1>Leprosy: </h2>
+                        <h2>Location: </h3>
+                        <p>
+                            <h5>
+                                <ul>
+                                    <li> - SouthEastern Asia</li>
+                                    <li> - Northern Africa</li>
+                                    <li> - Sub-Saharan Africa</li>
+                                </ol>
+                            </h5>
+                        </p>
+                        
+                        <h2>Causes: </h2>
+                        <p>
+                            <h5>
+                                The bacterium Mycobacterium leprae causes leprosy. It’s thought that leprosy spreads through contact with the mucosal secretions of a person with the infection. This usually occurs when a person with leprosy sneezes or coughs.
+                            </h5>  
+                        </p>
+                        <h2>Symptoms: </h2>
+                        <p>
+                            <h5>
+                                The symptoms of Leprosy are immediately noticable. They include, but are not limited to: Muscle weakness; numbness in hands, arm, feet, or legs; and skin lesions
+                            </h5>  
+                        </p>
+                        <h2>Cures: </h2>
+                        <p>
+                            <h5>
+                                    WHO developed a multidrug therapy in 1995 to cure all types of leprosy. It’s available free of charge worldwide.
+                                    <br>
+                                    Additionally, several antibiotics treat leprosy by killing the bacteria that causes it. These antibiotics include:                                    
+                                    <ol>
+                                        <li>dapsone</li>
+                                        <li>rifampin</li>
+                                        <li>clofazimine</li>
+                                        <li>minocycline</li>
+                                        <li>ofloxacin</li>
+                                    </ol>
+                            </h5>  
+                        </p>
+                        <h2>Effects: </h2>
+                        <p>
+                            <h5>
+                                Leprosy can lead to serious physical complications if not treated prompty. These include, but are not limited to:  
+                                <ul>
+                                    <li> - disfigurement</li>
+                                    <li> - hair loss</li>
+                                    <li> - muscle weakness</li>
+                                    <li> - permanent nerve damage</li>
+                                    <li> - chronic nasal congestion</li>
+                                    <li> - glaucoma</li>
+                                </ul>
+
+                            </h5>  
+                        </p>
+                        <h6><a href = "https://www.ncbi.nlm.nih.gov/pubmed/21073092" id = "caseStudyLink">Leprosy Case Study</a></h6>
+                        <div class="extraImages">
+                            <img src="/public/images/leprosy1.jpeg" alt=""/>
+                            <img src="/public/images/leprosy2.png" alt=""/>
+                            <img src="/public/images/leprosy3.jpg" alt=""/>
+                            <img src="/public/images/leprosy4.jpg" alt=""/>
+                        </div>`;
+    let nomaString = `<h1>Noma: </h2>
+                        <h2>Location: </h3>
+                        <p>
+                            <h5>
+                                <ul>
+                                    <li> - SouthEastern Asia</li>
+                                    <li> - Northern Africa</li>
+                                    <li> - Sub-Saharan Africa</li>
+                                    <li> - Pre-industrialization Europe and North America</li>
+                                </ol>
+                            </h5>
+                        </p>
+                        
+                        <h2>Causes: </h2>
+                        <p>
+                            <h5>
+                                Noma is a combination of many pre-processing factors that cumulates in gangrenous infection of the face.
+                                <br>
+                                Some these factors include
+                                <ul>
+                                    <li> - malnutrition</li>
+                                    <li> - poor oral hygene</li>
+                                    <li> - unsafe drinking water</li>
+                                    <li> - proximity to unkempt livestock</li>
+                                    <li> - past infections</li>
+                                    <li> - smoking</li>
+                                </ul>
+                            </h5>  
+                        </p>
+                        <h2>Symptoms: </h2>
+                        <p>
+                            <h5>
+                                The mucous membranes of the mouth develop ulcers, and rapid, painless tissue degeneration ensues, which can degrade tissues of the bones in the face.
+
+                            </h5>  
+                        </p>
+                        <h2>Cures: </h2>
+                        <p>
+                            <h5>
+                                    The progression of Noma can be slowed with antibiotics and improved nutrition, but the physical effects are permanent and irriversable. They can be limited
+                                    through plastic surgery and other cosmetic reconstructions.
+                            </h5>  
+                        </p>
+                        <h2>Effects: </h2>
+                        <p>
+                            <h5>
+                                Noma is a morbid disease with a high mortality rate, killing 9 of every 10 that become infected. Those that do survive are permanently scared, barring extreme surgery to
+                                remove the damage.
+
+                            </h5>  
+                        </p>
+                        <h6><a href = "_blank" id = "caseStudyLink">Link To Case Study</a></h6>
+                        <div class="extraImages">
+                            <img src="/public/images/noma1.jpeg" alt=""/>
+                            <img src="/public/images/noma2.jpeg" alt=""/>
+                            <img src="/public/images/noma3.png" alt=""/>
+                            <img src="/public/images/noma4.jpeg" alt=""/>
+                        </div>`;
     function reset(element, parent) {
         element.parentNode.removeChild(element);
         let transitionBox = document.getElementById("transitionTextBox");
@@ -283,6 +526,11 @@
         "tile_1": ["Leprosy"],
         "tile_2": ["Noma"],
     }
+    let links = {
+        "tile_0": ["Aids case study", "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4105092/"],
+        "tile_1": ["Leprosy case study", "https://www.ncbi.nlm.nih.gov/pubmed/21073092"],
+        "tile_2": ["Noma case study", "https://www.hbs.edu/faculty/Pages/item.aspx?num=46960"]
+    }
     function moveLeft(element) {
         let image = element.children[0].children[0].cloneNode(false);
         element.children[0].children[0].style.display = "none";
@@ -292,9 +540,9 @@
         image.className = "heroImage";
         document.getElementById("body").appendChild(image);
         let transitionBox = document.getElementById("transitionTextBox");
+        let transitionTextBody = document.getElementById("transitionTextBody");
         let transitionTitle = document.getElementById("transitionTitleBox");
-        transitionTitle.innerHTML = info[element.id][0];
-        transitionBox.style.paddingLeft = ((image.width/image.height*300) + 22).toString() + "px";
+        // transitionTitle.innerHTML = info[element.id][0];
         window.setTimeout( function() {
             transitionBox.style.opacity = "1";
             image.style.left = "0px";
@@ -305,6 +553,16 @@
                 // image.style.position = "relative";
             });
             element.style.opacity = "0";
+            transitionTextBody.style.left = ((image.width/image.height*300) + 22).toString() + "px";
+            transitionTextBody.style.width = `calc(100% - ${((image.width/image.height*300) + 22).toString()}px)`;
+            // transitionTextBody.innerHTML = aidsString;
+            if (element.id == "tile_0") {
+                transitionTextBody.innerHTML = aidsString;
+            } else if (element.id == "tile_1") {
+                transitionTextBody.innerHTML = leprosyString;
+            } else {
+                transitionTextBody.innerHTML = nomaString;
+            }
         }, 30);
         
         let tiles = document.getElementsByClassName("bodyTile");
