@@ -570,7 +570,12 @@
             </div>
             <div id = "homeTile" href = "#homeTile" class="bodyTile">
                 <div class="dayHeader" style="font-size: 40px">
-                    <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>
+                    <% if (today[1]) { %>
+                        <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>    
+                    <% } else { %>
+                        Off! 
+                    <% } %>
+                    
                 </div>
                 <div class="eventsHolder">
                     <% for (var i = 0; i < soonEvents.length; i++) { %>
