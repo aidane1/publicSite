@@ -742,25 +742,28 @@ app.get("/diseases", async function(req, res) {
 
 let iconMap = {
   "science": ['<i style = "color: black" class="fas fa-flask"></i>', "#81c784", "black"],
-  "language": ['<i style = "color: black" class="fas fa-book"></i>', "#89cff0", "black"],
-  "english": ['<i style = "color: black" class="fas fa-book"></i>', "#d256ff", "black"],
+  "language": ['<i style = "color: black" class="fas fa-book"></i>', "#4a79c4", "black"],
+  "english": ['<i style = "color: black" class="fas fa-book"></i>', "#89cff0", "black"],
   "french": ['<i style = "color: black" class="fas fa-book"></i>', "#e57373", "black"],
-  "math": ['<i style = "color: black" class="fas fa-calculator"></i>', "#c94322", "black"],
+  "math": ['<i style = "color: black" class="fas fa-calculator"></i>', "#f44242", "black"],
   "socials": ['<i style = "color: black" class="fas fa-map-marked-alt"></i>', "#FFF176", "black"],
   "social studies": ['<i style = "color: black" class="fas fa-map-marked-alt"></i>', "#FFF176", "black"],
   "trades": ['<i style = "color: black" class="fas fa-wrench"></i>', "#aaa", "black"],
   "auto": ['<i style = "color: black" class="fas fa-car"></i>', "#aaa", "black"],
   "other": ['<i style = "color: black" class="fas fa-question"></i>', "#ffffff", "black"],
   "accounting": ['<i style = "color: black" class="fas fa-coins"></i>', "orange", "black"],
-  "career and planning": ['<i style = "color: black" class="fas fa-briefcase"></i>', "#ffd400", "black"],
+  "career and planning": ['<i style = "color: black" class="fas fa-briefcase"></i>', "#ffbae6", "black"],
   "physical education": ['<i style = "color: white" class="fas fa-basketball-ball"></i>', "black", "white"],
   "special ed": ['<i style = "color: black" class="fas fa-rainbow"></i>', "#738678", "black"],
-  "fine arts": ['<i style = "color: black" class="fas fa-paint-brush"></i>', "white", "black"],
+  "fine arts": ['<i style = "color: black" class="fas fa-paint-brush"></i>', "#d291ff", "black"],
   "info tech.": ['<i style = "color: black" class="fas fa-tv"></i>', "#52c97a", "black"],
-  "na": ['<i style = "color: black" class="fas fa-tv"></i>', "#5e4ee8"],
+  "na": ['<i class="fas fa-file-signature"></i>', "white", "black"],
   "applied skills": ['<i style = "color: black" class="fas fa-cogs"></i>', "orange", "black"],
   "art": ['', ""],
   "courses": ['', ""],
+  "course": ['<i style = "color: white" class="fas fa-book-open"></i>', "black", "white"],
+  "teacher": ['<i style = "color: white" class="fas fa-user"></i>', "black", "white"],
+  "block": ['<i style = "color: white" class="fas fa-cube"></i>', "black", "white"],
 
 } 
 
@@ -2887,16 +2890,21 @@ function makeReadableSchedule(constant, schedule, blockMap) {
   return blockSchedule;
 }
 
-app.get("/course/:id", async function(req, res) {
+app.get("/swimming", async function(req, res) {
+  res.render("swimming/swimmingRandomizer");
+});
+
+app.get("/course", async function(req, res) {
   try {
-    if (req.session.userId) {
+    if (req.session.userId && req.query.courseId) {
       let user = await User.findOne({_id :req.session.userId});
       if (user != null) {
-        let course = await Course.findOne({_id : req.params.id});
+        let course = await Course.findOne({_id : req.query.courseId}).populate("teacher");
         if (course != null) {
           let notes = await Notes.find({forCourse : course._id});
           let assignments = await Assignments.find({forCourse : course._id});
-          res.render("redesign/courseInfo", {iconMap: iconMap, course: course, notes: notes, assignments: assignments});
+          console.log(assignments);
+          res.render("redesign/courseInfo", {icons: iconMap, course: course, notes: notes, assignments: assignments});
         } else {
           res.redirect("/");
         }
@@ -2904,7 +2912,7 @@ app.get("/course/:id", async function(req, res) {
         res.redirect("/login");
       }
     } else {
-      res.redirect("/login");
+      res.redirect("/");
     }
   } catch(e) {
     console.log(e);
@@ -3054,7 +3062,7 @@ app.get("/", async function(req, res) {
       
 
       
-
+      let alert = user.alerts[user.alerts.length-1];
       
       let currentClass = ["current", new EmptyCourse("Nothing!", "A")];
       let foundCurrent = false;
@@ -3099,7 +3107,8 @@ app.get("/", async function(req, res) {
           let empty = new EmptyCourse("No Courses!", "A");
           dayBlockList = [["", empty]];
         }
-        res.render("redesign/index", {userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        //typeof alert: ['<href>(optional)', text]
+        res.render("redesign/index", {alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];

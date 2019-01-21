@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        html, body {
+            width: 100%;
+            /* height: 100%; */
+            padding: 0;
+            padding-top: 10px;
+            margin: 0;
+        }
+        .swimmerTile {
+            /* width: 95%; */
+            margin-left: 2.5%;
+            margin-right: 2.5%;
+            border: 1px solid #ebcccc;
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            /* transition: background-color 0.1s linear; */
+        }
+        .swimmerName {
+            font-size: 25px;
+        }
+        .swimmerTier {
+            font-size: 13px;
+            /* color: rgb(190,190,190);
+            font-style: italic; */
+        }
+        img {
+            width: 40px;
+        }
+        .selectedTile {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border-color: #d0e9c6;
+        }
+        h1 {
+            margin-left: 2.5%;
+        }
+        .lanes {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .lane {
+            width: 60px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            text-align: center;
+            color: white;
+            background-color: #ddd;
+            border: 1px solid #aaa;
+            font-size: 30px;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .selectedLane {
+            background-color: #2196f3;
+            border-color: #1565c0;
+        }
+        .randomizeButton {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .randomize {
+            padding: 15px 15px;
+            margin-top: 40px;
+            background-color: #26a69a;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            border: 0;
+            border-radius: 8px;
+        }
+        .outputList {
+            padding-left: 10px;
+        }
+        .swimmingLane {
+            margin-top: 10px;
+            width: 102.5%;
+            position: relative;
+            left: -2.5%;
+            background-color: #b8e9ee;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Swimmers</h1>
+    <div class="swimmerList" id="swimmerList">
+
+    </div>
+    <h1>Lanes</h1>
+    <div class="lanes">
+        <div class="lane selectedLane" onclick = "selectLane(this)">1</div>
+        <div class="lane" onclick = "selectLane(this)">2</div>
+        <div class="lane" onclick = "selectLane(this)">3</div>
+        <div class="lane" onclick = "selectLane(this)">4</div>
+        <div class="lane" onclick = "selectLane(this)">5</div>
+        <div class="lane" onclick = "selectLane(this)">6</div>
+        <div class="lane" onclick = "selectLane(this)">7</div>
+        <div class="lane" onclick = "selectLane(this)">8</div>
+    </div>
+    <div class="randomizeButton">
+        <div class="randomize" onclick = "randomize()">
+            Randomize
+        </div>
+    </div>
+    <div class="outputList" id = "outputList">
+        <!-- <div class="swimmingLane"></div> -->
+    </div>
+    <script>
+        let namesArray = [["Aidan Eglin", "Tier 1"], ["Robert Yacovelli", "Tier 1"], ["Graham Johnstone", "Tier 1"], ["Nick Phillips", "Tier 1"], ["Liam Williamson", "Tier 1"], ["Ryan Murphy", "Tier 1A"], ["Zach Sholdice", "Tier 1A"], ["Jack Screen", "Tier 1A"], ["Brody Wright", "Tier 1A"], ["Ian Styne", "Tier 1A"], ["Kelsey Fillion", "Tier 1"], ["Alex Shortt", "Tier 1"], ["Morgan Mardiros", "Tier 1"], ["Sam Shortt", "Tier 1"], ["Kristen Hardy", "Tier 1A"], ["Sophie Kral", "Tier 1A"], ["Naomi Altwasser", "Tier 1A"], ["Abbi Johnson", "Tier 1A"], ["Khali Lindahl", "Tier 1A"]];
+        //ex: data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDIxLjkgMjEuOSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjEuOSAyMS45IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxwYXRoIGQ9Ik0xNC4xLDExLjNjLTAuMi0wLjItMC4yLTAuNSwwLTAuN2w3LjUtNy41YzAuMi0wLjIsMC4zLTAuNSwwLjMtMC43cy0wLjEtMC41LTAuMy0wLjdsLTEuNC0xLjRDMjAsMC4xLDE5LjcsMCwxOS41LDAgIGMtMC4zLDAtMC41LDAuMS0wLjcsMC4zbC03LjUsNy41Yy0wLjIsMC4yLTAuNSwwLjItMC43LDBMMy4xLDAuM0MyLjksMC4xLDIuNiwwLDIuNCwwUzEuOSwwLjEsMS43LDAuM0wwLjMsMS43QzAuMSwxLjksMCwyLjIsMCwyLjQgIHMwLjEsMC41LDAuMywwLjdsNy41LDcuNWMwLjIsMC4yLDAuMiwwLjUsMCwwLjdsLTcuNSw3LjVDMC4xLDE5LDAsMTkuMywwLDE5LjVzMC4xLDAuNSwwLjMsMC43bDEuNCwxLjRjMC4yLDAuMiwwLjUsMC4zLDAuNywwLjMgIHMwLjUtMC4xLDAuNy0wLjNsNy41LTcuNWMwLjItMC4yLDAuNS0wLjIsMC43LDBsNy41LDcuNWMwLjIsMC4yLDAuNSwwLjMsMC43LDAuM3MwLjUtMC4xLDAuNy0wLjNsMS40LTEuNGMwLjItMC4yLDAuMy0wLjUsMC4zLTAuNyAgcy0wLjEtMC41LTAuMy0wLjdMMTQuMSwxMS4zeiIgZmlsbD0iI0Q4MDAyNyIvPgo8L3N2Zz4K
+        //check: data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDI2IDI2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNiAyNiIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KICA8cGF0aCBkPSJtLjMsMTRjLTAuMi0wLjItMC4zLTAuNS0wLjMtMC43czAuMS0wLjUgMC4zLTAuN2wxLjQtMS40YzAuNC0wLjQgMS0wLjQgMS40LDBsLjEsLjEgNS41LDUuOWMwLjIsMC4yIDAuNSwwLjIgMC43LDBsMTMuNC0xMy45aDAuMXYtOC44ODE3OGUtMTZjMC40LTAuNCAxLTAuNCAxLjQsMGwxLjQsMS40YzAuNCwwLjQgMC40LDEgMCwxLjRsMCwwLTE2LDE2LjZjLTAuMiwwLjItMC40LDAuMy0wLjcsMC4zLTAuMywwLTAuNS0wLjEtMC43LTAuM2wtNy44LTguNC0uMi0uM3oiIGZpbGw9IiM5MURDNUEiLz4KPC9zdmc+Cg==
+        function split(array, size) {
+            let output = [];
+            for (var i = 0; i < size; i++) {
+                output.push([]);
+            }
+            for (var i = 0; i < array.length; i++) {
+                output[i%size].push(array[i]);
+            }
+            return output;
+        }
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                // And swap it with the current element.
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+
+            return array;
+        }
+        function randomize() {
+            let lanes = parseInt(document.getElementsByClassName("selectedLane")[0].innerText);
+            let swimmerList = document.getElementsByClassName("selectedTile");
+            let swimmers = [];
+            for (var i = 0; i < swimmerList.length; i++) {
+                swimmers.push(swimmerList[i].getAttribute("swimmer"));
+            }
+            let splitGroups = split(shuffle(swimmers), lanes);
+            let outputBox = document.getElementById("outputList");
+            outputList.innerHTML = "";
+            for (var i = 0; i < splitGroups.length; i++) {
+                let string = `<h2>Lane ${i+1}</h2><h5>${splitGroups[i].length ? splitGroups[i].join(", ") : "Empty"}</h5>`;
+                outputList.innerHTML += string;
+            }
+        }
+        function selectLane(element) {
+            let lanes = document.getElementsByClassName("lane");
+            for (var i = 0; i < lanes.length; i++) {
+                lanes[i].classList.remove("selectedLane");
+            }
+            element.classList.add("selectedLane");
+        }
+        function switchState(element) {
+            if (element.classList.contains("selectedTile")){ 
+                element.classList.remove("selectedTile");
+                element.children[1].src = "data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDIxLjkgMjEuOSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjEuOSAyMS45IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxwYXRoIGQ9Ik0xNC4xLDExLjNjLTAuMi0wLjItMC4yLTAuNSwwLTAuN2w3LjUtNy41YzAuMi0wLjIsMC4zLTAuNSwwLjMtMC43cy0wLjEtMC41LTAuMy0wLjdsLTEuNC0xLjRDMjAsMC4xLDE5LjcsMCwxOS41LDAgIGMtMC4zLDAtMC41LDAuMS0wLjcsMC4zbC03LjUsNy41Yy0wLjIsMC4yLTAuNSwwLjItMC43LDBMMy4xLDAuM0MyLjksMC4xLDIuNiwwLDIuNCwwUzEuOSwwLjEsMS43LDAuM0wwLjMsMS43QzAuMSwxLjksMCwyLjIsMCwyLjQgIHMwLjEsMC41LDAuMywwLjdsNy41LDcuNWMwLjIsMC4yLDAuMiwwLjUsMCwwLjdsLTcuNSw3LjVDMC4xLDE5LDAsMTkuMywwLDE5LjVzMC4xLDAuNSwwLjMsMC43bDEuNCwxLjRjMC4yLDAuMiwwLjUsMC4zLDAuNywwLjMgIHMwLjUtMC4xLDAuNy0wLjNsNy41LTcuNWMwLjItMC4yLDAuNS0wLjIsMC43LDBsNy41LDcuNWMwLjIsMC4yLDAuNSwwLjMsMC43LDAuM3MwLjUtMC4xLDAuNy0wLjNsMS40LTEuNGMwLjItMC4yLDAuMy0wLjUsMC4zLTAuNyAgcy0wLjEtMC41LTAuMy0wLjdMMTQuMSwxMS4zeiIgZmlsbD0iI0Q4MDAyNyIvPgo8L3N2Zz4K";
+            } else {
+                element.classList.add("selectedTile");
+                element.children[1].src = "data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDI2IDI2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNiAyNiIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KICA8cGF0aCBkPSJtLjMsMTRjLTAuMi0wLjItMC4zLTAuNS0wLjMtMC43czAuMS0wLjUgMC4zLTAuN2wxLjQtMS40YzAuNC0wLjQgMS0wLjQgMS40LDBsLjEsLjEgNS41LDUuOWMwLjIsMC4yIDAuNSwwLjIgMC43LDBsMTMuNC0xMy45aDAuMXYtOC44ODE3OGUtMTZjMC40LTAuNCAxLTAuNCAxLjQsMGwxLjQsMS40YzAuNCwwLjQgMC40LDEgMCwxLjRsMCwwLTE2LDE2LjZjLTAuMiwwLjItMC40LDAuMy0wLjcsMC4zLTAuMywwLTAuNS0wLjEtMC43LTAuM2wtNy44LTguNC0uMi0uM3oiIGZpbGw9IiM5MURDNUEiLz4KPC9zdmc+Cg==";
+            }
+        }
+        
+        for (var i = 0; i < namesArray.length; i++) {
+            let div = document.createElement("div");
+            div.className = "swimmerTile";
+            div.setAttribute("swimmer", namesArray[i][0]);
+            div.setAttribute("onclick", "switchState(this)");
+            let secondDiv = document.createElement("div");
+            let name = document.createElement("div");
+            name.innerText = namesArray[i][0];
+            name.className = "swimmerName";
+            let tier = document.createElement("div");
+            tier.innerHTML = "<i>" + namesArray[i][1] + "</i>";
+            tier.className = "swimmerTier";
+            secondDiv.appendChild(name);
+            secondDiv.appendChild(tier);
+            let ex = document.createElement("img");
+            ex.src = "data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDIxLjkgMjEuOSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjEuOSAyMS45IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxwYXRoIGQ9Ik0xNC4xLDExLjNjLTAuMi0wLjItMC4yLTAuNSwwLTAuN2w3LjUtNy41YzAuMi0wLjIsMC4zLTAuNSwwLjMtMC43cy0wLjEtMC41LTAuMy0wLjdsLTEuNC0xLjRDMjAsMC4xLDE5LjcsMCwxOS41LDAgIGMtMC4zLDAtMC41LDAuMS0wLjcsMC4zbC03LjUsNy41Yy0wLjIsMC4yLTAuNSwwLjItMC43LDBMMy4xLDAuM0MyLjksMC4xLDIuNiwwLDIuNCwwUzEuOSwwLjEsMS43LDAuM0wwLjMsMS43QzAuMSwxLjksMCwyLjIsMCwyLjQgIHMwLjEsMC41LDAuMywwLjdsNy41LDcuNWMwLjIsMC4yLDAuMiwwLjUsMCwwLjdsLTcuNSw3LjVDMC4xLDE5LDAsMTkuMywwLDE5LjVzMC4xLDAuNSwwLjMsMC43bDEuNCwxLjRjMC4yLDAuMiwwLjUsMC4zLDAuNywwLjMgIHMwLjUtMC4xLDAuNy0wLjNsNy41LTcuNWMwLjItMC4yLDAuNS0wLjIsMC43LDBsNy41LDcuNWMwLjIsMC4yLDAuNSwwLjMsMC43LDAuM3MwLjUtMC4xLDAuNy0wLjNsMS40LTEuNGMwLjItMC4yLDAuMy0wLjUsMC4zLTAuNyAgcy0wLjEtMC41LTAuMy0wLjdMMTQuMSwxMS4zeiIgZmlsbD0iI0Q4MDAyNyIvPgo8L3N2Zz4K";
+            div.appendChild(secondDiv);
+            div.appendChild(ex);
+            document.getElementById("swimmerList").appendChild(div);
+        }
+    </script>
+</body>
+</html>

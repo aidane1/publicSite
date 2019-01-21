@@ -474,6 +474,27 @@
             margin-left: 10px;
             color: orange;
         }
+        .alert {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 5px;
+            padding-right: 5px;
+            width: 95%;
+            border: 1px solid black;
+            position: absolute;
+            top: 20%;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #d9edf7;
+            border-color: #bcdff1;
+            color: #31708f;
+            border-radius: 5px;
+            -webkit-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            -moz-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            transition: top 0.2s linear;
+        }
         @media screen and (max-height: 520px) {
             .homeHeader {
                 height: 0px;
@@ -576,8 +597,8 @@
                 <div class="dayHolder">
                     <% for (var i = 0; i < courses.length; i++) { %>
                         <% if (i == courses.length-1) { %>
-                            <div class="dayBlock">
-                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course/${courses[i][1]._id}'` : `` %>"> -->
+                            <!-- <div class="dayBlock"> -->
+                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
                                 <div class="dayIcon">
                                     <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -590,13 +611,13 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
-                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
+                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
                                     </div>
                                 </div>
                             </div>
                         <% } else { %>
-                            <div class="dayBlock">
-                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course/${courses[i][1]._id}'` : `` %>"> -->
+                            <!-- <div class="dayBlock"> -->
+                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
                                 <div class="dayIcon">
                                         <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -609,7 +630,7 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
-                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
+                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
                                     </div>
                                 </div>
                             </div>
@@ -734,8 +755,12 @@
                 </div>
         </div>
     </div>
+    <div class="alert">
+        <Strong>Notice!</Strong> xyz yeet yeet yeet
+    </div>
   </body>
   <script>
+
     function unload() {
         var request = new XMLHttpRequest();
         request.open('GET', '/monitorUsage?page=/&id=<%=userId%>', true);
@@ -825,11 +850,21 @@
         document.getElementById("calendarMonth").innerText = child;
         $("#calendarBodies").animate({scrollLeft: Math.round(bodies.scrollLeft/(width))*(width)}, 150);
     });
+
+    document.onclick = function() {
+        let shownAlerts = document.getElementById("shown");
+        if (shownAlerts.style.top == "20%") {
+            shownAlerts.style.top = "-200px";
+        }
+    }
     window.onload = function() {
         backdrop.scrollLeft = window.innerWidth;
         let child = document.getElementsByClassName("calendarTile")[4].getAttribute("month");
         document.getElementById("calendarMonth").innerText = child;
         $("#calendarBodies").animate({scrollLeft: Math.round(4)*(width)}, 100);
+        let shownAlerts = document.getElementById("shown");
+        console.log(shownAlerts);
+        shownAlerts.style.top = "20%";
     }
   </script>
 </html>
