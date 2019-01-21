@@ -602,8 +602,8 @@
                 <div class="dayHolder">
                     <% for (var i = 0; i < courses.length; i++) { %>
                         <% if (i == courses.length-1) { %>
-                            <!-- <div class="dayBlock"> -->
-                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
+                            <div class="dayBlock">
+                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>"> -->
                                 <div class="dayIcon">
                                     <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -616,13 +616,13 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
-                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
+                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
                                     </div>
                                 </div>
                             </div>
                         <% } else { %>
-                            <!-- <div class="dayBlock"> -->
-                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
+                            <div class="dayBlock">
+                            <!-- <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>"> -->
                                 <div class="dayIcon">
                                         <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                         <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -635,7 +635,7 @@
                                     </div>
                                     <div class="timeBlock">
                                         <%=courses[i][0]%>
-                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
+                                        <!-- <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%> -->
                                     </div>
                                 </div>
                             </div>
