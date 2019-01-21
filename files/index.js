@@ -3064,9 +3064,9 @@ app.get("/", async function(req, res) {
       
       let alert = user.alerts[user.alerts.length-1];
       
-      let currentClass = ["current", new EmptyCourse("Nothing!", "A")];
+      let currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
       let foundCurrent = false;
-      let nextClass = ["next", new EmptyCourse("Nothing!", "A")];
+      let nextClass = ["Next", new EmptyCourse("Nothing!", "A")];
       let foundNext = false;
       
       if (today) {
