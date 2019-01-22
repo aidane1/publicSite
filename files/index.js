@@ -2983,6 +2983,20 @@ app.get("/updateAssignmentChecked", async function(req, res) {
   }
 })
 
+app.get("/static", async function(req, res) {
+  try {
+    if (req.query.src && req.query.title && req.query.backLink) {
+      res.render("redesign/static", {src: req.query.src, title: req.query.title, back:req.query.backLink});
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/login");
+  }
+  
+});
+
 app.get("/course", async function(req, res) {
   try {
     if (req.session.userId && req.query.courseId) {

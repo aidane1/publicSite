@@ -822,7 +822,7 @@
             document.getElementById("customTitle").innerText = json.assignment;
             
         } else {
-            document.getElementById("customTitle").innerHTML = `<a target = '_blank' href = '/public/assignments/${json.assignment.split("_")[json.assignment.split("_").length-1]}'>${json.assignment.split("_").slice(0, json.assignment.split("_").length-1).join("_") || "Link"}</a>`
+            document.getElementById("customTitle").innerHTML = `<a target = '_blank' href = '/static?src=/public/assignments/${json.assignment.split("_")[json.assignment.split("_").length-1]}&title=${json.assignment.split("_").slice(0, json.assignment.split("_").length-1).join("_") || "Link"}&backLink=/course?courseId=<%=course._id%>'>${json.assignment.split("_").slice(0, json.assignment.split("_").length-1).join("_") || "Link"}</a>`
         }
         document.getElementById("customTopic").innerText = json.topic || "No Topic";
         document.getElementById("customDue").innerText = json.due;
