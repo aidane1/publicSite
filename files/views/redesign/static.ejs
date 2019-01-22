@@ -24,7 +24,7 @@
         .embeddedFile {
             width: 100%;
             height: 100%;
-            overflow: auto;
+            /* overflow: auto; */
         }
         .homeHeader {
             width: 100%;
@@ -67,6 +67,9 @@
             <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
         </div>
     </div>
-    <iframe src = "<%=src%>" class = "embeddedFile"></iframe>
+    <div class="iframeHolder" style = "overflow: auto;-webkit-overflow-scrolling:touch">
+        <iframe src = "<%=src%>" class = "embeddedFile"></iframe>
+    </div>
+    
 </body>
 </html>
