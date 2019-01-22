@@ -1581,18 +1581,24 @@ app.post("/updateManyCourse", urlencodedParser, async function(req, res) {
 });
 
 app.get("/teacher/:id", async function(req, res) {
-  if (req.session.userId) {
-    let user = await User.findOne({_id : req.session.userId});
-    let teacher = await Teachers.findOne({_id : req.params.id});
-    if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-      let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-      res.render("teacherdashboard/teacherDashboard", {courses: courses, teacher: teacher});
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+        res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher});
+      } else {
+        res.redirect("/dashboard");
+      }
     } else {
-      res.redirect("/dashboard");
+      res.redirect("/login");
     }
-  } else {
+  } catch(e) {
+    console.log(e);
     res.redirect("/login");
   }
+  
 });
 
 app.get("/teacher/:id/:course/overview", async function(req, res) {
