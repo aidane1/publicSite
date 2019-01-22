@@ -491,7 +491,7 @@
             /* border: 1px solid #999; */
             transition: max-height 0.12s ease-out;
             z-index: 1000;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .dropdownOption {
             padding-top: 12px;
@@ -795,10 +795,9 @@
                     <div class="dropdown" id = "dropdown">
                         <div class="dropdownOption" onclick = "selectTopic(this)">No Topic</div>
                         <div class="dropdownOption" id = "createTopicButton" onclick = "openCreateTopic()">Create Topic</div>
-                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic1</div>
-                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic2</div>
-                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic3</div>
-                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic4</div>
+                        <% for (var i = 0; i < topics.length; i++) { %>
+                            <div class="dropdownOption" onclick = "selectTopic(this)"><%=topics[i]%></div>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -858,7 +857,7 @@
         let due = document.getElementById("assignmentDue").value;
         let topic;
         if (customTopic) {
-            topic = document.getElementById("newTopic").value;
+            topic = document.getElementById("newTopic").value + "&customTopic=true";
         } else {
             topic = document.getElementById("dropDownButton").innerText;
         }

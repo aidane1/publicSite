@@ -2988,7 +2988,8 @@ app.get("/course", async function(req, res) {
           for (var i = 0; i < user.completedAssignments.length; i++) {
             sendCompleted.push(user.completedAssignments[i].toString());
           }
-          res.render("redesign/courseInfo", {completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: notes, assignments: sendAssignments});
+          let topics = course.topics;
+          res.render("redesign/courseInfo", {topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: notes, assignments: sendAssignments});
         } else {
           res.redirect("/");
         }
@@ -3006,12 +3007,14 @@ app.get("/course", async function(req, res) {
 });
 
 app.post("/createUserAssignment",urlencodedParser, async function(req,res) {
-  console.log(req.body);
+  
   try {
     if (req.session.userId && req.body.info && req.body.due && req.query.course) {
+      if (req.body.customTopic == "true") {
+        await Course.findOneAndUpdate({_id : req.query.course}, {$push: {topics: req.body.topic}});
+      }
       let user = await User.findOne({_id : req.session.userId});
       let info = await createAssignment(user._id, "text", req.body.info, req.body.notes || "", req.body.due, req.query.course, req.body.topic || "No Topic", false);
-      console.log(info);
       res.send(info);
     }
   } catch(e) {
