@@ -1610,7 +1610,7 @@ app.get("/teacher/:id/:course/overview", async function(req, res) {
         let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
         let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
         if (course != null && course.teacher.toString() == teacher._id.toString()) {
-          res.render("teacherdashboard/teacherOverview", {course: course, courses: courses, teacher: teacher});
+          res.render("teacherDashboard/teacherOverview", {course: course, courses: courses, teacher: teacher});
         } else {
           res.redirect("/teacher/" + req.query.id);
         }
@@ -1635,7 +1635,7 @@ app.get("/teacher/:id/:course/assignments", async function(req, res) {
         let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
         let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
         if (course != null && course.teacher.toString() == teacher._id.toString()) {
-          res.render("teacherdashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
+          res.render("teacherDashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
         } else {
           res.redirect("/teacher/" + req.query.id);
         }
