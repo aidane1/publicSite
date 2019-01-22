@@ -272,8 +272,9 @@
             padding-left: 5px;
             padding-right: 5px;
             z-index: 2;
+            /* font-size: 40px; */
         }
-        .assignment:hover .editcourse {
+        .assignment:hover .editAssignment {
             visibility: visible;
         }
         .editDelete {
@@ -392,6 +393,23 @@
             top: 100px !important;
             cursor: pointer;
         }
+        .removeNewTopic {
+            font-size: 18px;
+            /* display: block; */
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .customAdd {
+            width: calc(100% - 30px);
+            flex-grow: 0;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -446,7 +464,7 @@
                         </div>
                     </div>
                     <div class="assignmentCategoriesBar">
-                        <div class="assignmentCategory">Submitted By</div>
+                        <div class="assignmentCategory">Topic</div>
                         <div class="assignmentCategory">Type</div>
                         <div class="assignmentCategory">Assignment</div>
                         <div class="assignmentCategory">Notes</div>
@@ -457,7 +475,19 @@
                             <div class="createAssignmentBlock">
                                 <!-- <input type="text" class = "addInput"> -->
                                 
-                                <input type = "text" class = "addInput" value = "~Me~" readonly="true">
+                                <!-- <input type = "text" class = "addInput" value = "~Me~" readonly="true"> -->
+                                <div class="optionsHolder">
+                                    <select id = "assignmentTopic" onchange = "assignmentSwitch(this.value)" style = "display: block">
+                                        <option value = "0">No Topic</option>
+                                        <option value = "1">Choose Topic</option>
+                                        <% for (var i = 0; i < course.topics.length; i++) { %>
+                                            <option value="<%=course.topics[i]%>"><%=course.topics[i]%></option>
+                                        <% } %>
+                                    </select>
+                                    <div id="customTopicInput" style = "width: 100%; display: flex; flex-direction: row; display: none">
+                                        <input type="text" id = "customTopicText" placeholder="New Topic..." class = "customAdd"><i class="fas fa-times removeNewTopic" onclick = "removeNewTopic()"></i>
+                                    </div>
+                                </div>
                             </div>
                             <div class="createAssignmentBlock">
                                 <div class="optionsHolder">
@@ -488,8 +518,8 @@
                     </div>
                     <div class="assignmentsBody">
                         <% for (var i =0 ; i < assignments.length; i++) { %>
-                            <div class="assignment">
-                                <div class="assignmentProperty"><%=assignments[i].submittedBy.username%></div>
+                            <div class="assignment" id = "assignment_<%=assignments[i]._id%>">
+                                <div class="assignmentProperty"><%=assignments[i].topic%></div>
                                 <div class="assignmentProperty"><%=assignments[i].type%></div>
                                 <div class="assignmentProperty">
                                     <% if (assignments[i].type == "text") { %>
@@ -501,10 +531,11 @@
                                 </div>
                                 <div class="assignmentProperty"><%=assignments[i].notes%></div>
                                 <div class="assignmentProperty"><%=assignments[i].due%></div>
+                                <i class="fas fa-ellipsis-v editAssignment"></i>
                                 <i class="fas fa-ellipsis-v editAssignment" onclick = "openEdit(this)">
                                     <div class="editDelete">
-                                        <div class="edit" onclick = 'getCourse("<%=courses[i]._id%>")'>Edit</div>
-                                        <div class="delete" onclick = "removeCourse('<%=courses[i]._id%>')">Delete</div>
+                                        <div class="edit" onclick = 'getAssignment("<%=assignments[i]._id%>")'>Edit</div>
+                                        <div class="delete" onclick = "removeAssignment('<%=assignments[i]._id%>')">Delete</div>
                                     </div>
                                 </i>
                             </div>
@@ -533,11 +564,50 @@
     });
     let pond = FilePond.create(inputElement);
     pond.on("processfile", function(err, file) {
-        // console.log(file.serverId);
         fileName = file.serverId;
     });
 </script>
 <script>
+    let customTopic = false;
+    function openEdit(element) {
+        element.children[0].style.display = "flex";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function removeNewTopic() {
+        let input = document.getElementById("customTopicInput");
+        let select = document.getElementById("assignmentTopic");
+        input.style.display = "none";
+        select.style.display = "block";
+    }
+    function removeAssignment(id) {
+        sendGetRequest("id=" + id, "/removeAssignment/<%=course.teacher%>/<%=course._id%>", function(res) {
+            console.log(res);
+            if (res[0] == true) {
+                let assignment = document.getElementById("assignment_" + id);
+                console.log("assignment_" + id);
+                assignment.parentNode.removeChild(assignment);
+            } else {
+
+            }
+        });
+    }
+    function assignmentSwitch(value) {
+        let input = document.getElementById("customTopicInput");
+        let select = document.getElementById("assignmentTopic");
+        if (value == "1") {
+            input.style.display = "block";
+            select.style.display = "none";
+            customTopic = true;
+        } else {
+            input.style.display = "none";
+            select.style.display = "block";
+            customTopic = false;
+        }
+    }
     function fileSwitch(value) {
         if (value == "text") {
             document.getElementById("assignmentInfo").style.display = "block";
@@ -568,8 +638,14 @@
         }
         let notes = document.getElementById("assignmentNotes").value;
         let due = document.getElementById("assignmentDue").value;
+        let topic;
+        if (customTopic) {
+            topic = document.getElementById("customTopicText").value;
+        } else {
+            topic = document.getElementById("assignmentTopic").value;
+        }
         if (sendable) {
-            let sendString = "type=" + type + "&info=" + info + "&notes=" + notes + "&due=" + due;
+            let sendString = "type=" + type + "&info=" + info + "&notes=" + notes + "&due=" + due + "&topic=" + topic + "&customTopic=" + customTopic;
             sendPostRequest(sendString, "/uploadAssignment/<%=course.teacher%>/<%=course._id%>", function(response) {
                 fileName = "";
             });

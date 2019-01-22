@@ -1650,7 +1650,26 @@ app.get("/teacher/:id/:course/assignments", async function(req, res) {
   }
 });
 
-
+app.get("/removeAssignment/:teacher/:course", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id: req.params.teacher});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let assignment = await Assignments.findOneAndDelete({_id : req.query.id});
+        console.log(assignment);
+        res.send([true, assignment]);
+      } else {
+        res.send([false, "you must be an admin to remove assignments"]);
+      } 
+    } else {
+      res.send([false, "please fill in all input fields"]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please try again."]);
+  }
+});
 app.post("/uploadTeacherFile", async function(req, res) {
   try {
     let assignment = req.files.filepond;
@@ -1700,12 +1719,16 @@ async function createAssignment(user, type, info, notes, due, course, topic, con
 
 app.post("/uploadAssignment/:teacher/:course", urlencodedParser, async function(req, res) {
   try {
-    if (req.session.userId && req.body.type && req.body.info && req.body.notes && req.body.due && req.params.course) {
+    if (req.session.userId && req.body.type && req.body.info && req.body.notes && req.body.due && req.params.course && req.body.topic) {
       let user = await User.findOne({_id : req.session.userId});
-      let teacher = await User.findOne({_id: req.params.teacher});
+      let teacher = await Teachers.findOne({_id: req.params.teacher});
       let confirmed = false;
       if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
         confirmed = true;
+      }
+      console.log(req.body.customTopic);
+      if (req.body.customTopic == "true") {
+        await Course.findOneAndUpdate({_id : req.params.course}, {$push: {topics: req.body.topic}});
       }
       let assignment = {
         confirmed: confirmed, 
@@ -1716,9 +1739,9 @@ app.post("/uploadAssignment/:teacher/:course", urlencodedParser, async function(
         due: req.body.due,
         date: (new Date()).local(),
         forCourse: req.params.course,
+        topic: req.body.topic || "No Topic"
       }
       Assignments.create(assignment, function(err, assignment) {
-        console.log(assignment);
         if (err) {
           console.log(err);
           res.send([false, "An unknown error occured. Please try again."]);
@@ -2070,24 +2093,24 @@ app.post("/create-school", urlencodedParser, function(req, res) {
   }
 });
 
-app.get("/admin", function(req, res) {
-  res.cookie("path", "/admin");
-  if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      if (err) {
-        res.redirect("/");
-      } else {
-        if (user.permissions == "admin") {
-          res.render("admin", {colours : user.colors, font : holidayFont(user.font)});
-        } else {
-          res.redirect("/");
-        }
-      }
-    });
-  } else {
-    res.redirect("/login");
-  }
-});
+// app.get("/admin", function(req, res) {
+//   res.cookie("path", "/admin");
+//   if (req.session.userId) {
+//     User.findOne({_id : req.session.userId}, function(err, user) {
+//       if (err) {
+//         res.redirect("/");
+//       } else {
+//         if (user.permissions == "admin") {
+//           res.render("admin", {colours : user.colors, font : holidayFont(user.font)});
+//         } else {
+//           res.redirect("/");
+//         }
+//       }
+//     });
+//   } else {
+//     res.redirect("/login");
+//   }
+// });
 
 app.get("/admin/block-schedule", function(req, res) {
   res.cookie("path", "/admin/block-schedule");
