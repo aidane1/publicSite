@@ -29,7 +29,10 @@ const CourseSchema = new Schema({
   semester: {
     type: Schema.Types.ObjectId,
     ref: "Semester"
-  }
+  },
+  topics: {
+    type: [{type: String}],
+  },
 });
 
 var Course = mongoose.model('Course', CourseSchema);

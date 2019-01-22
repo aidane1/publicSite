@@ -527,8 +527,10 @@
     let fileName = "";
     let inputElement = document.getElementById("assignmentFile");
     FilePond.setOptions({
-        server: "/uploadTeacherFile",
-    })
+        server: {
+            url: "/uploadTeacherFile",
+        }
+    });
     let pond = FilePond.create(inputElement);
     pond.on("processfile", function(err, file) {
         // console.log(file.serverId);

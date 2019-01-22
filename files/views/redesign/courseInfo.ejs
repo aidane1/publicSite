@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src = "/public/js/asyncRequest.js"></script>
+    <script src = "/public/js/moment.js"></script>
     <title><%=course.course%></title>
     <style>
         * {
@@ -18,7 +20,7 @@
             margin: 0;
             padding: 0;
         }
-        .backdrop {
+        .myBackdrop {
             width: 100%;
             height: 100%;
             background-color: rgb(240,240,240);
@@ -305,6 +307,9 @@
             height: calc(100% - 150px);
             padding: 20px;
             overflow: auto;
+            position: relative;
+            z-index: 99;
+            
         }
         textarea {
             border: 0;
@@ -443,7 +448,7 @@
             flex-direction: row;
             align-items: center;
             border-bottom: 1px solid rgb(210,210,210);
-
+            overflow: hidden;
         }
         .openOrChecked {
             font-size:35px;
@@ -453,10 +458,12 @@
         .assignmentActionTitle {
             margin-bottom: 5px;
             font-size: 16px;
+            white-space: nowrap;
         }
         .assignmentDate {
             font-size: 14px;
             color: rgb(190,190,190);
+            white-space: nowrap;
         }
         .openEdit {
             /* justify-self: end; */
@@ -464,11 +471,130 @@
         .last {
             border: 0 !important;
         }
-
+        .dropdownHolder {
+            position: relative;
+            left: 20px;
+            top: 1px;
+            color: black;
+            z-index: 102;
+        }
+        .dropdown {
+            font-size: 13px;
+            position: absolute;
+            top: -10px;
+            left: 0px;
+            max-height: 0px;
+            overflow: hidden;
+            visibility: hidden;
+            min-width: 100px;
+            box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
+            /* border: 1px solid #999; */
+            transition: max-height 0.12s ease-out;
+            z-index: 1000;
+            margin-bottom: 10px;
+        }
+        .dropdownOption {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-left: 10px;
+            text-align: left;
+            /* border: 1px solid black; */
+            background-color: white;
+        }
+        .droppedDropDown {
+            overflow: auto;
+            max-height: 160px;
+            visibility: visible;
+        }
+        .createTopic {
+            margin-top: 20px;
+            color: rgb(190,190,190);
+            display: flex;
+            flex-direction: row;
+        }
+        #createTopicButton {
+            border-bottom: 1px solid #aaa;
+        }
+        .createTopicInput {
+            position: relative;
+            left: 20px;
+            top: 1px;
+            color: black;
+            max-width: 0px;
+            width: 190px;
+            visibility: hidden;
+            transition: max-width 0.2s ease-out;
+            overflow: hidden;
+            max-height: 30px;
+            z-index: 101;
+        }   
+        .createTopicInput textarea {
+            font-size: 17px;
+            padding-bottom: 0px;
+            height: 30px;
+            max-width: 170px;
+            width: 170px;
+        }
+        .openInput {
+            max-width: 190px;
+            visibility: visible;
+        }
+        .removeNewTopic {
+            position: relative;
+            top: -5px;
+        }
+        .assignmentDisplayBox {
+            display: none;
+            width: 92%;
+            height: 50%;
+            position: fixed;
+            top: 25%;
+            left: 4%;
+            /* border-radius: 10px; */
+            background-color: white;
+            -webkit-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
+            -moz-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
+            box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
+            overflow: hidden;
+        }
+        .assignmentDisplayTopBar {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            /* padding: 5px 10px 5px 30px; */
+            padding-left: 30px;
+            padding-right: 10px;
+            border-bottom: 1px solid rgb(210,210,210);
+            color: #174ea6;
+            font-weight: 500;
+        }
+        .assignmentDisplayBody {
+            width: 100%;
+            height: calc(100% - 50px);
+            overflow: auto;
+            padding: 20px;
+        }
+        .customDisplayInfo {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .customDisplayTitle {
+            font-weight: 500;
+            font-size: 19px;
+            color: #174ea6;
+        }
+        .customDisplayBody {
+            font-size: 14px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="backdrop" id = "backdrop">
+    <div class="myBackdrop" id = "backdrop">
         <div class="homeHeader">
             <div class="homeRow">
                 <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
@@ -499,39 +625,11 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="notesAndAssignments">
-            <div class="assignments">
-                <div class="assignmentsTitle">Assignments &nbsp;<i class="fas fa-chevron-right smallFont"></i></div>
-                <div class="assignmentsBody">
-                    <div class="assignment">
-                        <div class="box"></div>
-                        <div class="assignmentInfo">
-                            First off FUCK your bitch
-                        </div>
-                    </div>
-                    <div class="assignment completedAssignment">
-                        <div class="box"></div>
-                        <div class="assignmentInfo">
-                            First off FUCK your bitch
-                        </div>
-                    </div>
-                    <div class="assignment">
-                        <div class="box"></div>
-                        <div class="assignmentInfo">
-                            First off FUCK your bitch
-                        </div>
-                    </div>
-                </div>
-            </div>    
-            <div class="notes">
-                <div class="notesTitle">Notes &nbsp;<i class="fas fa-chevron-right smallFont"></i></div>
-            </div>
-        </div> -->
         <div class="infoTab">
             <div class="infoTabBar">
                 <div class="infoTabHolders">
                     <div class="infoTabTab infoTabSelected">Assignments</div>
-                    <div class="infoTabTab">Notes</div>
+                    <!-- <div class="infoTabTab">Notes</div> -->
                 </div>
             </div>
             <div class="infoBody">
@@ -539,23 +637,63 @@
                     <div class = "createPlus">+</div><div class = "createText">Create</div>
                 </div>
                 <div class="topicList">
-                    <div class="topicGroup">
-                        <div class="topicGroupTitle">
-                            No Topic
+                    <% for (var i = 0; i < assignments.length; i++) { %>
+                        <div class="topicGroup">
+                            <div class="topicGroupTitle">
+                                <%=assignments[i][0]%>
+                            </div>
+                            <% for (var j = 0; j < assignments[i][1].length; j++) { %>
+                                <% if (j == assignments[i][1].length-1) { %>
+                                    <div class="topicAssignment last">
+                                        <% if (completedAssignments.indexOf(assignments[i][1][j]._id.toString()) >= 0) { %>
+                                            <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                        <% } else { %>
+                                            <!-- <%=completedAssignments.indexOf(assignments[i][1][j]._id.toString()) > 0%> -->
+                                            <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                                <i class="far fa-circle"></i>
+                                            </div>
+                                        <% } %>
+                                        <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[i][1][j])%>')">
+                                            <% if (assignments[i][1][j].type == "text") { %>
+                                                <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment%></div>
+                                            <% } else { %>
+                                                <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment.split("_").slice(0, assignments[i][1][j].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                            <% } %>
+                                            <div class="assignmentDate"><%=assignments[i][1][j].due%></div>
+                                        </div>
+                                        <div class="openEdit">
+
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <div class="topicAssignment">
+                                        <% if (completedAssignments.indexOf(assignments[i][1][j]._id.toString()) >= 0) { %>
+                                            <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                                <i class="far fa-circle"></i>
+                                            </div>
+                                        <% } %>
+                                        <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[i][1][j])%>')"> 
+                                            <% if (assignments[i][1][j].type == "text") { %>
+                                                <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment%></div>
+                                            <% } else { %>
+                                                <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment.split("_").slice(0, assignments[i][1][j].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                            <% } %>
+                                            <div class="assignmentDate"><%=assignments[i][1][j].due%></div>
+                                        </div>
+                                        <div class="openEdit">
+    
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% } %>
                         </div>
-                        <div class="topicAssignment last">
-                            <div class="openOrChecked" onclick="switchState(this)">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="assignmentAndDate">
-                                <div class="assignmentActionTitle">Fuck Sake</div>
-                                <div class="assignmentDate">tommorrow</div>
-                            </div>
-                            <div class="openEdit">
-                                <!-- <i class="fas fa-ellipsis-v"></i> -->
-                            </div>
-                        </div>
-                    </div>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -563,6 +701,61 @@
     <div class="darkModal" id = "darkModal">
 
     </div>
+    <div class="assignmentDisplayBox" id = "assignmentDisplayBox">
+        <div class="assignmentDisplayTopBar" id = "assignmentDisplayTopBar">
+            <div>Assignment</div>
+            <div onclick = "closeCustomModal()"><svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div>
+        </div>
+        <div class="assignmentDisplayBody">
+            <div class="customDisplayInfo">
+                <div class="customDisplayTitle">
+                    Title
+                </div>
+                <div class="customDisplayBody" id = "customTitle">
+                    Title
+                </div>
+            </div>
+            <div class="customDisplayInfo">
+                <div class="customDisplayTitle">
+                    Topic
+                </div>
+                <div class="customDisplayBody" id = "customTopic">
+                    Title
+                </div>
+            </div>
+            <div class="customDisplayInfo">
+                <div class="customDisplayTitle">
+                    Due
+                </div>
+                <div class="customDisplayBody" id = "customDue">
+                    Title
+                </div>
+            </div>
+            <div class="customDisplayInfo">
+                <div class="customDisplayTitle">
+                    Notes
+                </div>
+                <div class="customDisplayBody" id = "customNotes">
+                    Title
+                </div>
+            </div>
+            <div class="customDisplayInfo">
+                <div class="customDisplayTitle">
+                    Posted
+                </div>
+                <div class="customDisplayBody" id = "customPosted">
+                    Title
+                </div>
+            </div>
+            
+            <!-- <div><h3>Title</h3>Title</div>
+            <div><h3>Topic</h3>Title</div>
+            <div><h3>Due</h3>Title</div>
+            <div><h3>Posted</h3>Title</div> -->
+        </div>
+    </div>
+
+
     <div class="createAssignmentModal" id = "createAssignmentModal">
         <div class="assignmentTitle">
             <div>Assignment</div>
@@ -588,11 +781,33 @@
                 </div>
                 <textarea id = "assignmentDue"></textarea>
             </div>
+            <div class="createTopic">
+                Topic
+                <div class="createTopicInput" id = "createTopicInput">
+                    <textarea id = "newTopic"></textarea>
+                    <i class="fas fa-times removeNewTopic" onclick = "removeNewTopic()"></i>
+                    <!-- <div onclick = "removeNewTopic()"><svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div> -->
+                </div>
+                <div class="dropdownHolder" id = "dropdownHolder">
+                    <div class="dropdownButton" id = "dropDownButton" onclick = "extendDropDown()">
+                        No Topic
+                    </div>
+                    <div class="dropdown" id = "dropdown">
+                        <div class="dropdownOption" onclick = "selectTopic(this)">No Topic</div>
+                        <div class="dropdownOption" id = "createTopicButton" onclick = "openCreateTopic()">Create Topic</div>
+                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic1</div>
+                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic2</div>
+                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic3</div>
+                        <div class="dropdownOption" onclick = "selectTopic(this)">Topic4</div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <div class="createAssignmentBottom">
             <div class="iconsRow">
                     <svg onclick = "emptyModal()" focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 4V3H9v1H4v2h1v13c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6h1V4h-5zm2 15H7V6h10v13z"></path><path d="M9 8h2v9H9zm4 0h2v9h-2z"></path></svg>
-                    <div class="createAssignmentButton" id = "createAssignmentButton">
+                    <div class="createAssignmentButton" id = "createAssignmentButton" onclick = "createAssignment()">
                         Create
                     </div>
             </div>
@@ -601,6 +816,33 @@
 </body>
 <script>
     let validAssignment = false;
+    let customTopic = false;
+    function openAssignment(json) {
+        json = JSON.parse(json);
+        if (json.type == "text") {
+            document.getElementById("customTitle").innerText = json.assignment;
+            
+        } else {
+            document.getElementById("customTitle").innerHTML = `<a href = '/public/assignments/${json.assignment.split("_")[json.assignment.split("_").length-1]}'>${json.assignment.split("_").slice(0, json.assignment.split("_").length-1).join("_") || "Link"}</a>`
+        }
+        document.getElementById("customTopic").innerText = json.topic || "No Topic";
+        document.getElementById("customDue").innerText = json.due;
+        document.getElementById("customNotes").innerHTML = json.notes || "No Notes";
+        document.getElementById("customPosted").innerText = moment(json.date).format('MMMM Do YYYY, h:mm:ss a') ;
+        let modal = document.getElementById("darkModal");
+        let createAssignment = document.getElementById("assignmentDisplayBox");
+        modal.style.display = "block";
+        createAssignment.style.display = "block";
+        document.getElementById("backdrop").style.overflow = "hidden";
+        console.log(json);
+    }
+    function closeCustomModal() {
+        let modal = document.getElementById("darkModal");
+        let createAssignment = document.getElementById("assignmentDisplayBox");
+        modal.style.display = "none";
+        createAssignment.style.display = "none";
+        document.getElementById("backdrop").style.overflow = "auto";
+    }
     function checkIfValid(element) {
         let button = document.getElementById("createAssignmentButton");
         if (element.value) {
@@ -608,6 +850,70 @@
             button.classList.add("allowed");
         } else {
             button.classList.remove("allowed");
+        }
+    }
+    function createAssignment() {
+        let info = document.getElementById("assignmentTitle").value;
+        let notes = document.getElementById("assignmentNotes").value;
+        let due = document.getElementById("assignmentDue").value;
+        let topic;
+        if (customTopic) {
+            topic = document.getElementById("newTopic").value;
+        } else {
+            topic = document.getElementById("dropDownButton").innerText;
+        }
+        let sendString = "info=" + info + "&due=" + due + "&notes=" + notes + "&topic=" + topic;
+        if (info && due) {
+            sendPostRequest(sendString, "/createUserAssignment?course=<%=course._id%>", function(res) {
+                if (res[0]) {
+                    location.reload();
+                }
+            });
+        }
+    }
+    function openCreateTopic() {
+        let dropdown = document.getElementById("dropdown");
+        let dropdownHolder = document.getElementById("dropdownHolder");
+        dropdownHolder.style.display = "none";
+        dropdown.classList.remove("droppedDropDown");
+        let input = document.getElementById("createTopicInput");
+        input.classList.add("openInput");
+        customTopic = true;
+
+    }
+    function removeNewTopic() {
+        let dropdownHolder = document.getElementById("dropdownHolder");
+        dropdownHolder.style.display = "block";
+        let input = document.getElementById("createTopicInput");
+        input.classList.remove("openInput"); 
+        customTopic = false;
+    }
+    function extendDropDown() {
+        let dropdown = document.getElementById("dropdown");
+        dropdown.classList.add("droppedDropDown");
+    }
+    function selectTopic(element) {
+        let dropdown = document.getElementById("dropdown");
+        dropdown.classList.remove("droppedDropDown");
+        let button = document.getElementById("dropDownButton");
+        button.innerText = element.innerHTML;
+    }
+    function switchState(element, id) {
+        if (element.classList.contains("open")) {
+            element.classList.remove("open");
+            element.classList.add("checked");
+            element.innerHTML = '<i class="fas fa-check-circle"></i>';
+            console.log(id);
+            sendGetRequest("checked=true&id=" + id, "/updateAssignmentChecked", function(res) {
+
+            });
+        } else {
+            element.classList.add("open");
+            element.classList.remove("checked");
+            element.innerHTML = '<i class="far fa-circle"></i>';
+            sendGetRequest("checked=false&id=" + id, "/updateAssignmentChecked", function(res) {
+
+            });
         }
     }
     function openModal() {

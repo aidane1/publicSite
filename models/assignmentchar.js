@@ -9,17 +9,29 @@ const AssignmentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+    type: {
+        type: String,
+        default: "text",
+    },
+    topic: {
+        type: String,
+        default: "No Topic",
+    },
     confirmed: {
         type: Boolean,
+        default: false,
     },
     assignment: {
         type: String,
+        required: true,
     },
     notes: {
         type: String,
+        default: "",
     },
     due: {
         type: String,
+        default: "",
     },
     date: {
         type: Date,

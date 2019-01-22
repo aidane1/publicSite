@@ -232,7 +232,7 @@ let path = require("path");
 
 // let tesseract = require("node-tesseract");
 
-let fileParser = require("express-fileupload");
+let fileUpload = require("express-fileupload");
 
 
 let storage = multer.diskStorage({
@@ -286,7 +286,7 @@ let app = express();
 app.set("view engine", "ejs");
 
 
-app.use(fileParser());
+app.use(fileUpload());
 
 app.use(session({
   secret: contents.secret,
@@ -366,7 +366,7 @@ function wwwHttpsRedirect(req, res, next) {
 };
 
 app.use(wwwHttpsRedirect);
-
+// 
 let server = app.listen(80, function() {
   console.log("listening for requests");
 });
@@ -1644,20 +1644,53 @@ app.get("/teacher/:id/:course/assignments", async function(req, res) {
   }
 });
 
+
 app.post("/uploadTeacherFile", async function(req, res) {
-  let assignment = req.files.filepond;
-  let extension = assignment.name.split(".")[assignment.name.split(".").length-1];
-  let name = (new Date()).getTime().toString() + "." + extension;
-  assignment.mv(__dirname + "/public/assignments/" + name, function(err) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send(err);
-    } else {
-      assignment.name = name;
-      res.send(name);
-    }
-  });
+  try {
+    let assignment = req.files.filepond;
+    let extension = assignment.name.split(".")[assignment.name.split(".").length-1];
+    let name = (new Date()).getTime().toString() + "." + extension;
+    assignment.mv(__dirname + "/public/assignments/" + name, function(err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      } else {
+        assignment.name = name;
+        res.send(name);
+      }
+    });
+  } catch(e) {
+    console.log(e);
+    return res.status(500).send(e);
+  }
+  
 });
+
+async function createAssignment(user, type, info, notes, due, course, topic, confirmed) {
+  console.log(user,type,info, notes, due, course, topic, confirmed);
+  try {
+    if (user && type && info && due && course && topic) {
+      let assignment = {
+        confirmed: confirmed, 
+        submittedBy: user,
+        type: type,
+        assignment: info,
+        notes: notes,
+        due: due,
+        date: (new Date()).local(),
+        forCourse: course,
+        topic: topic,
+      };
+      let newAssignment = await Assignments.create(assignment);
+      return [true, newAssignment];
+    } else {
+      return [false, {}];
+    }
+  } catch(e) {
+    console.log(e);
+    return [false, {}];
+  }
+}
 
 app.post("/uploadAssignment/:teacher/:course", urlencodedParser, async function(req, res) {
   try {
@@ -2894,6 +2927,33 @@ app.get("/swimming", async function(req, res) {
   res.render("swimming/swimmingRandomizer");
 });
 
+app.get("/updateAssignmentChecked", async function(req, res) {
+  console.log(req.query);
+  try {
+    if (req.session.userId && req.query.id && req.query.checked) {
+      let user = await User.findOne({_id : req.session.userId});
+      let completed = user.completedAssignments;
+      let found = false;
+      for (var i = 0; i < completed.length; i++) {
+        if (completed[i].toString() == req.query.id) {
+          found = true;
+          if (req.query.checked == "false") {
+            completed.splice(i, 1);
+          }
+        }
+      }
+      if (!found && req.query.checked == "true") {
+        completed.push(req.query.id);
+      }
+      await User.findOneAndUpdate({_id : user._id}, {$set: {completedAssignments: completed}});
+      res.send(true);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send(false);
+  }
+})
+
 app.get("/course", async function(req, res) {
   try {
     if (req.session.userId && req.query.courseId) {
@@ -2903,8 +2963,32 @@ app.get("/course", async function(req, res) {
         if (course != null) {
           let notes = await Notes.find({forCourse : course._id});
           let assignments = await Assignments.find({forCourse : course._id});
-          console.log(assignments);
-          res.render("redesign/courseInfo", {icons: iconMap, course: course, notes: notes, assignments: assignments});
+          let sendAssignments = [];
+          assignments.sort(function(a,b) {
+            console.log(a.topic.localeCompare(b.topic));
+            a.topic.localeCompare(b.topic);
+          });
+          let currentTopic = assignments[0] ? assignments[0].topic : "No Topic";
+          let currentTopicGroup = [currentTopic, []];
+          for (var i = 0; i < assignments.length; i++) {
+            if ((assignments[i].topic != currentTopicGroup[0])) {
+              currentTopicGroup[1].sort(function(a,b) {
+                return (a.date.getTime() > b.date.getTime()) ? -1 : 1;
+              });
+              sendAssignments.push(currentTopicGroup);
+              currentTopic = assignments[i].topic;
+              currentTopicGroup = [currentTopic, []];
+            }
+            currentTopicGroup[1].push(assignments[i]);
+            if (i == assignments.length-1) {
+              sendAssignments.push(currentTopicGroup);
+            }
+          }
+          let sendCompleted = [];
+          for (var i = 0; i < user.completedAssignments.length; i++) {
+            sendCompleted.push(user.completedAssignments[i].toString());
+          }
+          res.render("redesign/courseInfo", {completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: notes, assignments: sendAssignments});
         } else {
           res.redirect("/");
         }
@@ -2920,6 +3004,21 @@ app.get("/course", async function(req, res) {
   }
   
 });
+
+app.post("/createUserAssignment",urlencodedParser, async function(req,res) {
+  console.log(req.body);
+  try {
+    if (req.session.userId && req.body.info && req.body.due && req.query.course) {
+      let user = await User.findOne({_id : req.session.userId});
+      let info = await createAssignment(user._id, "text", req.body.info, req.body.notes || "", req.body.due, req.query.course, req.body.topic || "No Topic", false);
+      console.log(info);
+      res.send(info);
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/login");
+  }
+})
 
 app.get("/monitorUsage", async function(req, res) {
   try {

@@ -95,16 +95,27 @@ const UserSchema = new Schema({
     type : Schema.Types.ObjectId
   },
   blockNames: {
-    type : Object
+    type : Object,
+    default: {}
   },
   scheduleColours : {
-    type: Object
+    type: Object,
+    default: {},
   },
   anonPosts: {
-    type: Array
+    type: Array,
   },
   studentID: {
-    type: String
+    type: String,
+    default: "",
+  },
+  completedAssignments: {
+    type: [{type: Schema.Types.ObjectId, ref: "Assignments"}],
+    default: [],
+  },
+  completedNotes: {
+    type: [{type: Schema.Types.ObjectId, ref: "Notes"}],
+    default: [],
   }
 });
 
