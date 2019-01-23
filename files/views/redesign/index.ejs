@@ -773,7 +773,7 @@
     </div>
     <% if (alert) { %> 
         <% if (alert[0]) { %>
-            <div class="alert" id = "shown" onclick = "window.location = '<%=alert[0]%>'">
+            <div class="alert" id = "shown" onclick = "removeAlert(); window.location = '<%=alert[0]%>'">
                 <Strong>Notice:</Strong> <%=alert[1]%>
             </div>
         <% } else { %>
