@@ -543,7 +543,7 @@
         <div class="homeHolder" id = "homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
-                <div class="accountIcon"><img src = "/public/icons/accountIcon.svg" /></div>
+                <div class="accountIcon" onclick = "window.location='/account'"><img src = "/public/icons/accountIcon.svg" /></div>
                 <div class="displayText">Home</div>
                 <div class="refreshIcon"></div>
             </div>
@@ -771,12 +771,26 @@
                 </div>
         </div>
     </div>
-    <div class="alert">
-        <Strong>Notice!</Strong> xyz yeet yeet yeet
-    </div>
+    <% if (alert) { %> 
+        <% if (alert[0]) { %>
+            <div class="alert" id = "shown" onclick = "window.location = '<%=alert[0]%>'">
+                <Strong>Notice:</Strong> <%=alert[1]%>
+            </div>
+        <% } else { %>
+            <div class="alert" id = "shown">
+                <Strong>Notice:</Strong> <%=alert[1]%>
+            </div>
+        <% } %>
+        
+    <% } %>
+    
   </body>
   <script>
-
+    function removeAlert() {
+        var request = new XMLHttpRequest();
+        request.open('GET', '/removeAlert', true);
+        request.send(null);
+    }
     function unload() {
         var request = new XMLHttpRequest();
         request.open('GET', '/monitorUsage?page=/&id=<%=userId%>', true);
@@ -870,6 +884,7 @@
     document.onclick = function() {
         let shownAlerts = document.getElementById("shown");
         if (shownAlerts && shownAlerts.style.top == "20%") {
+            removeAlert();
             shownAlerts.style.top = "-200px";
         }
     }

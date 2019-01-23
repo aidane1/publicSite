@@ -230,6 +230,8 @@ let multer  = require('multer');
 
 let path = require("path");
 
+let serverCourse = require("../models/servercourseschar.js");
+
 // let tesseract = require("node-tesseract");
 
 let fileUpload = require("express-fileupload");
@@ -759,14 +761,52 @@ let iconMap = {
   "info tech.": ['<i style = "color: black" class="fas fa-tv"></i>', "#52c97a", "black"],
   "na": ['<i class="fas fa-file-signature"></i>', "white", "black"],
   "applied skills": ['<i style = "color: black" class="fas fa-cogs"></i>', "orange", "black"],
-  "art": ['', ""],
-  "courses": ['', ""],
+  "art": ['<i class="fas fa-palette"></i>', "#e57373", "black"],
+  "courses": ['<i class="fas fa-cube"></i>', "#64b5f6", "black"],
+  "events": ['<i class="fas fa-calendar"></i>', "#81c784", "black"],
+  "logout": ['<i class="fas fa-sign-out-alt"></i>', "#fff176", "black"],
+  "notes": ['<i class="fas fa-sticky-note"></i>', "#64b5f6", "black"],
+  'assignments': ['<i class="fas fa-scroll"></i>', "#e57373", "black"],
+  "reminders": ['<i class="fas fa-calendar-day"></i>', "#81c784", "black"],
+  "blockColours": ['<i class="fas fa-palette"></i>', "#BA68c8", "black"],
+  "blockTitles": ['<i class="fas fa-pen-square"></i>', "#64b5f6", "black"],
+  "dayTitles": ['<i class="fas fa-signature"></i>', "#81c784", "black"],
   "course": ['<i style = "color: white" class="fas fa-book-open"></i>', "black", "white"],
   "teacher": ['<i style = "color: white" class="fas fa-user"></i>', "black", "white"],
   "block": ['<i style = "color: white" class="fas fa-cube"></i>', "black", "white"],
 
 } 
 
+
+async function addAlerts(userIds, alertText, href) {
+  for (var i = 0; i < userIds.length; i++) {
+    await User.findOneAndUpdate({_id : userIds[i]}, {$push: {alerts: [[href, alertText]]}});
+  }
+}
+
+app.post("/createSchoolAlert", urlencodedParser, async function(req,res) {
+  try {
+    if (req.session.userId && req.body.alertText) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null && user.permissions == "admin") {
+        let users = await User.find({school: user.school});
+        let userIds = [];
+        for (var i = 0; i < users.length; i++) {
+          userIds.push(users[i]._id);
+        }
+        addAlerts(userIds, req.body.alertText, req.body.alertLink || "");
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } else {
+      res.send(false);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send(false);
+  }
+});
 function makeColorMap(blockNames) {
   let colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
   '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -2939,7 +2979,6 @@ function makeReadableSchedule(constant, schedule, blockMap) {
       for (var key in schedule.schedule[i])  {
         let currentDay = [];
         for (var j = 0; j < schedule.schedule[i][key].length; j++) {
-          console.log(schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1]);
           currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse("LC's", schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j]), (schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1])*1.3]);
         }
         currentSchedule[key] = currentDay;
@@ -3081,6 +3120,23 @@ app.get("/monitorUsage", async function(req, res) {
   }
   res.send(true);
 });
+
+app.get("/removeAlert", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      user.alerts.shift();
+      await User.findOneAndUpdate({_id : req.session.userId}, {$set: {alerts: user.alerts}});
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send(false);
+  }
+  
+})
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2019, 0, 11, 10,14);
@@ -3207,7 +3263,7 @@ app.get("/", async function(req, res) {
       
 
       
-      let alert = user.alerts[user.alerts.length-1];
+      let alert = user.alerts[0] || false;
       
       let currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
       let foundCurrent = false;
@@ -3235,7 +3291,7 @@ app.get("/", async function(req, res) {
                   currentClass =[timeToString(times[i-1]), blockMap[currentSchedule[i-1][0]]];
                 } else {
                   foundCurrent = true;
-                  currentClass = ["current", new EmptyCourse("Nothing!", "A")];
+                  currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
                 }
               }
               if (i == currentSchedule.length-1 && !foundCurrent && (times[i][2]*60 + times[i][3] > currentDate.getHours()*60 + currentDate.getMinutes())) {
@@ -3761,6 +3817,16 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
       let user = await User.findOne({$and: [{school: req.body.school}, {username: req.body.username}]});
       if (user == null) {
         if (school != null) {
+          let coursesExists = false;
+
+          let courses = [];
+          if (req.body.studentID) {
+            let studentCourses = await serverCourse.findOne({$and: [{school: school._id}, {studentId: req.body.studentID}]});
+            if (studentCourses != null) {
+              coursesExists = true;
+              courses = studentCourses.courses;
+            }
+          }
           //TODO: function to autofill users courses when they sign up
           let userObject = {
             firstName: "_",
@@ -3768,7 +3834,7 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
             username: req.body.username,
             password: req.body.password,
             studentID: req.body.studentID || "",
-            courses: [],
+            courses: courses,
             colors: {
               bgColor: "rgb(79, 49, 48)",
               textColor: "rgb(216, 215, 143)",
@@ -3787,7 +3853,11 @@ app.post("/signup", urlencodedParser, async function(req, res, next) {
               } else {
                 req.session.userId = user._id;
                 res.cookie("sessionID", req.session.userId);
-                res.redirect("/courses");
+                if (coursesExists) {
+                  res.redirect("/");
+                } else {
+                  res.redirect("/courses");  
+                }
               }
             });
           } catch(e) {

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Document</title>
     <style>
     * {
@@ -26,18 +28,18 @@
           overflow: hidden;
       }
       .backdrop {
-        height: calc(100% - 70px);
+        height: calc(100% - 50px);
         /* flex-grow: 1; */
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* flex-wrap: nowrap; */
         overflow-y: auto;
         -webkit-overflow-scrolling: auto;
         background-color: rgb(240,240,240);
       }
       .homeHeader {
           width: 100%;
-          height: 70px;
+          height: 50px;
           background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
       }
       .homeRow {
@@ -61,12 +63,119 @@
           justify-content: start;
           align-items: center;
       }
+      .bodySection {
+          margin-top: 20px;
+          border-bottom: 1px solid rgb(210,210,210);
+          border-top: 1px solid rgb(210,210,210);
+      }
       .infoRow {
           flex-grow: 1;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
       }
+      .displayText {
+        color: white;
+        font-size: 24px;
+        font-weight: 300;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .iconRow {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: white;
+        }
+        .infoRow {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-grow: 1;
+            border-bottom: 1px solid rgb(210,210,210);
+            justify-content: space-between;
+            /* padding-left: 5px; */
+            padding-right: 5px;
+        }
+        .infoKey {
+            font-size: 20px;
+            font-weight: 400;
+        }
+        .infoValue {
+            font-size: 18px;
+            font-weight: 100;
+        }
+        .last .infoRow {
+            border: none;
+        }
+        .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            margin-left: 7.5px;
+            margin-right: 7.5px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .iconBubble i {
+            font-size: 18px;
+        }
+        .courseInfo {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid rgb(210,210,210);
+            border-bottom: 1px solid rgb(210,210,210);
+            background-color: white;
+        }
+        .fa-chevron-right {
+            margin-left: 10px;
+            font-size: 20px;
+            color: orange;
+        }
+        .infoDisplay {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            background-color: white;
+            height: 70px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-top: 1px solid rgb(210,210,210);
+            border-bottom: 1px solid rgb(210,210,210);
+        }
+        .leftIcon {
+            height: 100%;
+            width: 70px;
+            font-size: 30px;
+            text-align: center;
+        }
+        .leftIcon i {
+            margin-top: 18px;
+        }
+        .username {
+            font-size: 23px;
+        }
+        .studentID {
+            font-size: 13px;
+        }
+        .lastBox {
+            margin-bottom: 20px;
+        }
       
     
     </style>
@@ -75,24 +184,92 @@
     <div class="homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
-                <div class="accountIcon"><img src = "/public/icons/accountIcon.svg" /></div>
+                <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
                 <div class="displayText">Account</div>
-                <div class="refreshIcon"></div>
+                <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
             </div>
         </div>
         <div class="backdrop">
+            <div class="infoDisplay">
+                <div class="leftIcon"><i class="fas fa-school"></i></div>
+                <div class="displayInformation">
+                    <div class="username">AidanEglin</div>
+                    <div class="studentID">student ID: <span contenteditable = "true">98208102</span></div>
+                </div>
+            </div>
             <div class="bodySection">
-                <div class="bodyLine">
-                    <div class="iconBubble">
-
-                    </div>
+                <div class="iconRow">
+                    <div class="iconBubble" style = "background-color: <%-icons['art'][1]%>"><%-icons["art"][0]%></div>
                     <div class="infoRow">
-                        <div class="name">
-                            Theme
-                        </div>
-                        <div class="arrow">
-                            
-                        </div>
+                        <div class="infoKey">Theme</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow" onclick = "window.location = '/courses'">
+                    <div class="iconBubble" style = "background-color: <%-icons['courses'][1]%>"><%-icons["courses"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Courses</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow" onclick = "window.location = '/events'">
+                    <div class="iconBubble" style = "background-color: <%-icons['events'][1]%>"><%-icons["events"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Events</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow last" onclick = "window.location = '/login'">
+                    <div class="iconBubble" style = "background-color: <%-icons['logout'][1]%>"><%-icons["logout"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Logout</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bodySection">
+                <div class="iconRow">
+                    <div class="iconBubble" style = "background-color: <%-icons['notes'][1]%>"><%-icons["notes"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Notes</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow">
+                    <div class="iconBubble" style = "background-color: <%-icons['assignments'][1]%>"><%-icons["assignments"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Assignments</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow last">
+                    <div class="iconBubble" style = "background-color: <%-icons['reminders'][1]%>"><%-icons["reminders"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Reminders</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bodySection lastBox">
+                <div class="iconRow">
+                    <div class="iconBubble" style = "background-color: <%-icons['blockColours'][1]%>"><%-icons["blockColours"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Block Colours</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow">
+                    <div class="iconBubble" style = "background-color: <%-icons['blockTitles'][1]%>"><%-icons["blockTitles"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Block Names</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow last">
+                    <div class="iconBubble" style = "background-color: <%-icons['dayTitles'][1]%>"><%-icons["dayTitles"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Day Titles</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div>
             </div>

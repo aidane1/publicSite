@@ -93,6 +93,30 @@ const SchoolSchema = new Schema({
   },
   schoolId: {
     type: String,
+  },
+  blockConversion: {
+    type: Object,
+    default: {
+      "02": "A",
+      "04": "B",
+      "07": "C",
+      "09": "D",
+      "11": "E",
+    },
+  },
+  courseBlockConversion: {
+    type: Object,
+    default: {
+      "01": "A",
+      "03": "B",
+      "05": "C",
+      "07": "D",
+      "09": "E",
+    }
+  },
+  sendAlerts: {
+    type: Array,
+    default: [],
   }
 });
 
