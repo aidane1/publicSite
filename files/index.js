@@ -3406,6 +3406,19 @@ app.get("/removeAlert", async function(req, res) {
   }
   
 })
+app.get("/updateStudentId", async function(req, res) {
+  try {
+    if (req.session.userId && req.query.id) {
+      console.log(req.query.id);
+      await User.findOneAndUpdate({_id : req.session.userId}, {$set: {studentID: req.query.id}});
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  } catch(e) {
+    res.send(false);
+  }
+});
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2019, 0, 11, 10,14);
