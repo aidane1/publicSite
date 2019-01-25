@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <style>
         * {
@@ -383,8 +384,9 @@
         .configureBox {
             width: 300px;
             min-height: 300px;
+            max-height: 500px;
             border-radius: 10px;
-            /* background-color: white; */
+            background-color: white;
             margin: 10px;
             box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
             -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
@@ -474,7 +476,7 @@
         .container {
         display: block;
         position: relative;
-        padding-left: 35px;
+        padding-left: 45px;
         margin-bottom: 12px;
         cursor: pointer;
         font-size: 22px;
@@ -482,10 +484,11 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        text-align: left;
         }
 
         /* Hide the browser's default radio button */
-        .container input {
+        .container input[type="radio"] {
         position: absolute;
         opacity: 0;
         cursor: pointer;
@@ -503,12 +506,12 @@
         }
 
         /* On mouse-over, add a grey background color */
-        .container:hover input ~ .checkmark {
+        .container:hover input[type="radio"] ~ .checkmark {
         background-color: #ccc;
         }
 
         /* When the radio button is checked, add a blue background */
-        .container input:checked ~ .checkmark {
+        .container input[type="radio"]:checked ~ .checkmark {
         background-color: #2196F3;
         }
 
@@ -520,7 +523,7 @@
         }
 
         /* Show the indicator (dot/circle) when checked */
-        .container input:checked ~ .checkmark:after {
+        .container input[type="radio"]:checked ~ .checkmark:after {
         display: block;
         }
 
@@ -532,6 +535,146 @@
             height: 8px;
             border-radius: 50%;
             background: white;
+        }
+        .centerVertical {
+            width: 100%;
+            height: 200px;
+            overflow: auto;
+            padding: 5px 10px 15px 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            margin-top: 15px;
+            font-size: 20px;
+        }
+        .blockType {
+            margin: auto;
+            margin-top: 5px;    
+            font-size: 15px;
+            width: 100px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border: 1px solid black;
+            text-align: center;
+            position: relative;
+        }
+        .removeBlock {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            /* background-color: red; */
+        }
+        .removeBlock svg {
+            width: 100%;
+            height: 100%;
+            fill: red;
+            background-color: white;
+            cursor: pointer;
+        }
+        .addBlock {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            /* background-color: red; */
+        }
+        .addBlock svg {
+            width: 100%;
+            height: 100%;
+            fill: green;
+            background-color: white;
+            cursor: pointer;
+        }
+        .semesterBlock {
+            width: 95%;
+            margin-left: 2.5%;
+            border: 1px solid #aaa;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .semesterName {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 5px;
+            margin-bottom: 2.5px;
+        }
+        .semesterDate {
+            margin-top: 2.5px;
+            margin-bottom: 2.5px;
+            font-size: 13px;
+        }
+        .semesterDate span {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .conversionKey {
+            text-align: center;
+            margin-top: 5px;
+            position: relative;
+        }
+        .removeKey {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            /* background-color: red; */
+        }
+        .removeKey svg {
+            width: 100%;
+            height: 100%;
+            fill: red;
+            /* background-color: white; */
+            cursor: pointer;
+        }
+        .conversionValue {
+            text-align: center;
+            margin-top: 5px;
+        }
+        .optionsHolder {
+            width: 100%;
+        }
+        .optionsHolder select {
+            padding: 5px 5px;
+            width: 100%;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            outline: none;
+        }
+        .optionsHolder option {
+            text-align: center;
+        }
+        .newBlock {
+            border-color: #ddd;
+            color: black;
+            outline: none;
+            caret-color: black;
+        }
+        .newBlock:focus {
+            border-color: black;
+        }
+        .divPlaceholder {
+            color: #ddd;
+            outline: none;
+        }
+        .customNumber {
+            width: 60px;
+            /* border: 1px solid black; */
+            text-align: center;
+            outline: none;
+            z-index: 100;
+            margin: auto;
+        }
+        .customLengthHolder {
+            font-weight: 600;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -617,14 +760,13 @@
                                 Changing
                             </span>
                             <label class="switch">
-                                <input type="checkbox" checked>
+                                <input value = "<%=school.constantBlocks == true ? "1" : "0"%>" onchange = "changeConstant(this)" type="checkbox" <%=school.constantBlocks == true ? "checked" : ""%>>
                                 <span class="slider round"></span>
                             </label>
                             <span class="switchText">
                                 Constant
                             </span>
                         </div>
-                        
                     </div>
                     <div class="configureBox">
                         <div class="configureHeader">Schedule Type</div>
@@ -632,30 +774,31 @@
                             This determines what format of schedule your school is using. The
                             rotation period is the length of the schedule before repeating. default is 1 week rotation.
                             <div class="center" style = "flex-direction: column">
-                            <label class="container">One
-                                <input type="radio" checked="checked" name="radio">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">Two
-                                <input type="radio" name="radio">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">Three
-                                <input type="radio" name="radio">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">Four
-                                <input type="radio" name="radio">
-                                <span class="checkmark"></span>
-                            </label>
+                                <label class="container">One Week Rotation
+                                    <input onchange = "updateScheduleType(this)" type="radio" name="radio" value = "1" <%=school["scheduleRollLength"] == 1 ? "checked='checked'" : ""%>>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container">Four Week Rotation
+                                    <input onchange = "updateScheduleType(this)" type="radio" value = "4" name="radio" <%=school["scheduleRollLength"] == 4 ? "checked='checked'" : ""%>>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container"> <i>n</i> Week Rotation
+                                    <input onchange = "updateScheduleType(this)" type="radio" value = "3" name="radio" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "checked='checked'" : ""%>>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <div class = "customLengthHolder" id = "customLengthHolder" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "style='display:block'" : "style=display:none"%>>
+                                        Schedule length is <div class = "customNumber" oninput = "updateScheduleCustom(this)" id = "customNumber" contenteditable="true"><%=school["scheduleRollLength"]%></div> Weeks
+                                </div>
                             </div>
-                            
                         </div>
                     </div>
                     <div class="configureBox">
                         <div class="configureHeader">Spare Name</div>
                         <div class="configureSecondary">
                             This is the name of your schools spare block. Default is "Spare".
+                        </div>
+                        <div class="center">
+                            <div style = "font-size: 30px; margin-top: 15px" contenteditable="true" oninput="updateSpareName(this.innerText)"><%=school.spareName%></div>
                         </div>
                     </div>
                     <div class="configureBox">
@@ -664,18 +807,71 @@
                             These are the possible names for blocks that students have no control over (ex. Lunch, or Advisory).
                             They will show up the same on everyones schedule. Defaults are Lunch and Advisory.
                         </div>
+                        <div class="centerVertical" id = "constantBlockList">
+                            <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                                <% if (school.blockNames[i][1] == "constant") { %>
+                                    <div class="blockType block_constant_<%=school.blockNames[i][0]%>">
+                                        <%=school.blockNames[i][0]%>
+                                        <div class="removeBlock" onclick = "deleteConstantBlock('<%=school.blockNames[i][0]%>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                            <div class="blockType newBlock" id = "createConstantBlock">
+                                <div class="divPlaceholder" contenteditable = "true" onclick = "clearText(this)">New...</div>
+                                <div class="addBlock" onclick = "sendConstantBlock(this.parentNode.children[0].innerText)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" baseProfile="tiny" x="0px" y="0px" viewBox="0 0 100 125" xml:space="preserve"><path d="M50,5C25.187,5,5,25.187,5,50s20.187,45,45,45s45-20.187,45-45S74.813,5,50,5z M50,90c-22.056,0-40-17.944-40-40   s17.944-40,40-40s40,17.944,40,40S72.056,90,50,90z"/><path d="M65,47.5H52.5V35c0-1.381-1.119-2.5-2.5-2.5s-2.5,1.119-2.5,2.5v12.5H35c-1.381,0-2.5,1.119-2.5,2.5s1.119,2.5,2.5,2.5   h12.5V65c0,1.381,1.119,2.5,2.5,2.5s2.5-1.119,2.5-2.5V52.5H65c1.381,0,2.5-1.119,2.5-2.5S66.381,47.5,65,47.5z"/></svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="configureBox">
                         <div class="configureHeader">Available Changing Blocks</div>
                         <div class="configureSecondary">
                             There are the possible names for blocks that students can change based on their selected courses. Defaults are
-                            A,B,C,D
+                            A,B,C,D,E
+                        </div>
+                        <div class="centerVertical" id = "changingBlockList">
+                            <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                                <% if (school.blockNames[i][1] == "changing") { %>
+                                    <div class="blockType block_changing_<%=school.blockNames[i][0]%>">
+                                        <%=school.blockNames[i][0]%>
+                                        <div class="removeBlock" onclick="deleteChangingBlock('<%=school.blockNames[i][0]%>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                            <div class="blockType newBlock" id = "createChangingBlock">
+                                <div class="divPlaceholder" contenteditable = "true" onclick = "clearText(this)">New...</div>
+                                <div class="addBlock" onclick = "sendChangingBlock(this.parentNode.children[0].innerText)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" baseProfile="tiny" x="0px" y="0px" viewBox="0 0 100 125" xml:space="preserve"><path d="M50,5C25.187,5,5,25.187,5,50s20.187,45,45,45s45-20.187,45-45S74.813,5,50,5z M50,90c-22.056,0-40-17.944-40-40   s17.944-40,40-40s40,17.944,40,40S72.056,90,50,90z"/><path d="M65,47.5H52.5V35c0-1.381-1.119-2.5-2.5-2.5s-2.5,1.119-2.5,2.5v12.5H35c-1.381,0-2.5,1.119-2.5,2.5s1.119,2.5,2.5,2.5   h12.5V65c0,1.381,1.119,2.5,2.5,2.5s2.5-1.119,2.5-2.5V52.5H65c1.381,0,2.5-1.119,2.5-2.5S66.381,47.5,65,47.5z"/></svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="configureBox">
                         <div class="configureHeader">Semesters</div>
                         <div class="configureSecondary">
-                            These are the options that will be presented to courses for start and end dates. Note: Linear should be added as its own semester.
+                            These are the options that will be presented to courses for start and end dates. Note: Linear should be added as its own semester. It is reccomended that the names of semesters be kept short.
+                        </div>
+                        <div class="centerVertical" style = "grid-template-columns: repeat(1, 1fr);">
+                            
+                            <% for (var i = 0; i < school.semesters.length; i++) { %>
+                                  
+                                <div class = "semesterBlock">
+                                        <div class="semesterName" contenteditable="true" oninput="sendNewSemesterName(this.innerText, '<%=school.semesters[i]._id%>')"><%=school.semesters[i].name%></div>
+                                        <div class="semesterDate">
+                                            <span>Starts on: &nbsp;</span><%=moment(school.semesters[i].startDate).format("MMMM Do YYYY")%>
+                                            <!-- <span>Stars on: </span><input type="date"> -->
+                                        </div>
+                                        <div class="semesterDate">
+                                            <span>Ends on: &nbsp;</span><%=moment(school.semesters[i].endDate).format("MMMM Do YYYY")%>
+                                        </div>
+                                    </div>
+                                
+                            <% } %>
                         </div>
                     </div>
                     <div class="configureBox">
@@ -683,6 +879,48 @@
                         <div class="configureSecondary">
                             When courses are parsed from files, the information is often not in the format you want. This tells the parser what block on your end corrisponds to what block on the schools end.
                         </div>
+                        <div class="centerVertical" id = "keyValueList">
+                            <% for (var key in school.blockConversion) { %>
+                                <div class="conversionKey" id = "key_<%=key%>">
+                                    <div onfocusout = "sendKeyCorrection('<%=key%>', this)" contenteditable="true"><%=key%></div>
+                                    <div class="removeKey" onclick = "deleteKeyValuePair('<%=key%>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>
+                                    </div>
+                                </div>
+
+                                <div class="conversionValue">
+                                    <div class="optionsHolder">
+                                        <select name="" id="value_<%=key%>" onchange="sendValueCorrection('<%=key%>', this)">
+                                            <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                                                <% if (school.blockNames[i][1] == "changing") { %>
+                                                    <% if (school.blockNames[i][0] == school.blockConversion[key]) { %>
+                                                        <option value = "<%=school.blockNames[i][0]%>" selected="selected"><%=school.blockNames[i][0]%></option>
+                                                    <% } else { %>
+                                                        <option value = "<%=school.blockNames[i][0]%>"><%=school.blockNames[i][0]%></option>
+                                                    <% } %>
+                                                <% } %>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            <% } %>
+                            <div class="conversionKey" style = "opacity: 0.3" id = "newKey" contenteditable="true" onfocusout = "createNewValuePair(this.innerText, 'newValue')" onclick = "clearText(this)">Block...</div>
+                            <div class="conversionValue" style = "opacity: 0.3">
+                                <div class="optionsHolder">
+                                    <select name="" id="newValue">
+                                        <% for (var i = 0; i < school.blockNames.length; i++) { %>
+                                            <% if (school.blockNames[i][1] == "changing") { %>
+                                                <option value = "<%=school.blockNames[i][0]%>"><%=school.blockNames[i][0]%></option>
+                                            <% } %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="configureBox">
+                        <div class="configureHeader">School Year</div>
+                        <div class="configureSecondary">This will control the running start and end dates to your school year. The default will be the first of September to the 30th of June</div>
                     </div>
                 </div>
             </div>
@@ -718,7 +956,176 @@
         }
     }
 
+    function clearText(element) {
+        element.innerText = "";
+    }
+
+    function changeConstant(element) {
+        let current = element.getAttribute("value");
+        element.setAttribute("value", current === "1" ? "0" : "1");
+        let value = current == "1" ? "false" : "true";
+        sendGetRequest("constantBlocks=" + value, "/changeScheduleType", function(res) {
+            console.log(res);
+        });
+    }
+
     
+    function updateScheduleCustom(element) {;
+        let value = parseInt(element.innerText);
+        if (isNaN(value)) {
+            value = 1;
+        }
+        sendGetRequest("scheduleLength=" + value, "/changeScheduleLength", function(res) {
+            console.log(res);
+        });
+    }
+
+    function updateScheduleType(element) {
+        let value = element.value;
+        let holder = document.getElementById("customLengthHolder");
+        if (element.value == "3") {
+            holder.style.display = "block";
+        } else {
+            holder.style.display = "none";
+            value = parseInt(value);
+            
+            sendGetRequest("scheduleLength=" + value, "/changeScheduleLength", function(res) {
+                console.log(res);
+            });
+        }
+    }
+
+    function updateSpareName(spare) {
+        sendGetRequest("spareName=" + spare, "/updateSpareName", function(res) {
+            console.log(res);
+        })
+    }
+
+    function sendConstantBlock(block) {
+        sendGetRequest("block=" + block, "/makeConstantBlock", function(res) {
+            if (res == true) {
+                let div = document.createElement("div");
+                div.className = "blockType block_constant_" + block;
+                let removeBlock = document.createElement("div");
+                removeBlock.className = "removeBlock";
+                removeBlock.setAttribute("onclick", `deleteConstantBlock("${block}")`);;
+                removeBlock.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>`;
+                div.innerText = block;
+                div.appendChild(removeBlock);
+                document.getElementById("constantBlockList").insertBefore(div, document.getElementById("createConstantBlock"));
+                document.getElementById("createConstantBlock").children[0].innerText = "New...";
+            } else {
+                document.getElementById("createConstantBlock").children[0].innerText = "New...";
+            }
+        });
+    }
+
+    function sendChangingBlock(block) {
+        sendGetRequest("block=" + block, "/makeChangingBlock", function(res) {
+            if (res == true) {
+                let div = document.createElement("div");
+                div.className = "blockType block_changing_" + block;
+                let removeBlock = document.createElement("div");
+                removeBlock.className = "removeBlock";
+                removeBlock.setAttribute("onclick", `deleteChangingBlock("${block}")`);;
+                removeBlock.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>`;
+                div.innerText = block;
+                div.appendChild(removeBlock);
+                document.getElementById("changingBlockList").insertBefore(div, document.getElementById("createChangingBlock"));
+                document.getElementById("createChangingBlock").children[0].innerText = "New...";
+            } else {
+                document.getElementById("createChangingBlock").children[0].innerText = "New...";
+            }
+        });
+    }
+
+    function deleteConstantBlock(block) {
+        sendGetRequest("block=" + block, "/deleteConstantBlock", function(res) {
+            let similarBlocks = document.getElementsByClassName("block_constant_" + block);
+            console.log(similarBlocks);
+            while (similarBlocks.length) {
+                similarBlocks[0].parentNode.removeChild(similarBlocks[0]);
+            }
+        });
+    }
+    
+    function deleteChangingBlock(block) {
+        sendGetRequest("block=" + block, "/deleteChangingBlock", function(res) {
+            let similarBlocks = document.getElementsByClassName("block_changing_" + block);
+            while (similarBlocks.length) {
+                similarBlocks[0].parentNode.removeChild(similarBlocks[0]);
+            }
+        });
+    }
+
+    function sendNewSemesterName(name, semester) {
+        sendGetRequest("name=" + name + "&semester=" + semester, "/renameSemester", function(res) {
+
+        });
+    }
+
+    function sendKeyCorrection(oldKey, element) {
+        let newKey = element.innerText || oldKey;
+        sendGetRequest("old=" + oldKey + "&new=" + newKey, "/keyCorrection", function(res) {
+            if (res == true) {
+                let old = document.getElementById("value_" + oldKey);
+                old.id = "value_" + newKey;
+                old.setAttribute("onchange", `sendValueCorrection("${newKey}", this)`);
+            }
+        });
+    }
+
+    function sendValueCorrection(key, element) {
+        // console.log(element.value);
+        sendGetRequest("key=" + key + "&value=" + element.value, "/valueCorrection", function(res) {
+
+        });
+    }
+
+    function deleteKeyValuePair(key) {
+        sendGetRequest("key=" + key, "/deleteKey", function(res) {
+            if (res == true) {
+                let keyDiv = document.getElementById("key_" + key);
+                let value = document.getElementById("value_" + key);
+                keyDiv.parentNode.removeChild(keyDiv);
+                value.parentNode.parentNode.parentNode.removeChild(value.parentNode.parentNode);
+            }
+        });
+    }
+
+    function createNewValuePair(key, element) {
+        element = document.getElementById(element);
+        let conversionKey = document.createElement("div");
+        let conversionChild = document.createElement("div");
+        let conversionValue = document.createElement("div");
+        let removeKey = document.createElement("div");
+        removeKey.setAttribute("onclick", `deleteKeyValuePair('${key}')`);
+        removeKey.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><g><g><path d="M69,31c-1.2-1.2-3.2-1.2-4.4,0L50,45.6L35.5,31c-1.2-1.2-3.2-1.2-4.4,0c-1.2,1.2-1.2,3.2,0,4.4L45.6,50L31,64.5    c-1.2,1.2-1.2,3.2,0,4.4c0.6,0.6,1.4,0.9,2.2,0.9c0.8,0,1.6-0.3,2.2-0.9L50,54.4L64.5,69c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9    c1.2-1.2,1.2-3.2,0-4.4L54.4,50L69,35.5C70.2,34.2,70.2,32.3,69,31z"/><path d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45S74.9,5,50,5z M77.4,77.4c-7.3,7.3-17,11.3-27.4,11.3    c-10.3,0-20.1-4-27.4-11.3c-7.3-7.3-11.3-17-11.3-27.4c0-10.3,4-20.1,11.3-27.4c7.3-7.3,17-11.3,27.4-11.3    c10.3,0,20.1,4,27.4,11.3c7.3,7.3,11.3,17,11.3,27.4C88.7,60.3,84.7,70.1,77.4,77.4z"/></g></g></svg>`;
+        removeKey.className = "removeKey";
+        conversionKey.className = "conversionKey";
+        conversionKey.id = "key_" + key;
+        conversionChild.setAttribute("contenteditable", "true");
+        conversionChild.setAttribute("onfocusout", `sendKeyCorrection('${key}', this)`);
+        conversionChild.innerText = key;
+        conversionKey.appendChild(conversionChild);
+        conversionKey.appendChild(removeKey);
+        conversionValue.className = "conversionValue";
+        let optionsHolder = document.createElement("div");
+        optionsHolder.className = "optionsHolder";
+        let optionsClone = element.cloneNode(true);
+        optionsClone.id = "value_" + key;
+        optionsClone.setAttribute("onchange", `sendValueCorrection('${key}', this)`);
+        optionsHolder.appendChild(optionsClone);
+        conversionValue.appendChild(optionsHolder);
+        let createKey = document.getElementById("newKey");
+        createKey.innerHTML = "Block...";
+        document.getElementById("keyValueList").insertBefore(conversionKey, createKey);
+        document.getElementById("keyValueList").insertBefore(conversionValue, createKey);
+        sendGetRequest("key=" + key + "&value=" + element.value, "/valueCorrection", function(res) {
+
+        });
+    }
+
 
 </script>
 <script>

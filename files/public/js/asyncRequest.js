@@ -11,8 +11,6 @@ function sendPostRequest(string, path, callback) {
         if (this.readyState == 4 && this.status == 200) {
             let response = JSON.parse(this.responseText);
             callback(response);
-        } else {
-            callback([false, "An unknown error occured. please refresh and try again."]);
         }
     }
     loadRequest.open("POST", path, true);
@@ -33,8 +31,6 @@ function sendGetRequest(string, path, callback) {
         if (this.readyState == 4 && this.status == 200) {
             let response = JSON.parse(this.responseText);
             callback(response);
-        } else {
-            callback([false, "An unknown error occured. please refresh and try again."]);
         }
     }
     loadRequest.open("GET", path + "?" + string, true);

@@ -1142,8 +1142,8 @@ app.get("/dashboard/configure", async function(req, res) {
     try {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
-        let school = await School.findOne({_id : user.school});
-        res.render("dashboard/configureDashboard", {school: school});
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        res.render("dashboard/configureDashboard", {moment: moment, school: school});
       } else {
         res.redirect("/login");
       }
@@ -1154,6 +1154,275 @@ app.get("/dashboard/configure", async function(req, res) {
     res.redirect("/login");
   }
 });
+
+app.get("/changeScheduleType", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.constantBlocks !== null) {
+        await School.findOneAndUpdate({_id : user.school}, {$set: {constantBlocks: req.query.constantBlocks == "true"}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/changeScheduleLength", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.scheduleLength !== null && parseInt(req.query.scheduleLength) > 0) {
+        let school = await School.findOne({_id : user.school});
+        let currentScheduleType = school.scheduleRollLength;
+        let newScheduleType = parseInt(req.query.scheduleLength);
+        let currentConstantSchedule = school.constantBlockSchedule.schedule[0];
+        let currentOtherSchedule = school.blockOrder[0];
+        let firstDayTitles = school.dayTitles[0];
+        if (newScheduleType >= currentScheduleType) {
+          for (var i = 0; i < newScheduleType-currentScheduleType; i++) {
+            school.constantBlockSchedule.schedule.push(currentConstantSchedule);
+            school.blockOrder.push(currentOtherSchedule);
+            school.dayTitles.push(firstDayTitles);
+          }
+        } else {
+          school.constantBlockSchedule.schedule = school.constantBlockSchedule.schedule.slice(0, newScheduleType);
+          school.blockOrder = school.blockOrder.slice(0, newScheduleType);
+          school.dayTitles = school.dayTitles.slice(0, newScheduleType);
+        }
+        await School.findOneAndUpdate({_id : school._id}, {$set: {scheduleRollLength: newScheduleType, dayTitles: school.dayTitles, blockOrder: school.blockOrder, "constantBlockSchedule.schedule" : school.constantBlockSchedule.schedule}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/updateSpareName", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.spareName !== null) {
+        await School.findOneAndUpdate({_id : user.school}, {$set: {spareName: req.query.spareName}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/makeConstantBlock", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.block !== null) {
+        let school = await School.findOne({_id : user.school});
+        let found = false;
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "constant" && school.blockNames[i][0] == req.query.block) {
+            found = true;
+          }
+        }
+        if (!found) {
+          school.blockNames.push([req.query.block, "constant"]);
+        }
+        await School.findOneAndUpdate({_id : user.school}, {$set: {blockNames: school.blockNames}});
+        res.send(!found);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/deleteConstantBlock", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.block !== null) {
+        let school = await School.findOne({_id : user.school});
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "constant" && school.blockNames[i][0] == req.query.block) {
+            school.blockNames.splice(i, 1);
+            i--;
+          }
+        }
+        await School.findOneAndUpdate({_id : user.school}, {$set: {blockNames: school.blockNames}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/makeChangingBlock", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.block !== null) {
+        let school = await School.findOne({_id : user.school});
+        let found = false;
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "changing" && school.blockNames[i][0] == req.query.block) {
+            found = true;
+          }
+        }
+        if (!found) {
+          school.blockNames.push([req.query.block, "changing"]);
+        }
+        await School.findOneAndUpdate({_id : user.school}, {$set: {blockNames: school.blockNames}});
+        res.send(!found);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/deleteChangingBlock", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.block !== null) {
+        let school = await School.findOne({_id : user.school});
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "changing" && school.blockNames[i][0] == req.query.block) {
+            school.blockNames.splice(i, 1);
+            i--;
+          }
+        }
+        await School.findOneAndUpdate({_id : user.school}, {$set: {blockNames: school.blockNames}});
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/renameSemester", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.name !== null && req.query.semester !== null) {
+        let school = await School.findOne({_id : user.school});
+        let found = false;
+        for (var i = 0; i < school.semesters.length; i++) {
+          if (school.semesters[i].toString() == req.query.semester) {
+            found = true;
+          }
+        }
+        if (found) {
+          await Semesters.findOneAndUpdate({_id : req.query.semester}, {$set: {name: req.query.name}});  
+        }
+        res.send(found);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/keyCorrection", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.old && req.query.new) {
+        let school = await School.findOne({_id : user.school});
+        school.blockConversion[req.query.new] = school.blockConversion[req.query.old];
+        delete school.blockConversion[req.query.old];
+        await School.findOneAndUpdate({_id : school._id}, {$set: {blockConversion: school.blockConversion}});  
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/valueCorrection", async function(req, res) {
+  console.log(req.query);
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.key && req.query.value) {
+        let school = await School.findOne({_id : user.school});
+        school.blockConversion[req.query.key] = req.query.value;
+        await School.findOneAndUpdate({_id : school._id}, {$set: {blockConversion: school.blockConversion}});  
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+app.get("/deleteKey", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin" && user.school != null && req.query.key) {
+        let school = await School.findOne({_id : user.school});
+        delete school.blockConversion[req.query.key];
+        await School.findOneAndUpdate({_id : school._id}, {$set: {blockConversion: school.blockConversion}});  
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    } catch(e) {
+      console.log(e);
+      res.send(false);
+    }
+  } else {
+    res.send(false);
+  }
+});
+
+
 app.get("/dashboard/courses/codes", async function(req, res) {
   if (req.session.userId) {
     try {
@@ -2971,7 +3240,7 @@ function calculateSemesters(semesterList, date) {
   return goodSemesterList;
 }
 
-function makeReadableSchedule(constant, schedule, blockMap) {
+function makeReadableSchedule(constant, schedule, blockMap, spareName) {
   let blockSchedule = [];
   if (constant) {
     for (var i = 0; i < schedule.schedule.length; i++) {      
@@ -2979,7 +3248,7 @@ function makeReadableSchedule(constant, schedule, blockMap) {
       for (var key in schedule.schedule[i])  {
         let currentDay = [];
         for (var j = 0; j < schedule.schedule[i][key].length; j++) {
-          currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse("LC's", schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j]), (schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1])*1.3]);
+          currentDay.push([blockMap[schedule.schedule[i][key][j][0]] || new EmptyCourse(spareName, schedule.schedule[i][key][j][0]), timeToString(schedule.blockSchedule[j]), (schedule.blockSchedule[j][2]*60 + schedule.blockSchedule[j][3] - schedule.blockSchedule[j][0]*60 - schedule.blockSchedule[j][1])*1.3]);
         }
         currentSchedule[key] = currentDay;
       }
@@ -3156,14 +3425,14 @@ app.get("/", async function(req, res) {
 
 
 
-      let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, "LC's");
+      let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
       let events = await Events.find({school: user.school}).sort({date: "ascending"});
       let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]}).sort({date: "ascending"});;
       let schoolSkipped = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]}).sort({date: "ascending"});;
       let eventsObject = {};
 
 
-      let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap));
+      let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
       let colorMap = makeColorMap(school.blockNames);
       
       {
@@ -3301,7 +3570,7 @@ app.get("/", async function(req, res) {
             }
             if (currentSchedule.length == 0) {
 
-              dayBlockList = [["", new EmptyCourse("LC's", "A")]]; 
+              dayBlockList = [["", new EmptyCourse(school.spareNames, "A")]]; 
             }
           }
         } else {
@@ -3329,7 +3598,7 @@ app.get("/account", async function(req, res) {
   if (req.session.userId) {
     let user = await User.findOne({_id : req.session.userId});
     if (user != null) {
-      res.render("redesign/account", {icons: iconMap});
+      res.render("redesign/account", {user: user, icons: iconMap});
     } 
   } else {
     res.redirect("/login");

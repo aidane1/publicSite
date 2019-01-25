@@ -21,6 +21,7 @@
         position: fixed;
         top: 0;
         left: 0;
+        
       }
       .homeHolder {
           width: 100%;
@@ -196,8 +197,16 @@
             <div class="infoDisplay">
                 <div class="leftIcon"><i class="fas fa-school"></i></div>
                 <div class="displayInformation">
-                    <div class="username">AidanEglin</div>
-                    <div class="studentID">student ID: <span contenteditable = "true">98208102</span></div>
+                    <div class="username"><%=user.username%></div>
+                    <div class="studentID">
+                        student ID: 
+                        <% if (user.studentID) { %>
+                            <span contenteditable = "true"><%=user.studentID%></span>
+                        <% } else { %>
+                            <span onclick = "clearValue(this)" contenteditable="true" style = "min-width: 15px">Enter Student ID</span>
+                        <% } %>
+                        
+                    </div>
                 </div>
             </div>
             <div class="bodySection">
@@ -278,5 +287,10 @@
             </div>
         </div>
     </div>
+    <script>
+        function clearValue(element) {
+            element.innerText = "";
+        }
+    </script>
 </body>
 </html>

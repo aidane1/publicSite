@@ -43,9 +43,9 @@ const SchoolSchema = new Schema({
   masterAccount: {
     type: Schema.Types.ObjectId
   },
-  scheduleType: {
+  scheduleRollLength: {
     type: Number,
-    default: 0
+    default: 1,
   },
   constantBlocks: {
     type: Boolean,
@@ -117,6 +117,14 @@ const SchoolSchema = new Schema({
   sendAlerts: {
     type: Array,
     default: [],
+  },
+  startDate: {
+    type: Date,
+    default: new Date(2018, 08, 1),
+  },
+  endDate: {
+    type: Date,
+    default: new Date(2019, 05, 30),
   }
 });
 
