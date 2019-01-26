@@ -320,6 +320,7 @@
             outline: 0;
             appearance: none;
             -webkit-appearance: none;
+            border-radius: 0px;
         }
         textarea {
             border-bottom: 1px solid rgb(180,180,180);
@@ -515,6 +516,10 @@
             color: rgb(190,190,190);
             display: flex;
             flex-direction: row;
+            padding-bottom: 5px;
+        }
+        .expandedCreateTopic {
+            padding-bottom: 135px;
         }
         #createTopicButton {
             border-bottom: 1px solid #aaa;
@@ -751,11 +756,6 @@
                     Title
                 </div>
             </div>
-            
-            <!-- <div><h3>Title</h3>Title</div>
-            <div><h3>Topic</h3>Title</div>
-            <div><h3>Due</h3>Title</div>
-            <div><h3>Posted</h3>Title</div> -->
         </div>
     </div>
 
@@ -785,7 +785,7 @@
                 </div>
                 <textarea id = "assignmentDue"></textarea>
             </div>
-            <div class="createTopic">
+            <div class="createTopic" id = "createTopic">
                 Topic
                 <div class="createTopicInput" id = "createTopicInput">
                     <textarea id = "newTopic"></textarea>
@@ -894,10 +894,12 @@
     function extendDropDown() {
         let dropdown = document.getElementById("dropdown");
         dropdown.classList.add("droppedDropDown");
+        document.getElementById("createTopic").classList.add("expandedCreateTopic");
     }
     function selectTopic(element) {
         let dropdown = document.getElementById("dropdown");
         dropdown.classList.remove("droppedDropDown");
+        document.getElementById("createTopic").classList.remove("expandedCreateTopic");
         let button = document.getElementById("dropDownButton");
         button.innerText = element.innerHTML;
     }
