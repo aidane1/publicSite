@@ -160,7 +160,7 @@
             <% for (var i = 0; i < courses.length; i++) { %>
                 <% if (i == courses.length-1) { %>
                     <!-- <div class="dayBlock"> -->
-                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=assignments'">
+                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=assignments&from=/assignments'">
                         <div class="dayIcon">
                             <div class="iconBubble" style = "background-color: <%=categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                 <%-categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][0] : categories['other'][0]%>
@@ -178,7 +178,7 @@
                     </div>
                 <% } else { %>
                     <!-- <div class="dayBlock"> -->
-                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=assignments'">
+                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=assignments&from=/assignments'">
                         <div class="dayIcon">
                             <div class="iconBubble" style = "background-color: <%=categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][1] : categories['other'][1]%>">
                                 <%-categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][0] : categories['other'][0]%>

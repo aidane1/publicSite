@@ -3392,7 +3392,7 @@ app.get("/course", async function(req, res) {
             });
           }
           let topics = course.topics;
-          res.render("redesign/courseInfo", {target: req.query.target || "assignments", topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: sendNotes, assignments: sendAssignments});
+          res.render("redesign/courseInfo", {from: req.query.from || "/", target: req.query.target || "assignments", topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: sendNotes, assignments: sendAssignments});
         } else {
           res.redirect("/");
         }
