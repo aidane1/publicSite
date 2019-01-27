@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Events</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        body {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            padding-top: 50px;
+        }
+        .homeHeader {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        .bodyLine {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .event {
+            width: 95%;
+            margin: auto;
+            padding: 10px;
+            background-color: #ffef8c;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .event div {
+            margin: 5px 0px;
+            /* font-size: 13px; */
+            /* text-align: right; */
+        }
+        .eventInfo {
+            
+            font-size: 15px;
+        }
+        .eventDate {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .schoolSkipped {
+            font-size: 12px;
+            /* font-weight: 700; */
+        }
+    </style>
+</head>
+<body>
+    <div class="homeHeader">
+        <div class="homeRow">
+            <div class="backIcon" onclick = "window.location='/account'"><i class="fas fa-chevron-left"></i></div>
+            <div class="displayText">Events</div>
+            <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
+        </div>
+    </div>
+    <% for (var i = 0; i < events.length; i++) { %>
+        <div class="event">
+            <div class="eventDate"><%=moment(events[i].date).format("MMMM D, YYYY")%></div>
+            <div class="eventInfo"><%=events[i].info%></div>
+            <div class="schoolSkipped">
+                <div><i><%=events[i].schoolSkipped ? "School is skipped" : "School is not skipped" %></i></div>
+            </div>
+        </div>
+    <% } %> 
+</body>
+</html>

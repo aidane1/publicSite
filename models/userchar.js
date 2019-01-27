@@ -129,7 +129,7 @@ UserSchema.statics.authenticate = (name, password, school) => {
     User.findOne({ username: name }).exec((err, user) => {
       if (err) {
         reject(err);
-      } else if (!user || user.school != school) {
+      } else if (!user || user.school.toString() != school.toString()) {
         reject("user not found");
       } else {
         bcrypt.compare(password, user.password, (err, result) => {

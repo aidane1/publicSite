@@ -2025,6 +2025,24 @@ async function createAssignment(user, type, info, notes, due, course, topic, con
     return [false, {}];
   }
 }
+async function createNote(user, type, info, course) {
+  try {
+    if (user && type && info && course) {
+      let note = {
+        writtenBy: user,
+        noteType: type,
+        text: info,
+        forCourse: course,
+        date: (new Date()).local(),
+      }
+      let newNote = await Notes.create(note);
+      return [true, newNote];
+    }
+  } catch(e) {
+    console.log(e);
+    return [false, {}];
+  }
+}
 
 app.post("/uploadAssignment/:teacher/:course", urlencodedParser, async function(req, res) {
   try {
@@ -3196,7 +3214,7 @@ app.get("/bradshaw", function(req, res) {
 })
 
 app.get("/home", function(req, res) {
-  res.sendFile(__dirname + "/public/html/home.html");
+  res.render("homePage/home");
 });
 
 
@@ -3305,6 +3323,9 @@ app.get("/static", async function(req, res) {
   
 });
 
+function dateToCode(date) {
+  return `${date.getFullYear()}_${date.getMonth()}_${date.getDate()}`;
+}
 app.get("/course", async function(req, res) {
   try {
     if (req.session.userId && req.query.courseId) {
@@ -3316,7 +3337,6 @@ app.get("/course", async function(req, res) {
           let assignments = await Assignments.find({forCourse : course._id});
           let sendAssignments = [];
           assignments.sort(function(a,b) {
-            console.log(a.topic.localeCompare(b.topic));
             a.topic.localeCompare(b.topic);
           });
           let currentTopic = assignments[0] ? assignments[0].topic : "No Topic";
@@ -3339,8 +3359,28 @@ app.get("/course", async function(req, res) {
           for (var i = 0; i < user.completedAssignments.length; i++) {
             sendCompleted.push(user.completedAssignments[i].toString());
           }
+
+          let sendNotes = {};
+          notes.sort(function(a,b) {
+            return a.date.getTime() > b.date.getTime() ? -1 : 1;
+          });
+          let currentDate = notes[0] ? notes[0].date : new Date().local();
+          for (var i = 0; i < notes.length; i++) {
+            if (sendNotes[dateToCode(notes[i].date)]) {
+              sendNotes[dateToCode(notes[i].date)][1].push(notes[i]);
+            } else {
+              sendNotes[dateToCode(notes[i].date)] = [moment(notes[i].date).format("MMMM D, YYYY"), [notes[i]]];
+            }
+          }
+          for (var key in sendNotes) {
+            sendNotes[key][1].sort(function(a,b) {
+              return a.date.getTime() > b.date.getTime() ? 1 : -1;
+            });
+          }
           let topics = course.topics;
-          res.render("redesign/courseInfo", {topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: notes, assignments: sendAssignments});
+          console.log(sendNotes["2019_0_26"]);
+          // console.log(sendNotes);
+          res.render("redesign/courseInfo", {topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: sendNotes, assignments: sendAssignments});
         } else {
           res.redirect("/");
         }
@@ -3357,8 +3397,46 @@ app.get("/course", async function(req, res) {
   
 });
 
+app.post("/uploadNotesImage",  async function(req, res) {
+  try {
+    if (req.session.userId && req.query.course) {
+      let user = await User.findOne({_id : req.session.userId});
+      let noteImage = req.files.filepond;
+      let extension = noteImage.name.split(".")[noteImage.name.split(".").length-1];
+      let name = (new Date()).getTime().toString() + "." + extension;
+      noteImage.mv(__dirname + "/public/notes/" + name, function(err) {
+        if (err) {
+          console.log(err);
+          return res.status(500).send(err);
+        } else {
+          createNote(user._id, "file", name, req.query.course);
+          noteImage.name = name;
+          res.send(name);
+        }
+      });
+    } else {
+      res.status(500).send(false);
+    }
+  } catch(e) {
+    console.log(e);
+    return res.status(500).send(e);
+  }
+})
+
+app.post("/uploadStudentNote", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId && req.body.note && req.query.course) {
+      let user = await User.findOne({_id : req.session.userId});
+      let info = await createNote(user._id, "text", req.body.note, req.query.course);
+      res.send(info);
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect(res.send[false, {}]);
+  }
+});
+
 app.post("/createUserAssignment",urlencodedParser, async function(req,res) {
-  
   try {
     if (req.session.userId && req.body.info && req.body.due && req.query.course) {
       if (req.body.customTopic == "true") {
@@ -3420,8 +3498,8 @@ app.get("/updateStudentId", async function(req, res) {
   }
 });
 app.get("/", async function(req, res) {
-  let currentDate = (new Date()).local();
-  // let currentDate = new Date(2019, 0, 11, 10,14);
+  // let currentDate = (new Date()).local();
+  let currentDate = new Date(2019, 0, 11, 10,14);
   let startDate = moment([2018, 8, 3]);
   let endDate = moment([2019, 5, 30]);
   let yearLength = endDate.diff(startDate, "days");
@@ -3623,7 +3701,7 @@ app.get("/events", async function(req,res) {
     let user = await User.findOne({_id : req.session.userId});
     if (user != null) {
       let events = await Events.find({school: user.school}).sort({"date": "ascending"});
-      res.render("redesign/events", {icons: iconMap, events: events});
+      res.render("redesign/events", {moment: moment, icons: iconMap, events: events});
     } 
   } else {
     res.redirect("/login");
