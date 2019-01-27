@@ -9,740 +9,12 @@
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <link rel = "stylesheet" href = "/public/css/courseInfo.min.css">
     <script src = "/public/js/asyncRequest.js"></script>
     <script src = "/public/js/moment.js"></script>
     <title><%=course.course%></title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: sans-serif;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-        }
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            position: fixed;
-            top: 0px;
-            left: 0px;
-        }
-        .myBackdrop {
-            width: 100%;
-            height: 100%;
-            background-color: rgb(240,240,240);
-            overflow: auto;
-        }
-        .homeHeader {
-            width: 100%;
-            height: 70px;
-            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
-        }
-        .homeRow {
-            width: 100%;
-            height: 70px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            padding: 0px 20px;
-            align-items: center;
-        }
-        .displayText {
-            color: white;
-            font-size: 24px;
-            font-weight: 300;
-        }
-        .backIcon {
-            color: white;
-            font-size: 22px;
-            font-weight: 300;
-        }
-        .spacerIcon {
-            color: white;
-            font-size: 22px;
-            visibility: hidden;
-            font-weight: 300;
-        }
-        .iconRow {
-            width: 100%;
-            height: 50px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-        .infoRow {
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-grow: 1;
-            border-bottom: 1px solid rgb(210,210,210);
-            justify-content: space-between;
-            /* padding-left: 5px; */
-            padding-right: 5px;
-        }
-        .infoKey {
-            font-size: 20px;
-            font-weight: 400;
-        }
-        .infoValue {
-            font-size: 18px;
-            font-weight: 100;
-        }
-        .last .infoRow {
-            border: none;
-        }
-        .iconBubble {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            margin-left: 7.5px;
-            margin-right: 7.5px;
-            background-color: green;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            justify-content: center;
-        }
-        .courseInfo {
-            width: 100%;
-            margin-top: 20px;
-            border-top: 1px solid rgb(210,210,210);
-            border-bottom: 1px solid rgb(210,210,210);
-            background-color: white;
-        }
-        .notesAndAssignments {
-            width: 100%;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: white;
-            border-top: 1px solid rgb(210,210,210);
-            border-bottom: 1px solid rgb(210,210,210); 
-        }
-        .assignments {
-            padding-top: 5px;
-        }
-        .notes {
-            padding-top: 5px;
-            padding-bottom: 10px;
-        }
-        .assignmentsTitle {
-            width: 100%;
-            font-size: 20px;
-            font-weight: 400;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgb(210,210,210);
-        }
-        .notesTitle {
-            width: 100%;
-            font-size: 20px;
-            font-weight: 400;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgb(210,210,210);
-        }
-        .smallFont {
-            font-size: 16px;
-            color: #ddd;
-            /* font-weight: 600; */
-        }
-        .assignmentsBody {
-            width: 100%;
-            padding-left: 10px;
-        }
-        .assignment {
-            width: 100%;
-            height: 50px;
-            align-items: center;
-            overflow-x: auto;
-            display: flex;
-            flex-direction: row;
-            color: #5495ff;
-            font-weight: 900;
-            font-size: 100px;
-        }
-        .completedAssignment {
-            /* text-decoration: line-through; */
-        }
-        .completedAssignment .box {
-            background-color: #5495ff;
-        }
-        .box {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            background-color: white;
-            border: 3px solid #5495ff;
-            margin-right: 5px;
-        }
-        .assignmentInfo {
-            color: black;
-            font-weight: 400;
-            font-size: 18px;
-        }
-        .strikeout {
-            font-size: 4em;
-            line-height: 1em;
-            position: relative;
-        }
-        .strikeout::after {
-            border-bottom: 0.125em solid red;
-            content: "";
-            left: 0;
-            margin-top: calc(0.125em / 2 * -1);
-            position: absolute;
-            right: 0;
-            top: 50%;
-        }
-        .infoTab {
-            margin-top: 20px;
-            width: 100%;
-            background-color: white;
-        }
-        .infoTabBar {
-            
-            width: 100%;
-            height: 70px;
-            border-bottom: 1px solid rgb(210,210,210);
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
-        .infoTabHolders {
-            width: 70%;
-            /* margin-left: 15%; */
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            /* border-bottom: 1px solid rgb(210,210,210); */
-        }
-        .infoTabTab {
-            width: 50%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-bottom: 10px;
-            text-align: center;
-            color: #2664c9;
-            font-size: 18px;
-            
-        }
-        .infoTabSelected {
-            border-bottom: 2px solid #2664c9;
-        }
-        .infoBody {
-            width: 100%;
-            padding: 5px 10px;
-        }
-        .createButton {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            margin-right: 5px;
-            height: 50px;
-            width: 140px;
-            font-size: 40px;
-            font-weight: 100;
-            background-color: #1d5bc1;
-            color: white;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-evenly;
-            border-radius: 25px;
-            box-shadow: 0 1px 2px 0 #174ea64c, 0 2px 6px 2px #174ea626;
-        }
-        .createText {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            font-weight: 400;
-            font-size: 14px;
-            height: 100%;
-
-        }
-        .createPlus {
-            display: flex;
-            height: 100%;
-            flex-direction: column;
-            justify-content: center;
-            padding-bottom: 5px;
-            font-size: 35px;
-            font-weight: 200;
-        }
-        .darkModal {
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            opacity: 0.4;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: none;
-        }
-        .createAssignmentModal {
-            display: none;
-            width: 92%;
-            height: 90%;
-            position: fixed;
-            top: 5%;
-            left: 4%;
-            border-radius: 10px;
-            background-color: white;
-            -webkit-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            -moz-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            overflow: hidden;
-        }
-        .assignmentTitle {
-            width: 100%;
-            height: 50px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
-            /* padding: 5px 10px 5px 30px; */
-            padding-left: 30px;
-            padding-right: 10px;
-            border-bottom: 1px solid rgb(210,210,210);
-            color: #174ea6;
-            font-weight: 500;
-        }
-        .createAssignmentInfo {
-            width: 100%;
-            height: calc(100% - 150px);
-            padding: 20px;
-            overflow: auto;
-            position: relative;
-            z-index: 99;
-            
-        }
-        textarea {
-            border: 0;
-            outline: 0;
-            appearance: none;
-            -webkit-appearance: none;
-            border-radius: 0px;
-        }
-        textarea {
-            border-bottom: 1px solid rgb(180,180,180);
-            transition: border 0.07s linear;
-        }
-        textarea:focus {
-            border-bottom: 2px solid #174ea6;
-        }
-        .createTitle {
-            width: 100%;
-            background-color: #f1f3f4;
-            font-size: 10px;
-            margin-top: 15px;
-            
-        }
-        .createTitle textarea {
-            width: 100%;
-            background-color: #f1f3f4;
-            font-size: 16px;
-            padding: 10px 10px 5px 10px;
-            caret-color: #1967d2;
-        }
-        .assignmentWord {
-            width: 100%;
-            padding-left: 10px;
-            padding-top: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #174ea6;
-        }
-        .createNotes {
-            margin-top: 15px;
-            background-color: #f1f3f4;
-        }
-        .createNotes textarea {
-            width: 100%;
-            height: 100px;
-            background-color: #f1f3f4;
-            font-size: 16px;
-            padding: 10px 10px 0px 10px;
-            caret-color: #1967d2;
-        }
-        .notesWord {
-            width: 100%;
-            padding-left: 10px;
-            padding-top: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #174ea6;
-        }
-        .createTitle {
-            width: 100%;
-            background-color: #f1f3f4;
-            font-size: 10px;
-            margin-top: 15px;
-        }
-        .createDueDate {
-            margin-top: 15px;
-            background-color: #f1f3f4;
-        }
-        .createDueDate textarea {
-            width: 100%;
-            background-color: #f1f3f4;
-            font-size: 16px;
-            padding: 10px 10px 5px 10px;
-            caret-color: #1967d2;
-        }
-        .dueDateWord {
-            width: 100%;
-            padding-left: 10px;
-            padding-top: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #174ea6;
-        }
-        .createAssignmentBottom {
-            width: 100%;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
-            /* justify-content: end; */
-            justify-content: flex-end;
-            align-items: flex-end;
-            padding: 15px;
-            padding-bottom: 30px;
-        }
-        .iconsRow {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        .createAssignmentButton {
-            margin-left: 25px;
-            width: 100px;
-            text-align: center;
-            padding: 10px 0px;
-            background-color: #ddd;
-            color: #aaa;
-            border-radius: 3px;
-            transition: background-color 0.07s linear;
-        }
-        .allowed {
-            background-color: #174ea6;
-            color: white;
-        }
-        .topicList {
-            
-        }
-        .topicGroup {
-            margin: 10px;
-            padding: 5px 2px;
-            border-radius: 10px;
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        .topicGroupTitle {
-            font-size: 30px;
-            /* padding-left: 10px; */
-            /* padding-right: 5px; */
-            padding-bottom: 15px;
-            width: 100%;
-            border-bottom: 1px solid #1967d2;
-            color: #174ea6;
-        }
-
-        .topicAssignment {
-            width: 100%;
-            height: 70px;
-            padding-left: 20px;
-            padding-right: 5px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-bottom: 1px solid rgb(210,210,210);
-            overflow: hidden;
-        }
-        .openOrChecked {
-            font-size:35px;
-            margin-right: 15px;
-            color: #558de8;
-        }
-        .assignmentActionTitle {
-            margin-bottom: 5px;
-            font-size: 16px;
-            white-space: nowrap;
-        }
-        .assignmentDate {
-            font-size: 14px;
-            color: rgb(190,190,190);
-            white-space: nowrap;
-        }
-        .openEdit {
-            /* justify-self: end; */
-        }
-        .last {
-            border: 0 !important;
-        }
-        .dropdownHolder {
-            position: relative;
-            left: 20px;
-            top: 1px;
-            color: black;
-            z-index: 102;
-        }
-        .dropdown {
-            font-size: 13px;
-            position: absolute;
-            top: -10px;
-            left: 0px;
-            max-height: 0px;
-            overflow: hidden;
-            visibility: hidden;
-            min-width: 100px;
-            box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
-            /* border: 1px solid #999; */
-            transition: max-height 0.12s ease-out;
-            z-index: 1000;
-            margin-bottom: 20px;
-        }
-        .dropdownOption {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            padding-left: 10px;
-            text-align: left;
-            /* border: 1px solid black; */
-            background-color: white;
-        }
-        .droppedDropDown {
-            overflow: auto;
-            max-height: 160px;
-            visibility: visible;
-        }
-        .createTopic {
-            margin-top: 20px;
-            color: rgb(190,190,190);
-            display: flex;
-            flex-direction: row;
-            padding-bottom: 5px;
-        }
-        .expandedCreateTopic {
-            padding-bottom: 135px;
-        }
-        #createTopicButton {
-            border-bottom: 1px solid #aaa;
-        }
-        .createTopicInput {
-            position: relative;
-            left: 20px;
-            top: 1px;
-            color: black;
-            max-width: 0px;
-            width: 190px;
-            visibility: hidden;
-            transition: max-width 0.2s ease-out;
-            overflow: hidden;
-            max-height: 30px;
-            z-index: 101;
-        }   
-        .createTopicInput textarea {
-            font-size: 17px;
-            padding-bottom: 0px;
-            height: 30px;
-            max-width: 170px;
-            width: 170px;
-        }
-        .openInput {
-            max-width: 190px;
-            visibility: visible;
-        }
-        .removeNewTopic {
-            position: relative;
-            top: -5px;
-        }
-        .assignmentDisplayBox {
-            display: none;
-            width: 92%;
-            height: 50%;
-            position: fixed;
-            top: 25%;
-            left: 4%;
-            /* border-radius: 10px; */
-            background-color: white;
-            -webkit-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            -moz-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            overflow: hidden;
-        }
-        .assignmentDisplayTopBar {
-            width: 100%;
-            height: 50px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
-            /* padding: 5px 10px 5px 30px; */
-            padding-left: 30px;
-            padding-right: 10px;
-            border-bottom: 1px solid rgb(210,210,210);
-            color: #174ea6;
-            font-weight: 500;
-        }
-        .assignmentDisplayBody {
-            width: 100%;
-            height: calc(100% - 50px);
-            overflow: auto;
-            padding: 20px;
-        }
-        .customDisplayInfo {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .customDisplayTitle {
-            font-weight: 500;
-            font-size: 19px;
-            color: #174ea6;
-        }
-        .customDisplayBody {
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        .infoBodyHolder {
-            overflow: hidden;
-        }
-        .createNoteOrImage {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            /* justify-content: space-around; */
-            /* align-items:flex-end */
-        }
-        .noteText {
-            width: 100%;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-        }
-        .createNotePlus {
-            font-size: 30px;
-            color: #3c763d;
-            background-color: #dff0d8;
-            width: 50px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 50px;
-            border-bottom: 2px solid #174ea6;
-        }
-        .createNote {
-            width: calc(100% - 50px);
-            height: 50px;
-            font-size: 18px;
-            border: 0;
-            outline: 0;
-            appearance: none;
-            -webkit-appearance: none;
-            border-radius: 0px;
-            border-bottom: 1px solid rgb(180,180,180);
-            transition: border 0.07s linear;
-        }
-        .createNote:focus {
-            border-bottom: 2px solid #174ea6;
-        }
-        .takePicture {
-            font-size: 22px;
-        }
-        #notesUpload {
-            /* width: 200px; */
-        }
-        .dateGroup {
-            margin: 10px;
-            padding: 5px 2px;
-            border-radius: 10px;
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        .dateGroupTitle {
-            font-size: 30px;
-            /* padding-left: 10px; */
-            /* padding-right: 5px; */
-            padding-bottom: 15px;
-            width: 100%;
-            border-bottom: 1px solid #1967d2;
-            color: #174ea6;
-        }
-
-        .dateNote {
-            width: 100%;
-            height: 70px;
-            padding-left: 20px;
-            padding-right: 5px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-bottom: 1px solid rgb(210,210,210);
-            overflow: hidden;
-        }
-        .dateNoteImage {
-            width: 100px;
-            max-height: 300px;
-        }
-        .dateNoteImage img {
-            width: 100%;
-            max-height: 100%;
-        }
-        .noteFileGroup {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: center;
-            padding: 15px;
-        }
-        .dateNoteLink {
-            text-decoration: underline;
-            color: blue;
-        }
-        .imageDisplayBox {
-            display: none;
-            width: 92%;
-            height: 70%;
-            position: fixed;
-            top: 15%;
-            left: 4%;
-            /* border-radius: 10px; */
-            background-color: white;
-            -webkit-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            -moz-box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            box-shadow: 4px 5px 31px -6px rgba(0,0,0,0.75);
-            overflow: hidden;
-            z-index: 1000;
-        }
-        .imageDisplayTitle {
-            width: 100%;
-            height: 50px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
-            padding-left: 30px;
-            padding-right: 10px;
-            border-bottom: 1px solid rgb(210,210,210);
-            color: #174ea6;
-            font-weight: 500;
-        }
-        .imageDisplay {
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-        }
-        .imageDisplay img {
-            width: 100%;
-        }
+        
 
     </style>
 </head>
@@ -755,7 +27,7 @@
                 <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
             </div>
         </div>
-        <div class="courseInfo">
+        <!-- <div class="courseInfo">
             <div class="class iconRow">
                 <div class="iconBubble" style = "background-color: <%-icons['teacher'][1]%>"><%-icons["teacher"][0]%></div>
                 <div class="infoRow">
@@ -777,7 +49,7 @@
                     <div class="infoValue"><%=course.block%></div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="infoTab">
             <div class="infoTabBar">
                 <div class="infoTabHolders">
@@ -787,16 +59,9 @@
             </div>
             <div class="infoBodyHolder">
                 <div class="infoBody" style = "display: <%=target == 'notes' ? 'block' : 'none'%>" id = "infoBodyNotes">
-                    <div class = "createNoteOrImage">
-                        <div class="noteText">
-                            <input class = "createNote" id = "createNote" placeholder="Note...">
-                            <div class="createNotePlus" onclick = "sendNote()"><i class="fas fa-plus"></i></div>
-                        </div>
-                        <input type = "file" class = "filepond" id = "notesUpload" name = "filepond">
-                        <div class="takePicture">
-                            
-                            <!-- <i class="fas fa-camera"></i>     -->
-                        </div>
+                    
+                    <div class="createButton" onclick = "openNoteModal()">
+                        <div class = "createPlus">+</div><div class = "createText">Create</div>
                     </div>
                     <div class = "noteDateList">
                         <% for (var key in notes) { %>
@@ -972,6 +237,34 @@
         </div>
     </div>
 
+    <div class="createNoteModal" id="createNoteModal">
+        <div class="assignmentTitle">
+            <div>Note</div>
+            <div onclick = "closeNoteModal()"><svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div>
+        </div>
+        <div class="createNoteInfo">
+            <div class = "createNoteOrImage">
+                <div class="noteText">
+                    <div class="noteWord">
+                        Note
+                    </div>
+                    <textarea id = "createNote" oninput="checkNoteValid(this)"></textarea>
+                    <!-- <div class="createNotePlus" onclick = "sendNote()"><i class="fas fa-plus"></i></div> -->
+                </div>
+                <input type = "file" class = "filepond" id = "notesUpload" name = "filepond">
+                <div class="takePicture">
+                </div>
+            </div>
+        </div>
+        <div class="createAssignmentBottom">
+            <div class="iconsRow">
+                <svg onclick = "emptyNoteModal()" focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 4V3H9v1H4v2h1v13c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6h1V4h-5zm2 15H7V6h10v13z"></path><path d="M9 8h2v9H9zm4 0h2v9h-2z"></path></svg>
+                <div class="createAssignmentButton" id = "createNoteButton" onclick = "createNote()">
+                    Create
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="createAssignmentModal" id = "createAssignmentModal">
         <div class="assignmentTitle">
@@ -1022,15 +315,18 @@
         </div>
         <div class="createAssignmentBottom">
             <div class="iconsRow">
-                    <svg onclick = "emptyModal()" focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 4V3H9v1H4v2h1v13c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6h1V4h-5zm2 15H7V6h10v13z"></path><path d="M9 8h2v9H9zm4 0h2v9h-2z"></path></svg>
-                    <div class="createAssignmentButton" id = "createAssignmentButton" onclick = "createAssignment()">
-                        Create
-                    </div>
+                <svg onclick = "emptyModal()" focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 4V3H9v1H4v2h1v13c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6h1V4h-5zm2 15H7V6h10v13z"></path><path d="M9 8h2v9H9zm4 0h2v9h-2z"></path></svg>
+                <div class="createAssignmentButton" id = "createAssignmentButton" onclick = "createAssignment()">
+                    Create
+                </div>
             </div>
         </div>
     </div>
 </body>
 <script>
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+    );
     FilePond.setOptions({
         server: {
             url: "/uploadNotesImage?course=<%=course._id%>",
@@ -1038,11 +334,26 @@
     });
     let pond = FilePond.create(document.getElementById("notesUpload"));
     pond.on("processfile", function(err, file) {
-        pond.removeFile();
+        
     });
 
 </script>
 <script>
+    function checkNoteValid(element) {
+        let button = document.getElementById("createNoteButton");
+        if (element.value) {
+            validAssignment = true;
+            button.classList.add("allowed");
+        } else {
+            button.classList.remove("allowed");
+        }
+    }
+    function emptyNoteModal() {
+        let note = document.getElementById("createNote");
+        note.value = "";
+        checkNoteValid(note);
+        pond.removeFile();
+    }
     function moveTab(element, tab) {
         let oldPage = document.getElementById(tab == "assignments" ? "infoBodyNotes" : "infoBodyAssignments");
         let newPage = document.getElementById(tab == "notes" ? "infoBodyNotes" : "infoBodyAssignments");
@@ -1074,13 +385,14 @@
         displayImage.style.display = "none";
         document.getElementById("backdrop").style.overflow = "auto";
     }
-    function sendNote() {
-        let note = document.getElementById("createNote").value;
-        if (note) {
-            sendPostRequest("note=" + note, "/uploadStudentNote?course=<%=course._id%>", function(res) {
-                console.log(res);
+    function createNote() {
+        let note = document.getElementById("createNote");
+        if (note.value) {
+            sendPostRequest("note=" + note.value, "/uploadStudentNote?course=<%=course._id%>", function(res) {
                 if (res[0] == true) {
+                    pond.removeFile();
                     note.value = "";
+                    checkNoteValid(note);
                 }
             });
         }
@@ -1193,6 +505,20 @@
         modal.style.display = "block";
         createAssignment.style.display = "block";
         document.getElementById("backdrop").style.overflow = "hidden";
+    }
+    function openNoteModal() {
+        let modal = document.getElementById("darkModal");
+        let createNote = document.getElementById("createNoteModal");
+        modal.style.display = "block";
+        createNote.style.display = "block";
+        document.getElementById("backdrop").style.overflow = "hidden";
+    }
+    function closeNoteModal() {
+        let modal = document.getElementById("darkModal");
+        let createNote = document.getElementById("createNoteModal");
+        modal.style.display = "none";
+        createNote.style.display = "none";
+        document.getElementById("backdrop").style.overflow = "auto";
     }
     function closeModal() {
         let modal = document.getElementById("darkModal");
