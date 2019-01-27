@@ -26,12 +26,29 @@
         align-items: center;
         padding: 0px 50px;
         justify-content: start;
+        position: relative;
+      }
+      .navbar-bottom-expand {
+        width: 100%;
+        height: 265px;
+        max-height: 0px;
+        overflow: hidden;
+        background-color: #316e97;
+        transition: max-height 0.2s ease-out;
+      }
+      .navbar-bottom-expanded {
+        max-height: 265px;
+      }
+      .navbar-bottom-expand-item {
+        width: 100%;
+        padding: 15px 30px;
+        color: white;
+        font-size: 17px;
       }
       .navbar-items-holder {
         flex-grow: 1;
         display: flex;
         flex-direction: row;
-        /* align-items: center; */
         justify-content: space-around;
       }
       .logo {
@@ -81,7 +98,7 @@
       }
       .view-header {
         text-align: center;
-        padding-bottom: 30px;
+        padding: 0px 15px 30px 15px;
       }
       .view-header h1 {
         font-size: 34px;
@@ -101,6 +118,40 @@
         background-color: #222222;
         padding: 50px;
       }
+      .navbar-expand-icon {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: none;
+      }
+      .navbar-expand-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: white;
+      }
+      @media screen and (max-width: 980px) {
+        .navbar {
+          padding-left: 5px;
+        }
+        .navbar-item {
+          font-size: 17px;
+        }
+      }
+      @media screen and (max-width: 830px) {
+        .navbar-items-holder {
+          display: none;
+        }
+        .navbar-expand-icon {
+          display: block;
+        }
+      }
+      @media screen and (max-width: 430px) {
+        .screen-2 {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -114,6 +165,16 @@
           <div class="navbar-item">Districts</div>
           <div class="navbar-item">Contact</div>
       </div>
+      <div class="navbar-expand-icon" onclick = "toggleNavbarBottom()">
+          <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path d="m 8.9999999,970.36217 0,10 82.0000001,0 0,-10 z m 0,27.00002 0,10.00001 82.0000001,0 0,-10.00001 z m 0,27.00001 0,10 82.0000001,0 0,-10 z" style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;enable-background:accumulate;" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>
+      </div>
+    </div>
+    <div class="navbar-bottom-expand" id = "navbar-bottom-expand">
+      <div class="navbar-bottom-expand-item">Inquiries</div>
+      <div class="navbar-bottom-expand-item">Administrators</div>
+      <div class="navbar-bottom-expand-item">Students</div>
+      <div class="navbar-bottom-expand-item">Districts</div>
+      <div class="navbar-bottom-expand-item">Contact</div>
     </div>
     <div class="view view-2">
       <div class="view-header white ">
@@ -127,10 +188,10 @@
           <!-- <h5>reach them a new level</h5> -->
         </div>
         <div class="flex-row-container space-evenly">
-          <div class="screen-display">
+          <div class="screen-display screen-1">
             <img src = "/public/images/simulatedScreen.png">
           </div>
-          <div class="screen-display">
+          <div class="screen-display screen-2">
             <img src = "/public/images/simulatedScreenHomework.png">
           </div>
         </div>
@@ -138,5 +199,11 @@
       <div class="footer">
 
       </div>
+      <script>
+        function toggleNavbarBottom() {
+          document.getElementById("navbar-bottom-expand").classList.toggle("navbar-bottom-expanded");
+        }
+      
+      </script>
   </body>
 </html>
