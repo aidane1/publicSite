@@ -822,7 +822,7 @@
                                     <% for (var i = 0; i < notes[key][1].length; i++) { %>
                                         <% if (notes[key][1][i].noteType != "text") { %>
                                             <div class="dateNoteFile">
-                                                <% if (["jpg", "jpeg", "png", "ico"].indexOf(notes[key][1][i].text.split(".")[notes[key][1][i].text.split(".").length-1].toLowerCase()) > 0) { %>
+                                                <% if (["jpg", "jpeg", "png", "ico"].indexOf(notes[key][1][i].text.split(".")[notes[key][1][i].text.split(".").length-1].toLowerCase()) >= 0) { %>
                                                     <div class="dateNoteImage" onclick = "openImage('<%=notes[key][1][i].text%>')">
                                                         <img src = "/public/notes/<%=notes[key][1][i].text%>">
                                                     </div>
