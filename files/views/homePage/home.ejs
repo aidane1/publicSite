@@ -74,6 +74,9 @@
       .view-2 {
         background-color:#69afdc;
       }
+      .view-3 {
+        background-color: white;
+      }
       .row-container {
         width: 100%;
         text-align: justify;
@@ -131,6 +134,22 @@
         height: 100%;
         fill: white;
       }
+      .feature-list {
+        width: 80%;
+        margin: auto;
+        margin-top: 20px;
+      }
+      .feature-title {
+        font-size: 28px;
+      }
+      .feature-body {
+        width: 90%;
+      }
+      .feature-body-item {
+        width: 20%;
+        display: inline-block;
+        padding: 15px;
+      }
       @media screen and (max-width: 980px) {
         .navbar {
           padding-left: 5px;
@@ -145,6 +164,10 @@
         }
         .navbar-expand-icon {
           display: block;
+        }
+        .feature-body-item {
+          display: block;
+          width: 100%;
         }
       }
       @media screen and (max-width: 430px) {
@@ -193,6 +216,24 @@
           </div>
           <div class="screen-display screen-2">
             <img src = "/public/images/simulatedScreenHomework.png">
+          </div>
+        </div>
+      </div>
+      <div class="view view-3">
+        <div class="view-header">
+          <h1>Our innovative design was built by students, for students</h1>
+          <h5>Cover what matters to students, with a simplistic user-based design</h5>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Student features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Centralized Course Selection</div><div class="feature-body-item">In school events with alerts</div><div class="feature-body-item">Customizable weekly schedules</div><div class="feature-body-item">Notes, Assignments, and Reminders</div><div class="feature-body-item">Student connections through questions</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Admin features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Instant push notifications and alerts</div><div class="feature-body-item">Real time, completely customizable school information</div><div class="feature-body-item">Complete control over teachers, categories, and courses</div><div class="feature-body-item">Create events, pick blocks, and change spare names</div><div class="feature-body-item">Select semesters, assign start and end dates, and monitor student usage</div>
           </div>
         </div>
       </div>
