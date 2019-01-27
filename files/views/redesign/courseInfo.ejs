@@ -781,12 +781,12 @@
         <div class="infoTab">
             <div class="infoTabBar">
                 <div class="infoTabHolders">
-                    <div class="infoTabTab infoTabSelected" onclick = "moveTab(this,'assignments')">Assignments</div>
-                    <div class="infoTabTab" onclick = "moveTab(this, 'notes')">Notes</div>
+                    <div class="infoTabTab <%=target == 'notes' ? '' : 'infoTabSelected'%>" onclick = "moveTab(this,'assignments')">Assignments</div>
+                    <div class="infoTabTab <%=target == 'notes' ? 'infoTabSelected' : ''%>" onclick = "moveTab(this, 'notes')">Notes</div>
                 </div>
             </div>
             <div class="infoBodyHolder">
-                <div class="infoBody" style = "display: none" id = "infoBodyNotes">
+                <div class="infoBody" style = "display: <%=target == 'notes' ? 'block' : 'none'%>" id = "infoBodyNotes">
                     <div class = "createNoteOrImage">
                         <div class="noteText">
                             <input class = "createNote" id = "createNote" placeholder="Note...">
@@ -843,7 +843,7 @@
 
 
 
-                <div class="infoBody" id = "infoBodyAssignments">
+                <div class="infoBody" style = "display: <%=target == 'notes' ? 'none' : 'block'%>" id = "infoBodyAssignments">
                     <div class="createButton" onclick = "openModal()">
                         <div class = "createPlus">+</div><div class = "createText">Create</div>
                     </div>

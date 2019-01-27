@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <title>Notes</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            background-color: rgb(240,240,240);
+        }
+        .dayTitle {
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: black;
+            font-weight: 300;
+        }
+        .homeHeader {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .homeRow {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        .dayHolder {
+            width: 100%;
+            border-bottom: 1px solid rgb(210,210,210);
+            border-top: 1px solid rgb(210,210,210);
+            overflow-y: auto;
+        }
+        .dayBlock {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            background-color: white;
+            
+        }
+        .dayIcon {
+            width: 50px;
+            height: 50px;
+        }
+        .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            margin-left: 7.5px;
+            margin-top: 7.5px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .dayClass {
+            width: calc(100% - 50px);
+            border-bottom: 1px solid rgb(210,210,210);
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .bottomClass {
+            width: calc(100% - 50px);
+            /* border-bottom: 1px solid rgb(210,210,210); */
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .teacherClassBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+        .teacherName {
+            font-style: italic;
+            font-size: 11px;
+            /* font-weight: 300; */
+            color: grey;
+        }
+        .className {
+            font-size: 18px;
+        }
+    
+        .timeBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+            font-size: 18px;
+        }
+        .fa-chevron-right {
+            margin-left: 10px;
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="homeHeader">
+        <div class="homeRow">
+            <div class="backIcon" onclick = "window.location='/account'"><i class="fas fa-chevron-left"></i></div>
+            <div class="displayText">Notes</div>
+            <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
+        </div>
+    </div>
+    <div id = "coursesTile" class="bodyTile">
+        <div class="dayTitle"><a href = "/courses" style = "text-decoration: none; color: black">This Year</a></div>
+        <div class="dayHolder">
+            <% for (var i = 0; i < courses.length; i++) { %>
+                <% if (i == courses.length-1) { %>
+                    <!-- <div class="dayBlock"> -->
+                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=notes'">
+                        <div class="dayIcon">
+                            <div class="iconBubble" style = "background-color: <%=categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                <%-categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][0] : categories['other'][0]%>
+                            </div>
+                        </div>
+                        <div class="bottomClass">
+                            <div class="teacherClassBlock">
+                                <div class="className"><%=courses[i].course%></div>
+                                <div class="teacherName"><%=courses[i].semester.name%>, block <%=courses[i].block%>, <%=courses[i].teacher.prefix + courses[i].teacher.lastName%></div>
+                            </div>
+                            <div class="timeBlock">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <!-- <div class="dayBlock"> -->
+                    <div class="dayBlock" onclick = "window.location='course?courseId=<%=courses[i]._id%>&target=notes'">
+                        <div class="dayIcon">
+                            <div class="iconBubble" style = "background-color: <%=categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                <%-categories[courses[i].category.category.toLowerCase()] ? categories[courses[i].category.category.toLowerCase()][0] : categories['other'][0]%>
+                            </div>
+                        </div>
+                        <div class="dayClass">
+                            <div class="teacherClassBlock">
+                                <div class="className"><%=courses[i].course%></div>
+                                <div class="teacherName"><%=courses[i].semester.name%>, block <%=courses[i].block%>, <%=courses[i].teacher.prefix + courses[i].teacher.lastName%></div>
+                            </div>
+                            <div class="timeBlock">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

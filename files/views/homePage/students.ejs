@@ -58,8 +58,11 @@
         flex-direction: row;
         justify-content: space-around;
       }
-      .logo {
+      .logo-holder {
         height: 75%;
+      }
+      .logo {
+        height: 100%;
       }
       .navbar-item {
         color: white;
@@ -195,11 +198,11 @@
   <body>
     <!-- add Served school districts -->
     <div class="navbar">
-      <img class = "logo" src = "/public/images/logo_transparent_white.png"/>
+      <a href = "/home" class = "logo-holder"><img class = "logo" src = "/public/images/logo_transparent_white.png"/></a>
       <div class="navbar-items-holder">
         <div class="navbar-item"><a href = "/home/inquiries">Inquiries</a></div>
         <div class="navbar-item"><a href = "/home/administrators">Administrators</a></div>
-        <div class="navbar-item"><a href = "/home/students">Students</a></div>
+        <div class="navbar-item selected-item"><a href = "/home/students">Students</a></div>
         <div class="navbar-item"><a href = "/home/districts">Districts</a></div>
         <div class="navbar-item"><a href = "/home/contact">Contact</a></div>
       </div>
@@ -210,14 +213,14 @@
     <div class="navbar-bottom-expand" id = "navbar-bottom-expand">
       <div class="navbar-bottom-expand-item"><a href = "/home/inquiries">Inquiries</a></div>
       <div class="navbar-bottom-expand-item"><a href = "/home/administrators">Administrators</a></div>
-      <div class="navbar-bottom-expand-item"><a href = "/home/students">Students</a></div>
+      <div class="navbar-bottom-expand-item selected-item"><a href = "/home/students">Students</a></div>
       <div class="navbar-bottom-expand-item"><a href = "/home/districts">Districts</a></div>
       <div class="navbar-bottom-expand-item"><a href = "/home/contact">Contact</a></div>
     </div>
     <div class="view view-2">
       <div class="view-header white ">
-        <h1>Upload assignments, send alerts, and change course information. All in real time</h1>
-        <h5>Our powerful administrator dashboard allows for blazing fast updates and instant alerts</h5>
+        <h1>Connect to your classmates. Keep up to date. Never miss a class again</h1>
+        <h5>A simple to use interface </h5>
       </div>
     </div>
     <div class="view view-1">

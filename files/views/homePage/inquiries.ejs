@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <title></title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: 'Lato', sans-serif;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+      .navbar {
+        width: 100%;
+        height: 130px;
+        background-color: #316e97;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0px 50px;
+        justify-content: start;
+        position: relative;
+      }
+      .navbar-bottom-expand {
+        width: 100%;
+        height: 265px;
+        max-height: 0px;
+        overflow: hidden;
+        background-color: #316e97;
+        transition: max-height 0.2s ease-out;
+      }
+      .navbar-bottom-expanded {
+        max-height: 265px;
+      }
+      .navbar-bottom-expand-item {
+        width: 100%;
+        padding: 15px 30px;
+        color: white;
+        font-size: 17px;
+      }
+      .navbar-items-holder {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .logo {
+        height: 75%;
+      }
+      .navbar-item {
+        color: white;
+        font-size: 22px;
+        display: inline-block;
+        margin: 0px 20px;
+        cursor: pointer;
+      }
+      .navbar-item:hover {
+        color: #ede053;
+      }
+      .view {
+        width: 100%;
+        padding-top: 50px;
+      }
+      .view-1 {
+        background-color: #eee;
+        padding-bottom: 20px;
+      }
+      .view-2 {
+        background-color:#69afdc;
+      }
+      .view-3 {
+        background-color: white;
+      }
+      .row-container {
+        width: 100%;
+        text-align: justify;
+      }
+      .flex-row-container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .space-between {
+        justify-content: space-between;
+      }
+      .space-around {
+        justify-content: space-around;
+      }
+      .space-evenly {
+        justify-content: space-evenly;
+      }
+      .white {
+        color: white;
+      }
+      .view-header {
+        text-align: center;
+        padding: 0px 15px 30px 15px;
+      }
+      .view-header h1 {
+        font-size: 34px;
+        margin-bottom: 0px;
+      }
+      .view-header h5 {
+        margin-top: 15px;
+      }   
+      .screen-display {
+        height: 400px;
+        display: inline-block;
+      }
+      .screen-display img {
+        height: 100%;
+      }
+      .footer {
+        background-color: #222222;
+        padding: 50px;
+      }
+      .navbar-expand-icon {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: none;
+      }
+      .navbar-expand-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: white;
+      }
+      .feature-list {
+        width: 80%;
+        margin: auto;
+        margin-top: 20px;
+      }
+      .feature-title {
+        font-size: 28px;
+      }
+      .feature-body {
+        width: 90%;
+      }
+      .feature-body-item {
+        width: 20%;
+        display: inline-block;
+        padding: 15px;
+      }
+      @media screen and (max-width: 980px) {
+        .navbar {
+          padding-left: 5px;
+        }
+        .navbar-item {
+          font-size: 17px;
+        }
+      }
+      @media screen and (max-width: 830px) {
+        .navbar-items-holder {
+          display: none;
+        }
+        .navbar-expand-icon {
+          display: block;
+        }
+        .feature-body-item {
+          display: block;
+          width: 100%;
+        }
+      }
+      @media screen and (max-width: 430px) {
+        .screen-2 {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- add Served school districts -->
+    <div class="navbar">
+      <img class = "logo" src = "/public/images/logo_transparent_white.png"/>
+      <div class="navbar-items-holder">
+          <div class="navbar-item">Inquiries</div>
+          <div class="navbar-item">Administrators</div>
+          <div class="navbar-item">Students</div>
+          <div class="navbar-item">Districts</div>
+          <div class="navbar-item">Contact</div>
+      </div>
+      <div class="navbar-expand-icon" onclick = "toggleNavbarBottom()">
+          <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path d="m 8.9999999,970.36217 0,10 82.0000001,0 0,-10 z m 0,27.00002 0,10.00001 82.0000001,0 0,-10.00001 z m 0,27.00001 0,10 82.0000001,0 0,-10 z" style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;enable-background:accumulate;" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>
+      </div>
+    </div>
+    <div class="navbar-bottom-expand" id = "navbar-bottom-expand">
+      <div class="navbar-bottom-expand-item">Inquiries</div>
+      <div class="navbar-bottom-expand-item">Administrators</div>
+      <div class="navbar-bottom-expand-item">Students</div>
+      <div class="navbar-bottom-expand-item">Districts</div>
+      <div class="navbar-bottom-expand-item">Contact</div>
+    </div>
+    <div class="view view-2">
+      <div class="view-header white ">
+        <h1>Upload assignments, send alerts, and change course information. All in real time</h1>
+        <h5>Our powerful administrator dashboard allows for blazing fast updates and instant alerts</h5>
+      </div>
+    </div>
+    <div class="view view-1">
+        <div class="view-header">
+          <h1>Connect to Your Students. Elevate your School</h1>
+          <!-- <h5>reach them a new level</h5> -->
+        </div>
+        <div class="flex-row-container space-evenly">
+          <div class="screen-display screen-1">
+            <img src = "/public/images/simulatedScreen.png">
+          </div>
+          <div class="screen-display screen-2">
+            <img src = "/public/images/simulatedScreenHomework.png">
+          </div>
+        </div>
+      </div>
+      <div class="view view-3">
+        <div class="view-header">
+          <h1>Our innovative design was built by students, for students</h1>
+          <h5>Cover what matters to students, with a simplistic user-based design</h5>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Student features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Centralized Course Selection</div><div class="feature-body-item">In school events with alerts</div><div class="feature-body-item">Customizable weekly schedules</div><div class="feature-body-item">Notes, Assignments, and Reminders</div><div class="feature-body-item">Student connections through questions</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Admin features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Instant push notifications and alerts</div><div class="feature-body-item">Real time, completely customizable school information</div><div class="feature-body-item">Complete control over teachers, categories, and courses</div><div class="feature-body-item">Create events, pick blocks, and change spare names</div><div class="feature-body-item">Select semesters, assign start and end dates, and monitor student usage</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+
+      </div>
+      <script>
+        function toggleNavbarBottom() {
+          document.getElementById("navbar-bottom-expand").classList.toggle("navbar-bottom-expanded");
+        }
+      
+      </script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <title></title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: 'Lato', sans-serif;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+      .navbar {
+        width: 100%;
+        height: 130px;
+        background-color: #316e97;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0px 50px;
+        justify-content: start;
+        position: relative;
+      }
+      .navbar-bottom-expand {
+        width: 100%;
+        height: 265px;
+        max-height: 0px;
+        overflow: hidden;
+        background-color: #316e97;
+        transition: max-height 0.2s ease-out;
+      }
+      .navbar-bottom-expanded {
+        max-height: 265px;
+      }
+      .navbar-bottom-expand-item {
+        width: 100%;
+        padding: 15px 30px;
+        color: white;
+        font-size: 17px;
+      }
+      .navbar-items-holder {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .logo {
+        height: 75%;
+      }
+      .navbar-item {
+        color: white;
+        font-size: 22px;
+        display: inline-block;
+        margin: 0px 20px;
+        cursor: pointer;
+      }
+      .selected-item {
+        color: #ede053;
+      }
+      .navbar-item a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .navbar-item:hover {
+        color: #ede053;
+      }
+      .view {
+        width: 100%;
+        padding-top: 50px;
+      }
+      .view-1 {
+        background-color: #eee;
+        padding-bottom: 20px;
+      }
+      .view-2 {
+        background-color:#69afdc;
+      }
+      .view-3 {
+        background-color: white;
+      }
+      .row-container {
+        width: 100%;
+        text-align: justify;
+      }
+      .flex-row-container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .space-between {
+        justify-content: space-between;
+      }
+      .space-around {
+        justify-content: space-around;
+      }
+      .space-evenly {
+        justify-content: space-evenly;
+      }
+      .white {
+        color: white;
+      }
+      .view-header {
+        text-align: center;
+        padding: 0px 15px 30px 15px;
+      }
+      .view-header h1 {
+        font-size: 34px;
+        margin-bottom: 0px;
+      }
+      .view-header h5 {
+        margin-top: 15px;
+      }   
+      .screen-display {
+        height: 400px;
+        display: inline-block;
+      }
+      .screen-display img {
+        height: 100%;
+      }
+      .footer {
+        background-color: #222222;
+        padding: 50px;
+      }
+      .navbar-expand-icon {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: none;
+      }
+      .navbar-expand-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: white;
+      }
+      .feature-list {
+        width: 80%;
+        margin: auto;
+        margin-top: 20px;
+      }
+      .feature-title {
+        font-size: 28px;
+      }
+      .feature-body {
+        width: 90%;
+      }
+      .feature-body-item {
+        width: 20%;
+        display: inline-block;
+        padding: 15px;
+      }
+      @media screen and (max-width: 980px) {
+        .navbar {
+          padding-left: 5px;
+        }
+        .navbar-item {
+          font-size: 17px;
+        }
+      }
+      @media screen and (max-width: 830px) {
+        .navbar-items-holder {
+          display: none;
+        }
+        .navbar-expand-icon {
+          display: block;
+        }
+        .feature-body-item {
+          display: block;
+          width: 100%;
+        }
+      }
+      @media screen and (max-width: 430px) {
+        .screen-2 {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- add Served school districts -->
+    <div class="navbar">
+      <img class = "logo" src = "/public/images/logo_transparent_white.png"/>
+      <div class="navbar-items-holder">
+          <div class="navbar-item">Inquiries</div>
+          <div class="navbar-item">Administrators</div>
+          <div class="navbar-item">Students</div>
+          <div class="navbar-item">Districts</div>
+          <div class="navbar-item">Contact</div>
+      </div>
+      <div class="navbar-expand-icon" onclick = "toggleNavbarBottom()">
+          <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path d="m 8.9999999,970.36217 0,10 82.0000001,0 0,-10 z m 0,27.00002 0,10.00001 82.0000001,0 0,-10.00001 z m 0,27.00001 0,10 82.0000001,0 0,-10 z" style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;enable-background:accumulate;" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>
+      </div>
+    </div>
+    <div class="navbar-bottom-expand" id = "navbar-bottom-expand">
+      <div class="navbar-bottom-expand-item">Inquiries</div>
+      <div class="navbar-bottom-expand-item">Administrators</div>
+      <div class="navbar-bottom-expand-item">Students</div>
+      <div class="navbar-bottom-expand-item">Districts</div>
+      <div class="navbar-bottom-expand-item">Contact</div>
+    </div>
+    <div class="view view-2">
+      <div class="view-header white ">
+        <h1>Upload assignments, send alerts, and change course information. All in real time</h1>
+        <h5>Our powerful administrator dashboard allows for blazing fast updates and instant alerts</h5>
+      </div>
+    </div>
+    <div class="view view-1">
+        <div class="view-header">
+          <h1>Connect to Your Students. Elevate your School</h1>
+          <!-- <h5>reach them a new level</h5> -->
+        </div>
+        <div class="flex-row-container space-evenly">
+          <div class="screen-display screen-1">
+            <img src = "/public/images/simulatedScreen.png">
+          </div>
+          <div class="screen-display screen-2">
+            <img src = "/public/images/simulatedScreenHomework.png">
+          </div>
+        </div>
+      </div>
+      <div class="view view-3">
+        <div class="view-header">
+          <h1>Our innovative design was built by students, for students</h1>
+          <h5>Cover what matters to students, with a simplistic user-based design</h5>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Student features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Centralized Course Selection</div><div class="feature-body-item">In school events with alerts</div><div class="feature-body-item">Customizable weekly schedules</div><div class="feature-body-item">Notes, Assignments, and Reminders</div><div class="feature-body-item">Student connections through questions</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-title">Admin features of schoolr</div>
+          <div class="feature-body">
+            <div class="feature-body-item">Instant push notifications and alerts</div><div class="feature-body-item">Real time, completely customizable school information</div><div class="feature-body-item">Complete control over teachers, categories, and courses</div><div class="feature-body-item">Create events, pick blocks, and change spare names</div><div class="feature-body-item">Select semesters, assign start and end dates, and monitor student usage</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+
+      </div>
+      <script>
+        function toggleNavbarBottom() {
+          document.getElementById("navbar-bottom-expand").classList.toggle("navbar-bottom-expanded");
+        }
+      
+      </script>
+  </body>
+</html>

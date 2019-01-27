@@ -3216,7 +3216,21 @@ app.get("/bradshaw", function(req, res) {
 app.get("/home", function(req, res) {
   res.render("homePage/home");
 });
-
+app.get("/home/inquiries", async function(req, res) {
+  res.render("homePage/inquiries");
+})
+app.get("/home/administrators", async function(req, res) {
+  res.render("homePage/administrators");
+})
+app.get("/home/students", async function(req, res) {
+  res.render("homePage/students");
+})
+app.get("/home/districts", async function(req, res) {
+  res.render("homePage/districts");
+})
+app.get("/home/contact", async function(req, res) {
+  res.render("homePage/contact");
+})
 
 function createArray(depth) {
   if (depth == 1) {
@@ -3378,9 +3392,7 @@ app.get("/course", async function(req, res) {
             });
           }
           let topics = course.topics;
-          console.log(sendNotes["2019_0_26"]);
-          // console.log(sendNotes);
-          res.render("redesign/courseInfo", {topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: sendNotes, assignments: sendAssignments});
+          res.render("redesign/courseInfo", {target: req.query.target || "assignments", topics: topics, completedAssignments: sendCompleted, completedNotes: user.completedNotes, icons: iconMap, course: course, notes: sendNotes, assignments: sendAssignments});
         } else {
           res.redirect("/");
         }
@@ -3696,6 +3708,30 @@ app.get("/account", async function(req, res) {
   }
 });
 
+app.get("/notes", async function(req, res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user != null) {
+      let courses = await Course.find({_id : user.courses}).populate("teacher").populate("semester").populate("category");
+      res.render("redesign/notes", {categories: iconMap, courses: courses});
+    } 
+  } else {
+    res.redirect("/");
+  }
+});
+
+app.get("/assignments", async function(req, res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user != null) {
+      let courses = await Course.find({_id : user.courses}).populate("teacher").populate("semester").populate("category");
+      res.render("redesign/assignments", {categories: iconMap, courses: courses});
+    } 
+  } else {
+    res.redirect("/");
+  }
+});
+
 app.get("/events", async function(req,res) {
   if (req.session.userId) {
     let user = await User.findOne({_id : req.session.userId});
@@ -3704,7 +3740,7 @@ app.get("/events", async function(req,res) {
       res.render("redesign/events", {moment: moment, icons: iconMap, events: events});
     } 
   } else {
-    res.redirect("/login");
+    res.redirect("/");
   }
 });
 
