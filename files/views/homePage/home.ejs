@@ -158,12 +158,21 @@
         font-size: 28px;
       }
       .feature-body {
-        width: 90%;
+        width: 100%;
       }
       .feature-body-item {
         width: 20%;
         display: inline-block;
         padding: 15px;
+        text-align: center;
+        vertical-align: text-top; 
+      }
+      .feature-icon {
+        height: 48px;
+        margin-left: auto;
+      }
+      .feature-icon img {
+        height: 100%;
       }
       @media screen and (max-width: 980px) {
         .navbar {
@@ -183,6 +192,9 @@
         .feature-body-item {
           display: block;
           width: 100%;
+        }
+        .screen-3 {
+          display: none;
         }
       }
       @media screen and (max-width: 430px) {
@@ -225,12 +237,15 @@
           <h1>Connect to Your Students. Elevate your School</h1>
           <!-- <h5>reach them a new level</h5> -->
         </div>
-        <div class="flex-row-container space-evenly">
+        <div class="flex-row-container space-around">
           <div class="screen-display screen-1">
             <img src = "/public/images/simulatedScreen.png">
           </div>
           <div class="screen-display screen-2">
             <img src = "/public/images/simulatedScreenHomework.png">
+          </div>
+          <div class="screen-display screen-3">
+            <img src = "/public/images/simulatedScreenSignup.png">
           </div>
         </div>
       </div>
@@ -242,13 +257,13 @@
         <div class="feature-list">
           <div class="feature-title">Student features of schoolr</div>
           <div class="feature-body">
-            <div class="feature-body-item">Centralized Course Selection</div><div class="feature-body-item">In school events with alerts</div><div class="feature-body-item">Customizable weekly schedules</div><div class="feature-body-item">Notes, Assignments, and Reminders</div><div class="feature-body-item">Student connections through questions</div>
+            <div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/listIcon.png"></div>Centralized Course Selection</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/pushIcon.svg"></div>In school events with alerts</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/customScheduleIcon.png"></div>Customizable weekly schedules</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/assignmentIcon.png"></div>Notes, Assignments, and Reminders</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/faqIcon.png"></div>Student connections through questions</div>
           </div>
         </div>
         <div class="feature-list">
-          <div class="feature-title">Admin features of schoolr</div>
+          <div class="feature-title">Administrator features of schoolr</div>
           <div class="feature-body">
-            <div class="feature-body-item">Instant push notifications and alerts</div><div class="feature-body-item">Real time, completely customizable school information</div><div class="feature-body-item">Complete control over teachers, categories, and courses</div><div class="feature-body-item">Create events, pick blocks, and change spare names</div><div class="feature-body-item">Select semesters, assign start and end dates, and monitor student usage</div>
+            <div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/notificationIcon.png"></div>Instant push notifications and alerts</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/treeIcon.png"></div>Real time, completely customizable school information</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/schoolIcon.png"></div>Complete control over teachers, categories, and courses</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/calendarIcon.svg"></div>Create events, pick blocks, and change spare names</div><div class="feature-body-item"><div class="feature-icon"><img src = "/public/icons/presentationIcon.png"></div>Select semesters, assign start and end dates, and monitor student usage</div>
           </div>
         </div>
       </div>
