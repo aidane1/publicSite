@@ -58,7 +58,7 @@
         .bodyLowerSection {
             width: 100%;
             flex-grow: 1;   
-            background-color: rgb(231,235,237);
+            background-color: #f5f7f9;
         }
         .overPage {
             width: 100%;
@@ -184,6 +184,95 @@
             border-bottom: 1px solid rgb(56, 70, 90);
             cursor: pointer;
         }
+        .userHolder {
+            width: 95%;
+            max-width: 900px;
+            margin: auto;
+            padding-bottom: 60px;
+            margin-top: 50px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+        .searchUsers {
+            width: 100%;
+            height: 70px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .activeSearch {
+            background-color: white;
+            box-shadow: 0px 1px 2px 0px rgba(60,64,67,.3), 0px 2px 6px 2px rgba(60, 64, 67, 0.15);
+            border-bottom: 0;
+            z-index: 10;
+        }
+        .searchIcon {
+            font-size: 17px;
+            margin-left: 25px;
+            color: #999;
+        }
+        .searchInput {
+            flex-grow: 1;
+            background-color: transparent;
+            border: 0;
+            outline: none;
+            height: 100%;
+            padding-left: 15px;
+            font-size: 15px;
+        }
+        .searchInput::placeholder {
+            font-weight: 300;
+            color: #999;
+        }
+        .titleList {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .titleListItem {
+            width: 33.333%;
+            font-size: 13px;
+            font-weight: 600; 
+        }
+        .userList {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+        .user {
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            background-color: white;
+            border-bottom: 1px solid #ccc;
+            align-items: center;
+        }
+        .userProperty {
+            width: 33.333%;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .username {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .studentID {
+            font-size: 12px;
+            color: #999;
+            font-weight: 300;
+        }
+        .editPermissions {
+            margin-left: 5px;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -213,7 +302,7 @@
                     Add, edit, and remove courses
                 </div>        
                 <div class = "expandingcategorys" id = "expandingcategorys">
-                    <div class="expandedLink"  style = "color: rgb(67,181,245);">
+                    <div class="expandedLink">
                         Categories
                     </div>
                     <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
@@ -244,7 +333,7 @@
                 </div>                
             </div>
             <div class="sideBarTopic">
-                <div class="sideBarMain">
+                <div class="sideBarMain" style = "color: rgb(67,181,245);">
                     Users
                 </div>
                 <div class="sideBarSecondary">
@@ -265,7 +354,36 @@
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
                 <div class="userHolder">
-
+                    <div class="searchUsers" id = "searchUsers">
+                        <i class="searchIcon fas fa-search"></i><input type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search users">
+                    </div>
+                    <div class="titleList">
+                        <div class="titleListItem">
+                            User
+                        </div>
+                        <div class="titleListItem">
+                            Courses
+                        </div>
+                        <div class="titleListItem">
+                            Permissions
+                        </div>
+                    </div>
+                    <div class="userList">
+                        <% for (var i = 0; i < users.length; i++) { %>
+                            <div class="user">
+                            <div class="userProperty">
+                                <div class="username">
+                                    <%=users[i].username%>
+                                </div>
+                                <div class="studentID">
+                                    <%=users[i].studentID || "No student ID"%>
+                                </div>
+                            </div>
+                            <div class="userProperty">List</div>
+                            <div class="userProperty"><%=users[i].permissions%><i class="editPermissions fas fa-cogs"></i></div>
+                        </div>
+                        <% } %>
+                    </div>
                 </div>
             </div>
         </div>
@@ -299,6 +417,10 @@
             element.className = "expandedTopic";
             categorySecondary.style.visibility = "hidden";
         }
+    }
+    function toggleBlur() {
+        let element = document.getElementById("searchUsers");
+        element.classList.toggle("activeSearch");
     }
 
 

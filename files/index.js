@@ -1098,6 +1098,26 @@ app.get("/dashboard/courses/categories", async function(req,res) {
     res.redirect("/login");
   }
 });
+
+app.get("/dashboard/users", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let users = await User.find({school: school._id});
+        res.render("dashboard/usersDashboard", {school: school, users: users});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
 app.post("/editTeacher", urlencodedParser, async function(req, res) {
   console.log(req.body);
   try {
@@ -3265,7 +3285,7 @@ function daysInMonth (month, year) {
 function calculateSemesters(semesterList, date) {
   let goodSemesterList = [];
   for (var i = 0; i < semesterList.length; i++) {
-    if (semesterList[i].startDate.getTime() < date.getTime() && semesterList[i].endDate > date.getTime()) {
+    if (semesterList[i].startDate.getTime() <= date.getTime() && semesterList[i].endDate > date.getTime()) {
       goodSemesterList.push(semesterList[i]._id);
     }
   }
@@ -3511,7 +3531,7 @@ app.get("/updateStudentId", async function(req, res) {
 });
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
-  // let currentDate = new Date(2019, 0, 11, 10,14);
+  // let currentDate = new Date(2019, 0, 28, 10,14);
   let startDate = moment([2018, 8, 3]);
   let endDate = moment([2019, 5, 30]);
   let yearLength = endDate.diff(startDate, "days");
@@ -3644,7 +3664,7 @@ app.get("/", async function(req, res) {
       
       if (today) {
         let todayEvents = today[3]
-        let tommorowEvents = today[3];
+        let tommorowEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`][3];
         soonEvents = todayEvents.concat(tommorowEvents);
         let currentSchedule = school.constantBlocks ? school.constantBlockSchedule.schedule[today[0][0]]["day" + (today[0][1]+1).toString()] : school.blockOrder[today[0][0]]["day" + (today[0][1]+1).toString()];
 
