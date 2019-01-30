@@ -3454,6 +3454,7 @@ app.post("/uploadNotesImage",  async function(req, res) {
   try {
     if (req.session.userId && req.query.course) {
       let user = await User.findOne({_id : req.session.userId});
+      console.log(req.files);
       let noteImage = req.files.filepond;
       let extension = noteImage.name.split(".")[noteImage.name.split(".").length-1];
       let name = (new Date()).getTime().toString() + "." + extension;
@@ -3491,12 +3492,12 @@ app.post("/uploadStudentNote", urlencodedParser, async function(req, res) {
 
 app.post("/createUserAssignment",urlencodedParser, async function(req,res) {
   try {
-    if (req.session.userId && req.body.info && req.body.due && req.query.course) {
+    if (req.session.userId && req.body.info && req.body.due && req.query.course && req.body.type) {
       if (req.body.customTopic == "true") {
         await Course.findOneAndUpdate({_id : req.query.course}, {$push: {topics: req.body.topic}});
       }
       let user = await User.findOne({_id : req.session.userId});
-      let info = await createAssignment(user._id, "text", req.body.info, req.body.notes || "", req.body.due, req.query.course, req.body.topic || "No Topic", false);
+      let info = await createAssignment(user._id, req.body.type, req.body.info, req.body.notes || "", req.body.due, req.query.course, req.body.topic || "No Topic", false);
       res.send(info);
     }
   } catch(e) {

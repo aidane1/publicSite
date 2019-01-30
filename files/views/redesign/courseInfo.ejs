@@ -285,12 +285,13 @@
                 </div>
                 <textarea id = "assignmentNotes"></textarea>
             </div>
-            <div class="createDueDate">
+            <div class="createDueDate"  style = "margin-bottom: 20px" >
                 <div class="dueDateWord">
                     Due
                 </div>
                 <textarea id = "assignmentDue"></textarea>
             </div>
+            <input type = "file" class = "filepondAssignment" id = "assignmentsUpload" name = "filepond">
             <div class="createTopic" id = "createTopic">
                 Topic
                 <div class="createTopicInput" id = "createTopicInput">
@@ -312,6 +313,7 @@
                 </div>
             </div>
             
+            
         </div>
         <div class="createAssignmentBottom">
             <div class="iconsRow">
@@ -324,19 +326,32 @@
     </div>
 </body>
 <script>
+    let fileName = "";
     FilePond.registerPlugin(
         FilePondPluginImagePreview,
     );
-    FilePond.setOptions({
+    // FilePond.setOptions({
+    //     server: {
+    //         url: "/uploadNotesImage?course=<%=course._id%>",
+    //     }
+    // });
+    let pond = FilePond.create(document.getElementById("notesUpload"), {
         server: {
             url: "/uploadNotesImage?course=<%=course._id%>",
         }
     });
-    let pond = FilePond.create(document.getElementById("notesUpload"));
     pond.on("processfile", function(err, file) {
         
     });
 
+    let assignmentPond = FilePond.create(document.getElementById("assignmentsUpload"), {
+        server: {
+            url: "/uploadTeacherFile?course=<%=course._id%>"
+        }
+    });
+    assignmentPond.on("processfile", function(err, file) {
+        fileName = file.serverId;
+    });
 </script>
 <script>
     function checkNoteValid(element) {
@@ -438,12 +453,19 @@
         let notes = document.getElementById("assignmentNotes").value;
         let due = document.getElementById("assignmentDue").value;
         let topic;
+        let type;
         if (customTopic) {
             topic = document.getElementById("newTopic").value + "&customTopic=true";
         } else {
             topic = document.getElementById("dropDownButton").innerText;
         }
-        let sendString = "info=" + info + "&due=" + due + "&notes=" + notes + "&topic=" + topic;
+        if (fileName) {
+            type = "file";
+            info += "_" + fileName;
+        } else {
+            type = "text";
+        }
+        let sendString = "info=" + info + "&due=" + due + "&notes=" + notes + "&topic=" + topic + "&type=" + type;
         if (info && due) {
             sendPostRequest(sendString, "/createUserAssignment?course=<%=course._id%>", function(res) {
                 if (res[0]) {
