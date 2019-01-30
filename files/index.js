@@ -212,6 +212,8 @@ let Assignments = require("../models/assignmentchar.js");
 
 let Teachers = require("../models/teacherchar.js");
 
+let TeacherUser = require("../models/teacherUserchar.js");
+
 let Categories = require("../models/categorychar.js");
 
 let Semesters = require("../models/semesterchar.js");
@@ -1099,34 +1101,43 @@ app.get("/dashboard/courses/categories", async function(req,res) {
   }
 });
 
-app.get("/dashboard/users", async function(req,res) {
+app.get("/dashboard/users/:group", async function(req,res) {
   if (req.session.userId) {
     try {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
-        let users = await User.find({school: school._id});
-        res.render("dashboard/usersDashboard", {school: school, users: users});
+        if (req.params.group == "users") {
+          let users = await User.find({school: school._id});
+          res.render("dashboard/usersDashboard", {school: school, users: users});
+        } else if (req.params.group == "admins") {
+          let users = await User.find({school: school._id, permissions: "admin"});
+          res.render("dashboard/adminsListDashboard", {school: school, users: users});
+        } else if (req.params.group == "teachers") {
+          let teachers = await TeacherUser.find({school: school._id}).populate("teacherAccount");
+          res.render("dashboard/teacherListDashboard", {school: school, teachers: teachers});
+        } else {
+          let users = await User.find({school: school._id});
+          res.render("dashboard/usersDashboard", {school: school, users: users});
+        }
       } else {
-        res.redirect("/login");
+        res.redirect("/home");
       }
     } catch(e) {
-      res.redirect("/login");
+      res.redirect("/home");
     }
   } else {
-    res.redirect("/login");
+    res.redirect("/home");
   }
 });
 
 app.post("/editTeacher", urlencodedParser, async function(req, res) {
-  console.log(req.body);
   try {
-    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.id) {
+    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.id && req.body.code) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin" && user.school != null) {
-        let school = await School.findOne({_id : user.school});
-        await Teachers.findOneAndUpdate({_id : req.body.id}, {$set: {firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix}});
-        res.send([true, {firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix, _id: req.body.id}]);
+        await Teachers.findOneAndUpdate({_id : req.body.id}, {$set: {teacherCode: req.body.code, firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix}});
+        res.send([true, {teacherCode: req.body.code, firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix, _id: req.body.id}]);
       } else {
         res.send([false, "User must be an admin to submit changes to the teacher list"])
       }
@@ -1551,7 +1562,7 @@ app.post("/editCode", urlencodedParser, async function(req, res) {
 });
 app.post("/addTeacher", urlencodedParser, async function(req, res) {
   try {
-    if (req.session.userId && req.body.first && req.body.last && req.body.prefix) {
+    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.code) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin" && user.school != null) {
         let school = await School.findOne({_id : user.school});
@@ -1560,6 +1571,7 @@ app.post("/addTeacher", urlencodedParser, async function(req, res) {
           lastName: req.body.last[0].toUpperCase() + req.body.last.substring(1, req.body.last.length).toLowerCase(),
           prefix: req.body.prefix,
           school: school._id,
+          teacherCode: req.body.code,
         };
         Teachers.create(teacherObject, async function(err, teacher) {
           if (err || teacher == null) {
@@ -1911,23 +1923,32 @@ app.post("/updateManyCourse", urlencodedParser, async function(req, res) {
 
 app.get("/teacher/:id", async function(req, res) {
   try {
-    if (req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      let teacher = await Teachers.findOne({_id : req.params.id});
-      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-        res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher});
+    if (req.session.teacherId || req.session.userId) {
+      if (req.session.teacherId) {
+        let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
+        if (teacher.teacherAccount._id.toString() == req.params.id.toString()) {
+          let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
+          res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher.teacherAccount});
+        } else {
+          res.redirect("/home");
+        }
       } else {
-        res.redirect("/dashboard");
+        let user = await User.findOne({_id : req.session.userId});
+        let teacher = await Teachers.findOne({_id : req.params.id});
+        if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+          let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+          res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher});
+        } else {
+          res.redirect("/dashboard");
+        }
       }
     } else {
-      res.redirect("/login");
+      res.redirect("/home");
     }
   } catch(e) {
     console.log(e);
-    res.redirect("/login");
+    res.redirect("/home");
   }
-  
 });
 
 app.get("/teacher/:id/:course/overview", async function(req, res) {
@@ -3712,9 +3733,8 @@ app.get("/", async function(req, res) {
       res.redirect("/login");
     }
   } else {
-    res.redirect("/login");
+    res.redirect("/home");
   }
-  
 });
 
 app.get("/account", async function(req, res) {
@@ -4178,10 +4198,48 @@ app.get("/login", async function(req, res) {
     console.log(e);
     res.redirect("/signup");
   }
-  
   // res.render("login", {error: ""});
 })
+app.get("/login-teacher", async function(req, res) {
+  try {
+    let schools = await School.find({});
+    schools.sort(function(a,b) {
+      return (a.firstName > b.firstName ? -1 : 1);
+    });
+    res.render("redesign/loginTeacher", {schools: schools, error: ""});
+  } catch(e) {
+    console.log(e);
+    res.redirect("/home");
+  }
+});
+app.post("/login-teacher", urlencodedParser, async function(req, res) {
+  let schools = await School.find({});
+  schools.sort(function(a,b) {
+    return (a.firstName > b.firstName ? -1 : 1);
+  });
+  //the stringTest function is a function that confirms the string is only character a-z A-Z 0-9
+  if (req.body.username && req.body.code && req.body.school && stringTest(req.body.school) && stringTest(req.body.username) && stringTest(req.body.password)) {
+    
+    //try to find the user in the database. if that doesn't work, tell them their information was incorrect.
+    try {
+      // asyncronous function. returns the user if the info was correct, throws an error if it wasn't.
+      let response = await TeacherUser.authenticate(req.body.username, req.body.code, req.body.school);
+      //sets the session and cookie to the current user ID
+      req.session.teacherId = response._id;
 
+      res.cookie("teacherID", response._id);
+      //redirects to the cookie path, or to home if the user doesn't have path cookies
+      res.redirect("/teacher/" + response.teacherAccount._id);
+    } catch(e) {
+      console.log(e);
+      // tells the user their info was incorrect
+      res.render("redesign/loginTeacher", {schools: schools, error: "username or code incorrect. Please try again."});
+    }
+  } else {
+    //asks the user not to enter special characters.
+    res.render("redesign/login", {schools: schools, error: "Please fill in all fields with alphanumeric characters"});
+  }
+});
 app.post("/login", urlencodedParser, async (req, res, next) => {
 
   let schools = await School.find({});

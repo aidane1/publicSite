@@ -290,20 +290,20 @@
         <div class="logoBox">
                 <img src = "/public/images/logo_transparent.png"  class = "logoImage" />
         </div>
-        <form class="textInputs" action = "/login" method = "POST" id = "form">
+        <form class="textInputs" action = "/login-teacher" method = "POST" id = "form">
             
             <div class="inputHolder">
                 <div class="iconHolder">
                     <img src = "/public/icons/username.svg" />
                 </div>
-                <input type="username" name = "username" class = "username" placeholder = "Username">
+                <input type="username" name = "username" class = "username" placeholder = "Teacher ID">
             </div>
             
             <div class="inputHolder">
                 <div class="iconHolder">
                     <img src = "/public/icons/password.svg" />
                 </div>
-                <input type="password" name = "password" class = "password" placeholder="Password">
+                <input type="password" name = "code" class = "password" placeholder="Code">
             </div>
             <div class="schoolInput">
                 <select class = "schoolRoll" name = "school" dir = "rtl">
@@ -318,8 +318,7 @@
             LOGIN
         </div> -->
         <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Login</button>
-        <div class="signup"><a href = "/signup">Sign Up</a></div>
-        <div class="teacherLogin"><a href = "/login-teacher">Log in as teacher</a></div>
+        <div class="teacherLogin"><a href = "/login">Log in as student</a></div>
         <div class="teacherLogin"><a href = "/login-admin">Log in as admin</a></div>
     </div>
   </body>

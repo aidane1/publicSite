@@ -53,7 +53,8 @@
             flex-grow: 0;
             background-color: rgb(3, 155, 229);
             margin: 0;
-            padding: 0;
+            padding: 0; 
+            position: relative;
         }
         .bodyLowerSection {
             width: 100%;
@@ -74,6 +75,24 @@
         .barTitle {
             font-size: 27px;
             letter-spacing: 2px;
+        }
+        .barOptions {
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            padding-left: 50px;
+        }
+        .barOption {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0px 20px;
+            cursor: pointer;
+        }
+        .barOptionSelected {
+            text-decoration: underline;
         }
         .sideBarTitle {
             width: 100%;
@@ -302,7 +321,7 @@
                     Add, edit, and remove courses
                 </div>        
                 <div class = "expandingcategorys" id = "expandingcategorys">
-                    <div class="expandedLink">
+                    <div class="expandedLink"  onclick="window.location = '/dashboard/courses/categories'">
                         Categories
                     </div>
                     <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
@@ -351,15 +370,26 @@
                         Users
                     </div>
                 </div>
+                <div class="barOptions">
+                    <div class="barOption barOptionSelected">
+                        Users
+                    </div>
+                    <div class="barOption" onclick = "window.location = '/dashboard/users/admins'">
+                        Admins
+                    </div>
+                    <div class="barOption" onclick = "window.location = '/dashboard/users/teachers'">
+                        Teachers
+                    </div>
+                </div>
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
                 <div class="userHolder">
                     <div class="searchUsers" id = "searchUsers">
-                        <i class="searchIcon fas fa-search"></i><input type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search users">
+                        <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search users">
                     </div>
                     <div class="titleList">
                         <div class="titleListItem">
-                            User
+                            All
                         </div>
                         <div class="titleListItem">
                             Courses
@@ -370,7 +400,7 @@
                     </div>
                     <div class="userList">
                         <% for (var i = 0; i < users.length; i++) { %>
-                            <div class="user">
+                        <div class="user">
                             <div class="userProperty">
                                 <div class="username">
                                     <%=users[i].username%>
@@ -422,7 +452,17 @@
         let element = document.getElementById("searchUsers");
         element.classList.toggle("activeSearch");
     }
-
+    function searchText(text) {
+        let users = document.getElementsByClassName("user");
+        for (var i = 0; i < users.length; i++) {
+            let child = users[i].children[0].children[0];
+            if (child.innerText.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+                users[i].style.display = "flex";
+            } else {
+                users[i].style.display = "none";
+            }
+        }
+    }
 
     
 

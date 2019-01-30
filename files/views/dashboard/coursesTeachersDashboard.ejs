@@ -180,7 +180,7 @@
             padding: 12px;
         }
         .teacherCategory {
-            width: 30%;
+            width: 24%;
             font-size: 13px;
             color: #666;
             padding-left: 3px;
@@ -199,7 +199,7 @@
             position: relative;
         }
         .teacherProperty {
-            width: 30%;
+            width:24%;
             padding-right: 10px;
             font-size: 13px;
             padding-left: 5px;
@@ -261,7 +261,7 @@
         }
  
         .createTeacherBlock {
-            width: 30%;
+            width: 24%;
             margin-top: 30px;
         }
         .container {
@@ -464,6 +464,7 @@
                     <div class="teacherCategoriesBar">
                         <div class="teacherCategory">First Name</div>
                         <div class="teacherCategory">Last Name</div>
+                        <div class="teacherCategory">Teacher Code</div>
                         <div class="teacherCategory">Prefix</div>
                     </div>
                     <div class="expandingBlock" id = "expandingBlock">
@@ -474,6 +475,9 @@
                             </div>
                             <div class="createTeacherShortDescription createTeacherBlock">
                                 <input type="text" id = "addLast" class = "addInput">
+                            </div>
+                            <div class="createTeacherCode createTeacherBlock">
+                                <input type="text" id = "addCode" class = "addInput"/>
                             </div>
                             <div class="createTeacherTime createTeacherBlock">
                                 <div class="optionsHolder">
@@ -486,8 +490,8 @@
                                     </select>
                                     <input type="text" class = "createOtherPrefix" id = "otherPrefix">
                                 </div>
-                                
                             </div>
+                            
                         </div>
                         <div class="buttonsRow">
                             <div class="buttonRowButton createCreation" id = "createOrEdit" onclick="getNewTeacherInfo()">Create</div>
@@ -499,8 +503,9 @@
                             <div class="teacher" onclick = "window.location = '/teacher/<%=teachers[i]._id%>'" id = "teacher_<%=teachers[i]._id%>">
                                 <div class="teacherProperty"><%=teachers[i].firstName%></div>
                                 <div class="teacherProperty"><%=teachers[i].lastName%></div>
+                                <div class="teacherProperty"><%=teachers[i].teacherCode.toUpperCase()%></div>
                                 <div class="teacherProperty"><%=teachers[i].prefix%></div>
-                                <i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)">
+                                <i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)"></i>
                                     <div class="editDelete">
                                         <div class="edit" onclick = 'getTeacher("<%=teachers[i]._id%>")'>Edit</div>
                                         <div class="delete" onclick = "removeTeacher('<%=teachers[i]._id%>')">Delete</div>
@@ -647,7 +652,7 @@
                     let teacher = document.createElement("div");
                     teacher.className = "teacher";
                     teacher.id = "teacher_" + response[1]._id;
-                    let teacherString = `<div class="teacherProperty">${response[1].firstName}</div><div class="teacherProperty">${response[1].lastName}</div><div class="teacherProperty">${response[1].prefix}</div><i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = 'getTeacher("${response[1]._id}")'>Edit</div><div class="delete" onclick = "removeTeacher('${response[1]._id}')">Delete</div></div></i>`;
+                    let teacherString = `<div class="teacherProperty">${response[1].firstName}</div><div class="teacherProperty">${response[1].lastName}</div><div class="teacherProperty">${response[1].teacherCode}</div><div class="teacherProperty">${response[1].prefix}</div><i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = 'getTeacher("${response[1]._id}")'>Edit</div><div class="delete" onclick = "removeTeacher('${response[1]._id}')">Delete</div></div></i>`;
                     teacher.innerHTML = teacherString;
                     document.getElementsByClassName("teachersBody")[0].appendChild(teacher);
                 } else {
@@ -690,7 +695,8 @@
                     let teacher = document.getElementById("teacher_" + response[1]._id);
                     teacher.children[0].innerText = response[1].firstName;
                     teacher.children[1].innerText = response[1].lastName;
-                    teacher.children[2].innerText = response[1].prefix;
+                    teacher.children[2].innerText = response[1].teacherCode;
+                    teacher.children[3].innerText = response[1].prefix;
                     let createButton = document.getElementById("createTeacher");
                     createButton.classList.remove("notAllowed");
                 } else {
@@ -713,19 +719,21 @@
         let first = document.getElementById("addFirst").value;
         let last = document.getElementById("addLast").value;
         let prefix = document.getElementById("sideBlockSelector").value;
+        let code = document.getElementById("addCode").value;
         if (prefix == "_") {
             prefix = document.getElementById("otherPrefix").value;
         }
-        sendTeacherEdit({id: id,first: first, last: last, prefix: prefix});
+        sendTeacherEdit({code: code, id: id,first: first, last: last, prefix: prefix});
     }
     function getNewTeacherInfo() {
         let first = document.getElementById("addFirst").value;
         let last = document.getElementById("addLast").value;
         let prefix = document.getElementById("sideBlockSelector").value;
+        let code = document.getElementById("addCode").value;
         if (prefix == "_") {
             prefix = document.getElementById("otherPrefix").value;
         }
-        sendNewteacher({first: first, last: last, prefix: prefix});
+        sendNewteacher({code: code, first: first, last: last, prefix: prefix});
     }
     function openEdit(element) {
         element.children[0].style.display = "flex";

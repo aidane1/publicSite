@@ -5,11 +5,15 @@ const Schema = mongoose.Schema;
 
 
 
-const TeacherScema = new Schema({
-    username: {
+const TeacherSchema = new Schema({
+    school: {
+      type: Schema.Types.ObjectId,
+      ref: "School",
+    },
+    teacherID: {
         type: String,
     },
-    password: {
+    code: {
         type: String,
         required: true,
     },
@@ -23,37 +27,30 @@ const TeacherScema = new Schema({
 
 
 
-TeacherScema.statics.authenticate = (name, password, school) => {
-
+TeacherSchema.statics.authenticate = (ID, code, school) => {
+  console.log(ID);
   return new Promise((resolve, reject) => {
-    TeacherAccount.findOne({ username: name }).exec((err, user) => {
+    TeacherAccount.findOne({ teacherID: ID }).exec((err, user) => {
+      
       if (err) {
         reject(err);
       } else if (!user || user.school != school) {
-        reject("user not found");
+        reject("teacher not found");
       } else {
-        bcrypt.compare(password, user.password, (err, result) => {
-          if (result) {
-            resolve(user);
-          } else {
-            reject("password incorrect");
-          }
-        });
+        if (code == user.code) {
+          resolve(user);
+        } else {
+          reject("code incorrect");
+        }
       }
     });
   })
 }
+TeacherSchema.pre("save", function(next) {
+  this.teacherID = this.teacherID.toLowerCase();
+  next();
+})
 
-TeacherScema.pre('save', function(next) {
-  var user = this;
-  bcrypt.hash(user.password, 10, function (err, hash){
-    if (err) {
-      return (err);
-    }
-    user.password = hash;
-    next();
-  })
-});
 
 var TeacherAccount = mongoose.model('TeacherAccount', TeacherSchema);
 module.exports = TeacherAccount;
