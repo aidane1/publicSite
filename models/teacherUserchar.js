@@ -47,7 +47,9 @@ TeacherSchema.statics.authenticate = (ID, code, school) => {
   })
 }
 TeacherSchema.pre("save", function(next) {
-  this.teacherID = this.teacherID.toLowerCase();
+  if (this.teacherID) {
+    this.teacherID = this.teacherID.toLowerCase();
+  }
   next();
 })
 
