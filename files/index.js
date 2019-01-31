@@ -1913,12 +1913,20 @@ app.post("/updateManyCourse", urlencodedParser, async function(req, res) {
 
 app.get("/teacher/:id", async function(req, res) {
   try {
+    let currentDate = (new Date()).local();
+    
     if (req.session.teacherId || req.session.userId) {
       if (req.session.teacherId) {
         let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
         if (teacher.teacherAccount._id.toString() == req.params.id.toString()) {
+          let school = await School.findOne({_id : teacher.school}).populate("semesters");
+          let colorMap = makeColorMap(school.blockNames);
+          let currentSemesters = calculateSemesters(school.semesters, currentDate);
           let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
-          res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher.teacherAccount});
+          let allowedUserCourses = await Course.find({$and: [{teacher: teacher.teacherAccount._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+          res.render("teacherDashboard/teacherDashboard", {colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher.teacherAccount});
         } else {
           res.redirect("/home");
         }
@@ -1926,8 +1934,14 @@ app.get("/teacher/:id", async function(req, res) {
         let user = await User.findOne({_id : req.session.userId});
         let teacher = await Teachers.findOne({_id : req.params.id});
         if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+          let school = await School.findOne({_id : user.school}).populate("semesters");
+          let colorMap = makeColorMap(school.blockNames);
+          let currentSemesters = calculateSemesters(school.semesters, currentDate);
           let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-          res.render("teacherDashboard/teacherDashboard", {courses: courses, teacher: teacher});
+          let allowedUserCourses = await Course.find({$and: [{teacher: teacher._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+          res.render("teacherDashboard/teacherDashboard", {colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher});
         } else {
           res.redirect("/dashboard");
         }
@@ -3722,6 +3736,13 @@ app.get("/", async function(req, res) {
     } catch(e) {
       console.log(e);
       res.redirect("/login");
+    }
+  } else if (req.session.teacherId) {
+    let teacher = await TeacherUser.findOne({_id : req.session.teacherId});
+    if (teacher && teacher.teacherAccount) {
+      res.redirect("/teacher/" + teacher.teacherAccount._id);
+    } else {
+      res.redirect("/home");
     }
   } else {
     res.redirect("/home");
@@ -5524,5 +5545,5 @@ app.get("/down", function(req, res) {
 });
 
 app.get("*", function(req, res) {
-  res.sendFile(__dirname + "/errors/aStar.html");
+  res.sendFile(__dirname + "/errors/error404.html");
 });

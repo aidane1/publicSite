@@ -44,6 +44,7 @@
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
+            overflow-y: auto;
         }
         .bodyUpperSection {
             width: 100%;
@@ -167,7 +168,59 @@
             border-bottom: 1px solid rgb(56, 70, 90);
             cursor: pointer;
         }
-        
+        .scheduleBodies {
+            width: 100%;
+            height: calc(100% - 70px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+        .schedule {
+            /* width: 95%; */
+            width: 550px;
+            height: 100%;
+            overflow-x: auto;
+            
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+        .scheduleDay {
+            display: inline-block;
+            /* border-right: 1px solid black; */
+            /* width: 20%; */
+            /* display: flex; */
+            /* flex-direction: column; */
+            /* flex-wrap: nowrap; */
+        }
+        .scheduleTitle {
+            /* width: 100%; */
+            text-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 20px;
+            border-bottom: 1px solid black;
+            
+        }
+        .scheduleBlock {
+            width: 110px;
+            height: 80px;
+            min-height: 50px;
+            /* height: 150px; */
+            /* height: 120px; */
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            background-color: white;
+            font-size: 12px;
+        }
+        .scheduleBlock div {
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -176,8 +229,8 @@
             <div class="sideBarTitle">
                     <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
-            <div class="sideBarOverview">
-                <div class="overViewMain">
+            <div class="sideBarOverview ">
+                <div class="overViewMain" style = "color: rgb(67,181,245);">
                     Courses Overview
                 </div>
             </div> 
@@ -215,7 +268,29 @@
                 </div>
             </div>
             <div class = "bodyLowerSection">
-
+                <div class="scheduleBodies">
+                    <% for (var i = 0; i < readSchedule.length; i++) { %>
+                    <div class="schedule">
+                        <% for (var key in readSchedule[i]) { %>
+                            <div class="scheduleDay">
+                                <div class="scheduleTitle">
+                                    <%=titles[i][key]%>
+                                </div>
+                                <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
+                                    <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                        <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
+                                        <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
+                                            <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                        <% } %>
+                                        <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+                </div>
+                
             </div>
         </div>
     </div>

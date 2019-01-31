@@ -37,6 +37,7 @@
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
+            overflow-y: auto;
         }
         .bodyRight {
             width: calc(100% - 250px);
@@ -460,6 +461,7 @@
             font-size: 12px;
             text-align: center;
             margin-top: 10px;
+            color: #ccc;
         }
         .center {
             width: 100%;
@@ -781,22 +783,22 @@
                         <div class="configureSecondary">
                             This determines what format of schedule your school is using. The
                             rotation period is the length of the schedule before repeating. default is 1 week rotation.
-                            <div class="center" style = "flex-direction: column">
-                                <label class="container">One Week Rotation
-                                    <input onchange = "updateScheduleType(this)" type="radio" name="radio" value = "1" <%=school["scheduleRollLength"] == 1 ? "checked='checked'" : ""%>>
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container">Four Week Rotation
-                                    <input onchange = "updateScheduleType(this)" type="radio" value = "4" name="radio" <%=school["scheduleRollLength"] == 4 ? "checked='checked'" : ""%>>
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container"> <i>n</i> Week Rotation
-                                    <input onchange = "updateScheduleType(this)" type="radio" value = "3" name="radio" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "checked='checked'" : ""%>>
-                                    <span class="checkmark"></span>
-                                </label>
-                                <div class = "customLengthHolder" id = "customLengthHolder" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "style='display:block'" : "style=display:none"%>>
-                                        Schedule length is <div class = "customNumber" oninput = "updateScheduleCustom(this)" id = "customNumber" contenteditable="true"><%=school["scheduleRollLength"]%></div> Weeks
-                                </div>
+                        </div>
+                        <div class="center" style = "flex-direction: column">
+                            <label class="container">One Week Rotation
+                                <input onchange = "updateScheduleType(this)" type="radio" name="radio" value = "1" <%=school["scheduleRollLength"] == 1 ? "checked='checked'" : ""%>>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="container">Four Week Rotation
+                                <input onchange = "updateScheduleType(this)" type="radio" value = "4" name="radio" <%=school["scheduleRollLength"] == 4 ? "checked='checked'" : ""%>>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="container"> <i>n</i> Week Rotation
+                                <input onchange = "updateScheduleType(this)" type="radio" value = "3" name="radio" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "checked='checked'" : ""%>>
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class = "customLengthHolder" id = "customLengthHolder" <%=school["scheduleRollLength"] != 1 && school["scheduleRollLength"] != 4 ? "style='display:block'" : "style=display:none"%>>
+                                    Schedule length is <div class = "customNumber" oninput = "updateScheduleCustom(this)" id = "customNumber" contenteditable="true"><%=school["scheduleRollLength"]%></div> Weeks
                             </div>
                         </div>
                     </div>
@@ -929,6 +931,10 @@
                     <div class="configureBox">
                         <div class="configureHeader">School Year</div>
                         <div class="configureSecondary">This will control the running start and end dates to your school year. The default will be the first of September to the 30th of June</div>
+                    </div>
+                    <div class="configureBox">
+                        <div class="configureHeader">School Icons</div>
+                        <div class="configureSecondary">This is the main logo that will be used throughout the app to represent your school</div>
                     </div>
                 </div>
             </div>
