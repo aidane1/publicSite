@@ -503,7 +503,7 @@
                             <div class="teacher" onclick = "window.location = '/teacher/<%=teachers[i]._id%>'" id = "teacher_<%=teachers[i]._id%>">
                                 <div class="teacherProperty"><%=teachers[i].firstName%></div>
                                 <div class="teacherProperty"><%=teachers[i].lastName%></div>
-                                <div class="teacherProperty"><%=teachers[i].teacherCode.toUpperCase()%></div>
+                                <div class="teacherProperty"><%=teachers[i].teacherCode ? teachers[i].teacherCode.toUpperCase() || "No teacher code"%></div>
                                 <div class="teacherProperty"><%=teachers[i].prefix%></div>
                                 <i class="fas fa-ellipsis-v editteacher" onclick = "openEdit(this)"></i>
                                     <div class="editDelete">
