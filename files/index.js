@@ -3777,7 +3777,7 @@ app.get("/", async function(req, res) {
       let soonEvents = [];
       
       
-
+      console.log(eventsObject);
       
       let alert = user.alerts[0] || false;
       
@@ -3787,8 +3787,8 @@ app.get("/", async function(req, res) {
       let foundNext = false;
       
       if (today) {
-        let todayEvents = today[3]
-        let tommorowEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`][3];
+        let todayEvents = today[3];
+        let tommorowEvents = eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`] ? eventsObject[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()+1}`][3]: [];
         soonEvents = todayEvents.concat(tommorowEvents);
         let currentSchedule = school.constantBlocks ? school.constantBlockSchedule.schedule[today[0][0]]["day" + (today[0][1]+1).toString()] : school.blockOrder[today[0][0]]["day" + (today[0][1]+1).toString()];
 
