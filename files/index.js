@@ -352,9 +352,6 @@ app.use(async function(req, res, next) {
 app.enable('trust proxy');
 
 function wwwHttpsRedirect(req, res, next) {
-  console.log(req.secure);
-  console.log(req.headers.host);
-  console.log(req.protocol);
     if (req.secure) {
       next();
     } else {
