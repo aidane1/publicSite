@@ -362,11 +362,7 @@ function wwwHttpsRedirect(req, res, next) {
         next();
       }
     } else {
-      if (req.headers.host.slice(0, 4) !== 'www.') {
-        return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
-      } else {
-        next();
-      }
+      return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
     }
 };
 
