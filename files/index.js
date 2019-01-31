@@ -5545,5 +5545,5 @@ app.get("/down", function(req, res) {
 });
 
 app.get("*", function(req, res) {
-  res.sendFile(__dirname + "/errors/error404.html");
+  res.status(404).sendFile(__dirname + "/errors/error404.html");
 });
