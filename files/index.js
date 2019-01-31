@@ -357,12 +357,12 @@ function wwwHttpsRedirect(req, res, next) {
   console.log(req.protocol);
     if (req.secure) {
       if (req.headers.host.slice(0, 4) !== 'www.') {
-        return res.redirect(301, req.protocol + '://www.' + req.headers.host + req.originalUrl);
+        return res.redirect(301, req.protocol + '://' + req.headers.host + req.originalUrl);
       } else {
         next();
       }
     } else {
-      return res.redirect(301, 'https://www.' + req.headers.host + req.originalUrl);
+      return res.redirect(301, 'https://' + req.headers.host + req.originalUrl);
     }
 };
 
