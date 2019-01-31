@@ -177,6 +177,8 @@
         .schedule {
             /* width: 95%; */
             width: 550px;
+            border: 1px solid black;
+            border-bottom: 0;
             height: 100%;
             overflow-x: auto;
             
@@ -185,6 +187,7 @@
             flex-wrap: nowrap;
             margin: auto;
             margin-bottom: 20px;
+            margin-top: 20px;
         }
         .scheduleDay {
             display: inline-block;
@@ -272,20 +275,37 @@
                     <% for (var i = 0; i < readSchedule.length; i++) { %>
                     <div class="schedule">
                         <% for (var key in readSchedule[i]) { %>
-                            <div class="scheduleDay">
-                                <div class="scheduleTitle">
-                                    <%=titles[i][key]%>
-                                </div>
-                                <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                    <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
-                                        <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
-                                        <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
-                                            <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
-                                        <% } %>
-                                        <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+                            <% if (i == today[0][0] && key == "day" + (today[0][1]+1)) { %>
+                                <div class="scheduleDay">
+                                    <div class="scheduleTitle" style = "background-color: gold; border-left: 1px solid black; border-right: 1px solid black">
+                                        <%=titles[i][key]%>
                                     </div>
-                                <% } %>
-                            </div>
+                                    <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                            <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
+                                            <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
+                                                <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                            <% } %>
+                                            <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            <% } else { %>
+                                <div class="scheduleDay">
+                                    <div class="scheduleTitle">
+                                        <%=titles[i][key]%>
+                                    </div>
+                                    <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                            <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
+                                            <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
+                                                <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
+                                            <% } %>
+                                            <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+                                        </div>
+                                    <% } %>
+                                </div>  
+                            <% } %>
                         <% } %>
                     </div>
                 <% } %>
