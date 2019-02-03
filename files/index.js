@@ -3823,7 +3823,8 @@ app.get("/", async function(req, res) {
       let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
       let colorMap = makeColorMap(school.blockNames);
       for (var key in user.scheduleColours) {
-        if (user.scheduleColours[key]) {
+        let isOk  = /^#[0-9A-F]{6}$/i.test(`#${user.scheduleColours[key]}`);
+        if (user.scheduleColours[key] && isOk) {
           colorMap[key] = "#" + user.scheduleColours[key];
         }
       }
