@@ -187,12 +187,10 @@
         <div class="backdrop">
             <form action="/block-names" method = "post">
                 <% for (var key in blockMap) { %>
-                    <% if (blockMap[key].isReal) { %>
-                        <div class="inputLabel">
-                            <%=key%>
-                        </div>
-                        <input type="text" name = "<%=key%>" class="input" value = "<%=blockMap[key].course%>" placeholder="block <%=key%> (current: <%=blockMap[key].course%>)">    
-                    <% } %>
+                    <div class="inputLabel">
+                        <%=key%>
+                    </div>
+                    <input type="text" name = "<%=key%>" class="input" value = "<%=blockMap[key].course%>" placeholder="block <%=key%> (current: <%=blockMap[key].course%>)">    
                 <% } %>
                 
                 <div class="submitAll" onclick = "submitAll()">

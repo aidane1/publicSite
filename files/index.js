@@ -4010,10 +4010,15 @@ app.get("/block-names", async function(req, res) {
       if (user != null && user.school != null) {
         let currentDate = (new Date()).local();
         let school = await School.findOne({_id : user.school}).populate("semesters");
+        let changingColours = [];
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "changing") {
+            changingColours.push(school.blockNames[i]);
+          }
+        }
         let currentSemesters = calculateSemesters(school.semesters, currentDate);
         let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-        let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
-        console.log(user.blockNames);
+        let blockMap = blockNamesObject(changingColours, allowedUserCourses, user.blockNames, school.spareName);
         res.render("redesign/blockNames", {blockMap: blockMap, school: school, user: user, icons: iconMap});
       } 
     } else {
