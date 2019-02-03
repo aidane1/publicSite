@@ -306,14 +306,45 @@
       }
       .notification {
         position: fixed;
-        top: 50%;
+        bottom: 105%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%);
         padding: 20px;
         background-color: white;
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-        border-left: 4px solid #5cd669;
+        
         min-width: 400px;
+        overflow: hidden;
+      }
+      .success {
+        border-left: 4px solid #5cd669;
+      }
+      .fill-success {
+        background-color: #5cd669;
+      }
+      .error {
+        border-left: 4px solid #FF9494;
+      }
+      .fill-error {
+        background-color: #FF9494;
+      }
+      .notification-opened {
+        bottom: 50%;
+      }
+      .notification-closed {
+        animation: notification-bounce 0.5s 1;
+        animation-fill-mode: forwards;
+      }
+      @keyframes notification-bounce {
+        0% {
+          bottom: 50%;
+        }
+        5% {
+          bottom: 48%;
+        }
+        100% {
+          bottom: 100%;
+        }
       }
       .notification-icon {
         width: 30px;
@@ -322,13 +353,22 @@
         top: 50%;
         left: 20px;
         transform: translateY(-50%);
-        background-color: #5cd669;
+        /* background-color: #5cd669; */
         border-radius: 50%;
       }
-      .notification-icon svg {
+      .fill-success svg {
         position: absolute;
         top: 53%;
         left: 48%;
+        transform: translate(-50%, -50%);
+        fill: white;
+      }
+      .fill-error svg {
+        width: 19px;
+        height: 19px;
+        position: absolute;
+        top: 51%;
+        left: 50%;
         transform: translate(-50%, -50%);
         fill: white;
       }
@@ -430,15 +470,19 @@
     <div class="footer">
 
     </div>
-    <div class="notification">
-      <div class="notification-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z"/></svg>
+    <div class="notification <%=notificationType%> <%=notification ? 'notification-opened' : ''%>" id = "notification">
+      <div class="notification-icon fill-<%=notificationType%>">
+          <% if (notificationType == "error") { %>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.9 21.9" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 21.9 21.9"><path d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/></svg>
+          <% } else if (notificationType == "success") { %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z"/></svg>
+          <% } %>
       </div>
       <div class="notification-body">
-        <div class="notification-title">Success</div>
-        <div class="notification-info">Your inquiry has been recieved. You will get a response within one to two business days</div>
+        <div class="notification-title"><%=notificationTitle%></div>
+        <div class="notification-info"><%=notificationBody%></div>
       </div>
-      <div class="notification-close">
+      <div class="notification-close" onclick = "dismissNotification()">
           <svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
       </div>
     </div>
@@ -459,8 +503,11 @@
           }
         }
       }
+      function dismissNotification() {
+        var notification = document.getElementById("notification");
+        notification.classList.add("notification-closed");
+      }
     
     </script>
-
   </body>
 </html>

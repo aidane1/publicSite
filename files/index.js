@@ -3480,7 +3480,7 @@ app.get("/home", function(req, res) {
   res.render("homePage/home");
 });
 app.get("/home/inquiries", async function(req, res) {
-  res.render("homePage/inquiries");
+  res.render("homePage/inquiries", {notification: false, notificationType: "success", notificationTitle: "Success", notificationBody: "Your inquiry has been recieved. You will get a response within one to two business days"});
 });
 app.post("/home/inquiries", urlencodedParser, async function(req, res) {
   try {
@@ -3494,13 +3494,13 @@ app.post("/home/inquiries", urlencodedParser, async function(req, res) {
       transporter.sendMail(mailOptions, function(err, info) {
         
       });
-      res.render("homePage/inquiries");
+      res.render("homePage/inquiries", {notification: true, notificationType: "success", notificationTitle: "Success", notificationBody: "Your inquiry has been recieved. You will get a response within one to two business days"});
     } else {
-      res.render("homePage/inquiries");
+      res.render("homePage/inquiries", {notification: true, notificationType: "error", notificationTitle: "error", notificationBody: "An error occured. Please try again"});
     } 
   } catch(e) {
     console.log(e);
-    res.render("homePage/inquiries");
+    res.render("homePage/inquiries", {notification: true, notificationType: "error", notificationTitle: "error", notificationBody: "An error occured. Please try again"});
   }
 });
 app.get("/home/administrators", async function(req, res) {
