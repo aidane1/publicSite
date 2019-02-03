@@ -35,25 +35,24 @@
             width: 250px;
             height: 100%;
             background-color: rgb(28, 35, 46);
-            display: inline-flex;
+            display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
             overflow-y: auto;
         }
         .bodyRight {
             width: calc(100% - 250px);
-            vertical-align: text-top;
             position: relative;
             height: 100%;
-            display: inline-flex;
+            display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
-            
+            overflow-y: auto;   
         }
         .bodyUpperSection {
             width: 100%;
             flex-grow: 0;
-            background-color: rgb(3, 155, 229);
+            background-color: #039be5;
             margin: 0;
             padding: 0;
         }
@@ -62,18 +61,8 @@
             flex-grow: 1;   
             background-color: #f5f7f9;
             overflow-x: auto;
+            overflow-y: visible;
         }
-        .overPage {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-        }
-        
         .barTitle {
             font-size: 27px;
             letter-spacing: 2px;
@@ -87,7 +76,6 @@
         .headerLogo {
             width: 100%;
         }
-
         .sideBarTopic {
             width: 100%;
             padding: 20px;
@@ -534,7 +522,7 @@
                     Change information displays
                 </div>                
             </div>
-            <div class="sideBarTopic">
+            <div class="sideBarTopic" onclick = "window.location = '/dashboard/users/users/'" >
                 <div class="sideBarMain">
                     Users
                 </div>
