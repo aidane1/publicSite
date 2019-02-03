@@ -397,6 +397,7 @@
             text-align: center;
             font-size: 24px;
             margin-top: 10px;
+            color: white;
         }
         .switch {
         position: relative;
@@ -461,13 +462,15 @@
             font-size: 12px;
             text-align: center;
             margin-top: 10px;
-            color: #ccc;
+            color: #ddd;
+            line-height: 1.4;
         }
         .center {
             width: 100%;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
+            align-items: center;
             margin-top: 15px;
             justify-content: center;
             font-size: 20px;
@@ -479,6 +482,7 @@
         display: block;
         position: relative;
         padding-left: 45px;
+        margin-left: 20px;
         margin-bottom: 12px;
         cursor: pointer;
         font-size: 22px;
@@ -565,13 +569,11 @@
             right: -10px;
             width: 20px;
             height: 20px;
-            /* background-color: red; */
         }
         .removeBlock svg {
             width: 100%;
             height: 100%;
             fill: red;
-            background-color: white;
             cursor: pointer;
         }
         .addBlock {
@@ -580,13 +582,11 @@
             right: -10px;
             width: 20px;
             height: 20px;
-            /* background-color: red; */
         }
         .addBlock svg {
             width: 100%;
             height: 100%;
             fill: green;
-            background-color: white;
             cursor: pointer;
         }
         .semesterBlock {
@@ -703,6 +703,9 @@
                 left: -250px;
                 z-index: 5;
             }
+            .bodyRight {
+                width: 100%;
+            }
             .openSideBar {
                 display: block;
             }
@@ -794,7 +797,7 @@
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
                 <div class="configureMain">
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #4a628a">
                         <div class="configureHeader">Constant Length Blocks</div>
                         <div class="configureSecondary">
                             This controls whether or not corrisponding blocks on different days have the same length.
@@ -813,7 +816,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox"  style = "background-color: #da5b70">
                         <div class="configureHeader">Schedule Type</div>
                         <div class="configureSecondary">
                             This determines what format of schedule your school is using. The
@@ -837,7 +840,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #95b251">
                         <div class="configureHeader">Spare Name</div>
                         <div class="configureSecondary">
                             This is the name of your schools spare block. Default is "Spare".
@@ -846,7 +849,7 @@
                             <div style = "font-size: 30px; margin-top: 15px" contenteditable="true" oninput="updateSpareName(this.innerText)"><%=school.spareName%></div>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #30aeeb">
                         <div class="configureHeader">Available Constant Blocks</div>
                         <div class="configureSecondary">
                             These are the possible names for blocks that students have no control over (ex. Lunch, or Advisory).
@@ -871,7 +874,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #3880ff">
                         <div class="configureHeader">Available Changing Blocks</div>
                         <div class="configureSecondary">
                             There are the possible names for blocks that students can change based on their selected courses. Defaults are
@@ -896,7 +899,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #8d5ce3">
                         <div class="configureHeader">Semesters</div>
                         <div class="configureSecondary">
                             These are the options that will be presented to courses for start and end dates. Note: Linear should be added as its own semester. It is reccomended that the names of semesters be kept short.
@@ -919,7 +922,7 @@
                             <% } %>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #287ea1">
                         <div class="configureHeader">File Rename</div>
                         <div class="configureSecondary">
                             When courses are parsed from files, the information is often not in the format you want. This tells the parser what block on your end corrisponds to what block on the schools end.
@@ -963,11 +966,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #a666e2">
+                    
                         <div class="configureHeader">School Year</div>
                         <div class="configureSecondary">This will control the running start and end dates to your school year. The default will be the first of September to the 30th of June</div>
                     </div>
-                    <div class="configureBox">
+                    <div class="configureBox" style = "background-color: #d6a828">
                         <div class="configureHeader">School Icons</div>
                         <div class="configureSecondary">This is the main logo that will be used throughout the app to represent your school</div>
                     </div>

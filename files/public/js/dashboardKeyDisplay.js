@@ -1,21 +1,21 @@
 let compareMap = {
-    "courses": {
+    "course": {
         "course": function(obj) {return obj.code},
         "teacher": function(obj) {return obj.teacher._id},
         "block": function(obj) {return obj.block},
         "semester": function(obj) {return obj.semester._id},
         "category": function(obj) {return obj.category._id},
     },
-    "teachers": {
+    "teacher": {
         "firstName": function(obj) {return obj.firstName},
         "lastName": function(obj) {return obj.lastName},
         "teacherCode": function(obj) {return obj.teacherCode},
         "prefix": function(obj) {return obj.prefix},
     },
-    "categories": {
+    "category": {
         "category": function(obj) {return obj.category},
     },
-    "events": {
+    "event": {
         "date": function(obj) {
             var d = new Date(date),
                 month = '' + (d.getMonth() + 1),
@@ -47,27 +47,31 @@ let compareMap = {
         "schoolSkipped": function(obj) {return obj.schoolSkipped ? "checked": "open"},
         "dayRolled": function(obj) {return obj.dayRolled ? "checked": "open"},
         "displayedEvent": function(obj) {return obj.displayedEvent ? "checked": "open"},
+    },
+    "code": {
+        "code": function(obj) {return obj.code},
+        "course": function(obj) {return obj.course},
     }
 }
 
 let editMap = {
-    "courses": {
+    "course": {
         "course": function(obj) {return obj.course},
         "teacher": function(obj) {return obj.teacher.prefix + obj.teacher.lastName},
         "block": function(obj) {return obj.block},
         "semester": function(obj) {return obj.semester.name},
         "category": function(obj) {return obj.category.category},
     },
-    "teachers": {
+    "teacher": {
         "firstName": function(obj) {return obj.firstName},
         "lastName": function(obj) {return obj.lastName},
         "teacherCode": function(obj) {return obj.teacherCode},
         "prefix": function(obj) {return obj.prefix},
     },
-    "categories": {
+    "category": {
         "category": function(obj) {return obj.category},
     },
-    "events": {
+    "event": {
         "date": function(obj) {return obj.date},
         "dateString": function(obj) {return obj.dateString},
         "info": function(obj) {return obj.info},
@@ -75,5 +79,9 @@ let editMap = {
         "schoolSkipped": function(obj) {return obj.schoolSkipped ? "yes": "no"},
         "dayRolled": function(obj) {return obj.dayRolled ? "yes": "no"},
         "displayedEvent": function(obj) {return obj.displayedEvent ? "yes": "no"},
+    },
+    "code": {
+        "code": function(obj) {return obj.code},
+        "course": function(obj) {return obj.course}
     }
 }

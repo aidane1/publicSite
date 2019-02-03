@@ -987,7 +987,18 @@ app.get("/dashboard/users/:group", async function(req,res) {
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
         if (req.params.group == "users") {
-          let users = await User.find({school: school._id});
+          let users = await User.find({school: school._id}).populate("courses");
+          let keys = [
+            {displayFunc: (obj) => {return [obj.username, obj.studentID || "No student ID"]}, type: "stackedList", name: "User", propertyName: "username"},
+            {displayFunc: (obj) => {return obj.banned ? "yes" : "no"}, type: "single", name: "Banned", propertyName: "courses"},
+            {displayFunc: (obj) => {return obj.permissions}, type: "single", name: "Permissions", propertyName: "permissions"},
+          ];
+          let tabOptions = [
+            {name: "Users", selected: true, href: "/dashboard/users/users"},
+            {name: "Teachers", selected: false, href: "/dashboard/users/teachers"},
+            {name: "Admins", selected: false, href: "/dashboard/users/admins"},
+          ];
+          // res.render("dashboard/listTemplate", {list: users, tabs: tabOptions, keys: keys, name: "Users", singular: "User"});
           res.render("dashboard/usersDashboard", {school: school, users: users});
         } else if (req.params.group == "admins") {
           let users = await User.find({school: school._id, permissions: "admin"});
@@ -1030,7 +1041,13 @@ app.get("/dashboard/courses/teachers", async function(req,res) {
           "teacherCode": {type: "text"},
           "prefix": {type: "select", optionType: "list", options: ["Mr. ", "Mrs. ", "Ms. "], other: true, otherName: "Other"},
         }
-        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Teachers", singular: "Teacher", keys: keys, list: teachers});
+        let tabOptions = [
+          {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
+          {name: "Teachers", selected: true, href: "/dashboard/courses/teachers"},
+          {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
+          {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
+        ];
+        res.render("dashboard/dashboardTemplate", {title: "Edit teachers - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Teacher", keys: keys, list: teachers});
       } else {
         res.redirect("/home");
       }
@@ -1055,7 +1072,13 @@ app.get("/dashboard/courses/categories", async function(req,res) {
         let inputTypes = {
           "category": {type: "text"}
         };
-        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Categories", singular: "Category", keys: keys, list: categories});
+        let tabOptions = [
+          {name: "Categories", selected: true, href: "/dashboard/courses/categories"},
+          {name: "Teachers", selected: false, href: "/dashboard/courses/teachers"},
+          {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
+          {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
+        ];
+        res.render("dashboard/dashboardTemplate", {title: "Edit categories - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Category", keys: keys, list: categories});
       } else {
         res.redirect("/login");
       }
@@ -1118,8 +1141,14 @@ app.get("/dashboard/courses/courses", async function(req,res) {
           "semester": {type: "select", optionType: "map", options: semesterMap, other: false},
           "category": {type: "select", optionType: "map", options: categoryMap, other: false},
         }
+        let tabOptions = [
+          {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
+          {name: "Teachers", selected: false, href: "/dashboard/courses/teachers"},
+          {name: "Courses", selected: true, href: "/dashboard/courses/courses"},
+          {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
+        ];
         courses.sort((a,b) => a.course.localeCompare(b.course));
-        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Courses", singular: "Course", keys: keys, list: courses});
+        res.render("dashboard/dashboardTemplate", {title: "Edit courses - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Course", keys: keys, list: courses});
       } else {
         res.redirect("/login");
       }
@@ -1136,8 +1165,25 @@ app.get("/dashboard/courses/codes", async function(req, res) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
-        // res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Codes", singular: "Code", keys:})
-        res.render("dashboard/courseCodeDashboard", {school: school});
+        let codeList = [];
+        for (var key in school.courseCodes) {
+          codeList.push({_id: key, code: key, course: school.courseCodes[key]});
+        }
+        let keys = [
+          {displayFunc: (obj) => {return obj.code}, name: "Code", propertyName: "code"},
+          {displayFunc: (obj) => {return obj.course}, name: "Course", propertyName: "course"},
+        ]
+        let inputTypes = {
+          "code": {type: "text"},
+          "course": {type: "text"},
+        }
+        let tabOptions = [
+          {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
+          {name: "Teachers", selected: false, href: "/dashboard/courses/teachers"},
+          {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
+          {name: "Codes", selected: true, href: "/dashboard/courses/codes"},
+        ];
+        res.render("dashboard/dashboardTemplate", {title: "Edit codes - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Code", keys: keys, list: codeList});
       } else {
         res.redirect("/login");
       }
@@ -1178,7 +1224,7 @@ app.get("/dashboard/events", async function(req, res) {
           "dayRolled": {type: "checkbox", default: "open"},
           "displayedEvent": {type: "checkbox", default: "checked"},
         }
-        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Events", singular: "Event", keys: keys, list: events});
+        res.render("dashboard/dashboardTemplate", {tabs: [], title: "Edit events - dashboard", inputTypes: inputTypes, name: "Events", singular: "Event", keys: keys, list: events});
       } else {
         res.redirect("/login");
       }
@@ -1208,7 +1254,7 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
         if (user.permissions == "admin" && user.school != null) {
           let school = await School.findOne({_id : user.school});
           switch(req.query.table) {
-            case "teachers":
+            case "teacher":
               if (req.query.action == "create") {
                 req.body.school = user.school;
                 if (keyCheck(req.body, ["firstName", "lastName", "prefix", "school", "teacherCode"])) {
@@ -1232,6 +1278,7 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
                     res.send([false, "This teacher is currently assigned to a course. Remove all dependancies on this teacher before deletion"]);
                   } else {
                     let teacher = await Teachers.findOneAndDelete({_id : req.body._id});
+                    await TeacherUser.findOneAndDelete({teacherAccount: teacher._id});
                     res.send([true, teacher]);
                   }
                 } else {
@@ -1239,7 +1286,7 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
                 }
               }
               break;
-            case "categories":
+            case "category":
               if (req.query.action == "create") {
                 req.body.school = user.school;
                 if (keyCheck(req.body, ["category"])) {
@@ -1270,10 +1317,51 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
                 }
               }
               break;
-            case "codes":
-
+            case "code":
+              if (req.query.action == "create") {
+                req.body.school = user.school;
+                if (keyCheck(req.body, ["code", "course"])) {
+                  let school = await School.findOne({_id : user.school});
+                  let pair = {_id: req.body.code, code: req.body.code, course: req.body.course};
+                  school.courseCodes[req.body.code] = req.body.course;
+                  await School.findOneAndUpdate({_id: user.school}, {$set: {courseCodes: school.courseCodes}});
+                  await Course.updateMany({$and: [{school: school._id}, {code: req.body.code}]}, {$set: {code: req.body.code, course: req.body.course}});
+                  res.send([true, pair]);
+                } else {
+                  res.send([false, "Please fill in all fields before submission"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id", "code", "course"])) {
+                  if (req.body.code && req.body.code == req.body._id) {
+                    let school = await School.findOne({_id : user.school});
+                    school.courseCodes[req.body.code] = req.body.course;
+                    await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: school.courseCodes}});
+                    await Course.updateMany({$and: [{school: school._id}, {code: req.body.code}]}, {$set: {course: req.body.course}});
+                    res.send([true, {_id : req.body.code, code: req.body.code, course: req.body.course}]);
+                  } else {
+                    let school = await School.findOne({_id : user.school});
+                    delete courseCodes[req.body._id];
+                    school.courseCodes[req.body.code] = req.body.course;
+                    await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: courseCodes}});
+                    res.send([true, {_id : req.body.code, code: req.body.code, course: req.body.course}]);
+                  }
+                } else {
+                  res.send([false, "Please specify an ID before editing a row"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let school = await School.findOne({_id : user.school});
+                  let courseCodes = school.courseCodes;
+                  delete courseCodes[req.body._id];
+                  await School.findOneAndUpdate({_id : school._id}, {$set: {courseCodes: courseCodes}});
+                  let pair = {_id: req.body.code, code: req.body.code, course: req.body.course};
+                  res.send([true, pair]);
+                } else {
+                  res.send([false, "Please specify an ID before deletion"]);
+                }
+              }
               break;
-            case "courses":
+            case "course":
               if (req.query.action == "create") {
                 req.body.school = user.school;
                 if (keyCheck(req.body, ["course", "teacher", "block", "semester", "category", "school"])) {
@@ -1307,7 +1395,7 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
                 }
               }
               break;
-            case "events":
+            case "event":
               if (req.query.action == "create") {
                 req.body.school = user.school;
                 if (keyCheck(req.body, ["dateString", "info", "time", "dayRolled", "displayedEvent", "schoolSkipped", "school"])) {

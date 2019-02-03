@@ -1,5 +1,9 @@
 User-agent: *
-Disallow: /add/
-Disallow: /questions/
-Disallow: /suggestions/
-Disallow: /chatroom/
+Disallow: /add
+Disallow: /questions
+Disallow: /suggestions
+Disallow: /chatroom
+Disallow: /home
+Disallow: /home/inquiries/
+Disallow: /home/administrators
+Disallow: /home/students
