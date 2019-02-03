@@ -360,7 +360,7 @@ function wwwHttpsRedirect(req, res, next) {
 };
 
 app.use(wwwHttpsRedirect);
-// 
+
 let server = app.listen(80, function() {
   console.log("listening for requests");
 });
@@ -395,7 +395,10 @@ function blockNamesObject(blocks, courses, courseNames, spareName) {
   } 
   let parsedNames = JSON.parse(JSON.stringify(courseNames));
   for (var key in parsedNames) {
-    blockObject[key].course = parsedNames[key];
+    if (parsedNames[key]) {
+      blockObject[key].course = parsedNames[key];
+    }
+    
   }
   return blockObject;
 }
@@ -3810,7 +3813,7 @@ app.get("/", async function(req, res) {
 
 
 
-      let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+      let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
       let events = await Events.find({school: user.school}).sort({date: "ascending"});
       let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]}).sort({date: "ascending"});
       let schoolSkipped = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]}).sort({date: "ascending"});
@@ -3819,6 +3822,11 @@ app.get("/", async function(req, res) {
 
       let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
       let colorMap = makeColorMap(school.blockNames);
+      for (var key in user.scheduleColours) {
+        if (user.scheduleColours[key]) {
+          colorMap[key] = "#" + user.scheduleColours[key];
+        }
+      }
       
       {
         let currentDayDay = 0;
@@ -3915,8 +3923,6 @@ app.get("/", async function(req, res) {
       let soonEvents = [];
       
       
-      console.log(eventsObject);
-      
       let alert = user.alerts[0] || false;
       
       let currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
@@ -3992,7 +3998,97 @@ app.get("/account", async function(req, res) {
       res.render("redesign/account", {user: user, icons: iconMap});
     } 
   } else {
+    res.redirect("/home");
+  }
+});
+
+app.get("/block-names", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        let currentDate = (new Date()).local();
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        let currentSemesters = calculateSemesters(school.semesters, currentDate);
+        let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+        let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
+        console.log(user.blockNames);
+        res.render("redesign/blockNames", {blockMap: blockMap, school: school, user: user, icons: iconMap});
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.post("/block-names", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        for (var key in req.body) {
+          user.blockNames[key] = req.body[key];
+        }
+        await User.findOneAndUpdate({_id : user._id}, {$set: {blockNames: user.blockNames}});
+        res.redirect("/account");
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.get("/block-titles", async function(req, res) {
+  if (req.session.userId) {
+    let user = await User.findOne({_id : req.session.userId});
+    if (user != null) {
+      res.render("redesign/blockTitles", {user: user, icons: iconMap});
+    } 
+  } else {
     res.redirect("/login");
+  }
+});
+app.get("/block-colours", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        let currentDate = (new Date()).local();
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        let colourMap = makeColorMap(school.blockNames);
+        for (var key in user.scheduleColours) {
+          colourMap[key] = user.scheduleColours[key];
+        }
+        let currentSemesters = calculateSemesters(school.semesters, currentDate);
+        let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+        let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
+        res.render("redesign/blockColours", {colourMap: colourMap, blockMap: blockMap, user: user, icons: iconMap});
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.post("/block-colours", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        for (var key in req.body) {
+          user.scheduleColours[key] = req.body[key];
+        }
+        await User.findOneAndUpdate({_id : user._id}, {$set: {scheduleColours: user.scheduleColours}});
+        res.redirect("/account");
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
   }
 });
 
