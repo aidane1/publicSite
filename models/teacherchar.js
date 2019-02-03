@@ -7,9 +7,11 @@ let TeacherUser = require("../models/teacherUserchar.js");
 const TeacherSchema = new Schema({
   firstName: {
     type: String,
+    required: true,
   },
   lastName: {
     type: String, 
+    required: true,
   },
   teacherCode: {
     type: String,
@@ -17,10 +19,12 @@ const TeacherSchema = new Schema({
   },
   prefix: {
       type: String,
+      required: true,
   },
   school: {
     type : Schema.Types.ObjectId,
     ref: "School",
+    required: true,
   },
 });
 

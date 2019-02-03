@@ -270,7 +270,7 @@ let nodemailer = require("nodemailer");
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "pvsstudents@gmail.com",
+    user: "apexschoolr@gmail.com",
     pass: contents.emailPassword
   }
 });
@@ -975,121 +975,7 @@ app.post("/updateBlock", urlencodedParser, async function(req, res) {
 
   }
 });
-app.get("/dashboard/courses/courses", async function(req,res) {
-  if (req.session.userId) {
-    try {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin") {
-        let school = await School.findOne({_id : user.school}).populate("semesters");
-        let courses = await Course.find({school : school._id}).populate("category").populate("teacher").populate("semester");
-        courses.sort((a,b) => a.course.localeCompare(b.course));
-        let teachers = await Teachers.find({school: school._id});
-        let categories = await Categories.find({school: school._id});
-        res.render("dashboard/coursesCoursesDashboard", {categories: categories, school: school, courses: courses, teachers: teachers});
-      } else {
-        res.redirect("/login");
-      }
-    } catch(e) {
-      res.redirect("/login");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
-app.get("/removeCourse", async function(req, res) {
-  try {
-    if (req.session.userId && req.query.id) {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin" && user.school != null) {
-        await Course.findOneAndRemove({_id : req.query.id});
-        res.send([true, req.query.id])
-      } else {
-        res.send([false, "User must be an admin to submit changes to the master schedule"])
-      }
-    } else {
-      res.send([false, "A code must be presented to remove"])
-    }
-  } catch(e) {
-    console.log(e);
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
-app.post("/addCourse", urlencodedParser, async function(req, res) {
-  console.log(req.body);
-  try {
-    if (req.session.userId && req.body.course && req.body.teacher && req.body.block && req.body.semester && req.body.category) {
-        let user = await User.findOne({_id : req.session.userId});
-        if (user.permissions == "admin" && user.school != null) {
-          let school = await School.findOne({_id : user.school});
-          let newCourse = {
-            course: req.body.course.split("_")[1],
-            code: req.body.course.split("_")[0],
-            teacher: req.body.teacher,
-            block: req.body.block,
-            school: school._id,
-            category: req.body.category,
-            semester: req.body.semester,
-          };
-          Course.create(newCourse, async function(err, course) {
-            if (err || course == null) {
-              res.send([false, "An error in the creation process occured. please refresh and try again."]);
-            } else {
-              course = await Course.findOne({_id : course._id}).populate("teacher").populate("category").populate("semester");
-              console.log(course);
-              res.send([true, course]);
-            }
-          });
-        } else {
-          res.send([false, "User must be an admin to submit changes to the master schedule"])
-        }
-    } else {
-      res.send([false, "All event fields must be filled in"])
-    }
-  } catch(e) {
-    console.log(e);
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
-app.get("/getCourse", async function(req, res) {
-  try {
-    if (req.session.userId && req.query.id) {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin" && user.school != null) {
-        let course = await Course.findOne({_id: req.query.id});
-        if (course != null) {
-          res.send([true, course]);
-        } else {
-          res.send([false, "Course not found"]);
-        }
-      } else {
-        res.send([false, "User must be an admin to submit changes to the master schedule"])
-      }
-    } else {
-      res.send([false, "A code must be presented to remove"])
-    }
-  } catch(e) {
-    console.log(e);
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
-app.get("/dashboard/courses/categories", async function(req,res) {
-  if (req.session.userId) {
-    try {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin") {
-        let school = await School.findOne({_id : user.school});
-        let categories = await Categories.find({school: school._id});
-        res.render("dashboard/coursesCategoriesDashboard", {school: school, categories: categories});
-      } else {
-        res.redirect("/login");
-      }
-    } catch(e) {
-      res.redirect("/login");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+
 
 app.get("/dashboard/users/:group", async function(req,res) {
   if (req.session.userId) {
@@ -1121,33 +1007,52 @@ app.get("/dashboard/users/:group", async function(req,res) {
   }
 });
 
-app.post("/editTeacher", urlencodedParser, async function(req, res) {
-  try {
-    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.id && req.body.code) {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin" && user.school != null) {
-        await Teachers.findOneAndUpdate({_id : req.body.id}, {$set: {teacherCode: req.body.code, firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix}});
-        res.send([true, {teacherCode: req.body.code, firstName: req.body.first, lastName: req.body.last, prefix: req.body.prefix, _id: req.body.id}]);
-      } else {
-        res.send([false, "User must be an admin to submit changes to the teacher list"])
-      }
-    } else {
-      res.send([false, "All teacher fields must be filled in"])
-    }
-  } catch(e) {
-    console.log(e);
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
+
 app.get("/dashboard/courses/teachers", async function(req,res) {
   if (req.session.userId) {
     try {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
-        let courses = await Course.find({school : school._id});
         let teachers = await Teachers.find({school: school._id});
-        res.render("dashboard/coursesTeachersDashboard", {teachers: teachers, school: school, courses: courses});
+        let keys = [
+          {displayFunc: (obj) => {return obj.firstName}, name: "First Name", propertyName: "firstName"},
+          {displayFunc: (obj) => {return obj.lastName}, name: "Last Name", propertyName: "lastName"},
+          {displayFunc: (obj) => {return obj.teacherCode}, name: "Teacher Code", propertyName: "teacherCode"},
+          {displayFunc: (obj) => {return obj.prefix}, name: "Prefix", propertyName: "prefix"},
+        ]
+        let inputTypes = {
+          "firstName": {type: "text"},
+          "lastName": {type: "text"},
+          "teacherCode": {type: "text"},
+          "prefix": {type: "select", optionType: "list", options: ["Mr. ", "Mrs. ", "Ms. "], other: true, otherName: "Other"},
+        }
+        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Teachers", singular: "Teacher", keys: keys, list: teachers});
+      } else {
+        res.redirect("/home");
+      }
+    } catch(e) {
+      console.log(e);
+      res.redirect("/home");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/courses/categories", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let categories = await Categories.find({school: school._id});
+        let keys = [
+          {displayFunc: (obj) => {return obj.category}, name: "Category", propertyName: "category"}
+        ];
+        let inputTypes = {
+          "category": {type: "text"}
+        };
+        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Categories", singular: "Category", keys: keys, list: categories});
       } else {
         res.redirect("/login");
       }
@@ -1156,6 +1061,326 @@ app.get("/dashboard/courses/teachers", async function(req,res) {
     }
   } else {
     res.redirect("/login");
+  }
+});
+app.get("/dashboard/courses/courses", async function(req,res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school}).populate("semesters");
+        let courses = await Course.find({school : school._id}).populate("category").populate("teacher").populate("semester");
+        let teachers = await Teachers.find({school: school._id});
+        teachers.sort((a,b) => a.lastName.localeCompare(b.lastName));
+        let teacherMap = {};
+        for (var i = 0; i < teachers.length; i++) {
+          teacherMap[teachers[i]._id] = `${teachers[i].prefix}${teachers[i].lastName}`;
+        }
+        let blockList = [];
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "changing") {
+            blockList.push(school.blockNames[i][0]);
+          }
+        }
+        let categories = await Categories.find({school: school._id});
+        categories.sort((a,b) => a.category.localeCompare(b.category));
+        let categoryMap = {};
+        for (var i = 0; i < categories.length; i++) {
+          categoryMap[categories[i]._id] = categories[i].category;
+        }
+        let semesterMap = {};
+        for (var i = 0; i < school.semesters.length; i++) {
+          semesterMap[school.semesters[i]._id] = school.semesters[i].name;
+        }
+        let keys = [
+          {displayFunc: (obj) => {return obj.course}, name: "Course", propertyName: "course"},
+          {displayFunc: (obj) => {return obj.teacher.prefix + obj.teacher.lastName}, name: "Teacher", propertyName: "teacher"},
+          {displayFunc: (obj) => {return obj.block}, name: "Block", propertyName: "block"},
+          {displayFunc: (obj) => {return obj.semester.name}, name: "Semester", propertyName: "semester"},
+          {displayFunc: (obj) => {return obj.category.category}, name: "Category", propertyName: "category"},
+        ];
+        let courseCodes = [];
+        for (var key in school.courseCodes) {
+          courseCodes.push([key, school.courseCodes[key]]);
+        }
+        courseCodes.sort((a,b) => a[1].localeCompare(b[1]));
+        let codesMap = {};
+        for (var i = 0; i < courseCodes.length; i++) {
+          codesMap[courseCodes[i][0]] = courseCodes[i][1];
+        }
+        let inputTypes = {
+          "course": {type: "select", optionType: "map", options: codesMap, other: false},
+          "teacher": {type: "select", optionType: "map", options: teacherMap, other: false},
+          "block": {type: "select", optionType: "list", options: blockList, other: false},
+          "semester": {type: "select", optionType: "map", options: semesterMap, other: false},
+          "category": {type: "select", optionType: "map", options: categoryMap, other: false},
+        }
+        courses.sort((a,b) => a.course.localeCompare(b.course));
+        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Courses", singular: "Course", keys: keys, list: courses});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/courses/codes", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        // res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Codes", singular: "Code", keys:})
+        res.render("dashboard/courseCodeDashboard", {school: school});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+      res.redirect("/login");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+app.get("/dashboard/events", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        let events = await Events.find({school: school._id});
+        events.sort(function(a,b) {
+          return a.date.getTime() - b.date.getTime();
+        });
+        for (var i = 0; i < events.length; i++) {
+          events[i] = JSON.parse(JSON.stringify(events[i]));
+          events[i].dateString = moment(events[i].date).format("MMMM Do YYYY");
+        }
+        let keys = [
+          {displayFunc: (obj) => {return obj.dateString}, name: "Date", propertyName: "dateString"},
+          {displayFunc: (obj) => {return obj.info}, name: "Info", propertyName: "info"},
+          {displayFunc: (obj) => {return obj.time}, name: "Time", propertyName: "time"},
+          {displayFunc: (obj) => {return obj.schoolSkipped ? "yes" : "no"}, name: "School Skipped", propertyName: "schoolSkipped"},
+          {displayFunc: (obj) => {return obj.dayRolled ? "yes" : "no"}, name: "Day Rolled", propertyName: "dayRolled"},
+          {displayFunc: (obj) => {return obj.displayedEvent ? "yes" : "no"}, name: "Event Displayed", propertyName: "displayedEvent"},
+        ];
+        let inputTypes = {
+          "dateString": {type: "date"},
+          "info": {type: "text"},
+          "time": {type: "time"},
+          "schoolSkipped": {type: "checkbox", default: "open"},
+          "dayRolled": {type: "checkbox", default: "open"},
+          "displayedEvent": {type: "checkbox", default: "checked"},
+        }
+        res.render("dashboard/dashboardTemplate", {inputTypes: inputTypes, name: "Events", singular: "Event", keys: keys, list: events});
+      } else {
+        res.redirect("/login");
+      }
+    } catch(e) {
+
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
+
+function keyCheck(object, keys) {
+  for (var i = 0; i < keys.length; i++) {
+    if (!object[keys[i]]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+app.post("/adminEdit", urlencodedParser, async function(req, res) {
+  try {
+    if (req.query.table && req.query.action) {
+      if (req.session.userId) {
+        let user = await User.findOne({_id : req.session.userId});
+        if (user.permissions == "admin" && user.school != null) {
+          let school = await School.findOne({_id : user.school});
+          switch(req.query.table) {
+            case "teachers":
+              if (req.query.action == "create") {
+                req.body.school = user.school;
+                if (keyCheck(req.body, ["firstName", "lastName", "prefix", "school", "teacherCode"])) {
+                  
+                  let teacher = await Teachers.create(req.body);
+                  res.send([true, teacher]);
+                } else {
+                  res.send([false, "Please fill in all fields before submission"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let teacher = await Teachers.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  res.send([true, teacher]);
+                } else {
+                  res.send([false, "Please specify an ID before editing a row"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let courses = await Course.find({teacher: req.body._id});
+                  if (courses.length) {
+                    res.send([false, "This teacher is currently assigned to a course. Remove all dependancies on this teacher before deletion"]);
+                  } else {
+                    let teacher = await Teachers.findOneAndDelete({_id : req.body._id});
+                    res.send([true, teacher]);
+                  }
+                } else {
+                  res.send([false, "Please specify an ID before deletion"]);
+                }
+              }
+              break;
+            case "categories":
+              if (req.query.action == "create") {
+                req.body.school = user.school;
+                if (keyCheck(req.body, ["category"])) {
+                  let category = await Categories.create(req.body);
+                  res.send([true, category]);
+                } else {
+                  res.send([false, "Please fill in all fields before submission"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id"])) {
+                  await Categories.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  let category = await Categories.findOne({_id :req.body._id});
+                  res.send([true, category]);
+                } else {
+                  res.send([false, "Please specify an ID before editing a row"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let courses = await Course.find({category: req.body._id});
+                  if (courses.length) {
+                    res.send([false, "This category is currently assigned to a course. Remove all dependancies on this teacher before deletion"]);
+                  } else {
+                    let category = await Categories.findOneAndDelete({_id : req.body._id});
+                    res.send([true, category]);
+                  }
+                } else {
+                  res.send([false, "Please specify an ID before deletion"]);
+                }
+              }
+              break;
+            case "codes":
+
+              break;
+            case "courses":
+              if (req.query.action == "create") {
+                req.body.school = user.school;
+                if (keyCheck(req.body, ["course", "teacher", "block", "semester", "category", "school"])) {
+                  let codeKey = school.courseCodes[req.body.course] || req.body.course;
+                  req.body.code = req.body.course;
+                  req.body.course = codeKey;
+                  let courseID = await Course.create(req.body);
+                  let course = await Course.findOne({_id : courseID}).populate("semester").populate("teacher").populate("category");
+                  res.send([true, course]);
+                } else {
+                  res.send([false, "Please fill in all fields before submission"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id"])) {
+                  if (req.body.course) {
+                    req.body.code = req.body.course;
+                    req.body.course = school.courseCodes[req.body.code] || req.body.code;
+                  }
+                  await Course.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  let course = await Course.findOne({_id : req.body._id}).populate("semester").populate("teacher").populate("category");
+                  res.send([true, course]);
+                } else {
+                  res.send([false, "Please specify an ID before editing a row"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let course = await Course.findOneAndDelete({_id : req.body._id});
+                  res.send([true, course]);
+                } else {
+                  res.send([false, "Please specify an ID before deletion"]);
+                }
+              }
+              break;
+            case "events":
+              if (req.query.action == "create") {
+                req.body.school = user.school;
+                if (keyCheck(req.body, ["dateString", "info", "time", "dayRolled", "displayedEvent", "schoolSkipped", "school"])) {
+                  let date = req.body.dateString.split("-");
+                  date = new Date(parseInt(date[0]), parseInt(date[1])-1, date[2]);
+                  req.body.date = date;
+                  req.body.year = date.getFullYear();
+                  req.body.month = date.getMonth();
+                  req.body.day = date.getDate();
+                  req.body.displayedEvent = req.body.displayedEvent == "checked";
+                  req.body.schoolSkipped = req.body.schoolSkipped == "checked";
+                  req.body.dayRolled = req.body.dayRolled == "checked";
+                  req.body.longForm = req.body.info;
+                  let time = req.body.time.split(":");
+                  time = `${(time[0]-1)%12 + 1}:${time[1].length == 1 ? "0" + time[1] : time[1]} ${time[0] >= 12 ? "PM" : "AM"}`;
+                  req.body.time = time;
+                  let event = await Events.create(req.body);
+                  event = JSON.parse(JSON.stringify(event));
+                  event.dateString = moment(event.date).format("MMMM Do YYYY");
+                  res.send([true, event]);
+                } else {
+                  res.send([false, "Please fill in all fields before submission"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id"])) {
+                  if (req.body.displayedEvent) {
+                    req.body.displayedEvent = req.body.displayedEvent == "checked";
+                  } 
+                  if (req.body.dayRolled) {
+                    req.body.dayRolled = req.body.dayRolled == "checked";
+                  }
+                  if (req.body.schoolSkipped) {
+                    req.body.schoolSkipped = req.body.schoolSkipped == "checked";
+                  }
+                  if (req.body.time) {
+                    let time = req.body.time.split(":");
+                    time = `${(time[0]-1)%12 + 1}:${time[1].length == 1 ? "0" + time[1] : time[1]} ${time[0] >= 12 ? "PM" : "AM"}`;
+                    req.body.time = time;
+                  }
+                  if (req.body.info) {
+                    req.body.longForm = req.body.info;
+                  }
+                  if (req.body.date) {
+                    let date = req.body.dateString.split("-");
+                    date = new Date(parseInt(date[0]), parseInt(date[1])-1, date[2]);
+                    req.body.date = date;
+                  }
+                  await Events.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  let event = await Events.findOne({_id : req.body._id});
+                  event = JSON.parse(JSON.stringify(event));
+                  event.dateString = moment(event.date).format("MMMM Do YYYY");
+                  res.send([true, event]);
+                } else {
+                  res.send([false, "Please specify an ID before editing a row"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let event = await Events.findOneAndDelete({_id : req.body._id});
+                  res.send([true, event]);
+                } else {
+                  res.send([false, "Please specify an ID before deletion"]);
+                }
+              }
+              break;
+            default:
+          }
+        }
+      } else {
+        res.send([false, "User must be an admin to make changes"]);
+      }
+    } else {
+      res.send([false, "Please specify a table and an action"]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please try again"]);
   }
 });
 app.get("/dashboard/configure", async function(req, res) {
@@ -1444,23 +1669,7 @@ app.get("/deleteKey", async function(req, res) {
 });
 
 
-app.get("/dashboard/courses/codes", async function(req, res) {
-  if (req.session.userId) {
-    try {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin") {
-        let school = await School.findOne({_id : user.school});
-        res.render("dashboard/courseCodeDashboard", {school: school});
-      } else {
-        res.redirect("/login");
-      }
-    } catch(e) {
-      res.redirect("/login");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+
 app.post("/addCode", urlencodedParser, async function(req, res) {
   try {
     if (req.session.userId && req.body.code && req.body.course) {
@@ -1550,76 +1759,7 @@ app.post("/editCode", urlencodedParser, async function(req, res) {
     res.send([false, "An unknown error occured. Please refresh and try again"]);
   }
 });
-app.post("/addTeacher", urlencodedParser, async function(req, res) {
-  try {
-    if (req.session.userId && req.body.first && req.body.last && req.body.prefix && req.body.code) {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin" && user.school != null) {
-        let school = await School.findOne({_id : user.school});
-        let teacherObject = {
-          firstName: req.body.first[0].toUpperCase() + req.body.first.substring(1, req.body.first.length).toLowerCase(),
-          lastName: req.body.last[0].toUpperCase() + req.body.last.substring(1, req.body.last.length).toLowerCase(),
-          prefix: req.body.prefix,
-          school: school._id,
-          teacherCode: req.body.code,
-        };
-        Teachers.create(teacherObject, async function(err, teacher) {
-          if (err || teacher == null) {
-            res.send([false, "An error occured in the teacher making process. Please try again."])
-          } else {
-            await School.findOneAndUpdate({_id : school._id}, {$push: {teachers: teacher}});
-            res.send([true, teacher]);
-          }
-        });
-      } else {
-        res.send([false, "User must be an admin to submit changes to the master schedule"])
-      }
-    } else {
-      res.send([false, "All teacher fields must be filled in"])
-    }
-  } catch(e) {
-    console.log(e);
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
-app.get("/getTeacher", async function(req, res) {
-  try {
-    if (req.query.teacherId) {
-      let teacher = await Teachers.findOne({_id : req.query.teacherId});
-      if (teacher != null) {
-        res.send(teacher);
-      } else {
-        res.send({error: "No teacher found under that Id"});
-      }
-    } else {
-      res.send({error: "Please specify an teacher Id"});
-    } 
-  } catch(e) {
-    res.send({error: "An unknown error occured"});
-  }
-});
-app.get("/removeTeacher", async function(req, res) {
-  try {
-    if (req.session.userId && req.query.removedId) {
-        let user = await User.findOne({_id : req.session.userId});
-        if (user.permissions == "admin" && user.school != null) {
-          Teachers.findOneAndRemove({_id : req.query.removedId}, function(err, teacher) {
-            if (err || teacher == null) {
-              res.send([false, "Something went wrong in the removal process. Please try again"]);
-            } else {
-              res.send([true, teacher]);
-            }
-          });
-        } else {
-          res.send([false, "User must be an admin to submit changes to the master schedule"])
-        }
-    } else {
-      res.send([false, "All event fields must be filled in"])
-    }
-  } catch(e) {
-    res.send([false, "An unknown error occured. Please refresh and try again"]);
-  }
-});
+
 app.get("/dashboard", async function(req, res) {
   if (req.session.userId) {
     try {
@@ -1685,30 +1825,7 @@ app.get("/dashboard/courses", async function(req, res) {
     res.redirect("/login");
   }
 });
-app.get("/dashboard/events", async function(req, res) {
-  if (req.session.userId) {
-    try {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.permissions == "admin") {
-        let school = await School.findOne({_id : user.school});
-        let events = await Events.find({school: school._id});
-        events.sort(function(a,b) {
-          return a.date.getTime() - b.date.getTime();
-        });
-        for (var i = 0; i < events.length; i++) {
-          events[i].dateString = moment(events[i].date).format("MMMM Do YYYY");
-        }
-          res.render("dashboard/eventDashboard", {school : school, events: events});
-      } else {
-        res.redirect("/login");
-      }
-    } catch(e) {
 
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
 app.post("/addEvent", urlencodedParser, async function(req, res) {
   try {
     if (req.session.userId && req.body.date && req.body.info && req.body.time && req.body.schoolSkipped && req.body.dayRolled && req.body.eventDisplayed) {
@@ -3361,7 +3478,28 @@ app.get("/home", function(req, res) {
 });
 app.get("/home/inquiries", async function(req, res) {
   res.render("homePage/inquiries");
-})
+});
+app.post("/home/inquiries", urlencodedParser, async function(req, res) {
+  try {
+    if (req.body.email && req.body.first && req.body.last && req.body.subject) {
+      let mailOptions = {
+        from: "apexschoolr@gmail.com",
+        to: "aidaneglin@gmail.com",
+        subject: `${req.body.first} ${req.body.last} sent an inquiry`,
+        text: `${req.body.first} ${req.body.last} (${req.body.email}) at ${new Date().local()}: \n\n\n ${req.body.subject}`
+      }
+      transporter.sendMail(mailOptions, function(err, info) {
+        
+      });
+      res.render("homePage/inquiries");
+    } else {
+      res.render("homePage/inquiries");
+    } 
+  } catch(e) {
+    console.log(e);
+    res.render("homePage/inquiries");
+  }
+});
 app.get("/home/administrators", async function(req, res) {
   res.render("homePage/administrators");
 })

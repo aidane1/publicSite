@@ -21,10 +21,12 @@ const EventSchema = new Schema({
     default : "9:20"
   },
   info : {
-    type : String
+    type : String,
+    required: true,
   },
   date: {
-    type: Date
+    type: Date,
+    required: true,
   },
   longForm: {
     type: String
@@ -32,15 +34,19 @@ const EventSchema = new Schema({
   school : {
     type : Schema.Types.ObjectId,
     ref: 'School',
+    required: true,
   },
   schoolSkipped: {
-    type: Boolean
+    type: Boolean,
+    required: true,
   },
   dayRolled: {
-    type: Boolean
+    type: Boolean,
+    required: true,
   },
   displayedEvent: {
-    type: Boolean
+    type: Boolean,
+    required: true,
   }
 });
 

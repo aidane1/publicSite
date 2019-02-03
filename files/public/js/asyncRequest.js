@@ -17,6 +17,13 @@ function sendPostRequest(string, path, callback) {
     loadRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     loadRequest.send(string); 
 }
+function postObject(object, path, callback) {
+    let sendString = "";
+    for (var key in object) {
+        sendString += `${key}=${object[key]}&`;
+    }
+    sendPostRequest(sendString, path, callback);
+}
 
 function sendGetRequest(string, path, callback) {
     let loadRequest;

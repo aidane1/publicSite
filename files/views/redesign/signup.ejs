@@ -30,6 +30,7 @@
           margin: 0;
           padding: 0;
           background: linear-gradient(to bottom left, #ffc371, #ff5f6d);
+          min-height: 400px;
       }
       .backdrop {
           width: 100%;
@@ -40,6 +41,7 @@
           flex-wrap: nowrap;
           justify-content: space-evenly;
           margin: auto;
+          overflow-y: auto;
       }
       .logoBox {
           width: 100%;
@@ -132,19 +134,21 @@
             color: white;
             text-align: center;
             font-size: 22px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 40px;
+            margin-left: 5%;
+            display: block;
             
-            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+            /* background: linear-gradient(to right, #c33764, #1d2671); */
             border-radius: 7px;
         }
         .signup {
+            margin-top: 40px;
             width: 100%;
             text-align: center;
-            
+            color: rgb(153,0,51);
         }
         .signup a {
-            color: rgb(0,130,209);
+            color: rgb(153,0,51);
             text-decoration: none;
             margin-bottom: 70px;
         }
@@ -300,8 +304,9 @@
                     
                 </select>
             </div>
+            <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Sign Up</button>
         </form>
-        <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Sign up</button>
+        
         <div class="signup">
             <a href = "/login">Login</a>
         </div>

@@ -304,6 +304,54 @@
       .form-submit:hover {
         opacity: 0.7;
       }
+      .notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        border-left: 4px solid #5cd669;
+        min-width: 400px;
+      }
+      .notification-icon {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        background-color: #5cd669;
+        border-radius: 50%;
+      }
+      .notification-icon svg {
+        position: absolute;
+        top: 53%;
+        left: 48%;
+        transform: translate(-50%, -50%);
+        fill: white;
+      }
+      .notification-body {
+        margin-left: 50px;
+        margin-right: 50px;
+      }
+      .notification-title {
+        font-size: 18px;
+        font-weight: 600;
+        padding-bottom: 5px;
+      }
+      .notification-info {
+        font-size: 13px;
+        font-weight: 300;
+      }
+      .notification-close {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
       @media screen and (max-width: 980px) {
         .navbar {
           padding-left: 5px;
@@ -312,6 +360,7 @@
           font-size: 17px;
         }
       }
+
       @media screen and (max-width: 830px) {
         .navbar-items-holder {
           display: none;
@@ -327,6 +376,9 @@
       @media screen and (max-width: 430px) {
         .screen-2 {
           display: none;
+        }
+        .notification {
+          min-width: 100%;
         }
       }
     </style>
@@ -378,12 +430,23 @@
     <div class="footer">
 
     </div>
+    <div class="notification">
+      <div class="notification-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z"/></svg>
+      </div>
+      <div class="notification-body">
+        <div class="notification-title">Success</div>
+        <div class="notification-info">Your inquiry has been recieved. You will get a response within one to two business days</div>
+      </div>
+      <div class="notification-close">
+          <svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+      </div>
+    </div>
     <script>
       function toggleNavbarBottom() {
         document.getElementById("navbar-bottom-expand").classList.toggle("navbar-bottom-expanded");
       }
       function toggleCardBottom(card) {
-        console.log(card);
         for (var i = 0; i < card.children.length; i++) {
           if (card.children[i].classList.contains("card-cover")) {
             if (card.children[i].getAttribute("expanded") != "true") {
@@ -398,5 +461,6 @@
       }
     
     </script>
+
   </body>
 </html>

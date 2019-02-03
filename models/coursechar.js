@@ -7,13 +7,16 @@ const Schema = mongoose.Schema;
 const CourseSchema = new Schema({
   block: {
     type: String,
+    required: true,
   },
   teacher: {
     type: Schema.Types.ObjectId,
     ref: "Teacher",
+    required: true,
   },
   course: {
     type: String,
+    required: true,
   },
   code: {
     type: String
@@ -21,6 +24,7 @@ const CourseSchema = new Schema({
   school: {
     type : Schema.Types.ObjectId,
     ref: "School",
+    required: true,
   },
   category: {
     type: Schema.Types.ObjectId,
@@ -28,7 +32,8 @@ const CourseSchema = new Schema({
   },
   semester: {
     type: Schema.Types.ObjectId,
-    ref: "Semester"
+    ref: "Semester",
+    required: true,
   },
   topics: {
     type: [{type: String}],

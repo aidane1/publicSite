@@ -7,6 +7,7 @@
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <script src = "/public/js/dashboardKeyDisplay.js" type = "text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <style>
         * {
@@ -25,6 +26,7 @@
             position: fixed;
             top: 0;
             left: 0;
+            vertical-align: text-bottom;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -33,20 +35,20 @@
             width: 250px;
             height: 100%;
             background-color: rgb(28, 35, 46);
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             flex-wrap: nowrap;
             overflow-y: auto;
         }
         .bodyRight {
-            /* width: calc(100% - 250px); */
+            width: calc(100% - 250px);
+            vertical-align: text-top;
             position: relative;
-            flex-grow: 1;
             height: 100%;
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             flex-wrap: nowrap;
-            overflow: auto;
+            
         }
         .bodyUpperSection {
             width: 100%;
@@ -58,7 +60,8 @@
         .bodyLowerSection {
             width: 100%;
             flex-grow: 1;   
-            background-color: rgb(231,235,237);
+            background-color: #f5f7f9;
+            overflow-x: auto;
         }
         .overPage {
             width: 100%;
@@ -184,11 +187,298 @@
             border-bottom: 1px solid rgb(56, 70, 90);
             cursor: pointer;
         }
+        .openSideBar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            opacity: 0.5;
+            display: none;
+            z-index: 100;
+            cursor: pointer;
+        }  
+        .extendedBar {
+            left: 0px !important;
+        }    
+        @media screen and (max-width: 1000px) {
+            .barLeft {
+                /* display: none; */
+                transition: left 0.2s linear;
+                position: absolute;
+                top: 0px;
+                left: -250px;
+                z-index: 5;
+            }
+            .openSideBar {
+                display: block;
+            }
+            .topBar {
+                visibility: hidden;
+            }
+            .bodyRight {
+                width: 100%;
+            }
+        }
+        .tableHolderMain {
+            width: 95%;
+            min-width: 500px;
+            /* height: 500px; */
+            background-color: #f5f5f5;
+            -webkit-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            -moz-box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            box-shadow: -5px 4px 17px 2px rgba(0,0,0,0.25);
+            border-radius: 3px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+        
+        .lastProperty {
+            position: relative;
+        }
+        .rowsHeader {
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            background-color: #f5f5f5;
+        }
+        .rowsHeader td {
+            text-align: left;
+            font-weight: 500;
+            font-size: 13px;
+            color: #666;
+            padding: 15px 5px;
+        }
+        .container {
+            width: 100%; 
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #f5f5f5;
+        }
+        .openContainer {
+            max-height: 400px !important;
+            border-bottom: 1px solid #ddd !important;
+        }
+        .container-top table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .createRowCategory {
+            padding: 30px 3px;
+        }
+        .textInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+        }
+        .buttonsRow {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+        }
+        .buttonRowButton {
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        #submitRow {
+            color: white;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            background-color: rgb(3,155,229);
+        }
+        #cancelRow:hover {
+            background-color: #ddd;
+        }
+        .rowsBody {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .row {
+            padding: 20px 0px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .rowProperty {
+            padding: 10px 5px;
+            font-size: 13px;
+        }
+        .optionsHolder {
+            width: 90%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .optionsHolder select {
+            height: 100%;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0 !important;
+            background-color: #446cb2;
+            color: white;
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 20px;
+            outline: none;
+        }
+        .row:hover .editRow {
+            visibility: visible;
+        }
+        .editRow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            cursor: pointer;
+            visibility: hidden;
+            color: grey;
+            padding-left: 5px;
+            padding-right: 5px;
+            z-index: 2;
+            font-size: 18px;
+        }
+        .editDelete {
+            width: 100px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: -90px;
+            display: none;
+            z-index: 3;
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        .editDelete div {
+            width: 100%;
+            padding: 12px 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .editDelete div:hover {
+            background-color: #ddd;
+        }
+        .row:hover {
+            background-color: #f5f5f5;
+        }
+        .checkboxInput {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .checked {
+            background-color: rgb(3, 155, 229);
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none;
+        }
+        .dateInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+        }
+        .timeInput {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #dddddd;
+        }
+        .newTableRowBar {
+            width: 100%;
+            height: 60px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .createRow {
+            color: white;
+            float: right;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            margin-top: 11px;
+            margin-right: 8px;
+        }
+        .searchRows {
+            /* width: 100%; */
+            width: calc(100% - 200px);
+            /* height: 70px; */
+            height: 100%;
+            float: left;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .activeSearch {
+            background-color: white;
+            box-shadow: 0px 1px 2px 0px rgba(60,64,67,.3), 0px 2px 6px 2px rgba(60, 64, 67, 0.15);
+            border-bottom: 0;
+            z-index: 10;
+        }
+        .searchIcon {
+            font-size: 17px;
+            margin-left: 25px;
+            color: #999;
+        }
+        .searchInput {
+            flex-grow: 1;
+            background-color: transparent;
+            border: 0;
+            outline: none;
+            height: 100%;
+            padding-left: 15px;
+            font-size: 15px;
+        }
+        .searchInput::placeholder {
+            font-weight: 300;
+            color: #999;
+        }
     </style>
 </head>
 <body>
+    <div class="openSideBar" onclick = "openSideBar()">
+        <i class="fas fa-bars"></i>
+    </div>
     <div class = "background">
-        <div class="barLeft">
+        <div class="barLeft" id = "barLeft">
             <div class="sideBarTitle">
                     <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
@@ -213,7 +503,8 @@
                     Add, edit, and remove courses
                 </div>        
                 <div class = "expandingcategorys" id = "expandingcategorys">
-                    <div class="expandedLink"  style = "color: rgb(67,181,245);">
+                        <!-- style = "color: rgb(67,181,245);" -->
+                    <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
                         Categories
                     </div>
                     <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
@@ -232,7 +523,7 @@
                     Events
                 </div>
                 <div class="sideBarSecondary">
-                    Add, edit, and remove categorys
+                    Add, edit, and remove events
                 </div>                
             </div>
             <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
@@ -251,14 +542,6 @@
                     View users and permissions
                 </div>                
             </div>
-            <div class="sideBarTopic" onclick = "window.location = '/dashboard/users/users/'">
-                <div class="sideBarMain">
-                    Users
-                </div>
-                <div class="sideBarSecondary">
-                    View users and permissions
-                </div>                
-            </div>
         </div>
         <div class="bodyRight">
             <div class = "bodyUpperSection">
@@ -267,13 +550,105 @@
                 </div>
                 <div class="secondaryBar">
                     <div class="barTitle">
-                        Users
+                        <%=name%>
                     </div>
                 </div>
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
-                <div class="userHolder">
-
+                <div class="tableHolderMain">
+                    <div class="newTableRowBar" id = "newTableRowBar">
+                        <div class="searchRows" id = "searchRows">
+                            <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search <%=name.toLowerCase()%>">
+                        </div>
+                        <div class="createRow" onclick = "toggleRowCreate()">
+                            NEW <%=singular.toUpperCase()%>
+                        </div>
+                    </div>
+                    <table class="rowsBody">
+                        <tr class = "rowsHeader">
+                            <% for (var i = 0; i < keys.length; i++) { %>
+                                <td class="rowHeader"><%=keys[i].name%></td>
+                            <% } %>
+                        </tr>
+                        <tbody>
+                            <tr>
+                                <td colspan="<%=keys.length%>" style = "padding: 0px">
+                                    <div class="container" id = "openRowContainer">
+                                        <div class="container-top">
+                                            <table>
+                                                <tr>
+                                                    <% for (var i = 0; i < keys.length; i++) { %>
+                                                        <td class="createRowCategory">
+                                                            <% if (inputTypes[keys[i].propertyName].type == "text") { %>
+                                                                <input type="text" id = "create_<%=keys[i].propertyName%>" class = "textInput createCategory text" name = "<%=keys[i].propertyName%>">
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "select") { %>
+                                                                <div class="optionsHolder">
+                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>">
+                                                                        <% if (inputTypes[keys[i].propertyName].optionType == "list") { %>
+                                                                            <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
+                                                                                <option value="<%=inputTypes[keys[i].propertyName].options[j]%>"><%=inputTypes[keys[i].propertyName].options[j]%></option>
+                                                                            <% } %>
+                                                                            <% if (inputTypes[keys[i].propertyName].other) { %>
+                                                                                <option value="__other__"><%=inputTypes[keys[i].propertyName].otherName%></option>
+                                                                            <% } %>
+                                                                        <% } else { %>
+                                                                            <% for (var key in inputTypes[keys[i].propertyName].options) { %>
+                                                                                <option value="<%=key%>"><%=inputTypes[keys[i].propertyName].options[key]%></option>
+                                                                            <% } %>
+                                                                            <% if (inputTypes[keys[i].propertyName].other) { %>
+                                                                                <option value="__other__"><%=inputTypes[keys[i].propertyName].otherName%></option>
+                                                                            <% } %>
+                                                                        <% } %>
+                                                                    </select>
+                                                                </div>
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "time") { %>
+                                                                <input type="time" id = "create_<%=keys[i].propertyName%>" class = "timeInput createCategory time" name = "<%=keys[i].propertyName%>">
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "date") { %>
+                                                                <input type="date" id = "create_<%=keys[i].propertyName%>" class = "dateInput createCategory date" name = "<%=keys[i].propertyName%>">
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "checkbox") { %>
+                                                                <% if (inputTypes[keys[i].propertyName].default == "open") { %>
+                                                                    <div id = "create_<%=keys[i].propertyName%>" value = "open" class = "checkboxInput createCategory checkbox" name = "<%=keys[i].propertyName%>" onclick="toggleCheckBox(this)"></div>
+                                                                <% } else { %>
+                                                                    <div id = "create_<%=keys[i].propertyName%>" value = "checked" class = "checkboxInput createCategory checkbox checked" name = "<%=keys[i].propertyName%>" onclick="toggleCheckBox(this)">&#10003;</div>
+                                                                <% } %>
+                                                            <% } %>
+                                                        </td>
+                                                    <% } %>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="container-bottom">
+                                            <div class="buttonsRow">
+                                                <div class="buttonRowButton" id = "submitRow" onclick = "createRow()">Create</div>
+                                                <div class="buttonRowButton" id = "cancelRow" onclick = "toggleRowCreate()">Cancel</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>     
+                        <tbody id = "rowDisplay">
+                            <% for (var i = 0; i < list.length; i++) { %>
+                                <tr class="row" id = "row_<%=list[i]._id%>">
+                                <% for (var j = 0; j < keys.length; j++) { %>
+                                    <% if (j == keys.length-1) { %>
+                                        <td class="rowProperty lastProperty" name = "<%=keys[j].propertyName%>">
+                                            <%=keys[j].displayFunc(list[i])%>
+                                            <i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)">
+                                                <div class="editDelete">
+                                                    <div class="edit" onclick = "openEditBar('<%=JSON.stringify(list[i])%>')">Edit</div>
+                                                    <div class="delete" onclick = "deleteRow('<%=list[i]._id%>')">Delete</div>
+                                                </div>
+                                            </i>
+                                        </td>
+                                    <% } else { %>
+                                        <td class="rowProperty" name = "<%=keys[j].propertyName%>"><%=keys[j].displayFunc(list[i])%></td>
+                                    <% } %>
+                                <% } %>
+                                </tr>
+                            <% } %>
+                        </tbody>  
+                    </table>
                 </div>
             </div>
         </div>
@@ -283,16 +658,36 @@
     </div>
 </body>
 <script>
+    function openSideBar() {
+        let bar = document.getElementById("barLeft");
+        bar.classList.toggle("extendedBar");
+    }
     errorExtened = false;
-    
     document.onclick = function(e) {
         if (errorExtened) {
             document.getElementById("errorPopDown").classList.remove("errorDown");
             errorExtened = false;
         }
     }
+    function toggleBlur() {
+        let element = document.getElementById("newTableRowBar");
+        element.classList.toggle("activeSearch");
+    }
+    function searchText(text) {
+        let rows = document.getElementsByClassName("row");
+        for (var i = 0; i < rows.length; i++) {
+            let child = rows[i];
+            if (child.innerText.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
     let categorysExpanded = false;
-
+    function jsonEscape(str)  {
+        return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+    }
     function expandcategorysBar(element) {
         let categorys = document.getElementById("expandingcategorys");
         let categorySecondary = document.getElementById("categorySecondary");
@@ -308,10 +703,161 @@
             categorySecondary.style.visibility = "hidden";
         }
     }
-
-
-    
-
+    function toggleCheckBox(element) {
+        if (element.getAttribute("value") == "checked") {
+            element.setAttribute("value", "open");
+            element.classList.remove("checked");
+            element.innerHTML = "";
+        } else {
+            element.setAttribute("value", "checked");
+            element.classList.add("checked");
+            element.innerHTML = "&#10003;";
+        }
+    }
+    function setCheckBoxChecked(element) {
+        element.setAttribute("value", "checked");
+        element.classList.add("checked");
+        element.innerHTML = "&#10003;";
+    }
+    function setCheckBoxOpen(element) {
+        element.setAttribute("value", "open");
+        element.classList.remove("checked");
+        element.innerHTML = "";
+    }
+    function openEditBar(json) {
+        toggleRowCreate();
+        json = JSON.parse(jsonEscape(json));
+        document.getElementById("submitRow").innerText = "EDIT";
+        document.getElementById("submitRow").setAttribute("onclick", `editRow('${json._id}')`);
+        populateInputs(json);
+    }
+    function openEdit(element) {
+        element.children[0].style.display = "block";
+        element.setAttribute("onclick", "closeEdit(this)");
+    }
+    function closeEdit(element) {
+        element.children[0].style.display = "none";
+        element.setAttribute("onclick", "openEdit(this)");
+    }
+    function toggleRowCreate() {
+        let container = document.getElementById("openRowContainer");
+        container.classList.toggle("openContainer");
+        document.getElementById("submitRow").innerText = "CREATE";
+        document.getElementById("submitRow").setAttribute("onclick", "createRow()");
+    }
+    function getInputValues() {
+        let options = document.getElementsByClassName("createCategory");
+        let newRow = {};
+        for (var i = 0; i < options.length; i++) {
+            newRow[options[i].name || options[i].getAttribute("name")] = options[i].value || options[i].getAttribute("value");
+        }
+        return newRow;
+    }
+    function sanitizeInputs(inputs) {
+        for (var key in inputs) {
+            let currentInput = document.getElementById("create_" + key);
+            if (currentInput) {
+                if (currentInput.classList.contains("text")) {
+                    currentInput.value = "";
+                } else if (currentInput.classList.contains("select")) {
+                    currentInput.selectedIndex = 0;
+                }
+            }
+        }
+    }
+    function populateInputs(object) {
+        let mapFunctions = compareMap["<%=name.toLowerCase()%>"];
+        for (var key in object) {
+            let currentInput = document.getElementById("create_" + key);
+            if (currentInput) {
+                if (currentInput.classList.contains("text")) {
+                    currentInput.value = mapFunctions[key](object);
+                } else if (currentInput.classList.contains("select")) {
+                    let selectedIndex = 0;
+                    for (var i = 0; i < currentInput.children.length; i++) {
+                        if (currentInput.children[i].getAttribute("value") == (mapFunctions[key])(object)) {
+                            selectedIndex = i;
+                        }
+                    }
+                    currentInput.selectedIndex = selectedIndex;
+                } else if (currentInput.classList.contains("checkbox")) {
+                    if ((mapFunctions[key])(object) == "checked") {
+                        currentInput.setAttribute("value", "checked");
+                        setCheckBoxChecked(currentInput);
+                    } else {
+                        currentInput.setAttribute("value", "open");
+                        setCheckBoxOpen(currentInput);
+                    }
+                } else if (currentInput.classList.contains("date")) {
+                    currentInput.value = mapFunctions[key](object);
+                } else if (currentInput.classList.contains("time")) {
+                    currentInput.value = mapFunctions[key](object);
+                }
+            }
+        }
+    }
+    function extendError(text) {
+        let error = document.getElementById("errorPopDown");
+        error.innerText = "Error: " + text;
+        error.classList.add("errorDown");
+        errorExtened = true;
+    }
+    function editRow(id) {
+        let newRow = getInputValues();
+        newRow._id = id;
+        postObject(newRow, "/adminEdit?table=<%=name.toLowerCase()%>&action=edit", function(res) {
+            if (res[0] == true) {
+                let mapFunction = editMap["<%=name.toLowerCase()%>"];
+                let row = document.getElementById("row_" + id);
+                for (var i = 0; i < row.children.length; i++) {
+                    let name = row.children[i].getAttribute("name");
+                    if (newRow[name]) {
+                        console.log(res[1]);
+                        row.children[i].innerText = mapFunction[name](res[1]);
+                    }
+                    if (i == row.children.length-1) {
+                        row.children[i].innerHTML += `<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = "openEditBar('${JSON.stringify(res[1])}')">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`;
+                    }
+                }
+            } else {
+                extendError(res[1]);
+            }
+        });
+    }
+    function deleteRow(id) {
+        postObject({_id: id}, "/adminEdit?table=<%=name.toLowerCase()%>&action=delete", function(res) {
+            if (res[0] == true) {
+                let row = document.getElementById("row_" + id);
+                row.parentNode.removeChild(row);
+            } else {
+                extendError(res[1]);
+            }
+        });
+    }
+    function createRow() {
+        let newRow = getInputValues();
+        sanitizeInputs(newRow);
+        postObject(newRow, "/adminEdit?table=<%=name.toLowerCase()%>&action=create", function(res) {
+            if (res[0] == true) {
+                let mapFunction = editMap["<%=name.toLowerCase()%>"];
+                let row = document.createElement("tr");
+                row.className = "row";
+                row.id = "row_" + res[1]._id;
+                for (var key in newRow) {
+                    let property = document.createElement("td");
+                    property.className = "rowProperty";
+                    property.innerText = mapFunction[key](res[1]);
+                    row.appendChild(property);
+                }
+                row.children[row.children.length-1].classList.add("lastProperty");
+                row.children[row.children.length-1].innerHTML += `<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = "openEditBar('${JSON.stringify(res[1])}')">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`;
+                document.getElementById("rowDisplay").appendChild(row);
+            } else {
+                populateInputs(newRow);
+                extendError(res[1]);
+            }
+        });
+    }
 </script>
 <script>
 </script>

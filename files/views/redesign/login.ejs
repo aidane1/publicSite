@@ -31,6 +31,7 @@
           padding: 0;
           /* background: linear-gradient(to bottom left, rgb(255,102,0), rgb(153,0,51)); */
           background: linear-gradient(to bottom left, #ffc371, #ff5f6d);
+          min-height: 400px;
           /* background: #ddd; */
       }
       .backdrop {
@@ -42,6 +43,7 @@
           flex-wrap: nowrap;
           justify-content: space-evenly;
           margin: auto;
+          overflow-y: auto;
       }
       .logoBox {
           width: 100%;
@@ -130,8 +132,9 @@
             color: white;
             text-align: center;
             font-size: 22px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 40px;
+            margin-left: 5%;
+            display: block;
             
             /* background: linear-gradient(to right, #c33764, #1d2671); */
             border-radius: 7px;
@@ -139,11 +142,16 @@
         .signup {
             width: 100%;
             text-align: center;
-            
+            margin-top: 10px;
         }
         .teacherLogin {
             width: 100%;
             text-align: center;
+            color: rgb(153,0,51);
+            text-decoration: none;
+            margin-bottom: 70px;
+            margin-top: 10px;
+
         }
         .teacherLogin a {
             color: rgb(153,0,51);
@@ -313,14 +321,16 @@
                     
                 </select>
             </div>
+            <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Login</button>
         </form>
         <!-- <div class="loginButton pure-material-button-contained" onclick = "document.getElementById('form').submit()">
             LOGIN
         </div> -->
-        <button class="loginButton pure-material-button-contained" onclick = "setTimeout(() => document.getElementById('form').submit(), 500)">Login</button>
+        
         <div class="signup"><a href = "/signup">Sign Up</a></div>
-        <div class="teacherLogin"><a href = "/login-teacher">Log in as teacher</a></div>
-        <div class="teacherLogin"><a href = "/login-admin">Log in as admin</a></div>
+        <div class="teacherLogin">
+            Log in as <a href = "/login-teacher">teacher</a> | <a href = "/login-admin">admin</a>
+        </div>
     </div>
   </body>
   <script>
