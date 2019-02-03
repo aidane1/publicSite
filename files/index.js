@@ -4058,13 +4058,19 @@ app.get("/block-colours", async function(req, res) {
       if (user != null && user.school != null) {
         let currentDate = (new Date()).local();
         let school = await School.findOne({_id : user.school}).populate("semesters");
-        let colourMap = makeColorMap(school.blockNames);
+        let changingColours = [];
+        for (var i = 0; i < school.blockNames.length; i++) {
+          if (school.blockNames[i][1] == "changing") {
+            changingColours.push(school.blockNames[i]);
+          }
+        }
+        let colourMap = makeColorMap(changingColours);
         for (var key in user.scheduleColours) {
           colourMap[key] = user.scheduleColours[key];
         }
         let currentSemesters = calculateSemesters(school.semesters, currentDate);
         let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-        let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
+        let blockMap = blockNamesObject(changingColours, allowedUserCourses, user.blockNames, school.spareName);
         res.render("redesign/blockColours", {colourMap: colourMap, blockMap: blockMap, user: user, icons: iconMap});
       } 
     } else {

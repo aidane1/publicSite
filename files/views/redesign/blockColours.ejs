@@ -208,15 +208,13 @@
         <div class="backdrop">
             <form action="/block-names" method = "post">
                 <% for (var key in blockMap) { %>
-                    <% if (blockMap[key].isReal) { %>
-                        <div class="colourRow">
-                            <div class="colourRowLabel">
-                                block <%=key%> (<%=blockMap[key].course%>)
-                            </div>
-                            <input type = "hidden" value = '<%=colourMap[key]%>' id = "colorElement_<%=key%>" onchange = "changeFunction(this.value, '<%=key%>')">
-                            <button class="jscolor {width:200, height:150, insetColor:'#FFF', backgroundColor:'#666', valueElement:'colorElement_<%=key%>'}">Pick a Colour</button>
+                    <div class="colourRow">
+                        <div class="colourRowLabel">
+                            block <%=key%> (<%=blockMap[key].course%>)
                         </div>
-                    <% } %>
+                        <input type = "hidden" value = '<%=colourMap[key]%>' id = "colorElement_<%=key%>" onchange = "changeFunction(this.value, '<%=key%>')">
+                        <button class="jscolor {width:200, height:150, insetColor:'#FFF', backgroundColor:'#666', valueElement:'colorElement_<%=key%>'}">Pick a Colour</button>
+                    </div>
                 <% } %>
                 
                 <div class="submitAll" onclick = "submitFunction()">
