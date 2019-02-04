@@ -1284,7 +1284,8 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
                 }
               } else if (req.query.action == "edit") {
                 if (keyCheck(req.body, ["_id"])) {
-                  let teacher = await Teachers.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  let teacherID = await Teachers.findOneAndUpdate({_id : req.body._id}, {$set: req.body});
+                  let teacher = await Teachers.findOne({_id : teacherID._id});
                   res.send([true, teacher]);
                 } else {
                   res.send([false, "Please specify an ID before editing a row"]);
