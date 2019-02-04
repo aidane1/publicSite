@@ -34,7 +34,7 @@
         .barLeft {
             width: 250px;
             height: 100%;
-            background-color: rgb(28, 35, 46);
+            background-color: #262f3d;
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
@@ -214,14 +214,31 @@
         .extendedBar {
             left: 0px !important;
         }    
+        .bodyModal {
+            width: 100%;
+            height: 0;
+            overflow: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity .3s ease-out;
+        }
+        .openModal {
+            height: 100%;
+            opacity: 1;
+            display: block;
+            z-index: 9;
+        }
         @media screen and (max-width: 1000px) {
             .barLeft {
                 /* display: none; */
-                transition: left 0.2s linear;
+                transition: left 0.2s cubic-bezier(0.0,0.0,0.2,1);
                 position: absolute;
                 top: 0px;
                 left: -250px;
-                z-index: 5;
+                z-index: 10;
             }
             .openSideBar {
                 display: block;
@@ -491,7 +508,7 @@
             outline: none;
             height: 100%;
             padding-left: 15px;
-            font-size: 15px;
+            font-size: 17px;
         }
         .searchInput::placeholder {
             font-weight: 300;
@@ -588,14 +605,13 @@
                             <% } %>
                         </div>
                     <% } %>
-                    
                 </div>
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
                 <div class="tableHolderMain">
                     <div class="newTableRowBar" id = "newTableRowBar">
                         <div class="searchRows" id = "searchRows">
-                            <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search <%=name.toLowerCase()%>">
+                            <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search for <%=singular.toLowerCase()%>">
                         </div>
                         <div class="createRow" onclick = "toggleRowCreate()">
                             NEW <%=singular.toUpperCase()%>
@@ -700,14 +716,84 @@
             </div>
         </div>
     </div>
+    <div class="bodyModal" id = "bodyModal">
+
+    </div>
+    <div class="barLeft" id = "mobileBarLeft">
+        <div class="sideBarTitle">
+                <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+        </div>
+        <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+            <div class="overViewMain">
+                School Overview
+            </div>
+        </div> 
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+            <div class="sideBarMain">
+                Master Schedule
+            </div>
+            <div class="sideBarSecondary">
+                Edit and view the master schedule
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "expandSecondBar(this)">
+            <div class="sideBarMain">
+                Courses
+            </div>
+            <div class="sideBarSecondary" id = "categorySecondarySecond">
+                Add, edit, and remove courses
+            </div>        
+            <div class = "expandingcategorys" id = "expandingcategorysSecond">
+                    <!-- style = "color: rgb(67,181,245);" -->
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                    Categories
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                    Teachers
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                    Courses
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                    Codes
+                </div>
+            </div>
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+            <div class="sideBarMain">
+                Events
+            </div>
+            <div class="sideBarSecondary">
+                Add, edit, and remove events
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+            <div class="sideBarMain">
+                Configure
+            </div>
+            <div class="sideBarSecondary">
+                Change information displays
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/users/users/'" >
+            <div class="sideBarMain">
+                Users
+            </div>
+            <div class="sideBarSecondary">
+                View users and permissions
+            </div>                
+        </div>
+    </div>
     <div id = "errorPopDown">
         test error!
     </div>
 </body>
 <script>
     function openSideBar() {
-        let bar = document.getElementById("barLeft");
+        let bar = document.getElementById("mobileBarLeft");
         bar.classList.toggle("extendedBar");
+        let modal = document.getElementById("bodyModal");
+        modal.classList.toggle("openModal");
     }
     errorExtened = false;
     document.onclick = function(e) {
@@ -738,6 +824,21 @@
     function expandcategorysBar(element) {
         let categorys = document.getElementById("expandingcategorys");
         let categorySecondary = document.getElementById("categorySecondary");
+        if (categorysExpanded) {
+            categorys.style.maxHeight = "0px";
+            categorysExpanded = false;
+            element.className = "sideBarTopic";
+            categorySecondary.style.visibility = "visible";
+        } else {
+            categorys.style.maxHeight = "150px";
+            categorysExpanded = true;
+            element.className = "expandedTopic";
+            categorySecondary.style.visibility = "hidden";
+        }
+    }
+    function expandSecondBar(element) {
+        let categorys = document.getElementById("expandingcategorysSecond");
+        let categorySecondary = document.getElementById("categorySecondarySecond");
         if (categorysExpanded) {
             categorys.style.maxHeight = "0px";
             categorysExpanded = false;

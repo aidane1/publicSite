@@ -991,21 +991,39 @@ app.get("/dashboard/users/:group", async function(req,res) {
           let keys = [
             {displayFunc: (obj) => {return [obj.username, obj.studentID || "No student ID"]}, type: "stackedList", name: "User", propertyName: "username"},
             {displayFunc: (obj) => {return obj.banned ? "yes" : "no"}, type: "single", name: "Banned", propertyName: "courses"},
-            {displayFunc: (obj) => {return obj.permissions}, type: "single", name: "Permissions", propertyName: "permissions"},
+            {displayFunc: (obj) => {return obj.permissions}, type: "single", name: "Permissions", propertyName: "permissions", icon: '<i class="fas fa-cog" style = "font-size: 10px"></i>'},
           ];
           let tabOptions = [
             {name: "Users", selected: true, href: "/dashboard/users/users"},
             {name: "Teachers", selected: false, href: "/dashboard/users/teachers"},
             {name: "Admins", selected: false, href: "/dashboard/users/admins"},
           ];
-          // res.render("dashboard/listTemplate", {list: users, tabs: tabOptions, keys: keys, name: "Users", singular: "User"});
-          res.render("dashboard/usersDashboard", {school: school, users: users});
+          res.render("dashboard/listTemplate", {list: users, tabs: tabOptions, keys: keys, name: "Users", singular: "User"});
+          // res.render("dashboard/usersDashboard", {school: school, users: users});
         } else if (req.params.group == "admins") {
-          let users = await User.find({school: school._id, permissions: "admin"});
-          res.render("dashboard/adminsListDashboard", {school: school, users: users});
+          let users = await User.find({$and: [{school: school._id}, {permissions: "admin"}]});
+          let keys = [
+            {displayFunc: (obj) => {return obj.username}, type: "single", name: "User", propertyName: "username"},
+            {displayFunc: (obj) => {return obj.permissions}, type: "single", name: "Permissions", propertyName: "permissions", icon: '<i class="fas fa-cog" style = "font-size: 10px"></i>'},
+          ];
+          let tabOptions = [
+            {name: "Users", selected: false, href: "/dashboard/users/users"},
+            {name: "Teachers", selected: false, href: "/dashboard/users/teachers"},
+            {name: "Admins", selected: true, href: "/dashboard/users/admins"},
+          ];
+          res.render("dashboard/listTemplate", {list: users, tabs: tabOptions, keys: keys, name: "Users", singular: "Admin"});
         } else if (req.params.group == "teachers") {
           let teachers = await TeacherUser.find({school: school._id}).populate("teacherAccount");
-          res.render("dashboard/teacherListDashboard", {school: school, teachers: teachers});
+          let keys = [
+            {displayFunc: (obj) => {return obj.teacherAccount.firstName + " " + obj.teacherAccount.lastName}, type: "single", name: "All", propertyName: "teacher"},
+            {displayFunc: (obj) => {return obj.code}, type: "single", name: "Code", propertyName: "teacherCode"},
+          ];
+          let tabOptions = [
+            {name: "Users", selected: false, href: "/dashboard/users/users"},
+            {name: "Teachers", selected: true, href: "/dashboard/users/teachers"},
+            {name: "Admins", selected: false, href: "/dashboard/users/admins"},
+          ];
+          res.render("dashboard/listTemplate", {list: teachers, tabs: tabOptions, keys: keys, name: "Users", singular: "Teacher"});
         } else {
           let users = await User.find({school: school._id});
           res.render("dashboard/usersDashboard", {school: school, users: users});

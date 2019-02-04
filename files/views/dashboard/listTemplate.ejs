@@ -32,7 +32,7 @@
         .barLeft {
             width: 250px;
             height: 100%;
-            background-color: rgb(28, 35, 46);
+            background-color: #262f3d;
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
@@ -138,15 +138,39 @@
             height: 50px;
             /* background-color: red; */
             color: rgba(255,255,255,0.6);
-            padding: 10px;
+            padding: 10px 20px;
         }
         .secondaryBar {
-            width: 80%;
+            width: 100%;
+            padding: 10px 20px;
             margin-left: auto;
             margin-right: auto;
-            margin-top: 50px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             color: white;
+        }
+        .tabsBar {
+            width: 100%;
+            padding: 10px 10px 0px 10px;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            overflow-x: auto;
+        }
+        .tabsBarSelect {
+            width: 100%;
+            height: 5px;
+            background-color: white;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            border-radius: 10px 10px 0px 0px;
+        }
+        .tabsBarTab {
+            color: #eee;
+            margin: 0px 40px;
+            padding-bottom: 10px;
+            cursor: pointer;
+            position: relative;
         }
         .mainBody {
             width: 60%;
@@ -244,7 +268,7 @@
             outline: none;
             height: 100%;
             padding-left: 15px;
-            font-size: 15px;
+            font-size: 17px;
         }
         .searchInput::placeholder {
             font-weight: 300;
@@ -263,25 +287,25 @@
             font-size: 13px;
             font-weight: 600; 
         }
+        .listHolder {
+            width: 100%;
+            max-height: 250px;
+            overflow-y: auto;
+        }
         .userList {
             width: 100%;
-            overflow-y: auto;
-            max-height: 250px;
+            border-collapse: collapse;
         }
         .user {
-            width: 100%;
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
+            
             background-color: white;
             border-bottom: 1px solid #ccc;
-            align-items: center;
         }
         .userProperty {
             width: 33.333%;
             font-size: 13px;
             font-weight: 500;
+            padding: 10px 5px;
         }
         .username {
             font-size: 14px;
@@ -311,15 +335,32 @@
         }  
         .extendedBar {
             left: 0px !important;
-        }    
+        }  
+        .bodyModal {
+            width: 100%;
+            height: 0;
+            overflow: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity .3s ease-out;
+        }
+        .openModal {
+            height: 100%;
+            opacity: 1;
+            display: block;
+            z-index: 9;
+        }  
         @media screen and (max-width: 1000px) {
             .barLeft {
                 /* display: none; */
-                transition: left 0.2s linear;
+                transition: left 0.2s cubic-bezier(0.0,0.0,0.2,1);
                 position: absolute;
                 top: 0px;
                 left: -250px;
-                z-index: 5;
+                z-index: 10;
             }
             .openSideBar {
                 display: block;
@@ -406,58 +447,162 @@
                 </div>
                 <div class="secondaryBar">
                     <div class="barTitle">
-                        Users
+                        <%=name%>
                     </div>
                 </div>
-                <div class="barOptions">
-                    <div class="barOption barOptionSelected">
-                        Users
-                    </div>
-                    <div class="barOption" onclick = "window.location = '/dashboard/users/admins'">
-                        Admins
-                    </div>
-                    <div class="barOption" onclick = "window.location = '/dashboard/users/teachers'">
-                        Teachers
-                    </div>
+                <div class="tabsBar">
+                    <% for (var i = 0; i < tabs.length; i++) { %>
+                        <div class="tabsBarTab" onclick = "window.location = '<%=tabs[i].href%>'" style = "color: <%=tabs[i].selected ? 'white' : '#eee' %>">
+                            <%=tabs[i].name%>
+                            <% if (tabs[i].selected) { %>
+                                <div class="tabsBarSelect"></div>
+                            <% } %>
+                        </div>
+                    <% } %>
                 </div>
             </div>
             <div class = "bodyLowerSection" id = "bodyLowerSection">
                 <div class="userHolder">
                     <div class="searchUsers" id = "searchUsers">
-                        <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search users">
+                        <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search for <%=singular.toLowerCase()%>">
                     </div>
                     <div class="titleList">
-                        <div class="titleListItem">
-                            All
-                        </div>
-                        <div class="titleListItem">
-                            Courses
-                        </div>
-                        <div class="titleListItem">
-                            Permissions
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <% for (var i = 0; i < users.length; i++) { %>
-                        <div class="user">
-                            <div class="userProperty">
-                                <div class="username">
-                                    <%=users[i].username%>
-                                </div>
-                                <div class="studentID">
-                                    <%=users[i].studentID || "No student ID"%>
-                                </div>
+                        <% for (var i = 0; i < keys.length; i++) { %>
+                            <div class="titleListItem">
+                                <%=keys[i].name%>
                             </div>
-                            <div class="userProperty">List</div>
-                            <div class="userProperty"><%=users[i].permissions%><i class="editPermissions fas fa-cogs"></i></div>
-                        </div>
                         <% } %>
                     </div>
+                    <div class="listHolder">
+                        <table class="userList">
+                            <% for (var i = 0; i < list.length; i++) { %>
+                                <% if (i == list.length-1) { %>
+                                    <tr class="user" style = "border-bottom: 0">
+                                        <% for (var j = 0; j < keys.length; j++) { %>
+                                            <% if (keys[j].type == "single") { %>
+                                                <td class="userProperty">
+                                                    <%=keys[j].displayFunc(list[i])%>
+                                                    <% if (keys[j].icon) { %>
+                                                        <%-keys[j].icon%>
+                                                    <% } %>
+                                                </td>
+                                            <% } else if (keys[j].type == "stackedList") { %>
+                                                <td class="userProperty">
+                                                    <div class="username">
+                                                        <%=keys[j].displayFunc(list[i])[0]%>
+                                                    </div>
+                                                    <div class="studentID">
+                                                        <%=keys[j].displayFunc(list[i])[1]%>
+                                                    </div>
+                                                    <% if (keys[j].icon) { %>
+                                                        <%-keys[j].icon%>
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
+                                        <% } %>
+                                    </tr>
+                                <% } else { %>
+                                    <tr class="user">
+                                        <% for (var j = 0; j < keys.length; j++) { %>
+                                            <% if (keys[j].type == "single") { %>
+                                                <td class="userProperty">
+                                                    <%=keys[j].displayFunc(list[i])%>
+                                                    <% if (keys[j].icon) { %>
+                                                        <%-keys[j].icon%>
+                                                    <% } %>
+                                                </td>
+                                            <% } else if (keys[j].type == "stackedList") { %>
+                                                <td class="userProperty">
+                                                    <div class="username">
+                                                        <%=keys[j].displayFunc(list[i])[0]%>
+                                                    </div>
+                                                    <div class="studentID">
+                                                        <%=keys[j].displayFunc(list[i])[1]%>
+                                                    </div>
+                                                    <% if (keys[j].icon) { %>
+                                                        <%-keys[j].icon%>
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
+                                        <% } %>
+                                    </tr>
+                                <% } %>
+                            <% } %>
+                        </table>
+                    </div>
+                    
                     <div class="bottomPadding">
                         
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="bodyModal" id = "bodyModal">
+
+    </div>
+    <div class="barLeft" id = "mobileBarLeft">
+        <div class="sideBarTitle">
+                <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+        </div>
+        <div class="sideBarOverview"  onclick = "window.location = '/dashboard/'">
+            <div class="overViewMain">
+                School Overview
+            </div>
+        </div> 
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'" >
+            <div class="sideBarMain">
+                Master Schedule
+            </div>
+            <div class="sideBarSecondary">
+                Edit and view the master schedule
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "expandSecondBar(this)">
+            <div class="sideBarMain">
+                Courses
+            </div>
+            <div class="sideBarSecondary" id = "categorySecondarySecond">
+                Add, edit, and remove courses
+            </div>        
+            <div class = "expandingcategorys" id = "expandingcategorysSecond">
+                <div class="expandedLink"  onclick="window.location = '/dashboard/courses/categories'">
+                    Categories
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                    Teachers
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                    Courses
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                    Codes
+                </div>
+            </div>
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+            <div class="sideBarMain">
+                Events
+            </div>
+            <div class="sideBarSecondary">
+                Add, edit, and remove categorys
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+            <div class="sideBarMain">
+                Configure
+            </div>
+            <div class="sideBarSecondary">
+                Change information displays
+            </div>                
+        </div>
+        <div class="sideBarTopic">
+            <div class="sideBarMain" style = "color: rgb(67,181,245);">
+                Users
+            </div>
+            <div class="sideBarSecondary">
+                View users and permissions
+            </div>                
         </div>
     </div>
     <div id = "errorPopDown">
@@ -466,8 +611,10 @@
 </body>
 <script>
     function openSideBar() {
-        let bar = document.getElementById("barLeft");
+        let bar = document.getElementById("mobileBarLeft");
         bar.classList.toggle("extendedBar");
+        let modal = document.getElementById("bodyModal");
+        modal.classList.toggle("openModal");
     }
     errorExtened = false;
     
@@ -494,6 +641,21 @@
             categorySecondary.style.visibility = "hidden";
         }
     }
+    function expandSecondBar(element) {
+        let categorys = document.getElementById("expandingcategorysSecond");
+        let categorySecondary = document.getElementById("categorySecondarySecond");
+        if (categorysExpanded) {
+            categorys.style.maxHeight = "0px";
+            categorysExpanded = false;
+            element.className = "sideBarTopic";
+            categorySecondary.style.visibility = "visible";
+        } else {
+            categorys.style.maxHeight = "150px";
+            categorysExpanded = true;
+            element.className = "expandedTopic";
+            categorySecondary.style.visibility = "hidden";
+        }
+    }
     function toggleBlur() {
         let element = document.getElementById("searchUsers");
         element.classList.toggle("activeSearch");
@@ -501,9 +663,9 @@
     function searchText(text) {
         let users = document.getElementsByClassName("user");
         for (var i = 0; i < users.length; i++) {
-            let child = users[i].children[0].children[0];
+            let child = users[i].children[0];
             if (child.innerText.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
-                users[i].style.display = "flex";
+                users[i].style.display = "";
             } else {
                 users[i].style.display = "none";
             }

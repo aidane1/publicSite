@@ -31,7 +31,7 @@
         .barLeft {
             width: 250px;
             height: 100%;
-            background-color: rgb(28, 35, 46);
+            background-color: #262f3d;
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
@@ -383,14 +383,31 @@
         .infoBox textarea:focus {
             border-bottom: 2px solid #174ea6; 
         }
+        .bodyModal {
+            width: 100%;
+            height: 0;
+            overflow: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity .3s ease-out;
+        }
+        .openModal {
+            height: 100%;
+            opacity: 1;
+            display: block;
+            z-index: 9;
+        }
         @media screen and (max-width: 1000px) {
             .barLeft {
                 /* display: none; */
-                transition: left 0.2s linear;
+                transition: left 0.2s cubic-bezier(0.0,0.0,0.2,1);
                 position: absolute;
                 top: 0px;
                 left: -250px;
-                z-index: 5;
+                z-index: 10;
             }
             .openSideBar {
                 display: block;
@@ -559,6 +576,73 @@
             </div>
         </div>
     </div>
+    <div class="bodyModal" id = "bodyModal">
+
+    </div>
+    <div class="barLeft" id = "mobileBarLeft">
+        <div class="sideBarTitle">
+                <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
+        </div>
+        <div class="sideBarOverview">
+            <div class="overViewMain">
+                School Overview
+            </div>
+        </div> 
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/masterSchedule/'">
+            <div class="sideBarMain">
+                Master Schedule
+            </div>
+            <div class="sideBarSecondary">
+                Edit and view the master schedule
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "expandSecondBar(this)" >
+            <div class="sideBarMain">
+                Courses
+            </div>
+            <div class="sideBarSecondary" id = "courseSecondarySecond">
+                Add, edit, and remove courses
+            </div>        
+            <div class = "expandingCourses" id = "expandingCoursesSecond">
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/categories'">
+                    Categories
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/teachers'">
+                    Teachers
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/courses'">
+                    Courses
+                </div>
+                <div class="expandedLink" onclick="window.location = '/dashboard/courses/codes'">
+                    Codes
+                </div>
+            </div>
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/events/'" >
+            <div class="sideBarMain">
+                Events
+            </div>
+            <div class="sideBarSecondary">
+                Add, edit, and remove events
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/configure/'" >
+            <div class="sideBarMain">
+                Configure
+            </div>
+            <div class="sideBarSecondary">
+                Change information displays
+            </div>                
+        </div>
+        <div class="sideBarTopic" onclick = "window.location = '/dashboard/users/users/'">
+            <div class="sideBarMain">
+                Users
+            </div>
+            <div class="sideBarSecondary">
+                View users and permissions
+            </div>                
+        </div>
+    </div>
 </body>
 <script>
     
@@ -578,9 +662,26 @@
             courseSecondary.style.visibility = "hidden";
         }
     }
+    function expandSecondBar(element) {
+        let courses = document.getElementById("expandingCoursesSecond");
+        let courseSecondary = document.getElementById("courseSecondarySecond");
+        if (coursesExpanded) {
+            courses.style.maxHeight = "0px";
+            coursesExpanded = false;
+            element.className = "sideBarTopic";
+            courseSecondary.style.visibility = "visible";
+        } else {
+            courses.style.maxHeight = "150px";
+            coursesExpanded = true;
+            element.className = "expandedTopic";
+            courseSecondary.style.visibility = "hidden";
+        }
+    }
     function openSideBar() {
-        let bar = document.getElementById("barLeft");
+        let bar = document.getElementById("mobileBarLeft");
         bar.classList.toggle("extendedBar");
+        let modal = document.getElementById("bodyModal");
+        modal.classList.toggle("openModal");
     }
     let alertOut = false;
     function sendAlert() {
