@@ -873,6 +873,7 @@
         element.innerHTML = "";
     }
     function openEditBar(json) {
+        console.log(json);
         toggleRowCreate();
         json = JSON.parse(jsonEscape(json));
         document.getElementById("submitRow").innerText = "EDIT";
@@ -978,6 +979,13 @@
         error.classList.add("errorDown");
         errorExtened = true;
     }
+    function createElementFromHTML(htmlString) {
+        var div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+
+        // Change this to div.childNodes to support multiple top-level nodes
+        return div.firstChild; 
+    }
     function editRow(id) {
         let newRow = getInputValues();
         newRow._id = id;
@@ -988,11 +996,12 @@
                 for (var i = 0; i < row.children.length; i++) {
                     let name = row.children[i].getAttribute("name");
                     if (newRow[name]) {
-                        console.log(res[1]);
                         row.children[i].innerText = mapFunction[name](res[1]);
                     }
                     if (i == row.children.length-1) {
-                        row.children[i].innerHTML += `<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = "openEditBar('${JSON.stringify(res[1])}')">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`;
+                        let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
+                        openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
+                        row.children[i].appendChild(openElement);
                     }
                 }
             } else {
@@ -1026,7 +1035,9 @@
                     row.appendChild(property);
                 }
                 row.children[row.children.length-1].classList.add("lastProperty");
-                row.children[row.children.length-1].innerHTML += `<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit" onclick = "openEditBar('${JSON.stringify(res[1])}')">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`;
+                let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
+                openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
+                row.children[row.children.length-1].appendChild(openElement);
                 document.getElementById("rowDisplay").appendChild(row);
             } else {
                 populateInputs(newRow);
