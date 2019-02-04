@@ -1057,7 +1057,7 @@ app.get("/dashboard/courses/teachers", async function(req,res) {
           "firstName": {type: "text"},
           "lastName": {type: "text"},
           "teacherCode": {type: "text"},
-          "prefix": {type: "select", optionType: "list", options: ["Mr. ", "Mrs. ", "Ms. "], other: true, otherName: "Other"},
+          "prefix": {type: "select", optionType: "list", options: ["Mr. ", "Mrs. ", "Ms. ", "Mme. "], other: true, otherName: "Other"},
         }
         let tabOptions = [
           {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
