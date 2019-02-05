@@ -182,7 +182,7 @@ html, body {
 .infoTab {
     /* margin-top: 20px; */
     width: 100%;
-    background-color: white;
+    background-color: #fafafa;
 }
 .infoTabBar {
     
@@ -466,10 +466,11 @@ textarea:focus {
 }
 .topicGroup {
     margin: 10px;
-    padding: 5px 2px;
+    padding: 15px 12px;
     border-radius: 10px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
     overflow: hidden;
+    background-color: white;
 }
 .topicGroupTitle {
     font-size: 30px;
@@ -684,6 +685,7 @@ textarea:focus {
     border-radius: 10px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
     overflow: hidden;
+    background-color: white;
 }
 .dateGroupTitle {
     font-size: 30px;
