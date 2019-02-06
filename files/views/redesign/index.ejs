@@ -6,7 +6,7 @@
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
     <meta name = "theme-color" content = "orange" />
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name = "apple-mobile-web-app-status-bar-style" content = "#FC7753">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name = "apple-mobile-web-app-title" content = "PVSS">
     <link rel = "manifest" href = "public/manifests/home.json  " />
     <!-- <link rel = "stylesheet" href = "/public/css/index.css"> -->
@@ -46,6 +46,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
 }
 .animateLeft {
     animation: slideLeft 0.3s linear 1;
@@ -398,6 +399,28 @@ html, body {
     height: 1440px;
     position: relative;
 }
+.floatingActionButton {
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 6px 10px 0 #666;
+    background-color: red;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+.floatingActionButton:active {
+   box-shadow: 0 6px 14px 0 #666;
+   transform: scale(1.05);
+}
+.floatingActionButton img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 5px;
+    left: 0px;
+}
 .scheduleHour {
     width: 100%;
     height: 60px;
@@ -474,11 +497,8 @@ html, body {
     padding-bottom: 20px;
 }
 .schedule {
-    /* width: 95%; */
     width: 100%;
-    height: 100%;
     overflow-x: auto;
-    
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -487,27 +507,18 @@ html, body {
 }
 .scheduleDay {
     display: inline-block;
-    /* border-right: 1px solid black; */
-    /* width: 20%; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* flex-wrap: nowrap; */
 }
 .scheduleTitle {
-    /* width: 100%; */
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 20px;
     border-bottom: 1px solid black;
-    
 }
 .scheduleBlock {
     width: 110px;
     height: 80px;
     min-height: 50px;
-    /* height: 150px; */
-    /* height: 120px; */
     border-bottom: 1px solid black;
     border-right: 1px solid black;
     display: flex;
@@ -529,7 +540,6 @@ html, body {
     align-items: center;
     border-top: 1px solid rgba(255,255,255,0.5);
     z-index: 4;
-    /* background-color: black; */
 }
 .tab {
     width: 25%;
@@ -1001,8 +1011,11 @@ html, body {
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="floatingActionButton">
+                        <img src = "/public/icons/plusIcon.svg">
+                    </div>
                 </div>
+                
             </div>
         </div>
         <div class="bottomTabBar">
@@ -1029,6 +1042,7 @@ html, body {
     
   </body>
   <script>
+      let scrollingAllowed = true;
     function removeAlert() {
         var request = new XMLHttpRequest();
         request.open('GET', '/removeAlert', true);
@@ -1055,6 +1069,18 @@ html, body {
         return "rgba(130,130,130,0.5)";
     }
     function extendCalendarPopup(dateString, events, date) {
+        scrollingAllowed = false;
+        let backdrop = document.getElementById("backdrop");
+        backdrop.style.overflowX = "hidden";
+        $("#backdrop").animate({scrollLeft: 4*width}, 200);
+        let tabs = document.getElementsByClassName("tab");
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("selectedTab");
+            if (i == 3) {
+                tabs[i].classList.add("selectedTab");
+            }
+        }
+        tabs[3].classList.add("selectedTab");
         document.getElementById("dateTitle").innerHTML = dateString;
         let popup = document.getElementById("calendarPopUp");
         popup.classList.add("extendedPopUp")
@@ -1118,15 +1144,14 @@ html, body {
         });
         events = JSON.parse(jsonEscape(events));
     }
-    function removePopUp() {
-        let popup = document.getElementById("calendarPopUp");
-        popup.style.top = "calc(100% + 20px)";
-    }
     function closeModal() {
         let popup = document.getElementById("calendarPopUp");
         popup.classList.remove("extendedPopUp")
         let modal = document.getElementById("bodyModal");
         modal.classList.remove("displayedModal");
+        let backdrop = document.getElementById("backdrop");
+        backdrop.style.overflowX = "auto";
+        scrollingAllowed = true;
     }
     let currentBodyIndex = 1;
     let backdrop = document.getElementById("backdrop");
@@ -1136,15 +1161,16 @@ html, body {
         
     });
     function moveTab(index) {
-        let tabs = document.getElementsByClassName("tab");
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].classList.remove("selectedTab");
-            if (i == index) {
-                tabs[i].classList.add("selectedTab");
+        if (scrollingAllowed) {
+            let tabs = document.getElementsByClassName("tab");
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("selectedTab");
+                if (i == index) {
+                    tabs[i].classList.add("selectedTab");
+                }
             }
+            $("#backdrop").animate({scrollLeft: index*width}, 200);
         }
-        // document.getElementById("backdrop").scrollLeft = index*width;
-        $("#backdrop").animate({scrollLeft: index*width}, 200);
     }
     backdrop.addEventListener("touchmove", function(touch) {
         let currentBody = Math.round(backdrop.scrollLeft/width);

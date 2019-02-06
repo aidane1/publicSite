@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel = "manifest" href = "public/manifests/home.json  " />
     <title>PVSS student website | Course Select</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script>
         
@@ -33,14 +33,46 @@
         margin: 0;
         padding: 0;
       }
+      .homeHeader {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .homeRow {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
       .backdrop {
           width: 100%;
-          height: 100%;
+          height: calc(100% - 50px);
           overflow: auto;
           background-color: rgb(240,240,240);
-          /* display: flex; */
-          /* flex-direction: column; */
-          /* flex-wrap: nowrap; */
       }
       .expandingBar {
           max-height: 50px;
@@ -154,13 +186,21 @@
     </style>
   </head>
   <body>
+    <div class="homeHeader">
+        <div class="homeRow">
+            <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
+            <div class="displayText">Courses</div>
+            <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
+        </div>
+    </div>
       <div class="backdrop">
           <div class="semesterPicker">
             <% for (var i = 0; i < school.semesters.length; i++) { %>
                 <% if (school.semesters[i]._id.toString() == selectedSemester) { %>
                     <div class="semester selected"><%=school.semesters[i].name%></div>
                 <% } else { %>
-                    <div class="semester"><a href="/courses?semester=<%=school.semesters[i]._id%>"><%=school.semesters[i].name%></a></div>
+                    <!-- <div class="semester"><a href="/courses?semester=<%=school.semesters[i]._id%>"><%=school.semesters[i].name%></a></div> -->
+                    <div class="semester"><div onclick = "semSubmitAll('/courses?semester=<%=school.semesters[i]._id%>')"><%=school.semesters[i].name%></div></div>
                 <% } %>
             <% } %>
           </div>
@@ -254,7 +294,20 @@
         element.children[0].children[2].innerHTML = "&#9650;";
        }
     }
-
+    function semSubmitAll(href) {
+        let formData = new FormData();
+        for (var key in sendObject) {
+            formData.append(key, sendObject[key]);
+        }
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                window.location = href;
+            }
+        }
+        request.open("POST", "/courses?semester=<%=selectedSemester%>");
+        request.send(formData);
+    }
     function submitAll() {
         let form = document.createElement("form");
         form.method = "POST";
@@ -267,7 +320,6 @@
             form.appendChild(input);
         }
         document.body.appendChild(form);
-        console.log(form);
         form.submit();
     }
   </script>

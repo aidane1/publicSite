@@ -4794,7 +4794,6 @@ app.get("/courses", async function(req, res) {
 
         let categories = await Categories.find({school: school._id});
         let userCourses = blockNamesObject([], allowedUserCourses, {}, "LC's");
-        console.log(userCourses);
         let disallowedBlocks = [];
         for (var key in userCourses) {
           disallowedBlocks.push(key);
@@ -4845,6 +4844,7 @@ app.get("/getUserCourses", async function(req, res) {
 app.post("/courses", urlencodedParser, async function(req, res) {
 
   try {
+    console.log(req.body);
     if (req.session.userId && req.query.semester) {
       let user = await User.findOne({_id: req.session.userId}).populate({path: "courses", populate: {path: "semester"}});
       let school = await School.findOne({_id : user.school}).populate("semesters");
