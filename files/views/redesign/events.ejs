@@ -94,13 +94,15 @@
         </div>
     </div>
     <% for (var i = 0; i < events.length; i++) { %>
-        <div class="event">
-            <div class="eventDate"><%=moment(events[i].date).format("MMMM D, YYYY")%></div>
-            <div class="eventInfo"><%=events[i].info%></div>
-            <div class="schoolSkipped">
-                <div><i><%=events[i].schoolSkipped ? "School is skipped" : "School is not skipped" %></i></div>
+        <% if (events[i].displayedEvent) { %>
+            <div class="event">
+                <div class="eventDate"><%=moment(events[i].date).format("MMMM D, YYYY")%></div>
+                <div class="eventInfo"><%=events[i].info%></div>
+                <div class="schoolSkipped">
+                    <div><i><%=events[i].schoolSkipped ? "School is skipped" : "School is not skipped" %></i></div>
+                </div>
             </div>
-        </div>
+        <% } %>
     <% } %> 
 </body>
 </html>
