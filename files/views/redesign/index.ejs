@@ -10,7 +10,7 @@
     <meta name = "apple-mobile-web-app-title" content = "PVSS">
     <link rel = "manifest" href = "public/manifests/home.json  " />
     <link rel = "stylesheet" href = "/public/css/index.css">
-    <title>PVSS student website | Home</title>
+    <title>Schoolr student app | Home</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
@@ -22,6 +22,7 @@
     <link rel = "apple-touch-icon" sizes = " 114x114" href = "/public/schoolLogos/114x114_<%=favicon%>" />
     <link rel = "apple-touch-icon" sizes = " 57x57" href = "/public/schoolLogos/57x57_<%=favicon%>" />
     <link rel = "apple-touch-icon" sizes = " 72x72" href = "/public/schoolLogos/72x72_<%=favicon%>" />
+    <script src = "/public/js/asyncRequest.js"></script>
     <script>
         
     </script>
@@ -187,7 +188,7 @@
                                                     <% for (var l = 0; l < today[3].length; l++) { %>
                                                         <% events.push({time: today[3][l].time, info: today[3][l].info}); %>
                                                     <% } %>
-                                                    <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '<%=JSON.stringify(events)%>')">
+                                                    <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
                                                         <div class="dayDate">
                                                             <%= todayDate.getDate()%>
                                                         </div>
@@ -199,7 +200,7 @@
                                                         </div>
                                                     </div>
                                                 <% } else { %>
-                                                    <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', [])">
+                                                    <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
                                                         <div class="dayDate">
                                                             <%= todayDate.getDate()%>
                                                         </div>
@@ -233,10 +234,161 @@
                         <% initialOffset = (initialOffset + monthLengths[i])%7%>
                     <% } %>
                 </div>
+                <div class="bodyModal" id = "bodyModal" onclick = "closeModal()">
+
+                </div>
                 <div class="calendarPopUp" id = "calendarPopUp">
-                    <div class="removePopUp" onclick = "removePopUp()"></div>
                     <div class="dateTitle" id = "dateTitle"></div>
                     <div id = "eventsHolder"></div>
+                    <div class="scheduleBodyWrapper">
+                        <div class="scheduleBody" id = "scheduleBody">
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">1:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">2:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">3:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">4:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">5:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">6:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">7:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">8:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">9:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">10:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">11:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">12:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">1:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">2:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">3:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">4:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">5:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">6:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">7:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">8:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">9:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">10:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">11:00 PM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                            <div class="scheduleHour">
+                                <div class="scheduleHourBar">
+                                    <div class="scheduleHourTitle">12:00 AM</div>
+                                    <div class="middleBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -274,49 +426,94 @@
         request.open('GET', '/monitorUsage?page=/&id=<%=userId%>', true);
         request.send(null);
     }
-    function extendCalendarPopup(dateString, events) {
-// 
-        
-
-        events = JSON.parse(events);
-        
+    function jsonEscape(str)  {
+        return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+    }
+    function hexToRgbA(hex){
+        var c;
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('');
+            if(c.length== 3){
+                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c= '0x'+c.join('');
+            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.8)';
+        }
+        return "rgba(130,130,130,0.5)";
+    }
+    function extendCalendarPopup(dateString, events, date) {
+        document.getElementById("dateTitle").innerHTML = dateString;
         let popup = document.getElementById("calendarPopUp");
-        popup.style.top = "50px";
-        var myNode = document.getElementById("eventsHolder");
+        popup.classList.add("extendedPopUp")
+        let modal = document.getElementById("bodyModal");
+        modal.classList.add("displayedModal");
+        let myNode = document.getElementById("eventsHolder");
+        let scheduleBodies = document.getElementById("scheduleBody");
         while (myNode.firstChild) {
             myNode.removeChild(myNode.firstChild);
         }
-        for (var i = 0; i < events.length; i++) {
-            let event = document.createElement("div");
-            event.className = "eventBody";
-            let time = document.createElement("div");
-            time.className = "eventBodyTime";
-            let info = document.createElement("div");
-            info.className = "eventBodyInfo";
-            time.innerHTML = events[i].time;
-            info.innerHTML = events[i].info;
-            event.appendChild(time);
-            event.appendChild(info);
-            myNode.appendChild(event);
+        let currentScheduleEvents = document.getElementsByClassName("scheduleEvent");
+        while(currentScheduleEvents.length) {
+            currentScheduleEvents[0].parentNode.removeChild(currentScheduleEvents[0]);
         }
-        if (events.length == 0) {
-            let event = document.createElement("div");
-            event.className = "eventBody";
-            let time = document.createElement("div");
-            time.className = "eventBodyTime";
-            let info = document.createElement("div");
-            info.className = "eventBodyInfo";
-            time.innerHTML = "";
-            info.innerHTML = "No Events!";
-            event.appendChild(time);
-            event.appendChild(info);
-            myNode.appendChild(event);
-        }
-        document.getElementById("dateTitle").innerHTML = dateString;
+        sendGetRequest("date=" + date, "/infoOnDay", function(res) {
+            if (!res.events || res.events.length == 0) {
+                let event = document.createElement("div");
+                event.className = "eventBody";
+                let time = document.createElement("div");
+                time.className = "eventBodyTime";
+                let info = document.createElement("div");
+                info.className = "eventBodyInfo";
+                time.innerHTML = "";
+                info.innerHTML = "No Events!";
+                event.appendChild(time);
+                event.appendChild(info);
+                myNode.appendChild(event);
+            } else {
+                for (var i = 0; i < res.events.length; i++) {
+                    let event = document.createElement("div");
+                    event.className = "eventBody";
+                    let time = document.createElement("div");
+                    time.className = "eventBodyTime";
+                    let info = document.createElement("div");
+                    info.className = "eventBodyInfo";
+                    time.innerHTML = res.events[i].time;
+                    info.innerHTML = res.events[i].info;
+                    event.appendChild(time);
+                    event.appendChild(info);
+                    myNode.appendChild(event);
+                }
+            }
+            if (res.scheduleEvents) {
+                for (var i = 0; i < res.scheduleEvents.length; i++) {
+                    let newEvent = document.createElement("div");
+                    newEvent.className = "scheduleEvent";
+                    newEvent.style.top = `${res.scheduleEvents[i].time[0]*60 + res.scheduleEvents[i].time[1]}px`;
+                    newEvent.style.height = `${res.scheduleEvents[i].time[2]*60 + res.scheduleEvents[i].time[3] - (res.scheduleEvents[i].time[0]*60 + res.scheduleEvents[i].time[1])}px`;
+                    newEvent.style.backgroundColor = hexToRgbA(res.scheduleEvents[i].colour);
+                    let main = document.createElement("div");
+                    main.className = "scheduleBodyMain";
+                    main.innerText = res.scheduleEvents[i].mainInfo;
+                    let second = document.createElement("div");
+                    second.className = "scheduleBodySecond";
+                    second.innerText = res.scheduleEvents[i].secondaryInfo;
+                    newEvent.appendChild(main);
+                    newEvent.appendChild(second);
+                    scheduleBodies.appendChild(newEvent);
+                }
+            }
+        });
+        events = JSON.parse(jsonEscape(events));
     }
     function removePopUp() {
         let popup = document.getElementById("calendarPopUp");
         popup.style.top = "calc(100% + 20px)";
+    }
+    function closeModal() {
+        let popup = document.getElementById("calendarPopUp");
+        popup.classList.remove("extendedPopUp")
+        let modal = document.getElementById("bodyModal");
+        modal.classList.remove("displayedModal");
     }
     let currentBodyIndex = 1;
     let backdrop = document.getElementById("backdrop");
@@ -333,6 +530,7 @@
                 tabs[i].classList.add("selectedTab");
             }
         }
+        // document.getElementById("backdrop").scrollLeft = index*width;
         $("#backdrop").animate({scrollLeft: index*width}, 200);
     }
     backdrop.addEventListener("touchmove", function(touch) {
