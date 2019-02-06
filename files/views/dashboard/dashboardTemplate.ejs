@@ -611,7 +611,7 @@
                 <div class="tableHolderMain">
                     <div class="newTableRowBar" id = "newTableRowBar">
                         <div class="searchRows" id = "searchRows">
-                            <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search for <%=singular.toLowerCase()%>">
+                            <i class="searchIcon fas fa-search"></i><input index = "0" id = "searchText" oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search for <%=singular.toLowerCase()%>">
                         </div>
                         <div class="createRow" onclick = "toggleRowCreate()">
                             NEW <%=singular.toUpperCase()%>
@@ -810,11 +810,11 @@
         let rows = document.getElementsByClassName("row");
         for (var i = 0; i < rows.length; i++) {
             let child = rows[i];
-            if (child.innerText.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+            if (child.innerHTML.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
                 rows[i].style.display = "";
             } else {
                 rows[i].style.display = "none";
-            }
+            }    
         }
     }
     let categorysExpanded = false;
@@ -873,7 +873,6 @@
         element.innerHTML = "";
     }
     function openEditBar(json) {
-        console.log(json);
         toggleRowCreate();
         json = JSON.parse(jsonEscape(json));
         document.getElementById("submitRow").innerText = "EDIT";
@@ -881,6 +880,7 @@
         populateInputs(json);
     }
     function sortElements(bar, index) {
+        document.getElementById("searchText").setAttribute("index", index);
         let direction = 0;
         let arrows = document.getElementsByClassName("selectedArrow");
         for (var i = 0; i < arrows.length; i++) {
@@ -899,14 +899,19 @@
             bar.children[1].classList.add("selectedArrow");
         }
         let rows = Array.prototype.slice.call(document.getElementById("rowDisplay").children, 0);
+        let frag = document.createDocumentFragment();
+        
         if (direction != 0) {
             rows.sort(function(a,b) {
-                return a.children[index].innerText.localeCompare(b.children[index].innerText)/direction;
+                return a.children[index].innerHTML.localeCompare(b.children[index].innerHTML)/direction;
             });
             for (var i = 0; i < rows.length; i++) {
-                document.getElementById("rowDisplay").appendChild(rows[i]);
+                frag.appendChild(rows[i]);
+                // document.getElementById("rowDisplay").appendChild(rows[i]);
             }
         }
+        document.getElementById("rowDisplay").appendChild(frag);
+        
     }
     function openEdit(element) {
         element.children[0].style.display = "block";

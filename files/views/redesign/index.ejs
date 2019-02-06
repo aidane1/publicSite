@@ -341,6 +341,13 @@ html, body {
     flex-wrap: nowrap;
     justify-content: space-evenly;
 }
+.today {
+    background-color: rgba(97, 199, 237, 0.4);
+    font-size: 20px;
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 .boxTitle {
     font-size: 10px;
 }
@@ -764,29 +771,59 @@ html, body {
                                                     <% for (var l = 0; l < today[3].length; l++) { %>
                                                         <% events.push({time: today[3][l].time, info: today[3][l].info}); %>
                                                     <% } %>
-                                                    <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
-                                                        <div class="dayDate">
-                                                            <%= todayDate.getDate()%>
+                                                    <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
+                                                        <div class="calendarDay today" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
+                                                            <div class="dayDate">
+                                                                <%= todayDate.getDate()%>
+                                                            </div>
+                                                            <div class="boxTitle">
+                                                                <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                            </div>
+                                                            <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
+                                                                
+                                                            </div>
                                                         </div>
-                                                        <div class="boxTitle">
-                                                            <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                    <% } else { %>
+                                                        <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
+                                                            <div class="dayDate">
+                                                                <%= todayDate.getDate()%>
+                                                            </div>
+                                                            <div class="boxTitle">
+                                                                <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                            </div>
+                                                            <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
+                                                                
+                                                            </div>
                                                         </div>
-                                                        <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
-                                                            
-                                                        </div>
-                                                    </div>
+                                                    <% } %>
+                                                    
                                                 <% } else { %>
-                                                    <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
-                                                        <div class="dayDate">
-                                                            <%= todayDate.getDate()%>
+                                                    <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
+                                                        <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
+                                                            <div class="dayDate">
+                                                                <%= todayDate.getDate()%>
+                                                            </div>
+                                                            <div class="boxTitle">
+                
+                                                            </div>
+                                                            <div class="dayEvent" style = "visibility: hidden">
+                
+                                                            </div>
                                                         </div>
-                                                        <div class="boxTitle">
-            
-                                                        </div>
-                                                        <div class="dayEvent" style = "visibility: hidden">
-            
-                                                        </div>
-                                                    </div>
+                                                    <% } else { %>
+                                                        <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
+                                                            <div class="dayDate">
+                                                                <%= todayDate.getDate()%>
+                                                            </div>
+                                                            <div class="boxTitle">
+                
+                                                            </div>
+                                                            <div class="dayEvent" style = "visibility: hidden">
+                
+                                                            </div>
+                                                        </div>  
+                                                    <% } %> 
+                                                    
                                                 <% } %>
                                             <% } %>
                                         <% } else { %>
