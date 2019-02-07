@@ -3980,9 +3980,9 @@ function averageColors( colorArray ){
   }
 
   //Average RGB
-  red = Math.sqrt(red/colorArray.length);
-  green = Math.sqrt(green/colorArray.length);
-  blue = Math.sqrt(blue/colorArray.length);
+  red = Math.round(Math.sqrt(red/colorArray.length));
+  green = Math.round(Math.sqrt(green/colorArray.length));
+  blue = Math.round(Math.sqrt(blue/colorArray.length));
   return ( "rgb("+ red +","+ green +","+ blue +")" );
 }
 
