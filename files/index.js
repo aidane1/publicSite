@@ -2371,12 +2371,7 @@ app.post("/uploadTeacherFile", async function(req, res) {
 });
 
 async function createAssignment(user, type, info, notes, due, course, topic, confirmed) {
-  let date = new Date();
-  date = moment(date).format("DD MM YYYY HH:MM");
-  console.log(date);
   let currentDate = (new Date()).local();
-  currentDate = moment(currentDate).format("DD MM YYYY HH:MM");
-  console.log(currentDate);
   try {
     if (user && type && info && due && course && topic) {
       let assignment = {
@@ -2386,7 +2381,7 @@ async function createAssignment(user, type, info, notes, due, course, topic, con
         assignment: info,
         notes: notes,
         due: due,
-        date: (new Date()).local(),
+        date: currentDate,
         forCourse: course,
         topic: topic,
       };
