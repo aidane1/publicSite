@@ -45,8 +45,16 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
     background-color: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+}
+.statusBar {
+    width: 100%;
+    height: 20px;
+    background-color: red;
+    position: fixed;
+    top: -20px;
+    left: 0;
 }
 .animateLeft {
     animation: slideLeft 0.3s linear 1;
@@ -715,6 +723,9 @@ transform: scale(1.05);
     </style>
     </head>
     <body onunload="unload()">
+        <div class="statusBar">
+
+        </div>
         <div class="homeHolder" id = "homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
