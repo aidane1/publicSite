@@ -1177,11 +1177,11 @@ transform: scale(1.05);
     </div>
     <% if (alert) { %> 
         <% if (alert[0]) { %>
-            <div class="alert" id = "shown" onclick = "window.location = '<%=alert[0]%>'">
+            <div class="alert" id = "shown" shown = "true" onclick = "window.location = '<%=alert[0]%>'">
                 <Strong>Notice:</Strong> <%=alert[1]%>
             </div>
         <% } else { %>
-            <div class="alert" id = "shown">
+            <div class="alert" id = "shown"  shown = "true" >
                 <Strong>Notice:</Strong> <%=alert[1]%>
             </div>
         <% } %>
@@ -1327,7 +1327,10 @@ transform: scale(1.05);
 
     document.onclick = function() {
         let shownAlerts = document.getElementById("shown");
-        if (shownAlerts && shownAlerts.style.top == "20%") {
+        console.log(shownAlerts);
+        if (shownAlerts && shownAlerts.getAttribute("shown") === "true") {
+            console.log("here");
+            shownAlerts.setAttribute("shown", "false");
             shownAlerts.style.top = "-200px";
         }
     }
