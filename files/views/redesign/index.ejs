@@ -1334,6 +1334,15 @@ transform: scale(1.05);
             shownAlerts.style.top = "-200px";
         }
     }
+    document.ontouchstart = function() {
+        let shownAlerts = document.getElementById("shown");
+        console.log(shownAlerts);
+        if (shownAlerts && shownAlerts.getAttribute("shown") === "true") {
+            console.log("here");
+            shownAlerts.setAttribute("shown", "false");
+            shownAlerts.style.top = "-200px";
+        }
+    }
     window.onload = function() {
         let currentMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][new Date().getMonth()];
         let calendar = document.getElementById(currentMonth + "_" + new Date().getFullYear().toString());
