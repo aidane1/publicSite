@@ -827,8 +827,10 @@ transform: scale(1.05);
                         Recent Assignments
                     </h1>
                 </div>
+                <% let length = 0%>
                 <% for (var key in recentAssignments) { %>
                     <% for (var i = 0; i < recentAssignments[key].assignments.length; i++) { %>
+                        <% length++%>
                         <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#7ae281, #63c66a)">
                             <div class="blockHeader" style = "padding-top: 0px">
                                 <%=recentAssignments[key].course%>
@@ -847,6 +849,21 @@ transform: scale(1.05);
                             </div>
                         </div>
                     <% } %>
+                <% } %>
+                <% if (length == 0) { %>
+                    <div class = "blockHolder" style = "background: linear-gradient(#7ae281, #63c66a)">
+                        <div class="blockHeader" style = "padding-top: 0px">
+                            No recent assignments
+                        </div>
+                        <div class="blockLeft" style = "padding-top: 2px">
+                            <div class="blockMain" style = "font-size: 18px;">
+                                Create assignments for your class by clicking on a block on the today screen
+                            </div>
+                            <div class="blockSecondary">
+                                
+                            </div>
+                        </div>
+                    </div>
                 <% } %>
                 <div style = "width: 100%; padding-top: 10px"></div>
             </div>
