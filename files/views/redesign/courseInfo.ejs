@@ -402,7 +402,7 @@
         document.getElementById("customTopic").innerHTML = json.topic || "No Topic";
         document.getElementById("customDue").innerHTML = json.due;
         document.getElementById("customNotes").innerHTML = json.notes || "No Notes";
-        document.getElementById("customPosted").innerText = moment(json.date).format('MMMM Do YYYY, h:mm:ss a') ;
+        document.getElementById("customPosted").innerText = moment(json.date).subtract({hours: 8}).format('MMMM Do YYYY, h:mm:ss a') ;
         let modal = document.getElementById("darkModal");
         let createAssignment = document.getElementById("assignmentDisplayBox");
         modal.style.display = "block";
