@@ -739,7 +739,7 @@ transform: scale(1.05);
                                         <%=titles[i][key]%>
                                     </div>
                                     <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
                                             <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
                                             <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
                                                 <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
