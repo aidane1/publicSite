@@ -585,19 +585,21 @@ transform: scale(1.05);
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 20px;
-    border-bottom: 1px solid black;
 }
 .scheduleBlock {
     width: 110px;
     height: 80px;
     min-height: 50px;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
+    /* border-bottom: 1px solid black;
+    border-right: 1px solid black; */
+    margin: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     background-color: white;
     font-size: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 5px;
 }
 .scheduleBlock div {
     margin-top: 5px;
@@ -737,7 +739,7 @@ transform: scale(1.05);
                                         <%=titles[i][key]%>
                                     </div>
                                     <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background-color: <%=colorMap[readSchedule[i][key][j][0].block]%>">
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
                                             <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
                                             <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
                                                 <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
@@ -829,7 +831,7 @@ transform: scale(1.05);
                 </div>
                 <% for (var key in recentAssignments) { %>
                     <% for (var i = 0; i < recentAssignments[key].assignments.length; i++) { %>
-                        <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#5fe278, #48ad5b)">
+                        <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#7ae281, #63c66a)">
                             <div class="blockHeader" style = "padding-top: 0px">
                                 <%=recentAssignments[key].course%>
                             </div>

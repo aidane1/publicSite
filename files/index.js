@@ -2628,7 +2628,6 @@ app.post("/subscribe", urlencodedParser, function(req,res) {
 
 app.get("/manifest", function(req, res) {
 
-  console.log(req.session.userId);
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (err || user == null) {
@@ -2637,17 +2636,28 @@ app.get("/manifest", function(req, res) {
       } else {
         School.findOne({_id : user.school}, function(err, school) {
           if (err || school == null) {
-            console.log("bad school");
             res.sendFile(__dirname + "/public/manifests/home.json");
           } else {
-            console.log("final form");
-            res.sendFile(__dirname + "/public/manifests/home.json");
+            let manifest = {
+              "name": school.name,
+              "short_name": school.name,
+              "start_url": "/",
+              "display": "standalone",
+              "background_color": "orange",
+              "theme_color": "orange",
+              "description": `The ${school.name} school app!`,
+              "orientation": "portrait",
+              "lang": "en-US",
+              "icons": [
+                {}
+              ]
+            }
+            res.contentType("application/manifest+json").sendFile(__dirname + "/public/manifests/home.json");  
           }
         })
       }
     })
   } else {
-    console.log("bad id");
     res.sendFile(__dirname + "/public/manifests/home.json");
   }
 });
@@ -3949,6 +3959,35 @@ app.get("/infoOnDay", async function(req, res) {
     res.send({});
   }
 });
+function averageColors( colorArray ){
+  //get the red of RGB from a hex value
+  function hexToR(h) {return parseInt((cutHex( h )).substring( 0, 2 ), 16 )}
+
+  //get the green of RGB from a hex value
+  function hexToG(h) {return parseInt((cutHex( h )).substring( 2, 4 ), 16 )}
+
+  //get the blue of RGB from a hex value
+  function hexToB(h) {return parseInt((cutHex( h )).substring( 4, 6 ), 16 )}
+
+  //cut the hex into pieces
+  function cutHex(h) {if(h.charAt(1) == "x"){return h.substring( 2, 8 );} else {return h.substring(1,7);}}
+  var red = 0, green = 0, blue = 0;
+
+  for ( var i = 0; i < colorArray.length; i++ ){
+      red += hexToR( "" + colorArray[ i ] + "" )**2;
+      green += hexToG( "" + colorArray[ i ] + "" )**2;
+      blue += hexToB( "" + colorArray[ i ] + "" )**2;
+  }
+
+  //Average RGB
+  red = Math.sqrt(red/colorArray.length);
+  green = Math.sqrt(green/colorArray.length);
+  blue = Math.sqrt(blue/colorArray.length);
+  return ( "rgb("+ red +","+ green +","+ blue +")" );
+}
+
+
+
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
   // let currentDate = new Date(2019, 0, 28, 10,14);
@@ -3974,7 +4013,6 @@ app.get("/", async function(req, res) {
 
       }
       for (var i = 0; i < allowedUserCourses.length; i++) {
-        console.log(i);
         let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
         recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
         recent.sort(function(a,b) {
@@ -3987,9 +4025,7 @@ app.get("/", async function(req, res) {
             recentAssignments[allowedUserCourses[i]._id].assignments.push(recent[j]);
           }
         }
-        console.log(i);
       }
-      console.log(recentAssignments);
       let eventsObject = await makeDayMap(school._id);
 
 
@@ -4070,7 +4106,7 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
         //typeof alert: ['<href>(optional)', text]
-        res.render("redesign/index", {recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];
