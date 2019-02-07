@@ -3974,6 +3974,7 @@ app.get("/", async function(req, res) {
 
       }
       for (var i = 0; i < allowedUserCourses.length; i++) {
+        console.log(i);
         let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
         recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
         recent.sort(function(a,b) {
@@ -3986,6 +3987,7 @@ app.get("/", async function(req, res) {
             recentAssignments[allowedUserCourses[i]._id].assignments.push(recent[i]);
           }
         }
+        console.log(i);
       }
       console.log(recentAssignments);
       let eventsObject = await makeDayMap(school._id);
