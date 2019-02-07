@@ -340,6 +340,8 @@ app.use(async function(req, res, next) {
         let data = {user: user.username, dateString: formatted, info: info};
         logSchool(user.school, data);
         next();
+      } else {
+        next();
       }
     } else {
       next();
