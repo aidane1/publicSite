@@ -2371,7 +2371,12 @@ app.post("/uploadTeacherFile", async function(req, res) {
 });
 
 async function createAssignment(user, type, info, notes, due, course, topic, confirmed) {
-  console.log(user,type,info, notes, due, course, topic, confirmed);
+  let date = new Date();
+  date = moment(date).format("DD MM YYYY HH:MM");
+  console.log(date);
+  let currentDate = (new Date()).local();
+  currentDate = moment(currentDate).format("DD MM YYYY HH:MM");
+  console.log(currentDate);
   try {
     if (user && type && info && due && course && topic) {
       let assignment = {
@@ -3886,7 +3891,6 @@ app.get("/removeAlert", async function(req, res) {
     console.log(e);
     res.send(false);
   }
-  
 })
 app.get("/updateStudentId", async function(req, res) {
   try {
@@ -4000,6 +4004,10 @@ app.get("/", async function(req, res) {
       
       
       let alert = user.alerts[0] || false;
+      if (alert) {
+        user.alerts.shift();
+        await User.findOneAndUpdate({_id : req.session.userId}, {$set: {alerts: user.alerts}});
+      }
       
       let currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
       let foundCurrent = false;
