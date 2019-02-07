@@ -13,6 +13,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
 }
 .animateLeft {
     animation: slideLeft 0.3s linear 1;
@@ -44,7 +45,7 @@ html, body {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
     -webkit-overflow-scrolling: auto;
 }
@@ -87,6 +88,10 @@ html, body {
     /* background-color: red; */
 }
 #homeTile {
+    /* justify-content: start; */
+    display: block;
+    overflow-y: auto;
+    /* background-color: white; */
     /* background-color: blue; */
     /* background: linear-gradient(to bottom, #ddd, #999) !important; */
 }
@@ -100,8 +105,17 @@ html, body {
 }
 .dayHeader {
     width: 100%;
-    text-align: center;
+    text-align: left;
+    padding: 20px 10px 0px 10px;
+    /* background-color: white; */
+    border-bottom: 1px solid rgb(210,210,210);
     /* color: #00358c */
+}
+.dayHeader h1 {
+    margin: 0;
+    width: 100%;
+    margin: 0px 10px;
+    padding: 5px;
 }
 .accountIcon {
     width: 30px;
@@ -137,10 +151,42 @@ html, body {
         border: 1px solid rgb(210,210,210);
 }
 .blockHolder {
-    width: 100%;
-    height: 50px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    background: linear-gradient(#e8865c, #e86e5c);
+    border-radius: 5px;
+    padding: 5px 15px 10px 15px;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
-.classBlock {
+.eventBlockHolder {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 5px 15px 10px 15px;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    display: flex;
+    flex-direction: column;
+}
+.eventBlockHeader {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 5px 15px 10px 15px;
+    color: white;
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+}
+/* .classBlock {
     width: 90%;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -152,11 +198,39 @@ html, body {
     border-radius: 5px;
     font-size: 18px;
     border: 1px solid rgb(210,210,210);
-}
+} */
 .blockHeader {
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+    padding-top: 5px;
+    flex-grow: 1;
+}
+.blockLeft {
+    text-align: right;
+}
+.blockBottom {
     width: 100%;
-    text-align: center;
-    font-size: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.eventBlockMain {
+    font-size: 18px;
+    color: white;
+}
+.eventBlockSecondary {
+    font-size: 14px;
+    opacity: 0.7;
+}
+.blockMain {
+    font-size: 35px;
+    font-weight: 300;
+}
+.blockSecondary {
+    font-size: 14px;
+    font-weight: 300;
+    opacity: 0.7;
 }
 .dayTitle {
     font-size: 30px;
@@ -308,6 +382,13 @@ html, body {
     flex-wrap: nowrap;
     justify-content: space-evenly;
 }
+.today {
+    background-color: rgba(97, 199, 237, 0.4);
+    font-size: 20px;
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 .boxTitle {
     font-size: 10px;
 }
@@ -357,6 +438,28 @@ html, body {
 .scheduleBody {
     height: 1440px;
     position: relative;
+}
+.floatingActionButton {
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 6px 10px 0 #666;
+    background-color: red;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+.floatingActionButton:active {
+box-shadow: 0 6px 14px 0 #666;
+transform: scale(1.05);
+}
+.floatingActionButton img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 5px;
+    left: 0px;
 }
 .scheduleHour {
     width: 100%;
@@ -434,11 +537,9 @@ html, body {
     padding-bottom: 20px;
 }
 .schedule {
-    /* width: 95%; */
     width: 100%;
     height: 100%;
     overflow-x: auto;
-    
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -447,27 +548,18 @@ html, body {
 }
 .scheduleDay {
     display: inline-block;
-    /* border-right: 1px solid black; */
-    /* width: 20%; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* flex-wrap: nowrap; */
 }
 .scheduleTitle {
-    /* width: 100%; */
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 20px;
     border-bottom: 1px solid black;
-    
 }
 .scheduleBlock {
     width: 110px;
     height: 80px;
     min-height: 50px;
-    /* height: 150px; */
-    /* height: 120px; */
     border-bottom: 1px solid black;
     border-right: 1px solid black;
     display: flex;
@@ -489,7 +581,6 @@ html, body {
     align-items: center;
     border-top: 1px solid rgba(255,255,255,0.5);
     z-index: 4;
-    /* background-color: black; */
 }
 .tab {
     width: 25%;
@@ -553,6 +644,18 @@ html, body {
     }
     .teacherName {
         font-size: 10px;
+    }
+    .blockHeader {
+        font-size: 18px;
+    }
+    .blockMain {
+        font-size: 27px;
+    }
+    .blockSecondary {
+        font-size: 12px;
+    }
+    .dayHeader h1 {
+        font-size: 25px;
     }
 }
 @media screen and (min-width: 768px) {
