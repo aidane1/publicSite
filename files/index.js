@@ -3973,22 +3973,22 @@ app.get("/", async function(req, res) {
       let recentAssignments = {
 
       }
-      // for (var i = 0; i < allowedUserCourses.length; i++) {
-      //   console.log(i);
-      //   let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
-      //   recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
-      //   recent.sort(function(a,b) {
-      //     return a.date.getTime() < b.date.getTime();
-      //   });
-      //   if (recent.length >= 2) {
-      //     recentAssignments[allowedUserCourses[i]._id].assignments = recent.slice(0, 2);
-      //   } else {
-      //     for (var i = 0; i < recent.length; i++) {
-      //       recentAssignments[allowedUserCourses[i]._id].assignments.push(recent[i]);
-      //     }
-      //   }
-      //   console.log(i);
-      // }
+      for (var i = 0; i < allowedUserCourses.length; i++) {
+        console.log(i);
+        let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
+        recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
+        recent.sort(function(a,b) {
+          return a.date.getTime() < b.date.getTime();
+        });
+        if (recent.length >= 2) {
+          recentAssignments[allowedUserCourses[i]._id].assignments = recent.slice(0, 2);
+        } else {
+          for (var j = 0; j < recent.length; j++) {
+            recentAssignments[allowedUserCourses[i]._id].assignments.push(recent[j]);
+          }
+        }
+        console.log(i);
+      }
       console.log(recentAssignments);
       let eventsObject = await makeDayMap(school._id);
 
