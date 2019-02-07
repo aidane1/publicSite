@@ -596,7 +596,8 @@ transform: scale(1.05);
     justify-content: space-evenly;
     background-color: white;
     font-size: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     border-radius: 5px;
 }
 .scheduleBlock div {
@@ -737,7 +738,7 @@ transform: scale(1.05);
                                         <%=titles[i][key]%>
                                     </div>
                                     <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
+                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
                                             <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
                                             <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
                                                 <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
