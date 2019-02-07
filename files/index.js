@@ -359,9 +359,9 @@ function wwwHttpsRedirect(req, res, next) {
     }
 };
 
-// app.use(wwwHttpsRedirect);
+app.use(wwwHttpsRedirect);
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
@@ -3964,10 +3964,29 @@ app.get("/", async function(req, res) {
 
       let currentSemesters = calculateSemesters(school.semesters, currentDate);
       let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+      
+      
       let weekCount = school.constantBlocks ? school.constantBlockSchedule.schedule.length : school.blockOrder.length;
 
 
       let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
+      let recentAssignments = {
+
+      }
+      for (var i = 0; i < allowedUserCourses.length; i++) {
+        let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
+        recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
+        recent.sort(function(a,b) {
+          return a.date.getTime() < b.date.getTime();
+        });
+        if (recent.length >= 2) {
+          recentAssignments[allowedUserCourses[i]._id].assignments = recent.slice(0, 2);
+        } else {
+          for (var i = 0; i < recent.length; i++) {
+            recentAssignments[allowedUserCourses[i]._id].assignments.push(recent[i]);
+          }
+        }
+      }
       let eventsObject = await makeDayMap(school._id);
 
 
@@ -4048,7 +4067,7 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
         //typeof alert: ['<href>(optional)', text]
-        res.render("redesign/index", {currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];
@@ -4847,7 +4866,6 @@ app.get("/getUserCourses", async function(req, res) {
 app.post("/courses", urlencodedParser, async function(req, res) {
 
   try {
-    console.log(req.body);
     if (req.session.userId && req.query.semester) {
       let user = await User.findOne({_id: req.session.userId}).populate({path: "courses", populate: {path: "semester"}});
       let school = await School.findOne({_id : user.school}).populate("semesters");
@@ -4879,7 +4897,7 @@ app.post("/courses", urlencodedParser, async function(req, res) {
             newCourseObject.push(userBlock[key][newKey]);
           }
         }
-        await User.findOneAndUpdate({_id :  req.session.userId}, {$set: {courses: newCourseObject}});
+        await User.findOneAndUpdate({_id :  req.session.userId}, {$set: {courses: newCourseObject, blockNames: {}}});
         res.redirect("/");
       } else {
         res.redirect("/login");

@@ -467,6 +467,7 @@ html, body {
 .scheduleBodyWrapper {
     flex-grow: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .scheduleBody {
     height: 1440px;
@@ -824,24 +825,32 @@ transform: scale(1.05);
                         </div>
                     </div>
                 <% } %>
-                <!-- <div class="dayHeader">
+                <div class="dayHeader">
                     <h1>
                         Recent Assignments
                     </h1>
                 </div>
-                <div class = "blockHolder" style = "background: linear-gradient(#5fe278, #48ad5b)">
-                    <div class="blockHeader">
-                        Next
-                    </div>
-                    <div class="blockLeft">
-                        <div class="blockMain">
-                            <%=nextBlock[1].course%>
+                <% for (var key in recentAssignments) { %>
+                    <% for (var i = 0; i < recentAssignments[key].assignments.length; i++) { %>
+                        <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#5fe278, #48ad5b)">
+                            <div class="blockHeader" style = "padding-top: 0px">
+                                <%=recentAssignments[key].course%>
+                            </div>
+                            <div class="blockLeft" style = "padding-top: 2px">
+                                <div class="blockMain" style = "font-size: 18px;">
+                                    <% if (recentAssignments[key].assignments[i].type == "text") { %>
+                                        <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment%></div>
+                                    <% } else { %>
+                                        <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment.split("_").slice(0, recentAssignments[key].assignments[i].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                    <% } %>
+                                </div>
+                                <div class="blockSecondary">
+                                    <%=recentAssignments[key].assignments[i].due%>
+                                </div>
+                            </div>
                         </div>
-                        <div class="blockSecondary">
-                            <%=nextBlock[0]%>
-                        </div>
-                    </div>
-                </div> -->
+                    <% } %>
+                <% } %>
                 <div style = "width: 100%; padding-top: 10px"></div>
             </div>
             <div id = "coursesTile" class="bodyTile">
@@ -1223,6 +1232,7 @@ transform: scale(1.05);
         }
         tabs[3].classList.add("selectedTab");
         document.getElementById("dateTitle").innerHTML = dateString;
+        document.getElementById("calendarBodies").style.overflowY = "hidden";
         let popup = document.getElementById("calendarPopUp");
         popup.classList.add("extendedPopUp")
         let modal = document.getElementById("bodyModal");
@@ -1291,6 +1301,7 @@ transform: scale(1.05);
         let modal = document.getElementById("bodyModal");
         modal.classList.remove("displayedModal");
         scrollingAllowed = true;
+        document.getElementById("calendarBodies").style.overflowY = "auto";
     }
     let currentBodyIndex = 1;
     let backdrop = document.getElementById("backdrop");
