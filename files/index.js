@@ -3783,14 +3783,11 @@ app.get("/course", async function(req, res) {
           assignments.sort(function(a,b) {
             a.topic.localeCompare(b.topic);
           });
-          let currentTopic = assignments[0] ? assignments[0].topic : "No Topic";
-          // let currentTopicGroup = [currentTopic, []];
-          let currentTopicGroup = [];
           for (var i = 0; i < assignments.length; i++) {
-            if (!sendAssignments[currentTopic]) {
-              sendAssignments[currentTopic] = [];
+            if (!sendAssignments[assignments[i].topic]) {
+              sendAssignments[assignments[i].topic] = [];
             }
-            sendAssignments[currentTopic].push(assignments[i]);
+            sendAssignments[assignments[i].topic.push(assignments[i]);
           }
           let sendCompleted = [];
           for (var i = 0; i < user.completedAssignments.length; i++) {
