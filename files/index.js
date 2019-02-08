@@ -1257,7 +1257,125 @@ app.get("/dashboard/events", async function(req, res) {
     res.redirect("/login");
   }
 });
+app.get("/teacher/:id", async function(req, res) {
+  try {
+    let currentDate = (new Date()).local();
+    if (req.session.teacherId || req.session.userId) {
+      if (req.session.teacherId) {
+        let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
+        if (teacher.teacherAccount._id.toString() == req.params.id.toString()) {
+          let school = await School.findOne({_id : teacher.school}).populate("semesters");
+          let colorMap = makeColorMap(school.blockNames);
+          let currentSemesters = calculateSemesters(school.semesters, currentDate);
+          let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
+          let allowedUserCourses = await Course.find({$and: [{teacher: teacher.teacherAccount._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+          let map = await makeDayMap(school._id);
+          let today = map[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`];
+          console.log(today);
+          res.render("teacherDashboard/teacherDashboard", {today: today, colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher.teacherAccount});
+        } else {
+          res.redirect("/home");
+        }
+      } else {
+        let user = await User.findOne({_id : req.session.userId});
+        let teacher = await Teachers.findOne({_id : req.params.id});
+        if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+          let school = await School.findOne({_id : user.school}).populate("semesters");
+          let colorMap = makeColorMap(school.blockNames);
+          let currentSemesters = calculateSemesters(school.semesters, currentDate);
+          let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+          let allowedUserCourses = await Course.find({$and: [{teacher: teacher._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+          res.render("teacherDashboard/teacherDashboard", {colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher});
+        } else {
+          res.redirect("/dashboard");
+        }
+      }
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/home");
+  }
+});
 
+app.get("/teacher/:id/:course/overview", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
+        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+        if (course != null && course.teacher.toString() == teacher._id.toString()) {
+          res.render("teacherDashboard/teacherOverview", {course: course, courses: courses, teacher: teacher});
+        } else {
+          res.redirect("/teacher/" + req.query.id);
+        }
+      } else {
+        res.redirect("/dashboard");
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    res.redirect("/teacher/" + req.query.id);
+  }
+});
+
+app.get("/teacher/:id/:course/assignments", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let teacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
+        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
+        let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
+        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
+        if (course != null && course.teacher.toString() == teacher._id.toString()) {
+
+          let keys = [
+            {displayFunc: (obj) => {return obj.topic}, name: "Topic", propertyName: "topic"},
+            {displayFunc: (obj) => {return obj.type}, name: "Type", propertyName: "type"},
+            {displayFunc: (obj) => {return obj.type == "text" ? obj.assignment : obj[i].assignment.split("_").slice(0, obj[i].assignment.split("_").length-1).join("_")}, name: "Assignment", propertyName: "assignment"},
+            {displayFunc: (obj) => {return obj.notes}, name: "Notes", propertyName: "notes"},
+            {displayFunc: (obj) => {return obj.due}, name: "Due", propertyName: "due"},
+          ]
+          let topics = ["No Topic", ...course.topics];
+          let inputTypes = {
+            "topic": {type: "select", optionType: "list", options: topics, other: true, otherName: "Create Topic"},
+            "type": {type: "select", optionType: "list", options: ["Text", "File"], other: false},
+            "assignment": {type: "text"},
+            "notes": {type: "text"},
+            "due": {type: "text"},
+          }
+          let tabOptions = [
+            {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
+            {name: "Teachers", selected: true, href: "/dashboard/courses/teachers"},
+            {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
+            {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
+          ];
+
+
+          // res.render("teacherDashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
+          res.render("teacherDashboard/teacherTemplate", {teacher: teacher, courses: courses, course: course, title: "Edit assignments - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Assignments", singular: "Assignment", keys: keys, list: assignments});
+        } else {
+          res.redirect("/teacher/" + req.query.id);
+        }
+      } else {
+        res.redirect("/dashboard");
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    res.redirect("/teacher/" + req.query.id);
+  }
+});
 
 function keyCheck(object, keys) {
   for (var i = 0; i < keys.length; i++) {
@@ -2238,100 +2356,7 @@ async function makeDayMap(schoolID)  {
   }
   
 }
-app.get("/teacher/:id", async function(req, res) {
-  try {
-    let currentDate = (new Date()).local();
-    if (req.session.teacherId || req.session.userId) {
-      if (req.session.teacherId) {
-        let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
-        if (teacher.teacherAccount._id.toString() == req.params.id.toString()) {
-          let school = await School.findOne({_id : teacher.school}).populate("semesters");
-          let colorMap = makeColorMap(school.blockNames);
-          let currentSemesters = calculateSemesters(school.semesters, currentDate);
-          let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
-          let allowedUserCourses = await Course.find({$and: [{teacher: teacher.teacherAccount._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
-          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
-          let map = await makeDayMap(school._id);
-          let today = map[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`];
-          console.log(today);
-          res.render("teacherDashboard/teacherDashboard", {today: today, colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher.teacherAccount});
-        } else {
-          res.redirect("/home");
-        }
-      } else {
-        let user = await User.findOne({_id : req.session.userId});
-        let teacher = await Teachers.findOne({_id : req.params.id});
-        if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-          let school = await School.findOne({_id : user.school}).populate("semesters");
-          let colorMap = makeColorMap(school.blockNames);
-          let currentSemesters = calculateSemesters(school.semesters, currentDate);
-          let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-          let allowedUserCourses = await Course.find({$and: [{teacher: teacher._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
-          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
-          res.render("teacherDashboard/teacherDashboard", {colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher});
-        } else {
-          res.redirect("/dashboard");
-        }
-      }
-    } else {
-      res.redirect("/home");
-    }
-  } catch(e) {
-    console.log(e);
-    res.redirect("/home");
-  }
-});
 
-app.get("/teacher/:id/:course/overview", async function(req, res) {
-  try {
-    if (req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      let teacher = await Teachers.findOne({_id : req.params.id});
-      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
-        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-        if (course != null && course.teacher.toString() == teacher._id.toString()) {
-          res.render("teacherDashboard/teacherOverview", {course: course, courses: courses, teacher: teacher});
-        } else {
-          res.redirect("/teacher/" + req.query.id);
-        }
-      } else {
-        res.redirect("/dashboard");
-      }
-    } else {
-      res.redirect("/login");
-    }
-  } catch(e) {
-    res.redirect("/teacher/" + req.query.id);
-  }
-});
-
-app.get("/teacher/:id/:course/assignments", async function(req, res) {
-  try {
-    if (req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      let teacher = await Teachers.findOne({_id : req.params.id});
-      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
-        let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
-        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-        if (course != null && course.teacher.toString() == teacher._id.toString()) {
-          res.render("teacherDashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
-        } else {
-          res.redirect("/teacher/" + req.query.id);
-        }
-      } else {
-        res.redirect("/dashboard");
-      }
-    } else {
-      res.redirect("/login");
-    }
-  } catch(e) {
-    res.redirect("/teacher/" + req.query.id);
-  }
-});
 
 app.get("/removeAssignment/:teacher/:course", async function(req, res) {
   try {
@@ -3754,25 +3779,18 @@ app.get("/course", async function(req, res) {
         if (course != null) {
           let notes = await Notes.find({forCourse : course._id});
           let assignments = await Assignments.find({forCourse : course._id});
-          let sendAssignments = [];
+          let sendAssignments = {};
           assignments.sort(function(a,b) {
             a.topic.localeCompare(b.topic);
           });
           let currentTopic = assignments[0] ? assignments[0].topic : "No Topic";
-          let currentTopicGroup = [currentTopic, []];
+          // let currentTopicGroup = [currentTopic, []];
+          let currentTopicGroup = [];
           for (var i = 0; i < assignments.length; i++) {
-            if ((assignments[i].topic != currentTopicGroup[0])) {
-              currentTopicGroup[1].sort(function(a,b) {
-                return (a.date.getTime() > b.date.getTime()) ? -1 : 1;
-              });
-              sendAssignments.push(currentTopicGroup);
-              currentTopic = assignments[i].topic;
-              currentTopicGroup = [currentTopic, []];
+            if (!sendAssignments[currentTopic]) {
+              sendAssignments[currentTopic] = [];
             }
-            currentTopicGroup[1].push(assignments[i]);
-            if (i == assignments.length-1) {
-              sendAssignments.push(currentTopicGroup);
-            }
+            sendAssignments[currentTopic].push(assignments[i]);
           }
           let sendCompleted = [];
           for (var i = 0; i < user.completedAssignments.length; i++) {

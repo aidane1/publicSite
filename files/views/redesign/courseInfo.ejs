@@ -90,31 +90,30 @@
                         <div class = "createPlus">+</div><div class = "createText">Create</div>
                     </div>
                     <div class="topicList">
-                        <% for (var i = 0; i < assignments.length; i++) { %>
+                        <% for (var key in assignments) { %>
                             <div class="topicGroup">
                                 <div class="topicGroupTitle">
-                                    <%=assignments[i][0]%>
+                                    <%=key%>
                                 </div>
-                                <% for (var j = 0; j < assignments[i][1].length; j++) { %>
-                                    <% if (j == assignments[i][1].length-1) { %>
+                                <% for (var i = 0; i < assignments[key].length; i++) { %>
+                                    <% if (i == assignments[key].length-1) { %>
                                         <div class="topicAssignment last">
-                                            <% if (completedAssignments.indexOf(assignments[i][1][j]._id.toString()) >= 0) { %>
-                                                <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                            <% if (completedAssignments.indexOf(assignments[key][i]._id.toString()) >= 0) { %>
+                                                <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[key][i]._id%>')">
                                                     <i class="fas fa-check-circle"></i>
                                                 </div>
                                             <% } else { %>
-                                                <!-- <%=completedAssignments.indexOf(assignments[i][1][j]._id.toString()) > 0%> -->
-                                                <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
+                                                <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[key][i]._id%>')">
                                                     <i class="far fa-circle"></i>
                                                 </div>
                                             <% } %>
-                                            <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[i][1][j])%>')">
-                                                <% if (assignments[i][1][j].type == "text") { %>
-                                                    <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment%></div>
+                                            <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[key][i])%>')">
+                                                <% if (assignments[key][i].type == "text") { %>
+                                                    <div class="assignmentActionTitle"><%=assignments[key][i].assignment%></div>
                                                 <% } else { %>
-                                                    <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment.split("_").slice(0, assignments[i][1][j].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                                    <div class="assignmentActionTitle"><%=assignments[key][i].assignment.split("_").slice(0, assignments[key][i].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
                                                 <% } %>
-                                                <div class="assignmentDate"><%=assignments[i][1][j].due%></div>
+                                                <div class="assignmentDate"><%=assignments[key][i].due%></div>
                                             </div>
                                             <div class="openEdit">
 
@@ -122,27 +121,28 @@
                                         </div>
                                     <% } else { %>
                                         <div class="topicAssignment">
-                                            <% if (completedAssignments.indexOf(assignments[i][1][j]._id.toString()) >= 0) { %>
-                                                <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
-                                                    <i class="fas fa-check-circle"></i>
-                                                </div>
-                                            <% } else { %>
-                                                <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[i][1][j]._id%>')">
-                                                    <i class="far fa-circle"></i>
-                                                </div>
-                                            <% } %>
-                                            <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[i][1][j])%>')"> 
-                                                <% if (assignments[i][1][j].type == "text") { %>
-                                                    <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment%></div>
+                                                <% if (completedAssignments.indexOf(assignments[key][i]._id.toString()) >= 0) { %>
+                                                    <div class="openOrChecked checked" onclick = "switchState(this, '<%=assignments[key][i]._id%>')">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </div>
                                                 <% } else { %>
-                                                    <div class="assignmentActionTitle"><%=assignments[i][1][j].assignment.split("_").slice(0, assignments[i][1][j].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                                    <!-- <%=completedAssignments.indexOf(assignments[i][1][j]._id.toString()) > 0%> -->
+                                                    <div class="openOrChecked open" onclick = "switchState(this, '<%=assignments[key][i]._id%>')">
+                                                        <i class="far fa-circle"></i>
+                                                    </div>
                                                 <% } %>
-                                                <div class="assignmentDate"><%=assignments[i][1][j].due%></div>
+                                                <div class="assignmentAndDate" onclick = "openAssignment('<%=JSON.stringify(assignments[key][i])%>')">
+                                                    <% if (assignments[key][i].type == "text") { %>
+                                                        <div class="assignmentActionTitle"><%=assignments[key][i].assignment%></div>
+                                                    <% } else { %>
+                                                        <div class="assignmentActionTitle"><%=assignments[key][i].assignment.split("_").slice(0, assignments[key][i].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                                    <% } %>
+                                                    <div class="assignmentDate"><%=assignments[key][i].due%></div>
+                                                </div>
+                                                <div class="openEdit">
+    
+                                                </div>
                                             </div>
-                                            <div class="openEdit">
-        
-                                            </div>
-                                        </div>
                                     <% } %>
                                 <% } %>
                             </div>
