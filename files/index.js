@@ -3787,7 +3787,7 @@ app.get("/course", async function(req, res) {
             if (!sendAssignments[assignments[i].topic]) {
               sendAssignments[assignments[i].topic] = [];
             }
-            sendAssignments[assignments[i].topic.push(assignments[i]);
+            sendAssignments[assignments[i].topic].push(assignments[i]);
           }
           let sendCompleted = [];
           for (var i = 0; i < user.completedAssignments.length; i++) {
