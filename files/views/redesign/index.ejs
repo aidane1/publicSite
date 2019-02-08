@@ -851,21 +851,19 @@ transform: scale(1.05);
                         </div>
                     <% } %>
                 <% } %>
-                <% if (length == 0) { %>
-                    <div class = "blockHolder" style = "background: linear-gradient(#7ae281, #63c66a)">
-                        <div class="blockHeader" style = "padding-top: 0px">
-                            No recent assignments
+                <div class = "blockHolder" onclick = "window.location = '/assignments'", style = "background: linear-gradient(#7ae281, #63c66a); opacity: 0.5; border: 1px solid #63c66a">
+                    <div class="blockHeader" style = "padding-top: 0px">
+                        New Assignment
+                    </div>
+                    <div class="blockLeft" style = "padding-top: 2px">
+                        <div class="blockMain" style = "font-size: 18px;">
+                            Add Assignment
                         </div>
-                        <div class="blockLeft" style = "padding-top: 2px">
-                            <div class="blockMain" style = "font-size: 18px;">
-                                Create assignments for your class by clicking on a block on the today screen
-                            </div>
-                            <div class="blockSecondary">
-                                
-                            </div>
+                        <div class="blockSecondary">
+                            Click to add
                         </div>
                     </div>
-                <% } %>
+                </div>
                 <div style = "width: 100%; padding-top: 10px"></div>
             </div>
             <div id = "coursesTile" class="bodyTile">
