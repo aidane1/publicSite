@@ -1229,6 +1229,14 @@ transform: scale(1.05);
     
   </body>
   <script>
+        preloadPage("/account", function(res) {
+            preloaded["accountPage"] = res;
+        });
+        preloadPage("/courses", function(res) {
+            preloaded["coursePage"] = res;
+        });
+  </script>
+  <script>
     let scrollingAllowed = true;
     function unload() {
         var request = new XMLHttpRequest();

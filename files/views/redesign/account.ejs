@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <script src = "/public/js/preloader.js"></script>
     <title>Document</title>
     <style>
     * {
@@ -218,14 +219,14 @@
                         <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div> -->
-                <div class="iconRow" onclick = "window.location = '/courses'">
+                <div class="iconRow" onclick = "renderPreloaded('coursePage', '/courses')">
                     <div class="iconBubble" style = "background-color: <%-icons['courses'][1]%>"><%-icons["courses"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Courses</div>
                         <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div>
-                <div class="iconRow" onclick = "window.location = '/events'">
+                <div class="iconRow" onclick = "renderPreloaded('eventsPage', '/events')">
                     <div class="iconBubble" style = "background-color: <%-icons['events'][1]%>"><%-icons["events"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Events</div>
@@ -241,14 +242,14 @@
                 </div>
             </div>
             <div class="bodySection">
-                <div class="iconRow" onclick = "window.location = '/notes'">
+                <div class="iconRow" onclick = "renderPreloaded('notes', '/notes')">
                     <div class="iconBubble" style = "background-color: <%-icons['notes'][1]%>"><%-icons["notes"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Notes</div>
                         <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div>
-                <div class="iconRow last" onclick = "window.location = '/assignments'">
+                <div class="iconRow last" onclick = "renderPreloaded('assignmentsPage', '/assignments')">
                     <div class="iconBubble" style = "background-color: <%-icons['assignments'][1]%>"><%-icons["assignments"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Assignments</div>
@@ -264,14 +265,14 @@
                 </div> -->
             </div>
             <div class="bodySection lastBox">
-                <div class="iconRow" onclick="window.location = '/block-colours'">
+                <div class="iconRow" onclick = "renderPreloaded('blockColours', '/block-colours')">
                     <div class="iconBubble" style = "background-color: <%-icons['blockColours'][1]%>"><%-icons["blockColours"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Block Colours</div>
                         <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div>
-                <div class="iconRow last"  onclick = "window.location = '/block-names'">
+                <div class="iconRow last" onclick = "renderPreloaded('blockNames', '/block-names')">
                     <div class="iconBubble" style = "background-color: <%-icons['blockTitles'][1]%>"><%-icons["blockTitles"][0]%></div>
                     <div class="infoRow">
                         <div class="infoKey">Block Names</div>
@@ -289,11 +290,30 @@
         </div>
     </div>
     <script>
+        preloadPage("/events", function(res) {
+            preloaded["eventsPage"] = res;
+        });
+        preloadPage("/courses", function(res) {
+            preloaded["coursePage"] = res;
+        });
+        preloadPage("/notes", function(res) {
+            preloaded["notesPage"] = res;
+        });
+        preloadPage("/block-colours", function(res) {
+            preloaded["blockColours"] = res;
+        });
+        preloadPage("/block-names", function(res) {
+            preloaded["blockNames"] = res;
+        });
+        preloadPage("/assignments", function(res) {
+            preloaded["assignmentsPage"] = res;
+        });
+    </script>
+    <script>
         function clearValue(element) {
             element.innerText = "";
         }
         function sendStudentId(element) {
-            console.log("dicks");
             if (element.innerText) {
                 sendGetRequest("id=" + element.innerText, "/updateStudentId", function(res) {
 

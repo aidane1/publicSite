@@ -189,7 +189,7 @@
   <body>
     <div class="homeHeader">
         <div class="homeRow">
-            <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
+            <div class="backIcon" onclick = "window.location = '/'"><i class="fas fa-chevron-left"></i></div>
             <div class="displayText">Courses</div>
             <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
         </div>
@@ -200,7 +200,6 @@
                 <% if (school.semesters[i]._id.toString() == selectedSemester) { %>
                     <div class="semester selected"><%=school.semesters[i].name%></div>
                 <% } else { %>
-                    <!-- <div class="semester"><a href="/courses?semester=<%=school.semesters[i]._id%>"><%=school.semesters[i].name%></a></div> -->
                     <div class="semester"><div onclick = "semSubmitAll('/courses?semester=<%=school.semesters[i]._id%>')"><%=school.semesters[i].name%></div></div>
                 <% } %>
             <% } %>
@@ -262,6 +261,9 @@
         </div>
       </div>
   </body>
+  <script>
+      
+  </script>
   <script>
     let sendObject = {
 
