@@ -23,6 +23,7 @@
     <link rel = "apple-touch-icon" sizes = " 57x57" href = "/public/schoolLogos/57x57_<%=favicon%>" />
     <link rel = "apple-touch-icon" sizes = " 72x72" href = "/public/schoolLogos/72x72_<%=favicon%>" />
     <script src = "/public/js/asyncRequest.js"></script>
+    <script src = "/public/js/preloader.js"></script>
     <script>
         
     </script>
@@ -476,10 +477,20 @@ html, body {
     box-shadow: 0 6px 10px 0 #666;
     background-color: red;
     border-radius: 50%;
-    overflow: hidden;
+}
+.floatingActionButtonHolder {
     position: absolute;
-    bottom: 15px;
+    bottom: 60px;
     right: 15px;
+}
+.floatingActionButtonDropdown {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    position: absolute;
+    top: -105px;
+    left: -50px;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
 }
 .floatingActionButton:active {
 box-shadow: 0 6px 14px 0 #666;
@@ -716,7 +727,7 @@ transform: scale(1.05);
         <div class="homeHolder" id = "homeHolder">
         <div class="homeHeader">
             <div class="homeRow">
-                <div class="accountIcon" onclick = "window.location='/account'"><img src = "/public/icons/accountIcon.svg" /></div>
+                <div class="accountIcon" onclick = "renderPreloaded('accountPage', '/account')"><img src = "/public/icons/accountIcon.svg" /></div>
                 <div class="displayText">Home</div>
                 <div class="refreshIcon"></div>
             </div>
@@ -865,9 +876,10 @@ transform: scale(1.05);
                     </div>
                 </div>
                 <div style = "width: 100%; padding-top: 10px"></div>
+                
             </div>
             <div id = "coursesTile" class="bodyTile">
-                <div class="dayTitle"><a href = "/courses" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
+                <div class="dayTitle"><a onclick = "renderPreloaded('coursePage', '/courses')" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
                 <div class="dayHolder">
                     <% for (var i = 0; i < courses.length; i++) { %>
                         <% if (i == courses.length-1) { %>
@@ -1181,12 +1193,17 @@ transform: scale(1.05);
                             </div>
                         </div>
                     </div>
-                    <div class="floatingActionButton">
-                        <img src = "/public/icons/plusIcon.svg">
-                    </div>
                 </div>
                 
             </div>
+            <!-- <div class="floatingActionButtonHolder">
+                <div class="floatingActionButton">
+                    <img src = "/public/icons/plusIcon.svg">
+                </div>
+                <div class="floatingActionButtonDropdown">
+
+                </div>
+            </div> -->
         </div>
         <div class="bottomTabBar">
                 <div class="homeTabView">
