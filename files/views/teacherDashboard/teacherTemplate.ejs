@@ -46,6 +46,18 @@
             overflow-x: auto;
             max-width: 0px;
         }
+        .popupTextarea {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 0;
+            border-radius: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+
+        }
         .popupHolderOpen {
             max-width: 50% !important;
             min-width: 400px;
@@ -63,9 +75,6 @@
             height: 400px;
             overflow-y: auto;
             position: relative;
-        }
-        .filepond--root {
-
         }
         .popupBottom {
             width: 100%;
@@ -466,6 +475,18 @@
             z-index: 2;
             font-size: 18px;
         }
+        .otherWrapper {
+
+        }
+        .otherInput {
+
+        }
+        .otherLabel {
+            background-color: transparent;
+            border: 0;
+            border-bottom: 1px solid #9e9e9e;
+            border-radius: 0;
+        }
         .editDelete {
             width: 100px;
             background-color: white;
@@ -658,7 +679,7 @@
                                                                 <input type="text" id = "create_<%=keys[i].propertyName%>" class = "textInput createCategory text" name = "<%=keys[i].propertyName%>">
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "select") { %>
                                                                 <div class="optionsHolder">
-                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>">
+                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>" onchange = "otherCheck(this)">
                                                                         <% if (inputTypes[keys[i].propertyName].optionType == "list") { %>
                                                                             <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
                                                                                 <option value="<%=inputTypes[keys[i].propertyName].options[j]%>"><%=inputTypes[keys[i].propertyName].options[j]%></option>
@@ -688,15 +709,15 @@
                                                                 <% } %>
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "type-select") { %>
                                                                 <div class="optionsHolder">
-                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>')">
+                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].options[j].name%>')">
                                                                             <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
                                                                                 <option value="<%=inputTypes[keys[i].propertyName].options[j].type%>"><%=inputTypes[keys[i].propertyName].options[j].name%></option>
                                                                             <% } %>
                                                                     </select>
                                                                 </div>
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "popup-textarea") { %>
-                                                                <div class="popupText">
-                                                                    <%=inputTypes[keys[i].propertyName].default%> <span name = "<%=keys[i].propertyName%>" style = "padding-left: 10px" onclick = "openPopup('popup-textarea', '<%=keys[i].propertyName%>')"><i style = "font-size: 10px; cursor: pointer" class="fas fa-edit"></i></span>
+                                                                <div class="popupText createCategory" name = "<%=keys[i].propertyName%>" onclick = "openPopup('popup-textarea', '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].default%>')" value = "<%=inputTypes[keys[i].propertyName].default%>" id = "create_<%=keys[i].propertyName%>">
+                                                                    <%=inputTypes[keys[i].propertyName].default%> <span style = "padding-left: 10px"><i style = "font-size: 10px; cursor: pointer" class="fas fa-edit"></i></span>
                                                                 </div>
                                                             <% } %> 
                                                         </td>
@@ -757,15 +778,15 @@
 
             </div>
             <div class="popupBottom">
-                <div class="popupCancel">CANCEL</div>
-                <div class="popupEnter">ENTER</div>
+            <div class="popupCancel" onclick = "closePopup()">CANCEL</div>
+                <div class="popupEnter" onclick = "applyPopupValue()">ENTER</div>
             </div>
         </div>
     </div>
 </body>
 <script>
     FilePond.setOptions({
-        server: "/",
+        server: "/uploadTeacherFile",
     });
     FilePond.registerPlugin(
         FilePondPluginImagePreview,
@@ -803,9 +824,42 @@
             
         }
     }
-    function openPopup(type, inputName) {
+    function otherCheck(element) {
+        if (element.value == "__other__") {
+            console.log(element.value);
+            let inputWrapper = document.createElement("div");
+            inputWrapper.className = "otherWrapper";
+            let inputElement = document.createElement("input");
+            inputElement.className = "otherInput";
+            let inputLabel = document.createElement("label");
+            inputLabel.className = "otherLabel";
+            inputWrapper.appendChild(inputElement);
+            inputWrapper.appendChild(inputLabel);
+            element.parentNode.style.display = "none";
+            element.parentNode.parentNode.appendChild(inputWrapper);
+        }
+    }
+    function applyPopupValue() {
+        let popup = document.getElementById("popupHolder");
+        let type = popup.getAttribute("type");
+        let inputName = popup.getAttribute("currentInput");
+        console.log(inputName, type);
+        if (type == "popup-file") {
+
+        } else if (type == "popup-textarea") {
+            let input = document.getElementById("create_" + inputName);
+            input.setAttribute("value", popup.children[1].children[0].value);
+            let editButton = input.children[0];
+            input.setAttribute("onclick", `openPopup('${type}', '${inputName}', '${popup.children[1].children[0].value}')`);
+            input.innerHTML = popup.children[1].children[0].value.replace(/(\r\\n|\n|\r)/gm, "<br>");
+            input.appendChild(editButton);
+        }
+        closePopup();
+    }
+    function openPopup(type, inputName, defaultVal) {
         let popup = document.getElementById("popupHolder");
         popup.setAttribute("currentInput", inputName);
+        popup.setAttribute("type", type);
         if (type == "popup-file") {
             let fileInput = document.createElement("input");
             fileInput.type = "file";
@@ -817,10 +871,15 @@
         } else if (type == "popup-textarea") {
             let textarea = document.createElement("textarea");
             textarea.className = "popupTextarea";
+            textarea.value = defaultVal;
             popup.children[1].innerHTML = "";
             popup.children[1].appendChild(textarea);
             popup.classList.add("popupHolderOpen");
         }
+    }
+    function closePopup() {
+        let popup = document.getElementById("popupHolder");
+        popup.classList.remove("popupHolderOpen");
     }
     function toggleCheckBox(element) {
         if (element.getAttribute("value") == "checked") {
@@ -842,6 +901,9 @@
         element.setAttribute("value", "open");
         element.classList.remove("checked");
         element.innerHTML = "";
+    }
+    function jsonEscape(str)  {
+        return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
     }
     function openEditBar(json) {
         toggleRowCreate();
@@ -958,8 +1020,6 @@
     function createElementFromHTML(htmlString) {
         var div = document.createElement('div');
         div.innerHTML = htmlString.trim();
-
-        // Change this to div.childNodes to support multiple top-level nodes
         return div.firstChild; 
     }
     function editRow(id) {
@@ -997,29 +1057,30 @@
     }
     function createRow() {
         let newRow = getInputValues();
-        sanitizeInputs(newRow);
-        postObject(newRow, "/adminEdit?table=<%=singular.toLowerCase()%>&action=create", function(res) {
-            if (res[0] == true) {
-                let mapFunction = editMap["<%=singular.toLowerCase()%>"];
-                let row = document.createElement("tr");
-                row.className = "row";
-                row.id = "row_" + res[1]._id;
-                for (var key in newRow) {
-                    let property = document.createElement("td");
-                    property.className = "rowProperty";
-                    property.innerText = mapFunction[key](res[1]);
-                    row.appendChild(property);
-                }
-                row.children[row.children.length-1].classList.add("lastProperty");
-                let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
-                openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
-                row.children[row.children.length-1].appendChild(openElement);
-                document.getElementById("rowDisplay").appendChild(row);
-            } else {
-                populateInputs(newRow);
-                extendError(res[1]);
-            }
-        });
+        console.log(newRow);
+        // sanitizeInputs(newRow);
+        // postObject(newRow, "/adminEdit?table=<%=singular.toLowerCase()%>&action=create", function(res) {
+        //     if (res[0] == true) {
+        //         let mapFunction = editMap["<%=singular.toLowerCase()%>"];
+        //         let row = document.createElement("tr");
+        //         row.className = "row";
+        //         row.id = "row_" + res[1]._id;
+        //         for (var key in newRow) {
+        //             let property = document.createElement("td");
+        //             property.className = "rowProperty";
+        //             property.innerText = mapFunction[key](res[1]);
+        //             row.appendChild(property);
+        //         }
+        //         row.children[row.children.length-1].classList.add("lastProperty");
+        //         let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
+        //         openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
+        //         row.children[row.children.length-1].appendChild(openElement);
+        //         document.getElementById("rowDisplay").appendChild(row);
+        //     } else {
+        //         populateInputs(newRow);
+        //         extendError(res[1]);
+        //     }
+        // });
     }
 </script>
 </html>
