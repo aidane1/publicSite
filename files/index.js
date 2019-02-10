@@ -4125,7 +4125,7 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
         //typeof alert: ['<href>(optional)', text]
-        res.render("redesign/index", {averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {user: user, averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];

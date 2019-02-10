@@ -484,17 +484,36 @@ html, body {
     right: 15px;
 }
 .floatingActionButtonDropdown {
-    width: 100px;
-    height: 100px;
+    width: 190px;
     background-color: white;
     position: absolute;
-    top: -105px;
-    left: -50px;
+    bottom: 55px;
+    left: -140px;
     box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+    max-height: 300px;
+    transition: max-height 0.1s ease-out, left 0.1s ease-out, bottom 0.1s ease-out;
+    overflow: hidden;
+    border-radius: 2px;
+}
+.retractedDropdown {
+    left: -130px;
+    bottom: 50px;
+    max-height: 0px;
+}
+.actionItem {
+    width: 100%;
+    padding: 20px 10px;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+.actionItemIcon {
+    padding-right: 15px;
+    color: #3065ba;
 }
 .floatingActionButton:active {
-box-shadow: 0 6px 14px 0 #666;
-transform: scale(1.05);
+    box-shadow: 0 6px 14px 0 #666;
+    transform: scale(1.05);
 }
 .floatingActionButton img {
     width: 100%;
@@ -1196,14 +1215,20 @@ transform: scale(1.05);
                 </div>
                 
             </div>
-            <!-- <div class="floatingActionButtonHolder">
-                <div class="floatingActionButton">
+            <div class="floatingActionButtonHolder">
+                <div class="floatingActionButton" onclick = "toggleFAB()">
                     <img src = "/public/icons/plusIcon.svg">
                 </div>
-                <div class="floatingActionButtonDropdown">
-
+                <div class="floatingActionButtonDropdown retractedDropdown" id = "floatingActionButtonDropdown">
+                    <% if (user.permissions == "admin") { %>
+                        <div class="actionItem" onclick = "window.location = '/dashboard'"><i class="actionItemIcon fas fa-tachometer-alt"></i>Dashboard</div>
+                    <% } %>
+                    <div class="actionItem" onclick = "renderPreloaded('assignmentsPage', '/assignments')"><i class="actionItemIcon fas fa-scroll"></i>Assignments</div>
+                    <div class="actionItem" onclick = "renderPreloaded('notesPage', '/notes')"><i class="actionItemIcon fas fa-sticky-note"></i>Notes</div>
+                    <div class="actionItem" onclick = "renderPreloaded('eventsPage', '/events')"><i class="actionItemIcon fas fa-calendar"></i>Events</div>
+                    <div class="actionItem" onclick = "moveTab(3); toggleFAB()"><i class="actionItemIcon fas fa-calendar"></i>Create</div>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div class="bottomTabBar">
                 <div class="homeTabView">
@@ -1235,6 +1260,15 @@ transform: scale(1.05);
         preloadPage("/courses", function(res) {
             preloaded["coursePage"] = res;
         });
+        preloadPage("/events", function(res) {
+            preloaded["eventsPage"] = res;
+        });
+        preloadPage("/notes", function(res) {
+            preloaded["notesPage"] = res;
+        });
+        preloadPage("/assignments", function(res) {
+            preloaded["assignmentsPage"] = res;
+        });
   </script>
   <script>
     let scrollingAllowed = true;
@@ -1245,6 +1279,10 @@ transform: scale(1.05);
     }
     function jsonEscape(str)  {
         return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+    }
+    function toggleFAB() {
+        let page = document.getElementById("floatingActionButtonDropdown");
+        page.classList.toggle("retractedDropdown");
     }
     function hexToRgbA(hex){
         var c;
@@ -1376,18 +1414,14 @@ transform: scale(1.05);
 
     document.onclick = function() {
         let shownAlerts = document.getElementById("shown");
-        console.log(shownAlerts);
         if (shownAlerts && shownAlerts.getAttribute("shown") === "true") {
-            console.log("here");
             shownAlerts.setAttribute("shown", "false");
             shownAlerts.style.top = "-200px";
         }
     }
     document.ontouchstart = function() {
         let shownAlerts = document.getElementById("shown");
-        console.log(shownAlerts);
         if (shownAlerts && shownAlerts.getAttribute("shown") === "true") {
-            console.log("here");
             shownAlerts.setAttribute("shown", "false");
             shownAlerts.style.top = "-200px";
         }
@@ -1397,12 +1431,10 @@ transform: scale(1.05);
         let calendar = document.getElementById(currentMonth + "_" + new Date().getFullYear().toString());
         calendar.scrollIntoView();
         backdrop.scrollLeft = window.innerWidth;
-        $("#calendarBodies").animate({scrollLeft: Math.round(4)*(width)}, 100);
         let shownAlerts = document.getElementById("shown");
         if (shownAlerts) {
             shownAlerts.style.top = "20%";    
         }
-        
     }
   </script>
 </html>
