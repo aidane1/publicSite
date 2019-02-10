@@ -133,6 +133,7 @@ html, body {
 #calendarTile {
     /* background-color: purple; */
     justify-content: start;
+    overflow-x: hidden;
 }
 .dayHeader {
     width: 100%;
@@ -453,10 +454,12 @@ html, body {
     height: 100%;
     background-color: white;
     position: absolute;
-    right: -100%;
+    /* right: -100%; */
+    right: 0;
+    transform: translateX(100%);
     top: 0;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    transition: right 0.5s cubic-bezier(.05, .69, .14, 1);
+    transition: transform 0.5s cubic-bezier(.05, .69, .14, 1);
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -565,7 +568,7 @@ html, body {
     color: rgba(0,0,0,0.8);
 }
 .extendedPopUp {
-    right: 0;
+    transform: translateX(0%);
 }
 .removePopUp {
     width: 50px;
