@@ -331,7 +331,7 @@ function logSchool(school, info) {
 app.use(async function(req, res, next) {
   let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
   try {
-    if (validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
+    if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.username != "AidanEglin") {
         let date = (new Date()).local();
