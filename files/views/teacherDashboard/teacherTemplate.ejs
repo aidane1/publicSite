@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <style>
         * {
             font-family: "Roboto", sans-serif;
@@ -27,6 +32,63 @@
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
+        }
+        .popupHolder {
+            width: 50%;
+            box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+            position: fixed;
+            top: 50%;
+            left: calc(50% + 125px);
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            overflow-x: auto;
+            max-width: 0px;
+        }
+        .popupHolderOpen {
+            max-width: 50% !important;
+            min-width: 400px;
+        }
+        .popupTitle {
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+            padding: 10px 0px;
+        }
+        .popupBody {
+            width: 100%;
+            height: 400px;
+            overflow-y: auto;
+            position: relative;
+        }
+        .filepond--root {
+
+        }
+        .popupBottom {
+            width: 100%;
+            height: 70px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .popupEnter {
+            background-color: rgb(3,155,229);
+            padding: 13px 20px;
+            color: white;
+            margin: 0px 20px;
+            cursor: pointer;
+        }
+        .popupCancel {
+            padding: 13px 20px;
+            cursor: pointer;
+        }
+        .popupCancel:hover {
+            background-color: #ddd;
         }
         .barLeft {
             width: 250px;
@@ -246,6 +308,10 @@
             .bodyRight {
                 width: 100%;
             }
+            .popupHolder {
+                width: 75%;
+                left: 50%;
+            }
         }
         .tableHolderMain {
             width: 95%;
@@ -318,6 +384,11 @@
             appearance: none;
             -webkit-appearance: none;
             border: 1px solid #dddddd;
+        }
+        .popupText {
+            width: 90%;
+            height: 40px;
+            font-size: 16px;
         }
         .buttonsRow {
             width: 100%;
@@ -615,7 +686,19 @@
                                                                 <% } else { %>
                                                                     <div id = "create_<%=keys[i].propertyName%>" value = "checked" class = "checkboxInput createCategory checkbox checked" name = "<%=keys[i].propertyName%>" onclick="toggleCheckBox(this)">&#10003;</div>
                                                                 <% } %>
-                                                            <% } %>
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "type-select") { %>
+                                                                <div class="optionsHolder">
+                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>')">
+                                                                            <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
+                                                                                <option value="<%=inputTypes[keys[i].propertyName].options[j].type%>"><%=inputTypes[keys[i].propertyName].options[j].name%></option>
+                                                                            <% } %>
+                                                                    </select>
+                                                                </div>
+                                                            <% } else if (inputTypes[keys[i].propertyName].type == "popup-textarea") { %>
+                                                                <div class="popupText">
+                                                                    <%=inputTypes[keys[i].propertyName].default%> <span name = "<%=keys[i].propertyName%>" style = "padding-left: 10px" onclick = "openPopup('popup-textarea', '<%=keys[i].propertyName%>')"><i style = "font-size: 10px; cursor: pointer" class="fas fa-edit"></i></span>
+                                                                </div>
+                                                            <% } %> 
                                                         </td>
                                                     <% } %>
                                                 </tr>
@@ -666,8 +749,28 @@
                 </div>
             </div>
         </div>
+        <div class="popupHolder" id = "popupHolder">
+            <div class="popupTitle">
+                Enter Information
+            </div>
+            <div class="popupBody">
+
+            </div>
+            <div class="popupBottom">
+                <div class="popupCancel">CANCEL</div>
+                <div class="popupEnter">ENTER</div>
+            </div>
+        </div>
     </div>
 </body>
+<script>
+    FilePond.setOptions({
+        server: "/",
+    });
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+    );
+</script>
 <script>
     let coursesExpanded = false;
     function expandCoursesBar(element) {
@@ -698,6 +801,25 @@
             element.children[1].style.visibility = "visible";
             element.setAttribute("expanded", "false");
             
+        }
+    }
+    function openPopup(type, inputName) {
+        let popup = document.getElementById("popupHolder");
+        popup.setAttribute("currentInput", inputName);
+        if (type == "popup-file") {
+            let fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.className = "filepond";
+            popup.children[1].innerHTML = "";
+            popup.children[1].appendChild(fileInput);
+            popup.classList.add("popupHolderOpen");
+            FilePond.create(fileInput);
+        } else if (type == "popup-textarea") {
+            let textarea = document.createElement("textarea");
+            textarea.className = "popupTextarea";
+            popup.children[1].innerHTML = "";
+            popup.children[1].appendChild(textarea);
+            popup.classList.add("popupHolderOpen");
         }
     }
     function toggleCheckBox(element) {
