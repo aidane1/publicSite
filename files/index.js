@@ -329,27 +329,28 @@ function logSchool(school, info) {
   });
 }
 app.use(async function(req, res, next) {
-  let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
-  try {
-    if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      if (user.username != "AidanEglin") {
-        let date = (new Date()).local();
-        let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
-        let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
-        let data = {user: user.username, dateString: formatted, info: info};
-        logSchool(user.school, data);
-        next();
-      } else {
-        next();
-      }
-    } else {
-      next();
-    }
-  } catch(e) {
-    console.log(e);
-    next();
-  }
+  next();
+  // let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
+  // try {
+  //   if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
+  //     let user = await User.findOne({_id : req.session.userId});
+  //     if (user.username != "AidanEglin") {
+  //       let date = (new Date()).local();
+  //       let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+  //       let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
+  //       let data = {user: user.username, dateString: formatted, info: info};
+  //       logSchool(user.school, data);
+  //       next();
+  //     } else {
+  //       next();
+  //     }
+  //   } else {
+  //     next();
+  //   }
+  // } catch(e) {
+  //   console.log(e);
+  //   next();
+  // }
   
 });
 
@@ -1341,16 +1342,16 @@ app.get("/teacher/:id/:course/assignments", async function(req, res) {
           let keys = [
             {displayFunc: (obj) => {return obj.topic}, name: "Topic", propertyName: "topic"},
             {displayFunc: (obj) => {return obj.type}, name: "Type", propertyName: "type"},
-            {displayFunc: (obj) => {return obj.type == "text" ? obj.assignment : obj[i].assignment.split("_").slice(0, obj[i].assignment.split("_").length-1).join("_")}, name: "Assignment", propertyName: "assignment"},
-            {displayFunc: (obj) => {return obj.notes}, name: "Notes", propertyName: "notes"},
+            {displayFunc: (obj) => {return obj.type == "text" ? obj.assignment.replace(/(\r\\n|\n|\r)/gm, "<br>") : `${obj.assignment.split("_").slice(0, obj.assignment.split("_").length-1).join("_").replace(/(\r\\n|\n|\r)/gm, "<br>")}&nbsp;<a href = '/public/assignments/${obj.assignment.split("_").slice(obj.assignment.split("_").length-1, obj.assignment.split("_").length).join("_")}'>(file)</a>`}, name: "Assignment", propertyName: "assignment"},
+            {displayFunc: (obj) => {return obj.notes}, name: "Notes/Instruction", propertyName: "notes"},
             {displayFunc: (obj) => {return obj.due}, name: "Due", propertyName: "due"},
           ]
           let topics = ["No Topic", ...course.topics];
           let inputTypes = {
             "topic": {type: "select", optionType: "list", options: topics, other: true, otherName: "Create Topic"},
-            "type": {type: "select", optionType: "list", options: ["Text", "File"], other: false},
-            "assignment": {type: "text"},
-            "notes": {type: "text"},
+            "type": {type: "type-select", options: [{name: "Text", type: "blank-selector", default: ""}, {name: "File", type: "popup-file", default: ""}]},
+            "assignment": {type: "popup-textarea", default: "Blank Assignment"},
+            "notes": {type: "popup-textarea", default: "No Notes"},
             "due": {type: "text"},
           }
           let tabOptions = [
@@ -1379,7 +1380,7 @@ app.get("/teacher/:id/:course/assignments", async function(req, res) {
 
 function keyCheck(object, keys) {
   for (var i = 0; i < keys.length; i++) {
-    if (!object[keys[i]]) {
+    if (!object[keys[i]] || object[keys[i]] == "null") {
       return false;
     }
   }
@@ -1613,6 +1614,97 @@ app.post("/adminEdit", urlencodedParser, async function(req, res) {
   } catch(e) {
     console.log(e);
     res.send([false, "An unknown error occured. Please try again"]);
+  }
+});
+app.post("/teacherEdit/:teacher/:course", urlencodedParser, async function(req, res) {
+  try {
+    if (req.query.table && req.query.action) {
+      if (req.session.teacherId) {
+        let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
+        let course = await Course.findOne({_id : req.params.course});
+        if (course && teacher.teacherAccount._id.toString() == req.params.teacher.toString() && course.teacher.toString() == teacher.teacherAccount._id.toString()) {
+          switch (req.query.table) {
+            case "assignment":
+              if (req.query.action == "create") {
+                if (keyCheck(req.body, ["topic", "type", "assignment", "notes", "due"])) {
+                  req.body.forCourse = course._id;
+                  req.body.confirmed = true;
+                  req.body.submittedBy = teacher._id;
+                  if (req.body.type == "blank-selector") {
+                    req.body.type = "text";
+                  } else {
+                    req.body.assignment = req.body.assignment + "_" + req.body.type;
+                    req.body.type = "file";
+                  }
+                  let assignment = await Assignments.create(req.body);
+                  res.send([true, assignment]);
+                } else {
+                  res.send([false, "Please fill in all fields"]);
+                }
+              } else if (req.query.action == "edit") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let edits = {
+
+                  }
+                  if (req.body.type == "blank-selector") {
+                    req.body.type = "text";
+                  } else if (req.body.type != "null" && req.body.assignment && req.body.assignment != "null") {
+                    req.body.assignment = req.body.assignment + "_" + req.body.type;
+                    req.body.type = "file";
+                  }
+                  for (var key in req.body) {
+                    if (req.body[key] && req.body[key] != "null") {
+                      edits[key] = req.body[key];
+                    }
+                  }
+                  let assignment = req.body;
+                  let id = req.body._id;
+                  delete req.body["_id"];
+                  let newAssignment = await Assignments.findOneAndUpdate({_id : id}, {$set : req.body});
+                  for (var key in assignment) {
+                    newAssignment[key] = assignment[key];
+                  }
+                  res.send([true, newAssignment]);
+                } else {
+                  res.send([false, "Please fill in all fields"]);
+                }
+              } else if (req.query.action == "delete") {
+                if (keyCheck(req.body, ["_id"])) {
+                  let assignment = await Assignments.findByIdAndDelete({_id : req.body._id});
+                  res.send([true, assignment]);
+                } else {
+                  res.send([false, "An ID is required for deletion"]);
+                }
+              } else {
+                res.send([false, "The requested action is not available"]);
+              }
+              break;
+            case "note":
+              if (req.query.action == "create") {
+
+              } else if (req.query.action == "edit") {
+
+              } else if (req.query.action == "delete") {
+
+              } else {
+                res.send([false, "The requested action is not available"]);
+              }
+              break;
+            default:
+
+          }
+        } else {
+          res.send([false, "Teachers can only edit their own courses"]);
+        }
+      } else {
+        res.send([false, "Must be a teacher to make edits"]);
+      }
+    } else {
+      res.send([false, "Please specify a table and action"]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, "An unknown error occured. Please refresh and try again."]);
   }
 });
 app.get("/dashboard/configure", async function(req, res) {
