@@ -330,27 +330,27 @@ function logSchool(school, info) {
 }
 app.use(async function(req, res, next) {
   next();
-  // let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
-  // try {
-  //   if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
-  //     let user = await User.findOne({_id : req.session.userId});
-  //     if (user.username != "AidanEglin") {
-  //       let date = (new Date()).local();
-  //       let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
-  //       let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
-  //       let data = {user: user.username, dateString: formatted, info: info};
-  //       logSchool(user.school, data);
-  //       next();
-  //     } else {
-  //       next();
-  //     }
-  //   } else {
-  //     next();
-  //   }
-  // } catch(e) {
-  //   console.log(e);
-  //   next();
-  // }
+  let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
+  try {
+    if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.username != "a") {
+        let date = (new Date()).local();
+        let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+        let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
+        let data = {user: user.username, dateString: formatted, info: info};
+        logSchool(user.school, data);
+        // next();
+      } else {
+        // next();
+      }
+    } else {
+      // next();
+    }
+  } catch(e) {
+    console.log(e);
+    // next();
+  }
   
 });
 

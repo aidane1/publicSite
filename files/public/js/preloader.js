@@ -12,19 +12,13 @@ function preloadPage(url, callback) {
             callback(this.response);
         }
     }
-    loadRequest.open("GET", url, true);
+    loadRequest.open("GET", url + "?preload=true", true);
     loadRequest.send(); 
 }
 
 let preloaded = {
 
 }
-preloadPage("/account", function(res) {
-    preloaded["accountPage"] = res;
-});
-preloadPage("/courses", function(res) {
-    preloaded["coursePage"] = res;
-});
 function renderPreloaded(page, path) {
     if (preloaded[page] && true) {
         document.open();
