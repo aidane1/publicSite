@@ -45,5 +45,6 @@ TeacherSchema.pre("save", async function(next) {
   });
 });
 
+
 var Teacher = mongoose.model('Teacher', TeacherSchema);
 module.exports = Teacher;
