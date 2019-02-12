@@ -10,6 +10,8 @@
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src = "/public/js/asyncRequest.js" type = "text/javascript"></script>
+    <script src = "/public/js/teacherKeyDisplay.js" type = "text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <style>
         * {
@@ -113,6 +115,8 @@
             position: relative;
             height: 100%;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         .bodyUpperSection {
             width: 100%;
@@ -122,8 +126,9 @@
             padding: 0;
         }
         .bodyLowerSection {
+            margin: 0;
             width: 100%;
-            height: calc(100% - 150px);
+            flex-grow: 1;
             background-color: #f5f7f9;
             overflow-x: auto;
             overflow-y: visible;
@@ -476,16 +481,48 @@
             font-size: 18px;
         }
         .otherWrapper {
-
+            position: relative;
         }
         .otherInput {
-
-        }
-        .otherLabel {
             background-color: transparent;
             border: 0;
             border-bottom: 1px solid #9e9e9e;
             border-radius: 0;
+            outline: none;
+            width: 95%;
+            height: 40px;
+            font-size: 16px;
+            padding-top: 5px;
+        }
+        .otherInput:focus {
+            border-bottom: 2px solid #29a69a;
+        }
+        .otherLabel {
+            color: #9e9e9e;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 1rem;
+            cursor: text;
+            font-size: 16px;
+            transform: translate(0, 0) scale(1);
+            transition: transform 0.1s ease-out;
+        }
+        .otherClose {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 5px;
+            top: 15px;
+            cursor: pointer;
+        }
+        .otherClose svg {
+            width: 100%;
+            height: 100%;
+        }
+        .activeLabel {
+            transform: translate(-14%, -100%) scale(0.7);
+            color: #29a69a;
         }
         .editDelete {
             width: 100px;
@@ -708,15 +745,15 @@
                                                                     <div id = "create_<%=keys[i].propertyName%>" value = "checked" class = "checkboxInput createCategory checkbox checked" name = "<%=keys[i].propertyName%>" onclick="toggleCheckBox(this)">&#10003;</div>
                                                                 <% } %>
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "type-select") { %>
-                                                                <div class="optionsHolder">
-                                                                    <select name = "<%=keys[i].propertyName%>" class = "createCategory select"  id = "create_<%=keys[i].propertyName%>" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].options[j].name%>')">
+                                                                <div name = "<%=keys[i].propertyName%>" value = "<%=inputTypes[keys[i].propertyName].options[0].type%>" class = "optionsHolder createCategory type-select" id = "create_<%=keys[i].propertyName%>">
+                                                                    <select class = "type-select" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].options[j].name%>')">
                                                                             <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
                                                                                 <option value="<%=inputTypes[keys[i].propertyName].options[j].type%>"><%=inputTypes[keys[i].propertyName].options[j].name%></option>
                                                                             <% } %>
                                                                     </select>
                                                                 </div>
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "popup-textarea") { %>
-                                                                <div class="popupText createCategory" name = "<%=keys[i].propertyName%>" onclick = "openPopup('popup-textarea', '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].default%>')" value = "<%=inputTypes[keys[i].propertyName].default%>" id = "create_<%=keys[i].propertyName%>">
+                                                                <div class="popup-textarea createCategory" default = "<%=inputTypes[keys[i].propertyName].default%>" name = "<%=keys[i].propertyName%>" onclick = "openPopup('popup-textarea', '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].default%>')" value = "<%=inputTypes[keys[i].propertyName].default%>" id = "create_<%=keys[i].propertyName%>">
                                                                     <%=inputTypes[keys[i].propertyName].default%> <span style = "padding-left: 10px"><i style = "font-size: 10px; cursor: pointer" class="fas fa-edit"></i></span>
                                                                 </div>
                                                             <% } %> 
@@ -744,13 +781,13 @@
                                             <%=keys[j].displayFunc(list[i])%>
                                             <i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)">
                                                 <div class="editDelete">
-                                                    <div class="edit" onclick = "openEditBar('<%=JSON.stringify(list[i])%>')">Edit</div>
+                                                    <div class="edit" onclick = "openEditBar( '<%=JSON.stringify(list[i]).replace(/'/g, `\\'`)%>')">Edit</div>
                                                     <div class="delete" onclick = "deleteRow('<%=list[i]._id%>')">Delete</div>
                                                 </div>
                                             </i>
                                         </td>
                                     <% } else { %>
-                                        <td class="rowProperty" name = "<%=keys[j].propertyName%>"><%=keys[j].displayFunc(list[i])%></td>
+                                        <td class="rowProperty" name = "<%=keys[j].propertyName%>"><%-keys[j].displayFunc(list[i])%></td>
                                     <% } %>
                                 <% } %>
                                 </tr>
@@ -821,20 +858,61 @@
             element.className = "sideBarTopic";
             element.children[1].style.visibility = "visible";
             element.setAttribute("expanded", "false");
-            
         }
+    }
+    function toggleBlur() {
+        let element = document.getElementById("newTableRowBar");
+        element.classList.toggle("activeSearch");
+    }
+    function searchText(text) {
+        let rows = document.getElementsByClassName("row");
+        for (var i = 0; i < rows.length; i++) {
+            let child = rows[i];
+            if (child.innerHTML.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }    
+        }
+    }
+    function focusCustom(element) {
+        element.parentNode.children[1].classList.add("activeLabel");
+    } 
+    function blurCustom(element) {
+        if (!element.value) {
+            element.parentNode.children[1].classList.remove("activeLabel");
+        }
+    }
+    function customValChange(element) {
+        element.parentNode.parentNode.children[0].children[0].setAttribute("value",  element.value);
+        element.parentNode.parentNode.children[0].children[0].value = "";
+    }
+    function closeCustom(element) {
+        element.parentNode.parentNode.children[0].style.display = "block";
+        element.parentNode.parentNode.children[0].children[0].selectedIndex = 0;
+        element.parentNode.parentNode.removeChild(element.parentNode);
     }
     function otherCheck(element) {
         if (element.value == "__other__") {
-            console.log(element.value);
             let inputWrapper = document.createElement("div");
             inputWrapper.className = "otherWrapper";
             let inputElement = document.createElement("input");
             inputElement.className = "otherInput";
+            inputElement.id = "customInput_" + element.name;
+            inputElement.setAttribute("onfocus", "focusCustom(this)");
+            inputElement.setAttribute("onblur", "blurCustom(this)");
+            inputElement.setAttribute("oninput", "customValChange(this)");
             let inputLabel = document.createElement("label");
+            inputLabel.setAttribute("for", "customInput_" + element.name);
             inputLabel.className = "otherLabel";
+            inputLabel.innerHTML = element.children[element.selectedIndex].innerText;
             inputWrapper.appendChild(inputElement);
             inputWrapper.appendChild(inputLabel);
+            let removeOther = document.createElement("div");
+            removeOther.className = "otherClose";
+            removeOther.innerHTML = '<svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>';
+            removeOther.setAttribute("onclick", "closeCustom(this)");
+            inputWrapper.appendChild(removeOther);
             element.parentNode.style.display = "none";
             element.parentNode.parentNode.appendChild(inputWrapper);
         }
@@ -843,14 +921,13 @@
         let popup = document.getElementById("popupHolder");
         let type = popup.getAttribute("type");
         let inputName = popup.getAttribute("currentInput");
-        console.log(inputName, type);
         if (type == "popup-file") {
 
         } else if (type == "popup-textarea") {
             let input = document.getElementById("create_" + inputName);
             input.setAttribute("value", popup.children[1].children[0].value);
             let editButton = input.children[0];
-            input.setAttribute("onclick", `openPopup('${type}', '${inputName}', '${popup.children[1].children[0].value}')`);
+            input.setAttribute("onclick", `openPopup('${type}', '${inputName}', \`${popup.children[1].children[0].value}\`)`);
             input.innerHTML = popup.children[1].children[0].value.replace(/(\r\\n|\n|\r)/gm, "<br>");
             input.appendChild(editButton);
         }
@@ -867,7 +944,14 @@
             popup.children[1].innerHTML = "";
             popup.children[1].appendChild(fileInput);
             popup.classList.add("popupHolderOpen");
-            FilePond.create(fileInput);
+            let pond = FilePond.create(fileInput);
+            pond.on("processfile", function(err, file) {
+                console.log(file);
+                let input = document.getElementById("create_" + inputName);
+                fileName = file.serverId;
+                input.setAttribute("value", file.serverId);
+                input.setAttribute("fileName", file.filename);
+            });
         } else if (type == "popup-textarea") {
             let textarea = document.createElement("textarea");
             textarea.className = "popupTextarea";
@@ -907,6 +991,7 @@
     }
     function openEditBar(json) {
         toggleRowCreate();
+        console.log(json);
         json = JSON.parse(jsonEscape(json));
         document.getElementById("submitRow").innerText = "EDIT";
         document.getElementById("submitRow").setAttribute("onclick", `editRow('${json._id}')`);
@@ -976,6 +1061,11 @@
                     currentInput.value = "";
                 } else if (currentInput.classList.contains("select")) {
                     currentInput.selectedIndex = 0;
+                } else if (currentInput.classList.contains("type-select")) {
+                    currentInput.setAttribute("value", "");
+                    currentInput.children[0].selectedIndex = 0;
+                } else if (currentInput.classList.contains("popup-textarea")) {
+                    currentInput.setAttribute("value", currentInput.getAttribute("default"));
                 }
             }
         }
@@ -1007,6 +1097,21 @@
                     currentInput.value = mapFunctions[key](object);
                 } else if (currentInput.classList.contains("time")) {
                     currentInput.value = mapFunctions[key](object);
+                } else if (currentInput.classList.contains("popup-textarea")) {
+                    let icon = currentInput.children[0];
+                    console.log(icon);
+                    currentInput.innerHTML = mapFunctions[key](object).replace(/(\\r\\n|\\n|\\r)/gm, "<br>");
+                    currentInput.appendChild(icon);
+                    currentInput.setAttribute("onclick", `openPopup('popup-textarea', '${currentInput.getAttribute("name")}', \`${mapFunctions[key](object).replace(/(\\r\\n|\\n|\\r)/gm, "\n")}\`)`);
+                    currentInput.setAttribute("value", mapFunctions[key](object).replace(/(\\r\\n|\\n|\\r)/gm, "\n"));
+                } else if (currentInput.classList.contains("type-select")) {
+                    let selectedIndex = 0;
+                    for (var i = 0; i < currentInput.children.length; i++) {
+                        if (currentInput.children[i].getAttribute("value") == (mapFunctions[key])(object)) {
+                            selectedIndex = i;
+                        }
+                    }
+                    currentInput.selectedIndex = selectedIndex;
                 }
             }
         }
@@ -1025,14 +1130,14 @@
     function editRow(id) {
         let newRow = getInputValues();
         newRow._id = id;
-        postObject(newRow, "/adminEdit?table=<%=singular.toLowerCase()%>&action=edit", function(res) {
+        postObject(newRow, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=edit", function(res) {
             if (res[0] == true) {
                 let mapFunction = editMap["<%=singular.toLowerCase()%>"];
                 let row = document.getElementById("row_" + id);
                 for (var i = 0; i < row.children.length; i++) {
                     let name = row.children[i].getAttribute("name");
                     if (newRow[name]) {
-                        row.children[i].innerText = mapFunction[name](res[1]);
+                        row.children[i].innerHTML = mapFunction[name](res[1]);
                     }
                     if (i == row.children.length-1) {
                         let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
@@ -1046,7 +1151,7 @@
         });
     }
     function deleteRow(id) {
-        postObject({_id: id}, "/adminEdit?table=<%=singular.toLowerCase()%>&action=delete", function(res) {
+        postObject({_id: id}, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=delete", function(res) {
             if (res[0] == true) {
                 let row = document.getElementById("row_" + id);
                 row.parentNode.removeChild(row);
@@ -1057,30 +1162,30 @@
     }
     function createRow() {
         let newRow = getInputValues();
-        console.log(newRow);
-        // sanitizeInputs(newRow);
-        // postObject(newRow, "/adminEdit?table=<%=singular.toLowerCase()%>&action=create", function(res) {
-        //     if (res[0] == true) {
-        //         let mapFunction = editMap["<%=singular.toLowerCase()%>"];
-        //         let row = document.createElement("tr");
-        //         row.className = "row";
-        //         row.id = "row_" + res[1]._id;
-        //         for (var key in newRow) {
-        //             let property = document.createElement("td");
-        //             property.className = "rowProperty";
-        //             property.innerText = mapFunction[key](res[1]);
-        //             row.appendChild(property);
-        //         }
-        //         row.children[row.children.length-1].classList.add("lastProperty");
-        //         let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
-        //         openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
-        //         row.children[row.children.length-1].appendChild(openElement);
-        //         document.getElementById("rowDisplay").appendChild(row);
-        //     } else {
-        //         populateInputs(newRow);
-        //         extendError(res[1]);
-        //     }
-        // });
+        sanitizeInputs(newRow);
+        postObject(newRow, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=create", function(res) {
+            console.log(res);
+            if (res[0] == true) {
+                let mapFunction = editMap["<%=singular.toLowerCase()%>"];
+                let row = document.createElement("tr");
+                row.className = "row";
+                row.id = "row_" + res[1]._id;
+                for (var key in newRow) {
+                    let property = document.createElement("td");
+                    property.className = "rowProperty";
+                    property.innerHTML = mapFunction[key](res[1]);
+                    row.appendChild(property);
+                }
+                row.children[row.children.length-1].classList.add("lastProperty");
+                let openElement = createElementFromHTML(`<i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)"><div class="editDelete"><div class="edit">Edit</div><div class="delete" onclick = "deleteRow('${res[1]._id}')">Delete</div></div></i>`);
+                openElement.children[0].setAttribute("onclick", `openEditBar('${JSON.stringify(res[1])}')`);
+                row.children[row.children.length-1].appendChild(openElement);
+                document.getElementById("rowDisplay").appendChild(row);
+            } else {
+                populateInputs(newRow);
+                extendError(res[1]);
+            }
+        });
     }
 </script>
 </html>

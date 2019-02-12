@@ -218,6 +218,8 @@ let Categories = require("../models/categorychar.js");
 
 let Semesters = require("../models/semesterchar.js");
 
+let Log = require("../models/logchar.js");
+
 let webpush = require("web-push");
 
 let schedule = require("node-schedule");
@@ -307,50 +309,56 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 
 
-function logSchool(school, info) {
-  fs.readFile(__dirname + "/public/logins/" + school.toString() + ".json", function(err, data) {
-    if (err) {
-      let data = [info];
-      data = JSON.stringify(data);
-      fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", data, function(err) {
-        if (err) {
-          console.log(err);
-        }
-      })
-    } else {
-      let json = JSON.parse(data);
-      json.push(info);
-      fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", JSON.stringify(json), function(err){
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-  });
+async function logSchool(school, info) {
+  if (school && info.dateString && info.info && info.user) {
+    let log = await Log.create({school: school, dateString: info.dateString, info: info.info, user: info.user});
+    return log;
+  } else {
+    return {};
+  }
+  
+  // fs.readFile(__dirname + "/public/logins/" + school.toString() + ".json", function(err, data) {
+  //   if (err) {
+  //     let data = [info];
+  //     data = JSON.stringify(data);
+  //     fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", data, function(err) {
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //     })
+  //   } else {
+  //     let json = JSON.parse(data);
+  //     json.push(info);
+  //     fs.writeFile(__dirname + "/public/logins/" + school.toString() + ".json", JSON.stringify(json), function(err){
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //     });
+  //   }
+  // });
 }
 app.use(async function(req, res, next) {
-  next();
-  // let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
-  // try {
-  //   if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
-  //     let user = await User.findOne({_id : req.session.userId});
-  //     if (user.username != "a") {
-  //       let date = (new Date()).local();
-  //       let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
-  //       let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
-  //       let data = {user: user.username, dateString: formatted, info: info};
-  //       logSchool(user.school, data);
-  //       // next();
-  //     } else {
-  //       // next();
-  //     }
-  //   } else {
-  //     // next();
-  //   }
-  // } catch(e) {
-  //   console.log(e);
-  //   // next();
-  // }
+  let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
+  try {
+    if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.username != "a") {
+        let date = (new Date()).local();
+        let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+        let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
+        let data = {user: user.username, dateString: formatted, info: info};
+        await logSchool(user.school, data);
+        next();
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  } catch(e) {
+    console.log(e);
+    next();
+  }
   
 });
 
@@ -2090,15 +2098,9 @@ app.get("/dashboard", async function(req, res) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
-        let recentActivity = [];
-        fs.readFile(__dirname + "/public/logins/" + user.school.toString() + ".json", function(err, data) {
-          if (err) {
-            res.render("dashboard/dashboard", {recent: []});
-          } else {
-            recentActivity = JSON.parse(data);
-            res.render("dashboard/dashboard", {recent: recentActivity});
-          }
-        });
+        let recentActivity = await Log.find({school: school._id}).sort([["created_at", -1]]).limit(100);
+        recentActivity.reverse();
+        res.render("dashboard/dashboard", {recent: recentActivity});
       } else {
         res.redirect("/login");
       }
@@ -3984,7 +3986,7 @@ app.get("/monitorUsage", async function(req, res) {
       let date = (new Date()).local();
       let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
       let data = {user: user.username, dateString: formatted, info: `exited page ${req.query.page}`};
-      logSchool(user.school, data);
+      await logSchool(user.school, data);
     }
   } catch(e) {
     console.log(e);
@@ -4861,7 +4863,7 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 
       res.cookie("sessionID", response._id);
       //redirects to the cookie path, or to home if the user doesn't have path cookies
-      res.redirect(req.cookies.path || "/");
+      res.redirect("/");
     } catch(e) {
       console.log(e);
       // tells the user their info was incorrect
