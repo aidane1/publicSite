@@ -342,7 +342,7 @@ app.use(async function(req, res, next) {
   try {
     if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
       let user = await User.findOne({_id : req.session.userId});
-      if (user.username != "a") {
+      if (user.username != "AidanEglin") {
         let date = (new Date()).local();
         let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
         let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
