@@ -114,37 +114,6 @@
             /* padding-left: 5px; */
             padding-right: 5px;
         }
-        
-        
-        .input {
-            width: 95%;
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #ddd;
-            border-radius: 2px;
-            display: block;
-            margin: auto;
-            margin-bottom: 30px;
-            outline: none;
-        }
-        .input::placeholder {
-            color: grey;
-            font-size: 15px;
-            position: relative;
-            top: 0px;
-            left: 0px;
-            transition: top 0.1s linear, left 0.1s linear;
-        }
-        .input:focus {
-            border: 2px solid #1976d2;
-        }
-        .input:focus::placeholder {
-            font-size:12px;
-            color: #1976d2;
-            position: relative;
-            top: -20px;
-            left: -13px;
-        }
         .submitAll {
             width: 120px;
             text-align: center;
@@ -166,11 +135,40 @@
             border: 0;
             outline: none
         }
-        .inputLabel {
+        .otherWrapper {
             width: 95%;
-            margin: auto;
-            margin-top: 30px;
-            font-size: 18px;
+            position: relative;
+            margin: 40px auto;
+        }
+        .otherInput {
+            background-color: transparent;
+            border: 0;
+            border-bottom: 1px solid #9e9e9e;
+            border-radius: 0;
+            outline: none;
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            padding-top: 5px;
+        }
+        .otherInput:focus {
+            border-bottom: 2px solid #29a69a;
+        }
+        .otherLabel {
+            color: #9e9e9e;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 1rem;
+            cursor: text;
+            font-size: 16px;
+            transform: translate(0, 0) scale(1);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+        .activeLabel {
+            transform: translate(-14%, -100%) scale(0.7);
+            color: #29a69a;
         }
     
     </style>
@@ -187,10 +185,15 @@
         <div class="backdrop">
             <form action="/block-names" method = "post">
                 <% for (var key in blockMap) { %>
-                    <div class="inputLabel">
+                    <!-- <div class="inputLabel">
                         <%=key%>
                     </div>
-                    <input type="text" name = "<%=key%>" class="input" value = "<%=blockMap[key].course%>" placeholder="block <%=key%> (current: <%=blockMap[key].course%>)">    
+                    <input type="text" name = "<%=key%>" class="input" value = "<%=blockMap[key].course%>" placeholder="block <%=key%> (current: <%=blockMap[key].course%>)">     -->
+                    <div class="otherWrapper">
+                        <input type="text" name = "<%=key%>" onfocus="focusCustom(this)" onblur="blurCustom(this)" oninput="customValueChange(this)" class = "otherInput" id = "input_<%=key%>">
+                        <label for = "input_<%=key%>" class = "otherLabel"><%=key%> (<%=blockMap[key].course%>)</label>
+                        <!-- <div class="otherClose" onclick="closeCustom(this)"><svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div> -->
+                    </div>
                 <% } %>
                 
                 <div class="submitAll" onclick = "submitAll()">
@@ -200,6 +203,14 @@
         </div>
     </div>
     <script>
+        function focusCustom(element) {
+            element.parentNode.children[1].classList.add("activeLabel");
+        } 
+        function blurCustom(element) {
+            if (!element.value) {
+                element.parentNode.children[1].classList.remove("activeLabel");
+            }
+        }
         function submitAll() {
             let inputs = document.getElementsByClassName("input");
             let sendMap = {};
