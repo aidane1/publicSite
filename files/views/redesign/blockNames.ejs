@@ -185,14 +185,9 @@
         <div class="backdrop">
             <form action="/block-names" method = "post">
                 <% for (var key in blockMap) { %>
-                    <!-- <div class="inputLabel">
-                        <%=key%>
-                    </div>
-                    <input type="text" name = "<%=key%>" class="input" value = "<%=blockMap[key].course%>" placeholder="block <%=key%> (current: <%=blockMap[key].course%>)">     -->
                     <div class="otherWrapper">
-                        <input type="text" name = "<%=key%>" onfocus="focusCustom(this)" onblur="blurCustom(this)" oninput="customValueChange(this)" class = "otherInput" id = "input_<%=key%>">
+                        <input type="text" name = "<%=key%>" onfocus="focusCustom(this)" onblur="blurCustom(this)" id = "input_<%=key%>">
                         <label for = "input_<%=key%>" class = "otherLabel"><%=key%> (<%=blockMap[key].course%>)</label>
-                        <!-- <div class="otherClose" onclick="closeCustom(this)"><svg focusable="false" xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div> -->
                     </div>
                 <% } %>
                 
