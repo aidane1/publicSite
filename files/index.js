@@ -372,9 +372,9 @@ function wwwHttpsRedirect(req, res, next) {
     }
 };
 
-// app.use(wwwHttpsRedirect);
+app.use(wwwHttpsRedirect);
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
@@ -2098,9 +2098,12 @@ app.get("/dashboard", async function(req, res) {
       let user = await User.findOne({_id : req.session.userId});
       if (user.permissions == "admin") {
         let school = await School.findOne({_id : user.school});
-        let recentActivity = await Log.find({school: school._id}).sort([["created_at", -1]]).limit(100);
-        recentActivity.reverse();
-        res.render("dashboard/dashboard", {recent: recentActivity});
+        let recentActivity = await Log.find({school: school._id});
+        recentActivity.sort(function(a,b) {
+          return b.created_at.getTime() > a.created_at.getTime();
+        });
+        let newList = recentActivity.splice(0, recentActivity.length > 100 ? 100 : recentActivity.length);
+        res.render("dashboard/dashboard", {recent: newList});
       } else {
         res.redirect("/login");
       }
