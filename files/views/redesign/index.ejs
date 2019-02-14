@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name = "apple-mobile-web-app-title" content = "PVSS">
     <link rel = "manifest" href = "public/manifests/home.json  " />
-    <!-- <link rel = "stylesheet" href = "/public/css/index.css"> -->
     <title>Schoolr student app | Home</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
     <link rel="shortcut icon" href="/public/schoolLogos/64x64_<%=favicon%>" type="image/x-icon">
@@ -522,7 +520,7 @@ html, body {
     box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
     /* transition: max-height 0.12s cubic-bezier(0.0,0.0,0.2,1), left 0.12s cubic-bezier(0.0,0.0,0.2,1), bottom 0.12s cubic-bezier(0.0,0.0,0.2,1); */
     transform: translate(0%, calc(0% + 3px)) scale(1);
-    transition: transform 300ms cubic-bezier(0.0,0.0,0.2,1);
+    transition: transform 300ms cubic-bezier(0.21,0.94,0.2,0.94);
     overflow: hidden;
     border-radius: 2px;
     will-change: transform;
@@ -1346,7 +1344,6 @@ html, body {
     }
     function extendCalendarPopup(dateString, events, date) {
         scrollingAllowed = false;
-        $("#backdrop").animate({scrollLeft: 4*width}, 200);
         let tabs = document.getElementsByClassName("tab");
         for (var i = 0; i < tabs.length; i++) {
             tabs[i].classList.remove("selectedTab");
@@ -1443,9 +1440,7 @@ html, body {
                     tabs[i].classList.add("selectedTab");
                 }
             }
-            // console.log(`translateX(-${(index-1)*25}%)`);
             document.getElementById("backdropChild").style.transform = `translateX(${(index-1)*25*-1}%)`;
-            // $("#backdrop").animate({scrollLeft: index*width}, 200);
         }
     }
 
