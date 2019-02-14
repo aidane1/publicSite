@@ -68,23 +68,40 @@ html, body {
     right: 0px;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* flex-wrap: nowrap; */
     overflow: hidden;
 }
 .backdrop {
-    height: calc(100% - 70px);
+    height: calc(100% - 90px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
     /* flex-grow: 1; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* flex-wrap: wrap; */
+    /* overflow-x: hidden; */
+    /* overflow-y: hidden; */
+    -webkit-overflow-scrolling: auto;
+    
+}
+.backdropChild {
+    width: 400%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: auto;
+    transition: transform 0.3s cubic-bezier(0.13, 0.61, 0.61, 0.98);
+    will-change: transform;
+    /* transform: translateX(%); */
 }
 .bodyTile {
-    width: 100%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -770,463 +787,466 @@ html, body {
             </div> -->
         </div>
         <div class = "backdrop" id = "backdrop">
-            <div id = "scheduleTile" class="bodyTile">
-                <div class="scheduleBodies">
-                    <% for (var i = 0; i < readSchedule.length; i++) { %>
-                        <div class="schedule">
-                            <% for (var key in readSchedule[i]) { %>
-                                <div class="scheduleDay">
-                                    <div class="scheduleTitle">
-                                        <%=titles[i][key]%>
-                                    </div>
-                                    <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
-                                        <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
-                                            <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
-                                            <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
-                                                <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
-                                            <% } %>
-                                            <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
+            <div class="backdropChild" id = "backdropChild">
+                <div id = "scheduleTile" class="bodyTile">
+                    <div class="scheduleBodies">
+                        <% for (var i = 0; i < readSchedule.length; i++) { %>
+                            <div class="schedule">
+                                <% for (var key in readSchedule[i]) { %>
+                                    <div class="scheduleDay">
+                                        <div class="scheduleTitle">
+                                            <%=titles[i][key]%>
                                         </div>
-                                    <% } %>
-                                </div>
-                            <% } %>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
-            <div id = "homeTile" href = "#homeTile" class="bodyTile">
-                <div class="dayHeader">
-                    <h1>
-                        <% if (today[1]) { %>
-                            <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>    
-                        <% } else { %>
-                            Off! 
-                        <% } %>
-                    </h1>
-                </div>
-                <div id="currentBlock" class = "blockHolder">
-                    <div class="blockHeader">
-                        Current
-                    </div>
-                    <div class="blockLeft">
-                        <div class="blockMain">
-                            <%=currentBlock[1].course%>
-                        </div>
-                        <div class="blockSecondary">
-                            <%=currentBlock[0]%>
-                        </div>
-                    </div>
-                </div>
-                <div id="nextBlock" class = "blockHolder">
-                    <div class="blockHeader">
-                        Next
-                    </div>
-                    <div class="blockLeft">
-                        <div class="blockMain">
-                            <%=nextBlock[1].course%>
-                        </div>
-                        <div class="blockSecondary">
-                            <%=nextBlock[0]%>
-                        </div>
-                    </div>
-                </div>
-                <div class="dayHeader">
-                    <h1>
-                        Events
-                    </h1>
-                </div>
-                <% for (var i = 0; i < soonEvents.length; i++) { %>
-                    <div class = "eventBlockHolder" style = "background: linear-gradient(#5cc0e8, #5c9be8)">
-                        <div class = "eventBlockHeader">
-                            <h3 style = "margin: 0"><%=soonEvents[i].info%></h3>
-                        </div>
-                        <div class="blockBottom">
-                            <div class="eventBlockMain">
-                                <%=moment(soonEvents[i].date).format("DD-MM-YYYY")%>
-                            </div>
-                            <div class="eventBlockSecondary">
-                                <%=soonEvents[i].time%>
-                            </div>
-                        </div>
-                    </div>
-                <% } %>
-                <% if (soonEvents.length == 0) { %>
-                    <div class = "eventBlockHolder" style = "background: linear-gradient(#5cc0e8, #5c9be8)">
-                        <div class = "eventBlockHeader">
-                            <h2 style = "margin: 0">No Events!</h2>
-                        </div>
-                        <div class="blockBottom">
-                            <div class="eventBlockMain">
-                                <%=moment(currentDate).format("DD-MM-YYYY")%>
-                            </div>
-                            <div class="eventBlockSecondary">
-                                
-                            </div>
-                        </div>
-                    </div>
-                <% } %>
-                <div class="dayHeader">
-                    <h1>
-                        Recent Assignments
-                    </h1>
-                </div>
-                <% let length = 0%>
-                <% for (var key in recentAssignments) { %>
-                    <% for (var i = 0; i < recentAssignments[key].assignments.length; i++) { %>
-                        <% length++%>
-                        <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#7ae281, #63c66a)">
-                            <div class="blockHeader" style = "padding-top: 0px">
-                                <%=recentAssignments[key].course%>
-                            </div>
-                            <div class="blockLeft" style = "padding-top: 2px">
-                                <div class="blockMain" style = "font-size: 18px;">
-                                    <% if (recentAssignments[key].assignments[i].type == "text") { %>
-                                        <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment%></div>
-                                    <% } else { %>
-                                        <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment.split("_").slice(0, recentAssignments[key].assignments[i].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
-                                    <% } %>
-                                </div>
-                                <div class="blockSecondary">
-                                    <%=recentAssignments[key].assignments[i].due%>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } %>
-                <div class = "blockHolder" onclick = "window.location = '/assignments'", style = "background: linear-gradient(#7ae281, #63c66a); opacity: 0.5; border: 1px solid #63c66a">
-                    <div class="blockHeader" style = "padding-top: 0px">
-                        New Assignment
-                    </div>
-                    <div class="blockLeft" style = "padding-top: 2px">
-                        <div class="blockMain" style = "font-size: 18px;">
-                            Add Assignment
-                        </div>
-                        <div class="blockSecondary">
-                            Click to add
-                        </div>
-                    </div>
-                </div>
-                <div style = "width: 100%; padding-top: 10px"></div>
-                
-            </div>
-            <div id = "coursesTile" class="bodyTile">
-                <div class="dayTitle"><a onclick = "renderPreloaded('coursePage', '/courses')" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
-                <div class="dayHolder">
-                    <% for (var i = 0; i < courses.length; i++) { %>
-                        <% if (i == courses.length-1) { %>
-                            <!-- <div class="dayBlock"> -->
-                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
-                                <div class="dayIcon">
-                                    <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
-                                        <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
-                                    </div>
-                                </div>
-                                <div class="bottomClass">
-                                    <div class="teacherClassBlock">
-                                        <div class="className"><%=courses[i][1].course%></div>
-                                        <div class="teacherName"><%=courses[i][1].teacher%></div>
-                                    </div>
-                                    <div class="timeBlock">
-                                        <%=courses[i][0]%>
-                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
-                                    </div>
-                                </div>
-                            </div>
-                        <% } else { %>
-                            <!-- <div class="dayBlock"> -->
-                            <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
-                                <div class="dayIcon">
-                                        <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
-                                        <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
-                                    </div>
-                                </div>
-                                <div class="dayClass">
-                                    <div class="teacherClassBlock">
-                                        <div class="className"><%=courses[i][1].course%></div>
-                                        <div class="teacherName"><%=courses[i][1].teacher%></div>
-                                    </div>
-                                    <div class="timeBlock">
-                                        <%=courses[i][0]%>
-                                        <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
-                                    </div>
-                                </div>
-                            </div>
-                        <% } %>
-                    <% } %>
-                </div>
-            </div>
-            <div id = "calendarTile" class="bodyTile">
-                <div class="calendarBodies" id = "calendarBodies">
-                    <%let initialOffset = offset%>
-                    <% for (var i = 0; i < monthLengths.length; i++) { %>
-                        <% let currentMonth = (new Date(startDate[0], startDate[1]+i, 1)).getMonth()%>
-                        <% let pastDue = true%>
-                        <div class="calendarDate" id = "<%=monthNames[i].split(' ').join('_')%>" >
-                            <div class="middleBar"></div>
-                            <div class="dateName">
-                                <%=monthNames[i]%>
-                            </div>
-                            <div class="middleBar"></div>
-                        </div>
-                        <div class="calendarTile" month="<%=monthNames[i]%>"href = "#<%=monthNames[i].split(' ').join('_')%>">
-                            <% for (var j = 0; j < 6; j++) { %>
-                                <div class="calendarRow">
-                                    <% for (var k = 0; k < 7; k++) { %>
-                                        <% if (j*7 + k >= initialOffset) { %>
-                                            <% let previousDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset-1)%>
-                                            <% let todayDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset)%>
-                                            <% if (todayDate.getMonth() > currentMonth || (currentMonth == 11 && todayDate.getMonth() == 0)) { %>
-                                                <div class="calendarDay empty">
-                                                    <div class="dayDate">
-                                                        <%= todayDate.getDate()%>
-                                                    </div>
-                                                    <div class="boxTitle">
-        
-                                                    </div>
-                                                    <div class="dayEvent" style = "visibility: hidden">
-        
-                                                    </div>
-                                                </div>
-                                            <% }  else { %>
-                                                <% let today = eventMap[`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`]; %>
-                                                <% if (today) { %>
-                                                    <% let events = [] %>
-                                                    <% for (var l = 0; l < today[3].length; l++) { %>
-                                                        <% events.push({time: today[3][l].time, info: today[3][l].info}); %>
-                                                    <% } %>
-                                                    <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
-                                                        <div class="calendarDay today" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
-                                                            <div class="dayDate">
-                                                                <%= todayDate.getDate()%>
-                                                            </div>
-                                                            <div class="boxTitle">
-                                                                <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
-                                                            </div>
-                                                            <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    <% } else { %>
-                                                        <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
-                                                            <div class="dayDate">
-                                                                <%= todayDate.getDate()%>
-                                                            </div>
-                                                            <div class="boxTitle">
-                                                                <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
-                                                            </div>
-                                                            <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    <% } %>
-                                                    
-                                                <% } else { %>
-                                                    <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
-                                                        <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
-                                                            <div class="dayDate">
-                                                                <%= todayDate.getDate()%>
-                                                            </div>
-                                                            <div class="boxTitle">
-                
-                                                            </div>
-                                                            <div class="dayEvent" style = "visibility: hidden">
-                
-                                                            </div>
-                                                        </div>
-                                                    <% } else { %>
-                                                        <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
-                                                            <div class="dayDate">
-                                                                <%= todayDate.getDate()%>
-                                                            </div>
-                                                            <div class="boxTitle">
-                
-                                                            </div>
-                                                            <div class="dayEvent" style = "visibility: hidden">
-                
-                                                            </div>
-                                                        </div>  
-                                                    <% } %> 
-                                                    
+                                        <% for (var j = 0; j < readSchedule[i][key].length; j++) { %>
+                                            <div class="scheduleBlock" style = "height: <%=readSchedule[i][key][j][2]%>px; background: linear-gradient(<%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>, <%=averageColours([colorMap[readSchedule[i][key][j][0].block], colorMap[readSchedule[i][key][j][0].block], '#ffffff'])%>)">
+                                                <div class="scheduleCourse"><%=readSchedule[i][key][j][0].course%></div>
+                                                <% if (readSchedule[i][key][j][0].teacher != "Free") { %>
+                                                    <div class="scheduleTeacher"><%=readSchedule[i][key][j][0].teacher%></div>
                                                 <% } %>
-                                            <% } %>
-                                        <% } else { %>
-                                            <div class="calendarDay empty">
-                                                <div class="dayDate">
-                                                    <% let oldDate = new Date(startDate[0], startDate[1]+i, 0) %>
-                                                    <%= oldDate.getDate()-initialOffset+j*7+k+1%>
-                                                </div>
-                                                <div class="boxTitle">
-
-                                                </div>
-                                                <div class="dayEvent" style = "visibility: hidden">
-
-                                                </div>
+                                                <div class="scheduleTime"><%=readSchedule[i][key][j][1]%></div>
                                             </div>
                                         <% } %>
-                                    <% } %>
-                                </div>    
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div id = "homeTile" href = "#homeTile" class="bodyTile">
+                    <div class="dayHeader">
+                        <h1>
+                            <% if (today[1]) { %>
+                                <%=titles[today[0][0]]["day" + (today[0][1]+1).toString()]%>    
+                            <% } else { %>
+                                Off! 
                             <% } %>
+                        </h1>
+                    </div>
+                    <div id="currentBlock" class = "blockHolder">
+                        <div class="blockHeader">
+                            Current
                         </div>
-                        <% initialOffset = (initialOffset + monthLengths[i])%7%>
+                        <div class="blockLeft">
+                            <div class="blockMain">
+                                <%=currentBlock[1].course%>
+                            </div>
+                            <div class="blockSecondary">
+                                <%=currentBlock[0]%>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="nextBlock" class = "blockHolder">
+                        <div class="blockHeader">
+                            Next
+                        </div>
+                        <div class="blockLeft">
+                            <div class="blockMain">
+                                <%=nextBlock[1].course%>
+                            </div>
+                            <div class="blockSecondary">
+                                <%=nextBlock[0]%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dayHeader">
+                        <h1>
+                            Events
+                        </h1>
+                    </div>
+                    <% for (var i = 0; i < soonEvents.length; i++) { %>
+                        <div class = "eventBlockHolder" style = "background: linear-gradient(#5cc0e8, #5c9be8)">
+                            <div class = "eventBlockHeader">
+                                <h3 style = "margin: 0"><%=soonEvents[i].info%></h3>
+                            </div>
+                            <div class="blockBottom">
+                                <div class="eventBlockMain">
+                                    <%=moment(soonEvents[i].date).format("DD-MM-YYYY")%>
+                                </div>
+                                <div class="eventBlockSecondary">
+                                    <%=soonEvents[i].time%>
+                                </div>
+                            </div>
+                        </div>
                     <% } %>
+                    <% if (soonEvents.length == 0) { %>
+                        <div class = "eventBlockHolder" style = "background: linear-gradient(#5cc0e8, #5c9be8)">
+                            <div class = "eventBlockHeader">
+                                <h2 style = "margin: 0">No Events!</h2>
+                            </div>
+                            <div class="blockBottom">
+                                <div class="eventBlockMain">
+                                    <%=moment(currentDate).format("DD-MM-YYYY")%>
+                                </div>
+                                <div class="eventBlockSecondary">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <div class="dayHeader">
+                        <h1>
+                            Recent Assignments
+                        </h1>
+                    </div>
+                    <% let length = 0%>
+                    <% for (var key in recentAssignments) { %>
+                        <% for (var i = 0; i < recentAssignments[key].assignments.length; i++) { %>
+                            <% length++%>
+                            <div class = "blockHolder" onclick = "window.location = '/course?courseId=<%=key%>'" style = "background: linear-gradient(#7ae281, #63c66a)">
+                                <div class="blockHeader" style = "padding-top: 0px">
+                                    <%=recentAssignments[key].course%>
+                                </div>
+                                <div class="blockLeft" style = "padding-top: 2px">
+                                    <div class="blockMain" style = "font-size: 18px;">
+                                        <% if (recentAssignments[key].assignments[i].type == "text") { %>
+                                            <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment%></div>
+                                        <% } else { %>
+                                            <div class="assignmentActionTitle"><%=recentAssignments[key].assignments[i].assignment.split("_").slice(0, recentAssignments[key].assignments[i].assignment.split("_").length-1).join("_") || "File"%> &nbsp; <span style = "font-size: 12px">(File)</span></div>
+                                        <% } %>
+                                    </div>
+                                    <div class="blockSecondary">
+                                        <%=recentAssignments[key].assignments[i].due%>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                    <div class = "blockHolder" onclick = "window.location = '/assignments'", style = "background: linear-gradient(#7ae281, #63c66a); opacity: 0.5; border: 1px solid #63c66a">
+                        <div class="blockHeader" style = "padding-top: 0px">
+                            New Assignment
+                        </div>
+                        <div class="blockLeft" style = "padding-top: 2px">
+                            <div class="blockMain" style = "font-size: 18px;">
+                                Add Assignment
+                            </div>
+                            <div class="blockSecondary">
+                                Click to add
+                            </div>
+                        </div>
+                    </div>
+                    <div style = "width: 100%; padding-top: 10px"></div>
+                    
                 </div>
-                <div class="bodyModal" id = "bodyModal" onclick = "closeModal()">
+                <div id = "coursesTile" class="bodyTile">
+                    <div class="dayTitle"><a onclick = "renderPreloaded('coursePage', '/courses')" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
+                    <div class="dayHolder">
+                        <% for (var i = 0; i < courses.length; i++) { %>
+                            <% if (i == courses.length-1) { %>
+                                <!-- <div class="dayBlock"> -->
+                                <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
+                                    <div class="dayIcon">
+                                        <div class="iconBubble" style = "background: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                            <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
+                                        </div>
+                                    </div>
+                                    <div class="bottomClass">
+                                        <div class="teacherClassBlock">
+                                            <div class="className"><%=courses[i][1].course%></div>
+                                            <div class="teacherName"><%=courses[i][1].teacher%></div>
+                                        </div>
+                                        <div class="timeBlock">
+                                            <%=courses[i][0]%>
+                                            <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <!-- <div class="dayBlock"> -->
+                                <div class="dayBlock" onclick = "<%=courses[i][1].isReal ? `window.location='course?courseId=${courses[i][1]._id}'` : `` %>">
+                                    <div class="dayIcon">
+                                            <div class="iconBubble" style = "background-color: <%=categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][1] : categories['other'][1]%>">
+                                            <%-categories[courses[i][1].category.category.toLowerCase()] ? categories[courses[i][1].category.category.toLowerCase()][0] : categories['other'][0]%>
+                                        </div>
+                                    </div>
+                                    <div class="dayClass">
+                                        <div class="teacherClassBlock">
+                                            <div class="className"><%=courses[i][1].course%></div>
+                                            <div class="teacherName"><%=courses[i][1].teacher%></div>
+                                        </div>
+                                        <div class="timeBlock">
+                                            <%=courses[i][0]%>
+                                            <%- courses[i][1].isReal ? '<i class="fas fa-chevron-right"></i>' : ""%>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+                <div id = "calendarTile" class="bodyTile">
+                    <div class="calendarBodies" id = "calendarBodies">
+                        <%let initialOffset = offset%>
+                        <% for (var i = 0; i < monthLengths.length; i++) { %>
+                            <% let currentMonth = (new Date(startDate[0], startDate[1]+i, 1)).getMonth()%>
+                            <% let pastDue = true%>
+                            <div class="calendarDate" id = "<%=monthNames[i].split(' ').join('_')%>" >
+                                <div class="middleBar"></div>
+                                <div class="dateName">
+                                    <%=monthNames[i]%>
+                                </div>
+                                <div class="middleBar"></div>
+                            </div>
+                            <div class="calendarTile" month="<%=monthNames[i]%>"href = "#<%=monthNames[i].split(' ').join('_')%>">
+                                <% for (var j = 0; j < 6; j++) { %>
+                                    <div class="calendarRow">
+                                        <% for (var k = 0; k < 7; k++) { %>
+                                            <% if (j*7 + k >= initialOffset) { %>
+                                                <% let previousDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset-1)%>
+                                                <% let todayDate = new Date(startDate[0], startDate[1] + i, startDate[2] + 7*j+k-initialOffset)%>
+                                                <% if (todayDate.getMonth() > currentMonth || (currentMonth == 11 && todayDate.getMonth() == 0)) { %>
+                                                    <div class="calendarDay empty">
+                                                        <div class="dayDate">
+                                                            <%= todayDate.getDate()%>
+                                                        </div>
+                                                        <div class="boxTitle">
+            
+                                                        </div>
+                                                        <div class="dayEvent" style = "visibility: hidden">
+            
+                                                        </div>
+                                                    </div>
+                                                <% }  else { %>
+                                                    <% let today = eventMap[`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`]; %>
+                                                    <% if (today) { %>
+                                                        <% let events = [] %>
+                                                        <% for (var l = 0; l < today[3].length; l++) { %>
+                                                            <% events.push({time: today[3][l].time, info: today[3][l].info}); %>
+                                                        <% } %>
+                                                        <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
+                                                            <div class="calendarDay today" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
+                                                                <div class="dayDate">
+                                                                    <%= todayDate.getDate()%>
+                                                                </div>
+                                                                <div class="boxTitle">
+                                                                    <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                                </div>
+                                                                <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="calendarDay" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>')">
+                                                                <div class="dayDate">
+                                                                    <%= todayDate.getDate()%>
+                                                                </div>
+                                                                <div class="boxTitle">
+                                                                    <%= today[1] ? titles[today[0][0]]["day" + (today[0][1]+1).toString()] : ""%>
+                                                                </div>
+                                                                <div class="dayEvent" style = "visibility: <%=today[2] ? 'visible' : 'hidden'%>">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
+                                                        
+                                                    <% } else { %>
+                                                        <% if (currentDate.getFullYear() == todayDate.getFullYear() && currentDate.getMonth() == todayDate.getMonth() && currentDate.getDate() == todayDate.getDate()) { %>
+                                                            <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
+                                                                <div class="dayDate">
+                                                                    <%= todayDate.getDate()%>
+                                                                </div>
+                                                                <div class="boxTitle">
+                    
+                                                                </div>
+                                                                <div class="dayEvent" style = "visibility: hidden">
+                    
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="calendarDay empty" onclick = "extendCalendarPopup('<%=moment([todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()]).format('MMMM D, YYYY')%>', '[]', '<%=`${todayDate.getFullYear()}_${todayDate.getMonth()}_${todayDate.getDate()}`%>)">
+                                                                <div class="dayDate">
+                                                                    <%= todayDate.getDate()%>
+                                                                </div>
+                                                                <div class="boxTitle">
+                    
+                                                                </div>
+                                                                <div class="dayEvent" style = "visibility: hidden">
+                    
+                                                                </div>
+                                                            </div>  
+                                                        <% } %> 
+                                                        
+                                                    <% } %>
+                                                <% } %>
+                                            <% } else { %>
+                                                <div class="calendarDay empty">
+                                                    <div class="dayDate">
+                                                        <% let oldDate = new Date(startDate[0], startDate[1]+i, 0) %>
+                                                        <%= oldDate.getDate()-initialOffset+j*7+k+1%>
+                                                    </div>
+                                                    <div class="boxTitle">
 
-                </div>
-                <div class="calendarPopUp" id = "calendarPopUp">
-                    <div class="dateTitle" id = "dateTitle"></div>
-                    <div id = "eventsHolder"></div>
-                    <div class="scheduleBodyWrapper">
-                        <div class="scheduleBody" id = "scheduleBody">
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">1:00 AM</div>
-                                    <div class="middleBar"></div>
-                                </div>
+                                                    </div>
+                                                    <div class="dayEvent" style = "visibility: hidden">
+
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        <% } %>
+                                    </div>    
+                                <% } %>
                             </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">2:00 AM</div>
-                                    <div class="middleBar"></div>
+                            <% initialOffset = (initialOffset + monthLengths[i])%7%>
+                        <% } %>
+                    </div>
+                    <div class="bodyModal" id = "bodyModal" onclick = "closeModal()">
+
+                    </div>
+                    <div class="calendarPopUp" id = "calendarPopUp">
+                        <div class="dateTitle" id = "dateTitle"></div>
+                        <div id = "eventsHolder"></div>
+                        <div class="scheduleBodyWrapper">
+                            <div class="scheduleBody" id = "scheduleBody">
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">1:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">3:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">2:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">4:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">3:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">5:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">4:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">6:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">5:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">7:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">6:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">8:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">7:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">9:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">8:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">10:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">9:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">11:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">10:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">12:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">11:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">1:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">12:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">2:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">1:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">3:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">2:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">4:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">3:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">5:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">4:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">6:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">5:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">7:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">6:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">8:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">7:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">9:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">8:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">10:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">9:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">11:00 PM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">10:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="scheduleHour">
-                                <div class="scheduleHourBar">
-                                    <div class="scheduleHourTitle">12:00 AM</div>
-                                    <div class="middleBar"></div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">11:00 PM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
+                                </div>
+                                <div class="scheduleHour">
+                                    <div class="scheduleHourBar">
+                                        <div class="scheduleHourTitle">12:00 AM</div>
+                                        <div class="middleBar"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
-                
             </div>
+            
         </div>
         <div class="bottomTabBar">
                 <div class="homeTabView">
@@ -1422,22 +1442,11 @@ html, body {
                     tabs[i].classList.add("selectedTab");
                 }
             }
-            $("#backdrop").animate({scrollLeft: index*width}, 200);
+            // console.log(`translateX(-${(index-1)*25}%)`);
+            document.getElementById("backdropChild").style.transform = `translateX(${(index-1)*25*-1}%)`;
+            // $("#backdrop").animate({scrollLeft: index*width}, 200);
         }
     }
-    backdrop.addEventListener("touchmove", function(touch) {
-        let currentBody = Math.round(backdrop.scrollLeft/width);
-        if (currentBody != currentBodyIndex) {
-            currentBodyIndex = currentBody;
-            let tabs = document.getElementsByClassName("tab");
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("selectedTab");
-                if (i == currentBodyIndex) {
-                    tabs[i].classList.add("selectedTab");
-                }
-            }
-        }
-    });
 
     document.onclick = function() {
         let shownAlerts = document.getElementById("shown");
