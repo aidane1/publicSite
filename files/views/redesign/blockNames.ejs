@@ -186,7 +186,7 @@
             <form action="/block-names" method = "post">
                 <% for (var key in blockMap) { %>
                     <div class="otherWrapper">
-                        <input type="text" name = "<%=key%>" onfocus="focusCustom(this)" onblur="blurCustom(this)" id = "input_<%=key%>">
+                        <input type="text" class = "otherInput" name = "<%=key%>" onfocus="focusCustom(this)" onblur="blurCustom(this)" id = "input_<%=key%>">
                         <label for = "input_<%=key%>" class = "otherLabel"><%=key%> (<%=blockMap[key].course%>)</label>
                     </div>
                 <% } %>
