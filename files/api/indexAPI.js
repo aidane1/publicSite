@@ -102,89 +102,92 @@ async function makeDayMap(schoolID)  {
     let endDate = moment([2019, 5, 30]);
     let yearLength = endDate.diff(startDate, "days");
     let school = await School.findOne({_id : schoolID});
-    let weekCount = school.constantBlocks ? school.constantBlockSchedule.schedule.length : school.blockOrder.length;
-    let events = await Events.find({school: school}).sort({date: "ascending"});
-    let offSetEvents = await Events.find({$and: [{school : school}, {dayRolled: true}]}).sort({date: "ascending"});
-    let schoolSkipped = await Events.find({$and: [{school : school}, {schoolSkipped : true}]}).sort({date: "ascending"});
     let eventsObject = {};
-    {
-      let currentDayDay = 0;
-      let currentDayWeek = 0;
-      let currentIndex = 0;
-      let currentSkippedIndex = 0;
-      let currentEventIndex = 0;
-      let currentReminderIndex = 0;
-      let currentDate = startDate.clone();
-      for (var i = 0; i < yearLength; i++) {
-        //what the current 'day' is, if the 'day' value is displayed,,if there is an event on that day, and all the reminders for that day
-        let currentDayArray = [[0,0], true, false, [], []];
-        currentDate.add(1, "days");
-        if (currentDate.day() == 0 || currentDate.day() == 6) {
-          currentDayArray[1] = false;
-          currentDayArray[2] = false;
-        }
-        while(currentEventIndex < events.length && moment([events[currentEventIndex].date.getFullYear(), events[currentEventIndex].date.getMonth(), events[currentEventIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
-          if (events[currentEventIndex].date.getFullYear() == currentDate.year() && events[currentEventIndex].date.getMonth() == currentDate.month() && events[currentEventIndex].date.getDate() == currentDate.date() && events[currentEventIndex].displayedEvent) {
-            currentDayArray[3].push(events[currentEventIndex]);
-            currentDayArray[2] = true;
-          }
-          currentEventIndex++;
-        }
-        while(currentSkippedIndex < schoolSkipped.length && moment([schoolSkipped[currentSkippedIndex].date.getFullYear(), schoolSkipped[currentSkippedIndex].date.getMonth(), schoolSkipped[currentSkippedIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
-          if (schoolSkipped[currentSkippedIndex].date.getFullYear() == currentDate.year() && schoolSkipped[currentSkippedIndex].date.getMonth() == currentDate.month() && schoolSkipped[currentSkippedIndex].date.getDate() == currentDate.date()) {
+    if (school) {
+      let weekCount = school.constantBlocks ? school.constantBlockSchedule.schedule.length : school.blockOrder.length;
+      let events = await Events.find({school: school}).sort({date: "ascending"});
+      let offSetEvents = await Events.find({$and: [{school : school}, {dayRolled: true}]}).sort({date: "ascending"});
+      let schoolSkipped = await Events.find({$and: [{school : school}, {schoolSkipped : true}]}).sort({date: "ascending"});
+      {
+        let currentDayDay = 0;
+        let currentDayWeek = 0;
+        let currentIndex = 0;
+        let currentSkippedIndex = 0;
+        let currentEventIndex = 0;
+        let currentReminderIndex = 0;
+        let currentDate = startDate.clone();
+        for (var i = 0; i < yearLength; i++) {
+          //what the current 'day' is, if the 'day' value is displayed,,if there is an event on that day, and all the reminders for that day
+          let currentDayArray = [[0,0], true, false, [], []];
+          currentDate.add(1, "days");
+          if (currentDate.day() == 0 || currentDate.day() == 6) {
             currentDayArray[1] = false;
+            currentDayArray[2] = false;
           }
-          currentSkippedIndex++;
-        }
-        while(currentIndex < offSetEvents.length &&  moment([offSetEvents[currentIndex].date.getFullYear(), offSetEvents[currentIndex].date.getMonth(), offSetEvents[currentIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
-          if (offSetEvents[currentIndex].date.getFullYear() == currentDate.year() && offSetEvents[currentIndex].date.getMonth() == currentDate.month() && offSetEvents[currentIndex].date.getDate() == currentDate.date()) {
-            currentDayArray[1] = false;
+          while(currentEventIndex < events.length && moment([events[currentEventIndex].date.getFullYear(), events[currentEventIndex].date.getMonth(), events[currentEventIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (events[currentEventIndex].date.getFullYear() == currentDate.year() && events[currentEventIndex].date.getMonth() == currentDate.month() && events[currentEventIndex].date.getDate() == currentDate.date() && events[currentEventIndex].displayedEvent) {
+              currentDayArray[3].push(events[currentEventIndex]);
+              currentDayArray[2] = true;
+            }
+            currentEventIndex++;
           }
-          //rolls the day
-          currentDayDay -= 1;
-          while (currentDayDay < 0) {
-            currentDayWeek -= 1;
-            currentDayDay += 5;
+          while(currentSkippedIndex < schoolSkipped.length && moment([schoolSkipped[currentSkippedIndex].date.getFullYear(), schoolSkipped[currentSkippedIndex].date.getMonth(), schoolSkipped[currentSkippedIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (schoolSkipped[currentSkippedIndex].date.getFullYear() == currentDate.year() && schoolSkipped[currentSkippedIndex].date.getMonth() == currentDate.month() && schoolSkipped[currentSkippedIndex].date.getDate() == currentDate.date()) {
+              currentDayArray[1] = false;
+            }
+            currentSkippedIndex++;
           }
-          while (currentDayDay > 4) {
-            currentDayWeek += 1;
-            currentDayDay -= 5;
+          while(currentIndex < offSetEvents.length &&  moment([offSetEvents[currentIndex].date.getFullYear(), offSetEvents[currentIndex].date.getMonth(), offSetEvents[currentIndex].date.getDate()]).valueOf() <= currentDate.valueOf()) {
+            if (offSetEvents[currentIndex].date.getFullYear() == currentDate.year() && offSetEvents[currentIndex].date.getMonth() == currentDate.month() && offSetEvents[currentIndex].date.getDate() == currentDate.date()) {
+              currentDayArray[1] = false;
+            }
+            //rolls the day
+            currentDayDay -= 1;
+            while (currentDayDay < 0) {
+              currentDayWeek -= 1;
+              currentDayDay += 5;
+            }
+            while (currentDayDay > 4) {
+              currentDayWeek += 1;
+              currentDayDay -= 5;
+            }
+            while (currentDayWeek < 0) {
+              currentDayWeek += weekCount;
+            }
+            while (currentDayWeek > weekCount-1) {
+              currentDayWeek-= weekCount;
+            }
+            //makes sure it isnt negative
+            
+            //takes it mod 5 to be a day of the week
+            currentIndex++;
           }
-          while (currentDayWeek < 0) {
-            currentDayWeek += weekCount;
-          }
-          while (currentDayWeek > weekCount-1) {
-            currentDayWeek-= weekCount;
-          }
-          //makes sure it isnt negative
-          
-          //takes it mod 5 to be a day of the week
-          currentIndex++;
-        }
-        currentDayArray[0] = [currentDayWeek, currentDayDay];
+          currentDayArray[0] = [currentDayWeek, currentDayDay];
 
-        eventsObject[`${currentDate.year()}_${currentDate.month()}_${currentDate.date()}`] = currentDayArray;
-        if (currentDate.day() != 0 && currentDate.day() != 6) {
-          currentDayDay += 1;
-          while (currentDayDay < 0) {
-            currentDayWeek -= 1;
-            currentDayDay += 5;
+          eventsObject[`${currentDate.year()}_${currentDate.month()}_${currentDate.date()}`] = currentDayArray;
+          if (currentDate.day() != 0 && currentDate.day() != 6) {
+            currentDayDay += 1;
+            while (currentDayDay < 0) {
+              currentDayWeek -= 1;
+              currentDayDay += 5;
+            }
+            while (currentDayDay > 4) {
+              currentDayWeek += 1;
+              currentDayDay -= 5;
+            }
+            while (currentDayWeek < 0) {
+              currentDayWeek += weekCount;
+            }
+            while (currentDayWeek > weekCount-1) {
+              currentDayWeek-= weekCount;
+            }
+          } else {
+            currentDayArray[1] = false;
           }
-          while (currentDayDay > 4) {
-            currentDayWeek += 1;
-            currentDayDay -= 5;
-          }
-          while (currentDayWeek < 0) {
-            currentDayWeek += weekCount;
-          }
-          while (currentDayWeek > weekCount-1) {
-            currentDayWeek-= weekCount;
-          }
-        } else {
-          currentDayArray[1] = false;
         }
       }
     }
+    
     return eventsObject;
   } catch(e) {
     console.log(e);
@@ -217,6 +220,7 @@ app.get("/UserInfo", async function(req, res) {
 
     }
     if (req.query.schoolId) {
+      console.log(req.query);
       let map = await makeDayMap(req.query.schoolId);
       sendObject["dayMap"] = map;
       let school = await School.findOne({_id : req.query.schoolId}).populate("semesters");
