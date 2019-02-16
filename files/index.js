@@ -372,9 +372,9 @@ function wwwHttpsRedirect(req, res, next) {
     }
 };
 
-// app.use(wwwHttpsRedirect);
+app.use(wwwHttpsRedirect);
 
-let server = app.listen(8080, function() {
+let server = app.listen(80, function() {
   console.log("listening for requests");
 });
 
@@ -2451,7 +2451,6 @@ async function makeDayMap(schoolID)  {
     console.log(e);
     return {};
   }
-  
 }
 
 
