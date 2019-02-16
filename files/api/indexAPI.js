@@ -236,6 +236,7 @@ app.get("/UserInfo", async function(req, res) {
         sendObject.user = response;
       }
     }
+    console.log(sendObject);
     res.send(JSON.stringify(sendObject));
   } catch(e) {
     console.log(e);
