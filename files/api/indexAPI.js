@@ -224,6 +224,8 @@ app.get("/UserInfo", async function(req, res) {
       let map = await makeDayMap(req.query.schoolId);
       sendObject["dayMap"] = map;
       let school = await School.findOne({_id : req.query.schoolId}).populate("semesters");
+      let semesters = school.semesters;
+      sendObject.semesters = semesters;
       let courses = await Course.find({school : req.query.schoolId}).populate("teacher").populate("category");
       courses = JSON.parse(JSON.stringify(courses));
       for (var i = 0; i < courses.length; i++) {
