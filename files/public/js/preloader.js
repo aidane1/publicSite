@@ -20,12 +20,13 @@ let preloaded = {
 
 }
 function renderPreloaded(page, path) {
-    if (preloaded[page] && true) {
-        document.open();
-        document.write(preloaded[page]);
-        document.close();
-        window.history.pushState("", "", path);
-    } else {
-        window.location = path;
-    }
+    window.location = path;
+    // if (preloaded[page] && true) {
+    //     document.open();
+    //     document.write(preloaded[page]);
+    //     document.close();
+    //     window.history.pushState("", "", path);
+    // } else {
+    //     window.location = path;
+    // }
 }
