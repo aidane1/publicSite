@@ -746,7 +746,7 @@
                                                                 <% } %>
                                                             <% } else if (inputTypes[keys[i].propertyName].type == "type-select") { %>
                                                                 <div name = "<%=keys[i].propertyName%>" value = "<%=inputTypes[keys[i].propertyName].options[0].type%>" class = "optionsHolder createCategory type-select" id = "create_<%=keys[i].propertyName%>">
-                                                                    <select class = "type-select" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].options[j].name%>')">
+                                                                    <select class = "type-select" onchange = "openPopup(this.value, '<%=keys[i].propertyName%>', '<%=inputTypes[keys[i].propertyName].options[0].name%>')">
                                                                             <% for (var j = 0; j < inputTypes[keys[i].propertyName].options.length; j++) { %>
                                                                                 <option value="<%=inputTypes[keys[i].propertyName].options[j].type%>"><%=inputTypes[keys[i].propertyName].options[j].name%></option>
                                                                             <% } %>
