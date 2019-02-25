@@ -116,6 +116,27 @@ const UserSchema = new Schema({
   completedNotes: {
     type: [{type: Schema.Types.ObjectId, ref: "Notes"}],
     default: [],
+  },
+  beforeActivities: {
+    day1: {type: Array},
+    day2: {type: Array},
+    day3: {type: Array},
+    day4: {type: Array},
+    day5: {type: Array},
+  },
+  lunchActivities: {
+    day1: {type: Array},
+    day2: {type: Array},
+    day3: {type: Array},
+    day4: {type: Array},
+    day5: {type: Array},
+  },
+  AfterActivities: {
+    day1: {type: Array},
+    day2: {type: Array},
+    day3: {type: Array},
+    day4: {type: Array},
+    day5: {type: Array},
   }
 });
 

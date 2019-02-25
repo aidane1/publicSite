@@ -203,7 +203,7 @@
                     <div class="studentID">
                         student ID: 
                         <% if (user.studentID) { %>
-                            <span contenteditable = "true"><%=user.studentID%></span>
+                            <span contenteditable = "true" style = "min-width: 15px" oninput = "sendStudentId(this)"><%=user.studentID%></span>
                         <% } else { %>
                             <span onclick = "clearValue(this)" contenteditable="true" style = "min-width: 15px" oninput = "sendStudentId(this)">Enter Student ID</span>
                         <% } %>
@@ -263,6 +263,29 @@
                         <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
                     </div>
                 </div> -->
+            </div>
+            <div class="bodySection lastBox">
+                <div class="iconRow" onclick = "renderPreloaded('beforeSchool', '/before-school')">
+                    <div class="iconBubble" style = "background-color: <%-icons['before-school'][1]%>"><%-icons["before-school"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Before School Activites</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow" onclick = "renderPreloaded('lunchTime', '/lunch-time')">
+                    <div class="iconBubble" style = "background-color: <%-icons['lunch-time'][1]%>"><%-icons["lunch-time"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">Lunchtime Activities</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <div class="iconRow last" onclick = "renderPreloaded('afterSchool', '/after-school')">
+                    <div class="iconBubble" style = "background-color: <%-icons['after-school'][1]%>"><%-icons["after-school"][0]%></div>
+                    <div class="infoRow">
+                        <div class="infoKey">After School Activities</div>
+                        <div class="infoValue"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
             </div>
             <div class="bodySection lastBox">
                 <div class="iconRow" onclick = "renderPreloaded('blockColours', '/block-colours')">

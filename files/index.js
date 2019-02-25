@@ -782,7 +782,9 @@ let iconMap = {
   "course": ['<i style = "color: white" class="fas fa-book-open"></i>', "black", "white"],
   "teacher": ['<i style = "color: white" class="fas fa-user"></i>', "black", "white"],
   "block": ['<i style = "color: white" class="fas fa-cube"></i>', "black", "white"],
-
+  "before-school": ['<i class="fas fa-coffee"></i>', "#f9b64a", "black"],
+  "lunch-time": ['<i style = "color: white" class="fas fa-utensils"></i>', "black", "white"],
+  "after-school": ['<i class="fas fa-moon"></i>', '#81c784', "black"],
 } 
 
 
@@ -1052,6 +1054,9 @@ app.get("/dashboard/users/:group", async function(req,res) {
   }
 });
 
+app.get("/test", async function(req, res) {
+  res.sendFile(__dirname + "/public/html/test.html");
+});
 
 app.get("/dashboard/courses/teachers", async function(req,res) {
   if (req.session.userId) {
@@ -4254,6 +4259,153 @@ app.get("/account", async function(req, res) {
   }
 });
 
+app.get("/before-school", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        res.render("redesign/beforeSchool", {activities: JSON.parse(JSON.stringify(user.beforeActivities || {day1: [], day2: [], day3: [], day4: [], day5: []}))});
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.post("/before-school", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        if (req.body.day != null && req.body.activity != null) {
+          user.beforeActivities = user.beforeActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let newActivities = user.beforeActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          newActivities[req.body.day].push(req.body.activity);
+          await User.findOneAndUpdate({_id : user._id}, {$set: {beforeActivities: newActivities}});
+          res.send([true, {day: req.body.day, activity: req.body.activity}]);
+        } else if (req.body.removed && req.body.day) {
+          let newActivities = user.beforeActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let found = false;
+          for (var i = 0; i < user.beforeActivities[req.body.day].length; i++) {
+            if (user.beforeActivities[req.body.day][i] == req.body.removed && !found) {
+              found = true;
+              newActivities[req.body.day].splice(i, 1);
+              res.send([true, {day: req.body.day, removed: req.body.activity}]);
+            }
+          }
+          if (!found) {
+            res.send([true, {day: req.body.day, removed: ""}]);
+          }
+          await User.findOneAndUpdate({_id : user._id}, {$set: {beforeActivities: newActivities}});
+        }
+      } 
+    } else {
+      res.send([false, {}]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, {}]);
+  }
+});
+app.get("/lunch-time", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        res.render("redesign/lunchTime", {activities: JSON.parse(JSON.stringify(user.lunchActivities || {day1: [], day2: [], day3: [], day4: [], day5: []}))});
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.post("/lunch-time", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        if (req.body.day != null && req.body.activity != null) {
+          user.lunchActivities = user.lunchActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let newActivities = user.lunchActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          newActivities[req.body.day].push(req.body.activity);
+          await User.findOneAndUpdate({_id : user._id}, {$set: {lunchActivities: newActivities}});
+          res.send([true, {day: req.body.day, activity: req.body.activity}]);
+        } else if (req.body.removed && req.body.day) {
+          let newActivities = user.lunchActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let found = false;
+          for (var i = 0; i < user.lunchActivities[req.body.day].length; i++) {
+            if (user.lunchActivities[req.body.day][i] == req.body.removed && !found) {
+              found = true;
+              newActivities[req.body.day].splice(i, 1);
+              res.send([true, {day: req.body.day, removed: req.body.activity}]);
+            }
+          }
+          if (!found) {
+            res.send([true, {day: req.body.day, removed: ""}]);
+          }
+          await User.findOneAndUpdate({_id : user._id}, {$set: {lunchActivities: newActivities}});
+        }
+      } 
+    } else {
+      res.send([false, {}]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, {}]);
+  }
+});
+app.get("/after-school", async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        res.render("redesign/afterSchool", {activities: JSON.parse(JSON.stringify(user.AfterActivities || {day1: [], day2: [], day3: [], day4: [], day5: []}))});
+      } 
+    } else {
+      res.redirect("/home");
+    }
+  } catch(e) {
+    res.redirect("/home");
+  }
+});
+app.post("/after-school", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user != null && user.school != null) {
+        if (req.body.day != null && req.body.activity != null) {
+          user.AfterActivities = user.AfterActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let newActivities = user.AfterActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          newActivities[req.body.day].push(req.body.activity);
+          await User.findOneAndUpdate({_id : user._id}, {$set: {AfterActivities: newActivities}});
+          res.send([true, {day: req.body.day, activity: req.body.activity}]);
+        } else if (req.body.removed && req.body.day) {
+          let newActivities = user.AfterActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+          let found = false;
+          for (var i = 0; i < user.AfterActivities[req.body.day].length; i++) {
+            if (user.AfterActivities[req.body.day][i] == req.body.removed && !found) {
+              found = true;
+              newActivities[req.body.day].splice(i, 1);
+              res.send([true, {day: req.body.day, removed: req.body.activity}]);
+            }
+          }
+          if (!found) {
+            res.send([true, {day: req.body.day, removed: ""}]);
+          }
+          await User.findOneAndUpdate({_id : user._id}, {$set: {AfterActivities: newActivities}});
+        }
+      } 
+    } else {
+      res.send([false, {}]);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send([false, {}]);
+  }
+});
 app.get("/block-names", async function(req, res) {
   try {
     if (req.session.userId) {
@@ -4285,7 +4437,9 @@ app.post("/block-names", urlencodedParser, async function(req, res) {
       let user = await User.findOne({_id : req.session.userId});
       if (user != null && user.school != null) {
         for (var key in req.body) {
-          user.blockNames[key] = req.body[key];
+          if (req.body[key]) {
+            user.blockNames[key] = req.body[key];
+          }
         }
         await User.findOneAndUpdate({_id : user._id}, {$set: {blockNames: user.blockNames}});
         res.redirect("/account");
