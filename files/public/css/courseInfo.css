@@ -17,6 +17,7 @@ html, body {
     height: 100%;
     background-color: rgb(240,240,240);
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .homeHeader {
     width: 100%;
@@ -498,10 +499,17 @@ textarea:focus {
     margin-right: 15px;
     color: #558de8;
 }
+.assignmentAndDate {
+    width: calc(100% - 50px);
+}
 .assignmentActionTitle {
+    /* width: calc(100% - 50px); */
+    width: 100%;
     margin-bottom: 5px;
     font-size: 16px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .assignmentDate {
     font-size: 14px;
