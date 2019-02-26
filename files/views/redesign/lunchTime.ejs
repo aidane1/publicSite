@@ -184,7 +184,7 @@
         }
         .activityTile {
             padding: 7px 15px;
-            background-color: #eee;
+            background-color: #8de0fc;
             display: inline-block;
             border-radius: 100px;
             margin: 5px 10px;
@@ -192,6 +192,9 @@
             color: rgba(0,0,0,0.5);
             padding-right: 35px;
             position: relative;
+        }
+        .activityPlaceholder {
+            background-color: #eee;
         }
         .removeActivity {
             position: absolute;
@@ -258,7 +261,7 @@
             blurCustom(element);
             element.parentNode.children[0].value = "";
             if (value && day) {
-                sendPostRequest("activity=" + value + "&day=" + day, "/before-school", function(res) {
+                sendPostRequest("activity=" + value + "&day=" + day, "/lunch-time", function(res) {
                     let tag = document.createElement("div");
                     tag.className = "activityTile";
                     tag.setAttribute("day", day);

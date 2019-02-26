@@ -143,7 +143,10 @@ html, body {
 }
 #coursesTile {
     /* background-color: black; */
-    justify-content: start;
+    /* justify-content: start; */
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 #calendarTile {
     /* background-color: purple; */
@@ -284,7 +287,7 @@ html, body {
     width: 100%;
     text-align: center;
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     text-decoration: none;
     color: black;
     font-weight: 300;
@@ -714,6 +717,24 @@ html, body {
     box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
     transition: top 0.2s linear;
 }
+.activityHolder {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+.activityTile {
+    padding: 7px 15px;
+    background-color: #fff;
+    border-radius: 100px;
+    margin: 0px 10px 10px 10px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.5);
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.11);
+    display: inline-block;
+}
+.activityPlaceholder {
+    background-color: rgb(238, 238, 238);
+}
 @media screen and (max-height: 520px) {
     .homeHeader {
         height: 0px;
@@ -928,6 +949,19 @@ html, body {
                 </div>
                 <div id = "coursesTile" class="bodyTile">
                     <div class="dayTitle"><a onclick = "renderPreloaded('coursePage', '/courses')" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
+                    <div class="activityHolder">
+                        <% for (var i = 0; i < beforeActivities.length; i++) { %>
+                            <div class="activityTile">
+                                <%=beforeActivities[i]%>
+                            </div>
+                        <% } %>
+                        <% if (beforeActivities.length == 0) { %>
+                            <div class="activityTile">
+                                No Before School Activities!
+                            </div>
+                        <% } %>
+                        
+                    </div>
                     <div class="dayHolder">
                         <% for (var i = 0; i < courses.length; i++) { %>
                             <% if (i == courses.length-1) { %>
@@ -969,6 +1003,18 @@ html, body {
                                     </div>
                                 </div>
                             <% } %>
+                        <% } %>
+                    </div>
+                    <div class="activityHolder" style = "margin-top: 10px;">
+                        <% for (var i = 0; i < afterActivities.length; i++) { %>
+                            <div class="activityTile">
+                                <%=afterActivities[i]%>
+                            </div>
+                        <% } %>
+                        <% if (afterActivities.length == 0) { %>
+                            <div class="activityTile">
+                                No After School Activities!
+                            </div>
                         <% } %>
                     </div>
                 </div>

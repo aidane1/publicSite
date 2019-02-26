@@ -4119,19 +4119,19 @@ app.get("/", async function(req, res) {
     try {
       
       let user = await User.findOne({_id : req.session.userId});
+
       let school = await School.findOne({_id : user.school}).populate("semesters");
 
       let currentSemesters = calculateSemesters(school.semesters, currentDate);
-      let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-      
-      
-      let weekCount = school.constantBlocks ? school.constantBlockSchedule.schedule.length : school.blockOrder.length;
 
+      let allowedUserCourses = await Course.find({$and: [{_id: user.courses}, {semester: currentSemesters}]}).populate("category").populate("teacher");
 
       let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
+
       let recentAssignments = {
 
       }
+
       for (var i = 0; i < allowedUserCourses.length; i++) {
         let recent = await Assignments.find({forCourse : allowedUserCourses[i]._id});
         recentAssignments[allowedUserCourses[i]._id] = {course: blockMap[allowedUserCourses[i].block].course, assignments: []};
@@ -4150,19 +4150,22 @@ app.get("/", async function(req, res) {
 
 
       let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+
       let colorMap = makeColorMap(school.blockNames);
+
       for (var key in user.scheduleColours) {
         let isOk  = /^#[0-9A-F]{6}$/i.test(`#${user.scheduleColours[key]}`);
         if (user.scheduleColours[key] && isOk) {
           colorMap[key] = "#" + user.scheduleColours[key];
         }
       }
-      
-      
 
       let monthLengths = [];
+
       let monthNames = [];
+
       let currentMonthDate = startDate.clone();
+
       let initialOffset = moment([startDate.year(), startDate.month()]).weekday();
       
       for (var i = 0; i < endDate.diff(startDate, "months")+1; i++) {
@@ -4175,7 +4178,6 @@ app.get("/", async function(req, res) {
       
       let soonEvents = [];
       
-      
       let alert = user.alerts[0] || false;
       if (alert) {
         user.alerts.shift();
@@ -4183,9 +4185,20 @@ app.get("/", async function(req, res) {
       }
       
       let currentClass = ["Current", new EmptyCourse("Nothing!", "A")];
+
       let foundCurrent = false;
+
       let nextClass = ["Next", new EmptyCourse("Nothing!", "A")];
+
       let foundNext = false;
+
+      let beforeActivities = user.beforeActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+      beforeActivities = beforeActivities["day" + currentDate.getDay()] || [];
+      let lunchActivities = user.lunchActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+      lunchActivities = lunchActivities["day" + currentDate.getDay()] || [];
+      let afterActivities = user.AfterActivities || {day1: [], day2: [], day3: [], day4: [], day5: []};
+      afterActivities = afterActivities["day" + currentDate.getDay()] || [];
+      
       
       if (today) {
         let todayEvents = today[3];
@@ -4226,11 +4239,11 @@ app.get("/", async function(req, res) {
           dayBlockList = [["", empty]];
         }
         //typeof alert: ['<href>(optional)', text]
-        res.render("redesign/index", {user: user, averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {afterActivities: afterActivities, lunchActivities: lunchActivities, beforeActivities: beforeActivities, user: user, averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: today, currentBlock: currentClass, nextBlock: nextClass, soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       } else {
         let empty = new EmptyCourse("No Courses!", "A");
         dayBlockList = [["", empty]];
-        res.render("redesign/index", {userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: [[0,0], false, false, [], []], currentBlock: currentClass, nextBlock: nextClass, soonEvents: [], offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
+        res.render("redesign/index", {afterActivities: afterActivities, lunchActivities: lunchActivities, beforeActivities: beforeActivities, user: user, averageColours: averageColors, school: school, recentAssignments: recentAssignments, currentDate: currentDate, alert: alert, userId: user._id, colorMap: colorMap, readSchedule: readSchedule, moment: moment, favicon: school.favicon, today: [[0,0], false, false, [], []], currentBlock: ["Current", new EmptyCourse("Nothing!", "A")], nextBlock: ["Next", new EmptyCourse("Nothing!", "A")], soonEvents: soonEvents, offset: initialOffset, titles: school.dayTitles, startDate: [startDate.year(), startDate.month(), 1], monthLengths: monthLengths, monthNames: monthNames,eventMap: eventsObject, courses: dayBlockList, categories: iconMap});
       }
     } catch(e) {
       console.log(e);

@@ -258,7 +258,7 @@
             blurCustom(element);
             element.parentNode.children[0].value = "";
             if (value && day) {
-                sendPostRequest("activity=" + value + "&day=" + day, "/before-school", function(res) {
+                sendPostRequest("activity=" + value + "&day=" + day, "/after-school", function(res) {
                     let tag = document.createElement("div");
                     tag.className = "activityTile";
                     tag.setAttribute("day", day);
