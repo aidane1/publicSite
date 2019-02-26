@@ -951,12 +951,12 @@ html, body {
                     <div class="dayTitle"><a onclick = "renderPreloaded('coursePage', '/courses')" style = "text-decoration: none; color: black"><span style = "font-size: 12px; visibility: hidden">edit</span> Today <span style = "font-size: 12px">edit</span></a></div>
                     <div class="activityHolder">
                         <% for (var i = 0; i < beforeActivities.length; i++) { %>
-                            <div class="activityTile">
+                            <div class="activityTile" onclick = "window.location = '/before-school'">
                                 <%=beforeActivities[i]%>
                             </div>
                         <% } %>
                         <% if (beforeActivities.length == 0) { %>
-                            <div class="activityTile">
+                            <div class="activityTile" onclick = "window.location = '/before-school'">
                                 No Before School Activities!
                             </div>
                         <% } %>
@@ -1007,12 +1007,12 @@ html, body {
                     </div>
                     <div class="activityHolder" style = "margin-top: 10px;">
                         <% for (var i = 0; i < afterActivities.length; i++) { %>
-                            <div class="activityTile">
+                            <div class="activityTile" onclick = "window.location = '/after-school'">
                                 <%=afterActivities[i]%>
                             </div>
                         <% } %>
                         <% if (afterActivities.length == 0) { %>
-                            <div class="activityTile">
+                            <div class="activityTile" onclick = "window.location = '/after-school'">
                                 No After School Activities!
                             </div>
                         <% } %>
