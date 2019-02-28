@@ -3823,6 +3823,9 @@ function makeReadableSchedule(constant, schedule, blockMap, spareName) {
   return blockSchedule;
 }
 
+app.get("/convert", async function(req, res) {
+  res.render("swimming/converter");
+}); 
 app.get("/swimming", async function(req, res) {
   res.render("swimming/swimmingRandomizer");
 });
