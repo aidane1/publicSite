@@ -28,13 +28,22 @@ const postSchema = new Schema({
 const commentSchema = new Schema({
   parentPost: {
     type: Schema.Types.ObjectId,
-    ref: "Post"
   },
+  parents: [{type: Schema.Types.ObjectId}],
+  children: [{type: Schema.Types.ObjectId, ref: "Comment"}],
   body: {
-    type: String
+    type: String,
+  },
+  depth: {
+    type: Number,
+    default: 0,
   },
   submittedBy: {
     type: String
+  },
+  treeChildren: {
+    type: Array,
+    default: [],
   }
 });
 
