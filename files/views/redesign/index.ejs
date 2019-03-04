@@ -1312,6 +1312,7 @@ html, body {
                 <% if (user.permissions == "admin") { %>
                     <div class="actionItem" onclick = "window.location = '/dashboard'"><i class="actionItemIcon fas fa-tachometer-alt"></i>Dashboard</div>
                 <% } %>
+                <div class="actionItem" onclick = "window.location = '/questions'"></i><i class="actionItemIcon fas fa-question-circle"></i>Questions</div>
                 <div class="actionItem" onclick = "renderPreloaded('assignmentsPage', '/assignments')"><i class="actionItemIcon fas fa-scroll"></i>Assignments</div>
                 <div class="actionItem" onclick = "renderPreloaded('notesPage', '/notes')"><i class="actionItemIcon fas fa-sticky-note"></i>Notes</div>
                 <div class="actionItem" onclick = "renderPreloaded('eventsPage', '/events')"><i class="actionItemIcon fas fa-calendar"></i>Events</div>
@@ -1367,7 +1368,7 @@ html, body {
         if (page.classList.contains("retractedDropdown")) {
             
         } else {
-            page.style.height = "330px";
+            page.style.height = "390px";
         }
     }
     function closeFunction() {
