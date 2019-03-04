@@ -262,7 +262,7 @@
             document.addEventListener("touchend", function(event) {
                 pastAllowed = false;
                 if (!currentElement || !allowed || currentElement === undefined) {
-
+                    window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/" + currentElement.id);
                 } else {
                 currentElement.style.transition = "transform 0.4s";
                 currentElement.style.transform = "translateX(0px)";
