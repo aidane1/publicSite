@@ -216,7 +216,7 @@
                 <%=post.title%>
             </div>
             <div class="postBody">
-                <%=post.body%>
+                <%-post.body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, "<br>")%>
             </div>
             <div class="iconsBar">
                 <div class="submittedBy">
