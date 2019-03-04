@@ -34,6 +34,7 @@
         .backdrop {
             height: calc(100% - 50px);
             overflow-y: auto;
+            overflow-x: hidden;
             -webkit-overflow-scrolling: auto;
             background-color: rgb(240,240,240);
         }
@@ -75,6 +76,23 @@
             margin: 5px 0px;
             padding: 10px 7px;
             transform: translateX(0px);
+            position: relative;
+        }
+        .openBlock {
+            width: 100%;
+            height: calc(100% + 2px);
+            position: absolute;
+            right: -100%;
+            top: -1px;
+            background-color: #3aa5e8;
+        }
+        .openBlock i {
+            font-size: 30px;
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            color: white;
         }
         .postTitle {
             font-size: 18px;
@@ -303,6 +321,9 @@
                         <!-- <i class="fas fa-heart"></i> -->
                         <i class="far fa-heart"></i>
                     </div>
+                </div>
+                <div class="openBlock">
+                    <i class="fas fa-reply"></i>
                 </div>
             </div>
         <% } %>
