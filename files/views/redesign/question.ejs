@@ -164,12 +164,17 @@
             height: calc(100% - 120px);
             min-height: 300px;
         }
-        .createCommentBox textarea {
+        #createCommentTextarea {
             width: 100%;
             padding: 30px;
-            height: 100%;
+            height: auto;
+            min-height: 250px;
             outline: none;
             font-size: 22px;
+            border: 0;
+            border-radius: 0px;
+            appearance: none;
+            -webkit-appearance: none;
         }
         .replyToBox {
             width: 100%;
@@ -227,7 +232,6 @@
         <div class="comments">
             <% for (var i = 0; i < comments.length; i++) { %>
                 <div class="comment" id = "1">
-                    
                     <div class="commentMargin" style = "border-left: 5px solid <%=colours[comments[i].depth%colours.length]%>;margin-left: <%=100-(comments[i].depth*6 < 30 ? 100-comments[i].depth*6-5 : 65)%>%; width: <%=comments[i].depth*6 < 30 ? 100-comments[i].depth*6-5 : 65%>%;">
                         <div class="commentTopBar">
                             <div class="commentSubmittedBy">
@@ -259,7 +263,6 @@
             </div>
         </div>
         <div class="replyToBox" id = "replyToBox">Replying to a comment by AidanEglin</div>
-        <!-- <div class="replyToBox">Replying to a post by AidanEglin</div> -->
         <div class="createCommentBox">
             <textarea id="createCommentTextarea" depth = "0" parents = "_"></textarea>
         </div>
@@ -274,7 +277,7 @@
         textarea.setAttribute("parents", parents);
         textarea.setAttribute("depth", depth.toString());
         modal.style.transform = "translateY(0%)";
-        textarea.focus();
+        // textarea.focus();
     }
     function closeCreateComment() {
         let modal = document.getElementById("createComment");
