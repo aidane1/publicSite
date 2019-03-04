@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Question</title>
+    <script src = "/public/js/asyncRequest.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            
+        }
+        .homeHolder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+        .backdrop {
+            height: calc(100% - 50px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: auto;
+            background-color: rgb(240,240,240);
+        }
+        .homeHeader {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .iconsBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            height: 30px;
+            align-items: center;
+            font-size: 17px;
+
+        }
+        .submittedBy {
+            color: rgba(0,0,0,0.4);
+            font-size: 12px;
+        }
+        .icons * {
+            margin-right: 15px;
+        }
+        .post {
+            width: 100%;
+            padding: 20px;
+            padding-bottom: 5px;
+            background-color: white;
+            border-bottom: 1px solid rgb(210, 210, 210);
+        }
+        .postTitle {
+            width: 100%;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .postBody {
+            width: 100%;
+            font-size: 14px;
+        }
+        .iconsBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            height: 30px;
+            align-items: center;
+            font-size: 17px;
+            margin-top: 10px;
+        }
+        .icons * {
+            margin-right: 15px;
+        }
+        .comments {
+            width: 100%;
+            background-color: white;
+        }
+        .comment {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px;
+            padding-bottom: 5px;
+        }
+        .commentMargin {
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgb(210,210,210);
+            padding-left: 10px;
+            border-left: 3px solid blue;
+        }
+        .commentTopBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .commentSubmittedBy {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .commentBody {
+
+        }
+        .createComment {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: white;
+            overflow: auto;
+            transform: translateY(100%);
+            will-change: transform;
+            transition: transform 0.3s cubic-bezier(.28,.88,.34,.99);
+        }
+        .createCommentBox {
+            width: 100%;
+            height: calc(100% - 120px);
+            min-height: 300px;
+        }
+        .createCommentBox textarea {
+            width: 100%;
+            padding: 30px;
+            height: 100%;
+            outline: none;
+            font-size: 22px;
+        }
+        .replyToBox {
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 10px;
+            font-style: italic;
+        }
+        .createCommentTopBar {
+            padding: 15px 10px;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: rgb(240,240,240);
+            border-bottom: 1px solid rgb(210, 210, 210);
+        }
+        .commentTitle {
+            font-size: 18px;
+        }   
+        .commentAction {
+            color: red;
+        }
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body onload = "replaceLineBreak()">
+    <div class="homeHeader">
+        <div class="homeRow">
+            <div class="backIcon" onclick = "window.location='/questions'"><i class="fas fa-chevron-left"></i></div>
+            <div class="displayText">Question</div>
+            <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div>
+        </div>
+    </div>
+    <div class="backdrop">
+        <div class="post">
+            <div class="postTitle">
+                <%=post.title%>
+            </div>
+            <div class="postBody">
+                <%=post.body%>
+            </div>
+            <div class="iconsBar">
+                <div class="submittedBy">
+                    by <%=post.submittedBy%>
+                </div>
+                <i class="fas fa-reply" onclick = "openCreateComment('post', 'AidanEglin', '<%=JSON.stringify([post._id])%>', 0)"></i>
+                <div class="icons">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <i class="far fa-heart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="comments">
+            <% for (var i = 0; i < comments.length; i++) { %>
+                <div class="comment" id = "1">
+                    
+                    <div class="commentMargin" style = "border-left: 5px solid <%=colours[comments[i].depth%colours.length]%>;margin-left: <%=100-(comments[i].depth*6 < 30 ? 100-comments[i].depth*6-5 : 65)%>%; width: <%=comments[i].depth*6 < 30 ? 100-comments[i].depth*6-5 : 65%>%;">
+                        <div class="commentTopBar">
+                            <div class="commentSubmittedBy">
+                                By <%=comments[i].submittedBy%>
+                            </div>
+                            <div class="icons">
+                                <i class="fas fa-reply" onclick = "openCreateComment('comment', '<%=comments[i].submittedBy%>', '<%comments[i].parents.push(comments[i]._id)%><%=JSON.stringify(comments[i].parents)%>', '<%=comments[i].depth+1%>')"></i>
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                        <div class="commentBody">
+                            <%-comments[i].body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, "<br>")%>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <div class="createComment" id = "createComment">
+        <div class="createCommentTopBar">
+            <div class="commentAction" onclick="closeCreateComment()">
+                Cancel
+            </div>
+            <div class="commentTitle">
+                Comment
+            </div>
+            <div class="commentAction" onclick = "createCommentPost()">
+                Post
+            </div>
+        </div>
+        <div class="replyToBox" id = "replyToBox">Replying to a comment by AidanEglin</div>
+        <!-- <div class="replyToBox">Replying to a post by AidanEglin</div> -->
+        <div class="createCommentBox">
+            <textarea id="createCommentTextarea" depth = "0" parents = "_"></textarea>
+        </div>
+    </div>
+</body>
+<script>
+    function openCreateComment(type, username, parents, depth) {
+        let modal = document.getElementById("createComment");
+        let box = document.getElementById("replyToBox");
+        box.innerText = `Replying to a ${type} by ${username}`;
+        let textarea  = document.getElementById("createCommentTextarea");
+        textarea.setAttribute("parents", parents);
+        textarea.setAttribute("depth", depth.toString());
+        modal.style.transform = "translateY(0%)";
+        textarea.focus();
+    }
+    function closeCreateComment() {
+        let modal = document.getElementById("createComment");
+        modal.style.transform = "translateY(100%)";
+    }
+    function createCommentPost() {
+        let textarea  = document.getElementById("createCommentTextarea");
+        let comment = textarea.value;
+        let parents = textarea.getAttribute("parents");
+        let depth = textarea.getAttribute("depth");
+        let sendObject = {
+            comment: comment,
+            parents: parents,
+            depth: depth,
+        }
+        postObject(sendObject, "/questions/<%=post._id%>", function(res) {
+            location.reload();
+        });
+    }
+    function replaceLineBreak() {
+        // let bodies = document.getElementsByClassName("commentBody");
+        // for (var i = 0; i < bodies.length; i++) {
+        //     let current = bodies[i].innerHTML;
+        //     current = current.replace("&lt;br&gt;", "<br>");
+        //     console.log(current);
+        //     bodies[i].innerHTML = current;
+        // }
+    }
+
+</script>
+</html>

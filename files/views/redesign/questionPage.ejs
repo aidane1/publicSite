@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Questions</title>
+    <script src = "/public/js/asyncRequest.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            
+        }
+        .homeHolder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+        .backdrop {
+            height: calc(100% - 50px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: auto;
+            background-color: rgb(240,240,240);
+        }
+        .homeHeader {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        .backIcon {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .spacerIcon {
+            color: white;
+            font-size: 22px;
+            visibility: hidden;
+            font-weight: 300;
+        }
+        .post {
+            width: 100%;
+            background-color: white;
+            border-top: 1px solid rgb(210, 210, 210);
+            border-bottom: 1px solid rgb(210, 210, 210);
+            margin: 5px 0px;
+            padding: 10px 7px;
+            transform: translateX(0px);
+        }
+        .postTitle {
+            font-size: 18px;
+            color: black;
+            line-height: 20px;
+            margin-bottom: 5px;
+        }
+        .postBody {
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(0,0,0,0.6);
+            line-height: 18px;
+            position: relative;
+            max-height: 40px;
+            width: 100%;
+            overflow: hidden;
+            /* text-overflow: ellipsis; */
+        }
+        .postBodyCover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255, 255, 255, 0.8));
+        }
+        .iconsBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            height: 30px;
+            align-items: center;
+            font-size: 17px;
+
+        }
+        .submittedBy {
+            color: rgba(0,0,0,0.4);
+            font-size: 12px;
+        }
+        .icons * {
+            margin-right: 15px;
+        }
+        .createComment {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: white;
+            overflow: auto;
+            transform: translateY(100%);
+            will-change: transform;
+            transition: transform 0.3s cubic-bezier(.28,.88,.34,.99);
+        }
+        .createCommentBox {
+            width: 100%;
+            height: calc(100% - 120px);
+            min-height: 300px;
+        }
+        .createCommentTitle {
+            width: 100%;
+            height: 50px;
+            padding-left: 30px;
+            outline: none;
+            font-size: 22px;
+            border: 0;
+            border-radius: 0px;
+            appearance: none;
+            -webkit-appearance: none;
+            border-bottom: 1px solid rgb(210,210,210);
+        }
+        #createCommentTextarea {
+            width: 100%;
+            padding: 30px;
+            height: auto;
+            min-height: 250px;
+            outline: none;
+            font-size: 22px;
+            border: 0;
+            border-radius: 0px;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .replyToBox {
+            width: calc(100% - 50px);
+            padding: 10px 20px;
+            font-size: 10px;
+            font-style: italic;
+        }
+        .createCommentTopBar {
+            padding: 15px 10px;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: rgb(240,240,240);
+            border-bottom: 1px solid rgb(210, 210, 210);
+        }
+        .commentTitle {
+            font-size: 18px;
+        }   
+        .commentAction {
+            color: red;
+        }
+    </style>
+    <script>
+        window.onload  = function() {
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            let currentElement;
+            let startValue;
+            let finished = false;
+            let currentVertical = [0, 0];
+            let allowed = false;
+            let pastAllowed = false;
+            document.addEventListener("touchstart", function(event) {
+                let xVal = (event.touches["0"].clientX);
+                startValue = xVal;
+                currentVertical = [event.touches["0"].clientX, event.touches["0"].clientY];
+                let selectedElement = (event.target.parentNode.classList.contains("post") ? event.target.parentNode : event.target);
+                if (selectedElement.classList.contains("post")) {
+                    currentElement = selectedElement;
+                    currentElement.style.transition = "initial";
+                    currentElement.style.transform = "translateX(0px)";
+                } else {
+                    currentElement = false;
+                }
+            });
+            document.addEventListener("touchmove", function(event) {
+                currentV = currentVertical[1] - event.touches["0"].clientY;
+                currentH = currentVertical[0] - event.touches["0"].clientX;
+                if (Math.abs(currentV/currentH) < 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20) && !pastAllowed) {
+                    allowed = true;
+                } else if (Math.abs(currentV/currentH) > 0.6 && (Math.abs(currentH) > 20 || Math.abs(currentV) > 20)) {
+                    pastAllowed = true;
+                }
+                if (!currentElement) {
+
+                } else if (allowed) {
+                    let xVal = event.touches["0"].clientX;
+                    currentElement.style.transform = `translateX(-${(startValue - xVal).toString()}px)`;
+                    if (startValue - xVal > 100 && !finished) {
+                        finished = true;
+                        for (var i = 0; i < currentElement.children.length; i++) {
+                            if (currentElement.children[i].classList.contains("replyBox")) {
+                                currentElement.classList.add("expanding");
+                                currentElement.children[i].classList.add("boxFull");
+                                currentElement.children[i].children[0].classList.add("openReplyImage");
+
+                            }
+                        }
+                    }
+                    if (finished && (startValue - xVal < 100)) {
+                        finished = false;
+                        for (var i = 0; i < currentElement.children.length; i++) {
+                            if (currentElement.children[i].classList.contains("replyBox")) {
+                                currentElement.children[i].classList.remove("boxFull");
+                                currentElement.classList.remove("expanding");
+                                currentElement.children[i].children[0].classList.remove("openReplyImage");
+                            }
+                        }
+
+                    }
+                }
+            });
+            document.addEventListener("touchend", function(event) {
+                pastAllowed = false;
+                if (!currentElement || !allowed || currentElement === undefined) {
+
+                } else {
+                currentElement.style.transition = "transform 0.4s";
+                currentElement.style.transform = "translateX(0px)";
+
+                setTimeout(function() {
+                    if (finished) {
+                        window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/" + currentElement.id);
+                    }
+                    currentElement = "";
+                    startValue = 0;
+                    finished = false;
+                    allowed = false;
+                }, 350);
+
+
+
+                }
+            });
+            } else {
+            document.addEventListener("click", function(event) {
+                let target = event.target.parentNode.classList.contains("post") ? event.target.parentNode : event.target;
+                if (target.classList.contains("post")) {
+                    window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/" + target.id);
+                }
+            });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="homeHeader">
+        <div class="homeRow">
+            <div class="backIcon" onclick = "window.location='/'"><i class="fas fa-chevron-left"></i></div>
+            <div class="displayText">Questions</div>
+            <!-- <div class="spacerIcon"><i class="fas fa-chevron-left"></i></div> -->
+            <div class="backIcon" onclick = "openCreatePost()">
+                <i class="fas fa-pencil-alt"></i>
+            </div>
+        </div>
+    </div>
+    <div class="backdrop">
+        <% for (var i = 0; i < posts.length; i++) { %>
+            <div class="post" id = "<%=posts[i]._id%>">
+                <div class="postTitle">
+                    <%=posts[i].title%>
+                </div>
+                <div class="postBody">
+                    <%= posts[i].body ? posts[i].body : "This post has no body" %>
+                </div>
+                <div class="iconsBar">
+                    <div class="submittedBy">
+                        by <%=posts[i].submittedBy%>
+                    </div>
+                    <div class="icons">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <!-- <i class="fas fa-heart"></i> -->
+                        <i class="far fa-heart"></i>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    <div class="createComment" id = "createComment">
+        <div class="createCommentTopBar">
+            <div class="commentAction" onclick="closeCreateComment()">
+                Cancel
+            </div>
+            <div class="commentTitle">
+                Question
+            </div>
+            <div class="commentAction" onclick = "createCommentPost()">
+                Post
+            </div>
+        </div>
+        <div class="replyToBox" id = "replyToBox">Create Question</div>
+        <!-- <div class="replyToBox">Replying to a post by AidanEglin</div> -->
+        <div class="createCommentBox">
+            <input type = "text" class = "createCommentTitle" id = "createCommentTitle" placeholder="Title...">
+            <div contenteditable="true" id="createCommentTextarea" onfocus="this.innerHTML == 'No Body' ? this.innerHTML = '' : ''">No Body</div>
+        </div>
+    </div>
+</body>
+<script>
+    function openCreatePost() {
+        let modal = document.getElementById("createComment");
+        let textarea  = document.getElementById("createCommentTextarea");
+        modal.style.transform = "translateY(0%)";
+        let title = document.getElementById("createCommentTitle");
+        title.focus();
+    }
+    function closeCreateComment() {
+        let modal = document.getElementById("createComment");
+        modal.style.transform = "translateY(100%)";
+    }
+    function createCommentPost() {
+        let textarea  = document.getElementById("createCommentTextarea");
+        let title = document.getElementById("createCommentTitle");
+        let sendObject = {
+            title: title.value,
+            body: textarea.innerText,
+        }
+        postObject(sendObject, "/questions", function(res) {
+            console.log(res);
+            if (res._id) {
+                window.location = "/questions/" + res._id;
+            }
+        });
+    }
+
+</script>
+</html>

@@ -236,6 +236,8 @@ let path = require("path");
 
 let serverCourse = require("../models/servercourseschar.js");
 
+const util = require('util');
+
 // let tesseract = require("node-tesseract");
 
 let fileUpload = require("express-fileupload");
@@ -372,9 +374,9 @@ function wwwHttpsRedirect(req, res, next) {
     }
 };
 
-app.use(wwwHttpsRedirect);
+// app.use(wwwHttpsRedirect);
 
-let server = app.listen(80, function() {
+let server = app.listen(8080, function() {
   console.log("listening for requests");
 });
 
@@ -4264,6 +4266,211 @@ app.get("/", async function(req, res) {
   }
 });
 
+app.get("/questions", async (req, res) => {
+  try {
+    res.cookie("path", "/questions?page=" + req.query.page);
+    if (req.session.userId) {
+      let posts = await Posts.Post.find({}).sort({"date": -1}).limit(20);
+      let user = await User.findOne({_id : req.session.userId});
+      res.render("redesign/questionPage", {posts: posts, user: user});
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    res.redirect("/");
+  }
+});
+
+app.post("/questions", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user && user != null && req.body.body && req.body.title) {
+        let info = {
+          body: req.body.body,
+          title: req.body.title,
+          submittedBy: user.username,
+          anonymous: false,
+          date: (new Date()).local()
+        }
+        let post = await Posts.Post.create(info);
+        res.send(post);
+      }
+    }
+  } catch(e) {
+    console.log(e);
+    res.send({});
+  }
+
+});
+
+function findById(objects, id) {
+  for (var i = 0; i < objects.length; i++) {
+    if (objects[i]._id.toString() == id.toString()) {
+      return objects[i];
+    }
+  }
+}
+app.get("/questions/:id", async function(req, res) {
+  try {
+    let post = await Posts.Post.findOne({_id : req.params.id});
+    if (!post || post == null) {
+      res.redirect("/questions");
+    } else {
+      let comments = await Posts.Comment.find({_id : post.comments});
+      comments.sort(function(a,b) {
+        if (a == b) return 0;
+        return a.depth > b.depth ? 1 : -1;
+      });
+
+      let user = await User.findOne({_id : req.session.userId});
+      let newComments = [];
+      for (var i = 0; i < comments.length; i++) {
+        if (comments[i].depth == 0) {
+          newComments.push({
+            id: comments[i]._id.toString(),
+            children: [],
+          });
+        } else {
+          let current;
+          for (var k = 0; k < newComments.length; k++) {
+            if (newComments[k].id.toString() == comments[i].parents[1]._id.toString()) {
+              current = newComments[k];
+            }
+          }
+          for (var j = 2; j < comments[i].parents.length; j++) {
+            for (var k = 0; k < current.children.length; k++) {
+              if (current.children[k].id.toString() == comments[i].parents[j]._id.toString()) {
+                current = current.children[k];
+              }
+            }
+          }
+          if (current) {
+            current.children.push({
+              id: comments[i]._id.toString(),
+              children: [],
+            });
+          }
+        }
+      }
+      let commentList = [];
+      let ended = false;
+      let treeIndex = [0];
+      if (newComments.length > 0) {
+        while (!ended) {
+          let current = newComments[treeIndex[0]];
+          let hasRemainingSiblings = newComments.length > treeIndex[0]+1;
+          for (var i = 1; i < treeIndex.length; i++) {
+            if (i == treeIndex.length-1) {
+              hasRemainingSiblings = current.children.length > treeIndex[i]+1;
+            }
+            current = current.children[treeIndex[i]];
+          }
+          commentList.push(current.id);
+          if (current.children.length != 0) {
+            treeIndex.push(0);
+          } else if (hasRemainingSiblings) {
+            treeIndex[treeIndex.length-1]++;
+          } else {
+            let lastWithRemainingChildren = 0;
+            let hasUntouchedChildren = false;
+            if (newComments.length > treeIndex[0]+1) {
+              hasUntouchedChildren = true;
+            }
+            let currentTreeChild = newComments[treeIndex[0]];
+            for (var i = 1; i <  treeIndex.length; i++) {
+              if (currentTreeChild.children.length > treeIndex[i]+1) {
+                lastWithRemainingChildren = i;
+              }
+              currentTreeChild = currentTreeChild.children[treeIndex[i]];
+            }
+            if (!hasUntouchedChildren) {
+              ended = true;
+            } else {
+              treeIndex[lastWithRemainingChildren]++;
+              treeIndex = treeIndex.slice(0, lastWithRemainingChildren+1);
+            }
+          }
+        }
+      }
+      let newFullComments = [];
+      for (var i = 0; i < commentList.length; i++) {
+        let current = findById(comments, commentList[i]);
+        newFullComments.push(current);
+      }
+      let colours = ["#000080", "#0f52ba", "#0080ff", "#6593f5", "#73c2fb", "#57a0d3", "#89cff0", "#7ef9ff"];
+      res.render("redesign/question", {post: post, comments: newFullComments, id : req.params.id, user: user, colours: colours});
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/questions");
+  }
+});
+
+app.post("/questions/:id", urlencodedParser, async function(req, res) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id: req.session.userId});
+      if (user && user != null && req.body.comment && user.username && req.body.parents && req.body.depth) {
+        req.body.parents = JSON.parse(req.body.parents)
+        let params = {
+          parentPost: mongoose.Types.ObjectId(req.params.id),
+          parents: req.body.parents,
+          depth: parseInt(req.body.depth),
+          body: req.body.comment,
+          submittedBy: user.username
+        }
+        console.log(params);
+        let comment = await Posts.Comment.create(params);
+        await Posts.Post.findOneAndUpdate({_id : req.params.id}, {$push:{comments : comment._id}});
+        await Posts.Comment.findOneAndUpdate({_id : req.body.parents[req.body.parents.length-1]}, {$push:{children : comment._id}});
+        res.send(params);
+        // res.redirect("/questions/" + req.params.id);
+      }
+    } else {
+      res.send({});
+      // res.redirect("/questions/" + req.params.id);
+    }
+  } catch(e) {
+    console.log(e);
+    res.send({});
+    // res.redirect("/questions/" + req.params.id);
+  }
+  // if (req.session.userId) {
+  //   if (req.body.deleteComment) {
+  //     User.findOne({_id : req.session.userId}, function(err, user) {
+  //       if (user.permissions == "admin") {
+  //         Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
+  //           Posts.Comment.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
+  //             res.redirect("/questions/" + req.params.id);
+  //           });
+  //         });
+  //       } else {
+
+  //       }
+  //     });
+
+  //   } else {
+  //     User.findOne({_id : req.session.userId}, function(err, user) {
+  //       let params = {
+  //         parentPost: mongoose.Types.ObjectId(req.params.id),
+  //         body: req.body.comment,
+  //         submittedBy: user.username
+  //       }
+  //       Posts.Comment.create(params, function(err, comment) {
+  //         Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
+  //           User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}}).then(function(err, user) {
+  //             Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
+  //               res.redirect("/questions/" + req.params.id);
+  //             });
+  //           })
+  //         });
+  //       })
+  //     });
+  //   }
+  // }
+});
+
 app.get("/account", async function(req, res) {
   if (req.session.userId) {
     let user = await User.findOne({_id : req.session.userId});
@@ -5578,120 +5785,7 @@ app.post("/suggestions", urlencodedParser, function(req, res) {
   }
 });
 
-app.get("/questions", async (req, res) => {
-  res.cookie("path", "/questions?page=" + req.query.page);
-  if (req.session.userId) {
-    if (req.query.page == undefined) {
-      res.redirect("/questions?page=0");
-    } else {
-      let posts = Posts.Post.find({}).sort({"date": -1}).limit(parseInt(req.query.page)*20+20);
-      let user = User.findOne({_id : req.session.userId});
-      let count = Posts.Post.countDocuments({});
-      let final = await Promise.all([posts, user, count]);
-      posts = final[0], user = final[1], count = final[2];
-      posts = posts.slice((parseInt(req.query.page))*20);
-      res.render("questions", {posts: posts, user: user, colours: user.colors, font: holidayFont(user.font), page: parseInt(req.query.page), max: Math.ceil(count/20)});
-    }
 
-  } else {
-    res.redirect("/login");
-  }
-
-});
-
-app.post("/questions", urlencodedParser, function(req, res) {
-  if(req.session.userId) {
-    if (req.body.deleteElement) {
-       User.findOne({_id : req.session.userId}, function(err, user) {
-         if (user.permissions === "admin") {
-           Posts.Post.remove({_id : req.body.deleteElement}).then(() => {
-              Posts.Comment.remove({parentPost : req.body.deleteElement}).then(() => {
-                res.redirect("/questions?page=0");
-              });
-           });
-
-
-         } else {
-           res.redirect("/login");
-         }
-       });
-    } else {
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        let info = {
-          body: req.body.body,
-          title: req.body.title,
-          submittedBy: user.username,
-          anonymous: req.body.anon==="true",
-          date: (new Date()).local()
-        }
-        Posts.Post.create(info, function(err, post) {
-          res.redirect("/questions");
-        });
-      });
-    }
-  } else {
-    res.redirect("/login");
-  }
-
-});
-
-app.get("/questions/:id", function(req, res) {
-  res.cookie("path", "/questions/" + req.params.id);
-  if (req.session.userId) {
-    Posts.Post.findOne({_id : req.params.id}, function(err, post) {
-      if (!post) {
-        //do stuff if they search for a bad post
-        res.redirect("/questions")
-      } else {
-        Posts.Comment.find({_id : post.comments}, function(error, comments) {
-          User.findOne({_id :req.session.userId}, function(err_or, user) {
-            res.render("comment", {post: post, comments: comments, id : req.params.id, user: user, colours: user.colors, font: holidayFont(user.font)});
-          });
-        });
-      }
-    });
-  } else {
-    res.redirect("/login");
-  }
-
-});
-
-app.post("/questions/:id", urlencodedParser, function(req, res) {
-  if (req.session.userId) {
-    if (req.body.deleteComment) {
-
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        if (user.permissions == "admin") {
-          Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
-            Posts.Comment.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
-              res.redirect("/questions/" + req.params.id);
-            });
-          });
-        } else {
-
-        }
-      });
-
-    } else {
-      User.findOne({_id : req.session.userId}, function(err, user) {
-        let params = {
-          parentPost: mongoose.Types.ObjectId(req.params.id),
-          body: req.body.comment,
-          submittedBy: user.username
-        }
-        Posts.Comment.create(params, function(err, comment) {
-          Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-            User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}}).then(function(err, user) {
-              Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
-                res.redirect("/questions/" + req.params.id);
-              });
-            })
-          });
-        })
-      });
-    }
-  }
-});
 
 app.get("/chatroom", function(req,res) {
   res.cookie("path", "/chatroom?chatroom=" + req.query.chatroom);
