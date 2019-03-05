@@ -127,6 +127,7 @@
             height: 30px;
             align-items: center;
             font-size: 17px;
+            z-index: 50;
 
         }
         .submittedBy {
@@ -135,6 +136,21 @@
         }
         .icons * {
             padding: 5px 10px;
+            position: relative;
+            z-index: 5;
+        }
+        .toggleBar {
+            position: absolute;
+            top: 25px;
+            left: -90px;
+            background-color: rgb(290,290,290);
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.5);
+            padding: 0;
+            z-index: 10;
+        }
+        .barItem {
+            padding: 13px 20px 10px 10px;
+            /* border-bottom: 1px solid rgb(200,200,200); */
         }
         .createComment {
             position: fixed;
@@ -188,6 +204,7 @@
             border-radius: 50px;
             font-weight: 700;
             vertical-align: middle;
+            margin: 2px;
         }
         .addTag {
             vertical-align: middle;
@@ -441,8 +458,8 @@
     </div>
     <div class="backdrop">
         <% for (var i = 0; i < posts.length; i++) { %>
-            <div class="post" id = "<%=posts[i]._id%>" onclick = 'window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/<%=posts[i]._id%>")'>
-                <div class="postTitle">
+            <div class="post" style = "z-index: <%=posts.length-i%>" id = "<%=posts[i]._id%>">
+                <div class="postTitle"  onclick = 'window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/<%=posts[i]._id%>")'>
                     <%=posts[i].title%>
                     <% if (posts[i].tags) { %>
                         <% for (var j = 0; j < posts[i].tags.length; j++) { %>
@@ -454,7 +471,7 @@
 
                     <% } %>
                 </div>
-                <div class="postBody">
+                <div class="postBody"  onclick = 'window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/<%=posts[i]._id%>")'>
                     <%= posts[i].body ? posts[i].body : "This post has no body" %>
                 </div>
                 <div class="iconsBar">
@@ -462,7 +479,17 @@
                         by <%=posts[i].submittedBy%>
                     </div>
                     <div class="icons">
-                        <i class="fas fa-ellipsis-h"></i>
+                        <i class="fas fa-ellipsis-h" onclick = "openBar(this)">
+                            <div class="toggleBar" style = "display: none" displayed = "false">
+                                <div class="barItem">Report</div>
+                                <div class="barItem" onclick = 'window.location.replace(window.location.protocol + "//" + window.location.hostname + (window.location.port != "80" ? ":" + window.location.port : " ") + "/questions/<%=posts[i]._id%>")'>Comment</div>
+
+                                <% if (user.permissions == 'admin' || user.username == post.submittedBy) { %>
+                                    <div class="barItem">Edit</div>
+                                    <div class="barItem" onclick = "deletePost('<%=posts[i]._id%>')">Delete</div>
+                                <% } %>
+                            </div>
+                        </i>
                         <!-- <i class="fas fa-heart"></i> -->
                         <i class="far fa-heart"></i>
                     </div>
@@ -529,6 +556,23 @@
     </div>
 </body>
 <script>
+    function deletePost(id) {
+        sendPostRequest("id=" + id, "/delete-post", function(res) {
+            if (res.id) {
+                let post = document.getElementById(id);
+                post.parentNode.removeChild(post);
+            }
+        });
+    }
+    function openBar(element) {
+        if (element.children[0].getAttribute("displayed") === "true") {
+            element.children[0].style.display = "none";
+            element.children[0].setAttribute("displayed", "false");
+        } else {
+            element.children[0].style.display = "block";
+            element.children[0].setAttribute("displayed", "true");
+        }
+    }
     function openCreatePost() {
         let modal = document.getElementById("createComment");
         let textarea  = document.getElementById("createCommentTextarea");

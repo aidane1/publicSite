@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 
 
 const postSchema = new Schema({
-
+  shown: {
+    type: Boolean,
+    default: true,
+  },
   date: {
     type: Date
   },

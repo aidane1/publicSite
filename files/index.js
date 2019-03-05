@@ -4266,12 +4266,36 @@ app.get("/", async function(req, res) {
   }
 });
 
+app.post("/delete-post", urlencodedParser, async function(req,res) {
+  try {
+    if (req.session.userId && req.body.id) {
+      let user = await User.findOne({_id : req.session.userId});
+      let post = await Posts.Post.findOne({_id : req.body.id});
+      if (user && user != null && post && post != null) {
+        if (user.username == post.submittedBy || user.permissions == "admin") {
+          await Posts.Post.findOneAndUpdate({_id : req.body.id}, {$set: {shown: false}});
+          res.send({id : req.body.id});
+        } else {
+          res.send({});
+        }
+      } else {
+        res.send({});
+      }
+    } else {
+      res.send({});
+    }
+  } catch(e) {
+    console.log(e);
+    res.send({});
+  }
+});
+
 app.get("/questions", async (req, res) => {
   try {
     res.cookie("path", "/questions?page=" + req.query.page);
     if (req.session.userId) {
       let currentDate = (new Date()).local();
-      let posts = await Posts.Post.find({}).sort({"date": -1}).limit(20);
+      let posts = await Posts.Post.find({shown: true}).sort({"date": -1}).limit(20);
       let user = await User.findOne({_id : req.session.userId});
       let courses = await Course.find({_id : user.courses}).populate("category");
       let school = await School.findOne({_id : user.school}).populate("semesters");
@@ -4335,7 +4359,7 @@ function findById(objects, id) {
 }
 app.get("/questions/:id", async function(req, res) {
   try {
-    let post = await Posts.Post.findOne({_id : req.params.id});
+    let post = await Posts.Post.findOne({shown: true, _id : req.params.id});
     if (!post || post == null) {
       res.redirect("/questions");
     } else {
