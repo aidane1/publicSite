@@ -21,6 +21,14 @@ const postSchema = new Schema({
   body: {
     type: String
   },
+  tags: {
+    type: Array,
+    default: [],
+  },
+  attachments: {
+    type: Array,
+    default: [],
+  },
   comments: [{type: Schema.Types.ObjectId, ref: "Comment"}]
 });
 
@@ -44,7 +52,8 @@ const commentSchema = new Schema({
   treeChildren: {
     type: Array,
     default: [],
-  }
+  },
+  
 });
 
 var Post = mongoose.model('Post', postSchema);

@@ -4270,13 +4270,33 @@ app.get("/questions", async (req, res) => {
   try {
     res.cookie("path", "/questions?page=" + req.query.page);
     if (req.session.userId) {
+      let currentDate = (new Date()).local();
       let posts = await Posts.Post.find({}).sort({"date": -1}).limit(20);
       let user = await User.findOne({_id : req.session.userId});
-      res.render("redesign/questionPage", {posts: posts, user: user});
+      let courses = await Course.find({_id : user.courses}).populate("category");
+      let school = await School.findOne({_id : user.school}).populate("semesters");
+      let currentSemesters = calculateSemesters(school.semesters, currentDate);
+      let tagsList = [];
+      for (var i = 0; i < courses.length; i++) {
+        if (iconMap[courses[i].category.category.toLowerCase()]) {
+          for (var j = 0; j < currentSemesters.length; j++) {
+            if (currentSemesters[j].toString() == courses[i].semester.toString()) {
+              tagsList.push([
+                courses[i].course, 
+                averageColors([iconMap[courses[i].category.category.toLowerCase()][1], "#ffffff"]),
+                iconMap[courses[i].category.category.toLowerCase()][1]
+              ]);
+            }
+          }
+        }
+      }
+      console.log(posts[0]);
+      res.render("redesign/questionPage", {tags: tagsList, posts: posts, user: user});
     } else {
       res.redirect("/login");
     }
   } catch(e) {
+    console.log(e);
     res.redirect("/");
   }
 });
@@ -4286,12 +4306,14 @@ app.post("/questions", urlencodedParser, async function(req, res) {
     if (req.session.userId) {
       let user = await User.findOne({_id : req.session.userId});
       if (user && user != null && req.body.body && req.body.title) {
+        let tags = req.body.tags ? JSON.parse(req.body.tags) : [];
         let info = {
           body: req.body.body,
           title: req.body.title,
           submittedBy: user.username,
           anonymous: false,
-          date: (new Date()).local()
+          date: (new Date()).local(),
+          tags: tags,
         }
         let post = await Posts.Post.create(info);
         res.send(post);
