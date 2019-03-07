@@ -313,7 +313,7 @@ app.use(cookieParser());
 
 async function logSchool(school, info) {
   if (school && info.dateString && info.info && info.user) {
-    let log = await Log.create({school: school, dateString: info.dateString, info: info.info, user: info.user});
+    let log = await Log.create({created_at: new Date(), school: school, dateString: info.dateString, info: info.info, user: info.user});
     return log;
   } else {
     return {};
@@ -340,11 +340,11 @@ async function logSchool(school, info) {
   // });
 }
 app.use(async function(req, res, next) {
-  let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names"];
+  let validPaths = ["/", "/account", "/courses", "/events", "/notes", "/assignments", "/block-colours", "/block-names", "/questions", "/school-grades"];
   try {
     if (!req.query.preload && validPaths.indexOf(url.parse(req.url).pathname) >= 0 && req.session.userId) {
       let user = await User.findOne({_id : req.session.userId});
-      if (user.username != "AidanEglin") {
+      if (user.username != "dick") {
         let date = (new Date()).local();
         let formatted = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
         let info = `accessed ${url.parse(req.url).pathname} via method ${req.method}`;
@@ -374,7 +374,7 @@ function wwwHttpsRedirect(req, res, next) {
     }
 };
 
-app.use(wwwHttpsRedirect);
+// app.use(wwwHttpsRedirect);
 
 let server = app.listen(80, function() {
   console.log("listening for requests");
@@ -2153,7 +2153,7 @@ app.get("/dashboard", async function(req, res) {
         let school = await School.findOne({_id : user.school});
         let recentActivity = await Log.find({school: school._id});
         recentActivity.sort(function(a,b) {
-          return b.created_at.getTime() > a.created_at.getTime();
+          return b.created_at.getTime() > a.created_at.getTime() ? 0 : 1;
         });
         let newList = recentActivity.splice(0, recentActivity.length > 100 ? 100 : recentActivity.length);
         res.render("dashboard/dashboard", {recent: newList});
