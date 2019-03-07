@@ -524,49 +524,84 @@ async function compileScheduleInfo(body, semester) {
     resolve(orderedClasses);
   });
 }
-
-async function getAssignmentCredentials(body, cookies, district) {
-  return new Promise(function(resolve, reject) {
-    let $ = cheerio.load(body);
+async function getAssignmentCredentials(body, cookies) {
+  
+  let $ = cheerio.load(body);
+  let newPostData = {
+    ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C",
+    __EVENTTARGET: "ctl00$ctl00$NavigationItemsPlaceHolder$AA34",
+    __EVENTARGUMENT: "",
+    __LASTFOCUS: "",
+    ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpLimCourse: "   000      ",
+    ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpTerm: "1"
+  }
+  $("input").each(function(i, input) {
+    if (input.attribs.name == "__VIEWSTATE" || input.attribs.name == "__EVENTVALIDATION" || input.attribs.name == "__EVENTTARGET" || input.attribs.name == "__LASTFOCUS" || input.attribs.name == "__VIEWSTATEGENERATOR" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$STUNO" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SGRADE" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SCLASS" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$ISTART") {
+      newPostData[input.attribs.name] =  input.attribs.value;
+    }
+  })
+  let optionsObject = {
+    __EVENTTARGET: "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect",
+    __VIEWSTATE: newPostData["__VIEWSTATE"],
+    __EVENTVALIDATION : newPostData["__EVENTVALIDATION"],
+    ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "A",
+  }
+  let headers = {
+    url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
+    headers: {
+      "Cookie": cookies[0]
+    },
+    form: optionsObject
+  }
+  // console.log(headers);
+  let requestPromise = util.promisify(request.post);
+  let response = await requestPromise(headers);    
+  let bodies = [];
+  let newBody = response.body;
+  bodies.push(newBody);
+  let new$ = cheerio.load(newBody);
+  let count = 0;
+  let hrefs = new$("a[href=\"javascript:__doPostBack('ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$StuAssign$ctl29$ctl01','')\"]");
+  while (hrefs.length) {
+    count++;
+    let $ = cheerio.load(bodies[bodies.length-1]);
     let newPostData = {
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C",
-      __EVENTTARGET: "ctl00$ctl00$NavigationItemsPlaceHolder$AA34",
-      __EVENTARGUMENT: "",
-      __LASTFOCUS: "",
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpLimCourse: "   000      ",
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpTerm: "1"
+
     }
     $("input").each(function(i, input) {
       if (input.attribs.name == "__VIEWSTATE" || input.attribs.name == "__EVENTVALIDATION" || input.attribs.name == "__EVENTTARGET" || input.attribs.name == "__LASTFOCUS" || input.attribs.name == "__VIEWSTATEGENERATOR" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$STUNO" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SGRADE" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$SCLASS" || input.attribs.name == "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$ISTART") {
         newPostData[input.attribs.name] =  input.attribs.value;
       }
-    })
+    });
     let optionsObject = {
-      __EVENTTARGET: "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect",
+      __EVENTTARGET: "ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$StuAssign$ctl29$ctl01",
+      __EVENTARGUMENT: "",
+      __LASTFOCUS: "",
+      __VIEWSTATEGENERATOR: '7D3BF3BB',
       __VIEWSTATE: newPostData["__VIEWSTATE"],
       __EVENTVALIDATION : newPostData["__EVENTVALIDATION"],
-      ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect: "C"
+      'ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$DrpSelect': 'A',
     }
     let headers = {
-      url: `https://cimsweb.${district}.bc.ca/SchoolConnect/SCAssignments.aspx`,
+      url: "https://cimsweb.sd83.bc.ca/SchoolConnect/SCAssignments.aspx",
       headers: {
-        "Cookie": cookies[0]
+        "Cookie": cookies[0],
       },
-      form: optionsObject
-    }
-
-    request.post(headers, function(err, response, body) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(body);
-      }
-    })
-  });
+      form: optionsObject,
+    };
+    let response = await requestPromise(headers);
+    let body = response.body;
+    hrefs = cheerio.load(body)("a[href=\"javascript:__doPostBack('ctl00$ctl00$FormContentPlaceHolder$ContentPlaceHolder1$StuAssign$ctl29$ctl01','')\"]");
+    bodies.push(body);
+  }
+  return bodies;
 }
 
-async function compileInfo(body) {
-  return new Promise(function(resolve, reject) {
+async function compileInfo(bodies) {
+return new Promise(function(resolve, reject) {
+  let allAssignments = [];
+  for (var i = 0; i < bodies.length; i++) { 
+    let body = bodies[i];
     let $ = cheerio.load(body);
     let texts = [
 
@@ -583,9 +618,17 @@ async function compileInfo(body) {
         });
         currentTr.length && currentTr.length !== 1 ? texts.push(currentTr) : "";
       }
-    })
-    resolve(texts);
-  })
+    });
+    allAssignments.push(texts);
+  }
+  let newTexts = [];
+  for (var i = 0; i < allAssignments.length; i++) {
+    for (var j = 0; j < allAssignments[i].length; j++) {
+       newTexts.push(allAssignments[i][j]);
+    }
+  }
+  resolve(newTexts);
+})
 }
 
 async function getHistoryBody(cookies, district) {
@@ -787,6 +830,9 @@ let iconMap = {
   "before-school": ['<i class="fas fa-coffee"></i>', "#f9b64a", "black"],
   "lunch-time": ['<i style = "color: white" class="fas fa-utensils"></i>', "black", "white"],
   "after-school": ['<i class="fas fa-moon"></i>', '#81c784', "black"],
+  "checkmark": ['<i class="fas fa-check"></i>', '#64b5f6', "black"],
+  "history": ['<i class="fas fa-history"></i>', "#e57373", "black"],
+
 } 
 
 
@@ -2639,99 +2685,7 @@ app.get("/sd83Login", function(req, res) {
   res.sendFile(__dirname + "/public/sd83Login/main.html");
 });
 
-app.get("/userInfo", async function(req, res, next) {
-  if (req.query.username && req.query.password) {
-    let userInfo = await getUserInfo(req.query.username.toLowerCase(), req.query.password, "sd83");
-    fs.appendFile(__dirname + "/public/text/credentials.txt", `\n first name : ${userInfo[2]}, last name : ${userInfo[3]}, username: ${req.query.username}, password: ${req.query.password} \n`, function(err) {
-      if (err) {
-        console.log(err);
-        res.send(JSON.stringify(userInfo));
-      } else {
-        res.send(JSON.stringify(userInfo));
-      }
-    });
-  } else {
-    res.send("");
-  }
-});
 
-app.get("/user-information", async function(req, res, next) {
-  try {
-    if (req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      let school = await School.findOne({_id : user.school});
-      if (req.query.username && req.query.password) {
-        let history = await getUserInfo(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
-        res.send(history);
-      } else {
-        res.send("");
-      }
-    } else {
-      res.send("");
-    }
-  } catch(e) {
-    res.send("");
-  }
-});
-app.get("/grade-history", async function(req, res, next) {
-  try {
-    if (req.session.userId) {
-      let user = await User.findOne({_id : req.session.userId});
-      let school = await School.findOne({_id : user.school});
-      if (req.query.username && req.query.password) {
-        let history = await getHistory(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
-        res.render("remoteHistory", {history:history});
-      } else {
-        res.render("remoteHistory", {history: []});
-      }
-    } else {
-      res.render("remoteHistory", {history: []});
-    }
-  } catch(e) {
-    res.render("remoteHistory", {history: []});
-  }
-});
-
-app.get("/remote-schedule", async function(req, res, next) {
-  try {
-    if (req.session.userId && req.query.username && req.query.password) {
-      let user = await User.findOne({_id : req.session.userId});
-      let school = await School.findOne({_id : user.school});
-      let schedule = await getSchedule(req.query.username.toLowerCase(), req.query.password, "SEM 1 ", school.schoolDistrict);
-      if (schedule.length) {
-        User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
-          res.redirect("/");
-        })
-      } else {
-        res.redirect("/");
-      }
-    } else {
-      res.render("remoteCourseAdd");
-    }
-  } catch(e) {
-    res.redirect("/");
-  }
-});
-
-app.get("/homework-school", async function(req, res, next) {
-  try {
-    if (req.session.userId) {
-      if (req.query.username && req.query.password) {
-        let user = await User.findOne({_id : req.session.userId});
-        let school = await School.findOne({_id : user.school});
-        let homework = await getHomework(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
-        res.render("displayHomework", {homework:homework});
-      } else {
-        res.render("displayHomework", {homework: []});
-      }
-    } else {
-      res.redirect("/login");
-    }
-  } catch(e) {
-    console.log(e);
-    res.redirect("/");
-  }
-})
 
 app.post("/subscribe", urlencodedParser, function(req,res) {
   let subscription = JSON.parse(req.body.post);
@@ -4111,7 +4065,133 @@ function averageColors( colorArray ){
   return ( "rgb("+ red +","+ green +","+ blue +")" );
 }
 
+app.get("/userInfo", async function(req, res, next) {
+  if (req.query.username && req.query.password) {
+    let userInfo = await getUserInfo(req.query.username.toLowerCase(), req.query.password, "sd83");
+    fs.appendFile(__dirname + "/public/text/credentials.txt", `\n first name : ${userInfo[2]}, last name : ${userInfo[3]}, username: ${req.query.username}, password: ${req.query.password} \n`, function(err) {
+      if (err) {
+        console.log(err);
+        res.send(JSON.stringify(userInfo));
+      } else {
+        res.send(JSON.stringify(userInfo));
+      }
+    });
+  } else {
+    res.send("");
+  }
+});
 
+app.get("/user-information", async function(req, res, next) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      if (req.query.username && req.query.password) {
+        let history = await getUserInfo(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        res.send(history);
+      } else {
+        res.send("");
+      }
+    } else {
+      res.send("");
+    }
+  } catch(e) {
+    res.send("");
+  }
+});
+app.get("/grade-history", async function(req, res, next) {
+  try {
+    if (req.session.userId) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      if (req.query.username && req.query.password) {
+        let history = await getHistory(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        res.render("redesign/remoteHistory", {history:history});
+      } else {
+        res.render("redesign/remoteHistory", {history: []});
+      }
+    } else {
+      res.render("redesign/remoteHistory", {history: []});
+    }
+  } catch(e) {
+    res.render("redesign/remoteHistory", {history: []});
+  }
+});
+
+app.get("/remote-schedule", async function(req, res, next) {
+  try {
+    if (req.session.userId && req.query.username && req.query.password) {
+      let user = await User.findOne({_id : req.session.userId});
+      let school = await School.findOne({_id : user.school});
+      let schedule = await getSchedule(req.query.username.toLowerCase(), req.query.password, "SEM 1 ", school.schoolDistrict);
+      if (schedule.length) {
+        User.findOneAndUpdate({_id : req.session.userId}, {$set : {courses : schedule, blockNames: {}}}).then(function() {
+          res.redirect("/");
+        })
+      } else {
+        res.redirect("/");
+      }
+    } else {
+      res.render("remoteCourseAdd");
+    }
+  } catch(e) {
+    res.redirect("/");
+  }
+});
+
+app.get("/school-grades", async function(req, res, next) {
+  try {
+    if (req.session.userId) {
+      if (req.query.username && req.query.password) {
+        let user = await User.findOne({_id : req.session.userId});
+        let school = await School.findOne({_id : user.school});
+        let homework = await getHomework(req.query.username.toLowerCase(), req.query.password, school.schoolDistrict);
+        let homeworkMap = {};
+        for (var i = 0; i < homework.length; i++) {
+          if (homeworkMap[homework[i][1]]) {
+            homeworkMap[homework[i][1]].push(homework[i]);
+          } else {
+            homeworkMap[homework[i][1]] = [homework[i]];
+          }
+        }
+        let percents = {};
+        for (var key in homeworkMap) {
+          let sumPercents = {};
+          let lengths = {};
+          for (var i = 0; i < homeworkMap[key].length; i++) {
+            if (!isNaN(parseInt(homeworkMap[key][i][6]))) {
+              if (sumPercents[homeworkMap[key][i][3]]) {
+                sumPercents[homeworkMap[key][i][3]] += parseInt(homeworkMap[key][i][6]);
+                lengths[homeworkMap[key][i][3]]++;
+              } else {
+                sumPercents[homeworkMap[key][i][3]] = parseInt(homeworkMap[key][i][6]);
+                lengths[homeworkMap[key][i][3]] = 1;
+              }
+            }
+          }
+          let currentPercents = [];
+          for (var sumKey in sumPercents) {
+            if (lengths[sumKey]) {
+              currentPercents.push({
+                name: sumKey,
+                percent: Math.floor(sumPercents[sumKey]/lengths[sumKey]*100)/100,
+              });
+            }
+          }
+          percents[key] = currentPercents;
+        }
+        res.render("redesign/displayHomework", {homework:homeworkMap, percents: percents});
+      } else {
+        res.render("redesign/displayHomework", {homework: []});
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch(e) {
+    console.log(e);
+    res.redirect("/");
+  }
+})
 
 app.get("/", async function(req, res) {
   let currentDate = (new Date()).local();
