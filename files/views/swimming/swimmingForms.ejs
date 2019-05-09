@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Swimming</title>
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            box-sizing: border-box;            
+        }
+        html, body {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            background-color: #f6f6f6;
+        }
+        .form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form > * {
+            width: 80%;
+            min-width: 290px;
+        }
+        .description {
+            font-size: 22px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 2px solid #ccc;
+            padding: 5px;
+        }
+        .label {
+            margin-block-end: 10px;
+        }
+        .box-set {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .box-set-box {
+            width: 45px;
+            height: 45px;
+            background-color: #eee;
+            border: 2px solid #ccc;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            color: black;
+        }
+        .box-set-box-selected {
+            background-color: #89c7f9;
+            border: 2px solid #3877aa;
+        }
+        .submit {
+            padding: 10px 0px;
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            background-color: #50b25e;
+            border: 2px solid #3b8e47;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: center;  
+        }
+        .submit-none {
+            opacity: 0.5;
+        }
+        .name {
+            font-size: 22px;
+            padding: 5px;
+            border: 2px solid #ccc;
+        }
+        .coach {
+            font-size: 22px;
+            border: 2px solid #ccc;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+            padding: 5px;
+        }
+        .success {
+            width: 95%;
+            position: fixed;
+            top: 0%;
+            left: 50%;
+            transform: translate(-50%, -200%);
+            padding: 20px 0px;
+            font-size: 22px;
+            background-color: #c7e2cb;
+            border-left: 4px solid #558e61;
+            padding-left: 15px;
+            font-weight: 800;
+            color: #547f5d;
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.4);
+            transition: top 0.2s ease-out, transform 0.2s ease-out;
+        }
+        .success-shown {
+            top: 50%;
+            transform: translate(-50%, -50%); 
+        }
+        .error {
+            width: 95%;
+            position: fixed;
+            top: 0%;
+            left: 50%;
+            transform: translate(-50%, -200%);
+            padding: 20px 0px;
+            font-size: 22px;
+            background-color: #f9b2a2;
+            border-left: 4px solid #8c3125;
+            padding-left: 15px;
+            font-weight: 800;
+            color: #8c3125;
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.4);
+            transition: top 0.2s ease-out, transform 0.2s ease-out;
+        }
+        .error-shown {
+            top: 50%;
+            transform: translate(-50%, -50%); 
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="form">
+            <h2 class="label">
+                Name
+            </h2>
+            <input type="text" name="name" class="name information" placeholder="Name...">
+            <h2 class="label">
+                Coach
+            </h2>
+            <select name="coach" class="coach information">
+                <option value="Jason">Jason</option>
+                <option value="Laura">Laura</option>
+                <option value="Kim">Kim</option>
+            </select>
+            <h2 class="label">
+                Practice Session
+            </h2>
+            <div class="box-set information" name="practiceDay" value="M">
+                <div class="box-set-box">M</div>
+                <div class="box-set-box">T</div>
+                <div class="box-set-box">W</div>
+                <div class="box-set-box">TH</div>
+                <div class="box-set-box">F</div>
+                <div class="box-set-box">S</div>
+            </div>
+            <div class="box-set information" name="practiceSession" value="AM" style="margin-top: 20px;">
+                <div class="box-set-box">AM</div>
+                <div class="box-set-box">PM</div>
+            </div>
+            
+            <h2 class="label">
+                Description
+            </h2>
+            <textarea name="description" class="description information" cols="30" rows="5"></textarea>
+            <h2 class="label">
+                Attended Activation?
+            </h2>
+            <div class="box-set information" name="attendedActivation" value="N">
+                <div class="box-set-box">Y</div>
+                <div class="box-set-box">N</div>
+            </div>
+            <h2 class="label">
+                Completed Activation
+            </h2>
+            <div class="box-set information" name="completedActivation" value="1">
+                <div class="box-set-box">1</div>
+                <div class="box-set-box">2</div>
+                <div class="box-set-box">3</div>
+                <div class="box-set-box">4</div>
+                <div class="box-set-box">5</div>
+            </div>
+            <h2 class="label">
+                Activation Intention
+            </h2>
+            <div class="box-set information" name="activationIntention" value="D">
+                <div class="box-set-box">A</div>
+                <div class="box-set-box">B</div>
+                <div class="box-set-box">C</div>
+                <div class="box-set-box">D</div>
+            </div>
+            <h2 class="label">
+                Attended Swim?
+            </h2>
+            <div class="box-set information" name="attendedSwim" value="N">
+                <div class="box-set-box">Y</div>
+                <div class="box-set-box">N</div>
+            </div>
+            <h2 class="label">
+                Completed Swim
+            </h2>
+            <div class="box-set information" name="completedSwim" value="5">
+                <div class="box-set-box">1</div>
+                <div class="box-set-box">2</div>
+                <div class="box-set-box">3</div>
+                <div class="box-set-box">4</div>
+                <div class="box-set-box">5</div>
+            </div>
+            <h2 class="label">
+                Swim Intention
+            </h2>
+            <div class="box-set information" name="activationSwim" value="D">
+                <div class="box-set-box">A</div>
+                <div class="box-set-box">B</div>
+                <div class="box-set-box">C</div>
+                <div class="box-set-box">D</div>
+            </div>
+            <h2 class="label">
+                Practice Feeling
+            </h2>
+            <div class="box-set information" name="feeling" value=":(">
+                <div class="box-set-box">:)</div>
+                <div class="box-set-box">:|</div>
+                <div class="box-set-box">:(</div>
+            </div>
+            <h2 class="label">
+                Soreness
+            </h2>
+            <div class="box-set information" name="soreness" value=":(">
+                    <div class="box-set-box">:)</div>
+                    <div class="box-set-box">:|</div>
+                    <div class="box-set-box">:(</div>
+            </div>
+            <h2 class="label">
+                Overall Mood
+            </h2>
+            <div class="box-set information" name="mood" value=":(">
+                <div class="box-set-box">:)</div>
+                <div class="box-set-box">:|</div>
+                <div class="box-set-box">:(</div>
+            </div>
+            <h2 class="label">
+                Extra Notes
+            </h2>
+            <textarea name="customNotes" class="description information" cols="30" rows="3"></textarea>
+            <div class="submit" onclick="submit()" id="submit">
+                SUBMIT
+            </div>
+        </div>
+    </div>
+    <div class="success" id="success">
+        Success!
+    </div>
+    <div class="error" id="error">
+        Error!
+    </div>
+</body>
+<script>
+    let boxes = document.getElementsByClassName("box-set-box");
+    for (var i = 0; i < boxes.length; i++) {
+        boxes[i].setAttribute("onclick", "boxSelect(this)");
+    }
+
+    function boxSelect(box) {
+        let parent = box.parentNode;
+        let children = parent.children;
+        for (var i = 0; i < children.length; i++) {
+            children[i].classList.remove("box-set-box-selected");
+        }
+        box.classList.add("box-set-box-selected");
+        parent.setAttribute("value", box.innerText);
+    }
+    let submitButton = document.getElementById("submit");
+    let success = document.getElementById("success");
+    let error = document.getElementById("error");
+
+    document.onclick = function() {
+        success.classList.remove("success-shown");
+        error.classList.remove("error-shown");
+    }
+    function submit() {
+        let information = document.getElementsByClassName("information");
+        let info = {};
+        for (var i = 0; i < information.length; i++) {
+            let name = information[i].getAttribute("name") || information[i].name;
+            let value = information[i].getAttribute("value") || information[i].value;
+            info[name] = value;
+        }
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                setTimeout(function() {
+                    submitButton.setAttribute("onclick", "submit()");
+                    submitButton.classList.remove("submit-none");
+                }, 1000);
+                let response = JSON.parse(this.responseText);
+                if (response.valid) {
+                    success.classList.add("success-shown");
+                    success.innerHTML = `Success! ${response.name} has logged a workout`
+                } else {
+                    error.classList.add("error-shown");
+                    error.innerHTML = `Error. ${response.reason}`;
+                }
+            } else if (this.readyState == 4 && this.status != 200) {
+                error.classList.add("error-shown");
+            }
+        }
+        let string = "";
+        for (var key in info) {
+            string += `${key}=${info[key]}&`;
+        }
+        request.open("POST", "/forms", true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(string);
+        submitButton.setAttribute("onclick", "");
+        submitButton.classList.add("submit-none");
+    }
+</script>
+</html>

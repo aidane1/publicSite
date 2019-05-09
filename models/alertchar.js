@@ -18,6 +18,9 @@ const AlertSchema = new Schema({
   },
   date: {
       type: Date,
+  },
+  expiresOn: {
+      type: Date,
   }
 });
 

@@ -649,7 +649,7 @@
             <div class="sideBarTitle">
                     <img width = "250" height = "102" class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
-            <div class="sideBarOverview">
+            <div class="sideBarOverview" onclick = "window.location = '/teacher/<%=teacher.teacherAccount._id%>'">
                 <div class="overViewMain">
                     Courses Overview
                 </div>
@@ -679,11 +679,11 @@
         <div class="bodyRight">
             <div class = "bodyUpperSection">
                 <div class="topBar">
-                    PVSS (sd83)
+                    <%=school.name%> <%=school.schoolDistrict ? `(${school.schoolDistrict})` : ""%>
                 </div>
                 <div class="secondaryBar">
                     <div class="barTitle">
-                        <%=teacher.firstName%> <%=teacher.lastName%>
+                        <%=teacher.teacherAccount.firstName%> <%=teacher.teacherAccount.lastName%>
                     </div>
                 </div>
             </div>
@@ -795,7 +795,7 @@
                             <% if (list.length == 0) { %>
                                 <tr class="row">
                                     <td class="rowProperty">
-                                        No instances of <%=singular%> created yet
+                                        No <%=name%>
                                     </td>
                                     <% for (var i = 0; i < keys.length-1; i++) { %>
                                         <td class="rowProperty"></td>
@@ -1130,7 +1130,7 @@
     function editRow(id) {
         let newRow = getInputValues();
         newRow._id = id;
-        postObject(newRow, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=edit", function(res) {
+        postObject(newRow, "/teacherEdit/<%=teacher.teacherAccount._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=edit", function(res) {
             if (res[0] == true) {
                 let mapFunction = editMap["<%=singular.toLowerCase()%>"];
                 let row = document.getElementById("row_" + id);
@@ -1151,7 +1151,7 @@
         });
     }
     function deleteRow(id) {
-        postObject({_id: id}, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=delete", function(res) {
+        postObject({_id: id}, "/teacherEdit/<%=teacher.teacherAccount._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=delete", function(res) {
             if (res[0] == true) {
                 let row = document.getElementById("row_" + id);
                 row.parentNode.removeChild(row);
@@ -1163,7 +1163,7 @@
     function createRow() {
         let newRow = getInputValues();
         sanitizeInputs(newRow);
-        postObject(newRow, "/teacherEdit/<%=teacher._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=create", function(res) {
+        postObject(newRow, "/teacherEdit/<%=teacher.teacherAccount._id%>/<%=course._id%>?table=<%=singular.toLowerCase()%>&action=create", function(res) {
             console.log(res);
             if (res[0] == true) {
                 let mapFunction = editMap["<%=singular.toLowerCase()%>"];

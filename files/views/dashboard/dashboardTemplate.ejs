@@ -683,15 +683,15 @@
                         </tbody>     
                         <tbody id = "rowDisplay">
                             <% for (var i = 0; i < list.length; i++) { %>
-                                <tr class="row" id = "row_<%=list[i]._id%>">
+                                <tr class="row" id = "row_<%=list[i]._id%>" onclick = "<%=listClick(list[i])%>">
                                 <% for (var j = 0; j < keys.length; j++) { %>
                                     <% if (j == keys.length-1) { %>
                                         <td class="rowProperty lastProperty" name = "<%=keys[j].propertyName%>">
                                             <%=keys[j].displayFunc(list[i])%>
-                                            <i class="fas fa-ellipsis-v editRow" onclick = "openEdit(this)">
+                                            <i class="fas fa-ellipsis-v editRow" onclick = "event.stopPropagation(); openEdit(this)">
                                                 <div class="editDelete">
-                                                    <div class="edit" onclick = "openEditBar('<%=JSON.stringify(list[i])%>')">Edit</div>
-                                                    <div class="delete" onclick = "deleteRow('<%=list[i]._id%>')">Delete</div>
+                                                    <div class="edit" onclick = "event.stopPropagation(); openEditBar('<%=JSON.stringify(list[i])%>')">Edit</div>
+                                                    <div class="delete" onclick = "event.stopPropagation(); deleteRow('<%=list[i]._id%>')">Delete</div>
                                                 </div>
                                             </i>
                                         </td>

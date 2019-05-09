@@ -30,765 +30,761 @@
         
     </script>
     <style>
-        @font-face {
-    font-family: SF;
-    src: url("/public/fonts/SF-Pro-Display-Regular.otf");
-}
-* {
-    box-sizing: border-box;
-    font-family: sans-serif;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-}
-html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
-}
-.animateLeft {
-    animation: slideLeft 0.3s linear 1;
-    animation-fill-mode: forwards;
-}
-@keyframes slideLeft {
-    0% {
-        right: 0px;
-    }
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .animateLeft {
+            animation: slideLeft 0.3s linear 1;
+            animation-fill-mode: forwards;
+        }
+        @keyframes slideLeft {
+            0% {
+                right: 0px;
+            }
 
-    100% {
-        right: 50%;
-    }
-}
-.homeHolder {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    width: 100%;
-    height: 100%;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* flex-wrap: nowrap; */
-    overflow: hidden;
-}
-.backdrop {
-    height: calc(100% - 90px);
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    /* flex-grow: 1; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* flex-wrap: wrap; */
-    /* overflow-x: hidden; */
-    /* overflow-y: hidden; */
-    -webkit-overflow-scrolling: auto;
-    
-}
-.backdropChild {
-    width: 400%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    transition: transform 0.3s cubic-bezier(0.34, 0.62, 0.44, 0.93);
-    will-change: transform;
-    /* transform: translateX(%); */
-}
-.bodyTile {
-    width: 25%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    overflow-y: hidden;
-    justify-content: space-evenly;
-    background-color: rgb(240,240,240);
-    position: relative;
-}
-.homeHeader {
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
-}
-.bottomTabBar {
-    width: 100%;
-    height: 40px;
-    background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
-}
-.homeRow {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding: 0px 20px;
-    align-items: center;
-}
-.displayText {
-    color: white;
-    font-size: 24px;
-}
-#scheduleTile {
-    /* background-color: red; */
-}
-#homeTile {
-    display: block;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-#coursesTile {
-    /* background-color: black; */
-    /* justify-content: start; */
-    display: block;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-#calendarTile {
-    /* background-color: purple; */
-    justify-content: start;
-    overflow-x: hidden;
-}
-.dayHeader {
-    width: 100%;
-    text-align: left;
-    padding: 20px 10px 0px 10px;
-    /* background-color: white; */
-    border-bottom: 1px solid rgb(210,210,210);
-    /* color: #00358c */
-}
-.dayHeader h1 {
-    margin: 0;
-    width: 100%;
-    margin: 0px 10px;
-    padding: 5px;
-}
-.accountIcon {
-    width: 30px;
-    height: 30px;
-    margin-top: 10px;
-}
-.accountIcon img {
-    width: 100%;
-    height: 100%;
-}
-.refreshIcon {
-        width: 30px;
-        height: 30px;
-        margin-top: 10px;
-}
-.eventsHolder {
-        width: 100%;
-        height: 50px;
-        overflow: auto;
-}
-.eventBlock {
-        width: 90%;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: white;
-        /* background: #f5ffe2; */
-        text-align: center;
-        margin: auto;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        font-size: 18px;
-        border: 1px solid rgb(210,210,210);
-}
-.blockHolder {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    background: linear-gradient(#e8865c, #e86e5c);
-    border-radius: 5px;
-    padding: 5px 15px 10px 15px;
-    color: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.eventBlockHolder {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    border-radius: 5px;
-    padding: 5px 15px 10px 15px;
-    color: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    display: flex;
-    flex-direction: column;
-}
-.eventBlockHeader {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    border-radius: 5px;
-    padding: 5px 15px 10px 15px;
-    color: white;
-    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
-}
-/* .classBlock {
-    width: 90%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background-color: white;
-    text-align: center;
-    margin: auto;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    font-size: 18px;
-    border: 1px solid rgb(210,210,210);
-} */
-.blockHeader {
-    text-align: left;
-    font-size: 20px;
-    font-weight: 600;
-    padding-top: 5px;
-    flex-grow: 1;
-}
-.blockLeft {
-    text-align: right;
-}
-.blockBottom {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.eventBlockMain {
-    font-size: 18px;
-    color: white;
-}
-.eventBlockSecondary {
-    font-size: 14px;
-    opacity: 0.7;
-}
-.blockMain {
-    font-size: 35px;
-    font-weight: 300;
-}
-.blockSecondary {
-    font-size: 14px;
-    font-weight: 300;
-    opacity: 0.7;
-}
-.dayTitle {
-    font-size: 30px;
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    text-decoration: none;
-    color: black;
-    font-weight: 300;
-}
-.dayHolder {
-    width: 100%;
-    border-bottom: 1px solid rgb(210,210,210);
-    border-top: 1px solid rgb(210,210,210);
-    overflow-y: auto;
-}
-.dayBlock {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    background-color: white;
-    
-}
-.dayIcon {
-    width: 50px;
-    height: 50px;
-}
-.iconBubble {
-    width: 35px;
-    height: 35px;
-    border-radius: 8px;
-    margin-left: 7.5px;
-    margin-top: 7.5px;
-    background-color: green;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-}
-.dayClass {
-    width: calc(100% - 50px);
-    border-bottom: 1px solid rgb(210,210,210);
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding-right: 10px;
-}
-.bottomClass {
-    width: calc(100% - 50px);
-    /* border-bottom: 1px solid rgb(210,210,210); */
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding-right: 10px;
-}
-.teacherClassBlock {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex-wrap: nowrap;
-}
-.teacherName {
-    font-style: italic;
-    font-size: 11px;
-    /* font-weight: 300; */
-    color: grey;
-}
-.className {
-    font-size: 18px;
-}
-.timeBlock {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: nowrap;
-    font-size: 18px;
-}
-.calendarTitleBar {
-    width: 100%;
-    /* height: 30px; */
-    font-size: 28px;
-    font-weight: 300;
-    margin-top: 10px;
-}
-.calendarDaysBar {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    /* padding: 0px 20px; */
-    color: orange;
-    font-size: 13px;
-    margin-top: 10px;
-}
-.calendarBodies {
-    width: 100%;
-    overflow-y: auto;
-    height: 100%;
-    -webkit-overflow-scrolling: touch;
-}
-.calendarTile {
-    min-height: 360px;
-    background-color: white;
-}
-.calendarDate {
-    width: 100%;
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-.dateName {
-    padding: 10px;
-    font-size: 22px;
-}
-.middleBar {
-    flex-grow: 1;
-    height: 2px;
-    background-color: #ddd;
-}
-.calendarRow {
-    width: 100%;
-    height: 60px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    /* border-bottom: 1px solid black; */
-}
-.calendarDay {
-    min-width: 14.28%;
-    flex-grow: 1;
-    text-align: center;
-    font-size: 13px;
-    padding-top: 5px;
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: space-evenly;
-}
-.today {
-    background-color: rgba(97, 199, 237, 0.4);
-    font-size: 20px;
-    color: white;
-    border-radius: 50%;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}
-.boxTitle {
-    font-size: 10px;
-}
-.dayEvent {
-    width: 6px;
-    height: 6px;
-    background-color: grey;
-    border-radius: 50%;
-    margin: auto;
-}
-.empty {
-    opacity: 0.3;
-}
-.bodyModal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 0px;
-    overflow: hidden;
-    background-color: rgba(0,0,0,0.4);
-    opacity: 0;
-    transition: opacity 0.3s linear;
-}
-.displayedModal {
-    opacity: 1;
-    height: 100%;
-}
-.calendarPopUp {
-    width: calc(100% - 90px);
-    height: 100%;
-    background-color: white;
-    position: absolute;
-    /* right: -100%; */
-    right: 0;
-    transform: translateX(100%);
-    top: 0;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    transition: transform 0.5s cubic-bezier(.05, .69, .14, 1);
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    /* overflow: hidden; */
-}
-.scheduleBodyWrapper {
-    flex-grow: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-.scheduleBody {
-    height: 1440px;
-    position: relative;
-}
-.floatingActionButton {
-    width: 50px;
-    height: 50px;
-    box-shadow: 0 6px 10px 0 #666;
-    background-color: red;
-    border-radius: 50%;
-}
-.floatingActionButtonHolder {
-    position: absolute;
-    bottom: 60px;
-    right: 15px;
-}
-.floatingActionButtonOverflow {
-    width: 210px;
-    position: absolute;
-    bottom: 52px;
-    left: -160px;
-    overflow: hidden;
-}
-.retractedDropdown {
+            100% {
+                right: 50%;
+            }
+        }
+        .homeHolder {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            width: 100%;
+            height: 100%;
+            /* display: flex; */
+            /* flex-direction: column; */
+            /* flex-wrap: nowrap; */
+            overflow: hidden;
+        }
+        .backdrop {
+            height: calc(100% - 90px);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            /* flex-grow: 1; */
+            /* display: flex; */
+            /* flex-direction: column; */
+            /* flex-wrap: wrap; */
+            /* overflow-x: hidden; */
+            /* overflow-y: hidden; */
+            -webkit-overflow-scrolling: auto;
+            
+        }
+        .backdropChild {
+            width: 400%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            transition: transform 0.3s cubic-bezier(0.34, 0.62, 0.44, 0.93);
+            will-change: transform;
+            /* transform: translateX(%); */
+        }
+        .bodyTile {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow-y: hidden;
+            justify-content: space-evenly;
+            background-color: rgb(240,240,240);
+            position: relative;
+        }
+        .homeHeader {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .bottomTabBar {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(to right, rgb(0,153,153), rgb(0,130,209));
+        }
+        .homeRow {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 0px 20px;
+            align-items: center;
+        }
+        .displayText {
+            color: white;
+            font-size: 24px;
+        }
+        #scheduleTile {
+            /* background-color: red; */
+        }
+        #homeTile {
+            display: block;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #coursesTile {
+            /* background-color: black; */
+            /* justify-content: start; */
+            display: block;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #calendarTile {
+            /* background-color: purple; */
+            justify-content: start;
+            overflow-x: hidden;
+        }
+        .dayHeader {
+            width: 100%;
+            text-align: left;
+            padding: 20px 10px 0px 10px;
+            /* background-color: white; */
+            border-bottom: 1px solid rgb(210,210,210);
+            /* color: #00358c */
+        }
+        .dayHeader h1 {
+            margin: 0;
+            width: 100%;
+            margin: 0px 10px;
+            padding: 5px;
+        }
+        .accountIcon {
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .accountIcon img {
+            width: 100%;
+            height: 100%;
+        }
+        .refreshIcon {
+                width: 30px;
+                height: 30px;
+                margin-top: 10px;
+        }
+        .eventsHolder {
+                width: 100%;
+                height: 50px;
+                overflow: auto;
+        }
+        .eventBlock {
+                width: 90%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                background-color: white;
+                /* background: #f5ffe2; */
+                text-align: center;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                font-size: 18px;
+                border: 1px solid rgb(210,210,210);
+        }
+        .blockHolder {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            background: linear-gradient(#e8865c, #e86e5c);
+            border-radius: 5px;
+            padding: 5px 15px 10px 15px;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .eventBlockHolder {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            border-radius: 5px;
+            padding: 5px 15px 10px 15px;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            display: flex;
+            flex-direction: column;
+        }
+        .eventBlockHeader {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            border-radius: 5px;
+            padding: 5px 15px 10px 15px;
+            color: white;
+            /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+        }
+        /* .classBlock {
+            width: 90%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: white;
+            text-align: center;
+            margin: auto;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            border: 1px solid rgb(210,210,210);
+        } */
+        .blockHeader {
+            text-align: left;
+            font-size: 20px;
+            font-weight: 600;
+            padding-top: 5px;
+            flex-grow: 1;
+        }
+        .blockLeft {
+            text-align: right;
+        }
+        .blockBottom {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .eventBlockMain {
+            font-size: 18px;
+            color: white;
+        }
+        .eventBlockSecondary {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .blockMain {
+            font-size: 35px;
+            font-weight: 300;
+        }
+        .blockSecondary {
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.7;
+        }
+        .dayTitle {
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            text-decoration: none;
+            color: black;
+            font-weight: 300;
+        }
+        .dayHolder {
+            width: 100%;
+            border-bottom: 1px solid rgb(210,210,210);
+            border-top: 1px solid rgb(210,210,210);
+            overflow-y: auto;
+        }
+        .dayBlock {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            background-color: white;
+            
+        }
+        .dayIcon {
+            width: 50px;
+            height: 50px;
+        }
+        .iconBubble {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            margin-left: 7.5px;
+            margin-top: 7.5px;
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .dayClass {
+            width: calc(100% - 50px);
+            border-bottom: 1px solid rgb(210,210,210);
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .bottomClass {
+            width: calc(100% - 50px);
+            /* border-bottom: 1px solid rgb(210,210,210); */
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding-right: 10px;
+        }
+        .teacherClassBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+        .teacherName {
+            font-style: italic;
+            font-size: 11px;
+            /* font-weight: 300; */
+            color: grey;
+        }
+        .className {
+            font-size: 18px;
+        }
+        .timeBlock {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+            font-size: 18px;
+        }
+        .calendarTitleBar {
+            width: 100%;
+            /* height: 30px; */
+            font-size: 28px;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+        .calendarDaysBar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            /* padding: 0px 20px; */
+            color: orange;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .calendarBodies {
+            width: 100%;
+            overflow-y: auto;
+            height: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .calendarTile {
+            min-height: 360px;
+            background-color: white;
+        }
+        .calendarDate {
+            width: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .dateName {
+            padding: 10px;
+            font-size: 22px;
+        }
+        .middleBar {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #ddd;
+        }
+        .calendarRow {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            /* border-bottom: 1px solid black; */
+        }
+        .calendarDay {
+            min-width: 14.28%;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 13px;
+            padding-top: 5px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
+        }
+        .today {
+            background-color: rgba(97, 199, 237, 0.4);
+            font-size: 20px;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        }
+        .boxTitle {
+            font-size: 10px;
+        }
+        .dayEvent {
+            width: 6px;
+            height: 6px;
+            background-color: grey;
+            border-radius: 50%;
+            margin: auto;
+        }
+        .empty {
+            opacity: 0.3;
+        }
+        .bodyModal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0px;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.3s linear;
+        }
+        .displayedModal {
+            opacity: 1;
+            height: 100%;
+        }
+        .calendarPopUp {
+            width: calc(100% - 90px);
+            height: 100%;
+            background-color: white;
+            position: absolute;
+            /* right: -100%; */
+            right: 0;
+            transform: translateX(100%);
+            top: 0;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            transition: transform 0.5s cubic-bezier(.05, .69, .14, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            /* overflow: hidden; */
+        }
+        .scheduleBodyWrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .scheduleBody {
+            height: 1440px;
+            position: relative;
+        }
+        .floatingActionButton {
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 6px 10px 0 #666;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .floatingActionButtonHolder {
+            position: absolute;
+            bottom: 60px;
+            right: 15px;
+        }
+        .floatingActionButtonOverflow {
+            width: 210px;
+            position: absolute;
+            bottom: 52px;
+            left: -160px;
+            overflow: hidden;
+        }
+        .retractedDropdown {
 
-}
-.floatingActionButtonDropdown {
-    width: 190px;
-    left: 10px;
-    bottom: 10px;
-    background-color: white;
-    position: absolute;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    /* transition: max-height 0.12s cubic-bezier(0.0,0.0,0.2,1), left 0.12s cubic-bezier(0.0,0.0,0.2,1), bottom 0.12s cubic-bezier(0.0,0.0,0.2,1); */
-    transform: translate(0%, calc(0% + 3px)) scale(1);
-    transition: transform 300ms cubic-bezier(0.21,0.94,0.2,0.94);
-    overflow: hidden;
-    border-radius: 2px;
-    will-change: transform;
-}
-.retractedDropdown .floatingActionButtonDropdown {
-    transform: translate(190px, calc(100%)) scale(0);
-}
-.actionItem {
-    width: 100%;
-    padding: 20px 10px;
-    color: #333;
-    font-size: 18px;
-    font-weight: 600;
-}
-.actionItemIcon {
-    padding-right: 15px;
-    color: #3065ba;
-}
-.floatingActionButton:active {
-    box-shadow: 0 6px 14px 0 #666;
-    transform: scale(1.05);
-}
-.floatingActionButton img {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 5px;
-    left: 0px;
-}
-.scheduleHour {
-    width: 100%;
-    height: 60px;
-    position: relative;
-}
-.scheduleHourBar {
-    width: 100%;
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-}
-.scheduleHourTitle {
-    padding: 0px 10px;
-    font-size: 17px;
-    color: #aaa;
-}
-.scheduleEvent {
-    position: absolute;
-    width: 100%;
-    padding: 10px;
-}
-.scheduleBodyMain {
-    font-size: 18px;
-    color: black;
-}
-.scheduleBodySecond {
-    font-size: 14px;
-    color: rgba(0,0,0,0.8);
-}
-.extendedPopUp {
-    transform: translateX(0%);
-}
-.removePopUp {
-    width: 50px;
-    background-color: grey;
-    position: relative;
-    top: -20px;
-    height: 5px;
-    border-radius: 5px;
-    margin: auto;
-    margin-top: 10px;
-}
-.dateTitle {
-    width: 100%;
-    font-size: 20px;
-    text-align: center;
-}
-.eventBody {
-    width: 100%;
-    border: 5px solid #bbb;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-.eventBodyTime {
-    background-color: #bbb;
-    padding-right: 3px;
-}
-.eventBodyInfo {
-    flex-grow: 1;
-    background-color: #b2ffbc;
-    overflow-x: auto;
-    padding-left: 5px;
-    color: #277230;
-}
-.scheduleBodies {
-    width: 100%;
-    height: calc(100% - 70px);
-    overflow-y: auto;
-    padding-bottom: 20px;
-}
-.schedule {
-    width: 650px;
-    overflow-x: auto;
-    margin-bottom: 20px;
-    display: block;
-    padding-left: 10px;
-}
-.scheduleDay {
-    display: inline-block;
-    vertical-align: top;
-}
-.scheduleTitle {
-    text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-size: 20px;
-}
-.scheduleBlock {
-    width: 110px;
-    height: 80px;
-    min-height: 50px;
-    /* border-bottom: 1px solid black;
-    border-right: 1px solid black; */
-    margin: 10px 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    background-color: white;
-    font-size: 12px;
-    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    border-radius: 5px;
-}
-.scheduleBlock div {
-    margin-top: 5px;
-    text-align: center;
-}
-.homeTabView {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.5);
-    z-index: 4;
-}
-.tab {
-    width: 25%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    border-right: 1px solid rgba(255,255,255,0.5);
-    font-size: 10px;
-}
-.selectedTab {
-    background-color: rgba(255,255,255,0.4);
-}
-.noBorder  {
-    border: none !important;
-}
-.fa-chevron-right {
-    margin-left: 10px;
-    color: orange;
-}
-.alert {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 5px;
-    padding-right: 5px;
-    width: 95%;
-    border: 1px solid black;
-    position: absolute;
-    top: 20%;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #d9edf7;
-    border-color: #bcdff1;
-    color: #31708f;
-    border-radius: 5px;
-    -webkit-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
-    -moz-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
-    box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
-    transition: top 0.2s linear;
-}
-.activityHolder {
-    width: 100%;
-    text-align: center;
-    margin-top: 15px;
-}
-.activityTile {
-    padding: 7px 15px;
-    background-color: #fff;
-    border-radius: 100px;
-    margin: 0px 10px 10px 10px;
-    font-weight: 500;
-    color: rgba(0,0,0,0.5);
-    box-shadow: 1px 2px 3px rgba(0,0,0,0.11);
-    display: inline-block;
-}
-.activityPlaceholder {
-    background-color: rgb(238, 238, 238);
-}
-@media screen and (max-height: 520px) {
-    .homeHeader {
-        height: 0px;
-    }
-    .homeRow {
-        display: none;
-    }
-    .backdrop {
-        height: calc(100% - 40px);
-    }
-}
-@media screen and (max-width: 320px) {
-    .className {
-        font-size: 14px;
-    }
-    .timeBlock {
-        font-size: 14px;   
-    }
-    .teacherName {
-        font-size: 10px;
-    }
-    .blockHeader {
-        font-size: 18px;
-    }
-    .blockMain {
-        font-size: 27px;
-    }
-    .blockSecondary {
-        font-size: 12px;
-    }
-    .dayHeader h1 {
-        font-size: 25px;
-    }
-}
-@media screen and (min-width: 768px) {
-    .backdrop {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-evenly;
-        background-color: rgb(240,240,240);
-        overflow-y: auto;
-        
-    }
-    .bodyTile {
-        width: 350px;
-        height: 500px;
-        margin-left: 50px;
-        margin-right: 50px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        border: 1px solid rgb(210,210,210);
-    }
-}
+        }
+        .floatingActionButtonDropdown {
+            width: 190px;
+            left: 10px;
+            bottom: 10px;
+            background-color: white;
+            position: absolute;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            /* transition: max-height 0.12s cubic-bezier(0.0,0.0,0.2,1), left 0.12s cubic-bezier(0.0,0.0,0.2,1), bottom 0.12s cubic-bezier(0.0,0.0,0.2,1); */
+            transform: translate(0%, calc(0% + 3px)) scale(1);
+            transition: transform 300ms cubic-bezier(0.21,0.94,0.2,0.94);
+            overflow: hidden;
+            border-radius: 2px;
+            will-change: transform;
+        }
+        .retractedDropdown .floatingActionButtonDropdown {
+            transform: translate(190px, calc(100%)) scale(0);
+        }
+        .actionItem {
+            width: 100%;
+            padding: 20px 10px;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .actionItemIcon {
+            padding-right: 15px;
+            color: #3065ba;
+        }
+        .floatingActionButton:active {
+            box-shadow: 0 6px 14px 0 #666;
+            transform: scale(1.05);
+        }
+        .floatingActionButton img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 5px;
+            left: 0px;
+        }
+        .scheduleHour {
+            width: 100%;
+            height: 60px;
+            position: relative;
+        }
+        .scheduleHourBar {
+            width: 100%;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+        }
+        .scheduleHourTitle {
+            padding: 0px 10px;
+            font-size: 17px;
+            color: #aaa;
+        }
+        .scheduleEvent {
+            position: absolute;
+            width: 100%;
+            padding: 10px;
+        }
+        .scheduleBodyMain {
+            font-size: 18px;
+            color: black;
+        }
+        .scheduleBodySecond {
+            font-size: 14px;
+            color: rgba(0,0,0,0.8);
+        }
+        .extendedPopUp {
+            transform: translateX(0%);
+        }
+        .removePopUp {
+            width: 50px;
+            background-color: grey;
+            position: relative;
+            top: -20px;
+            height: 5px;
+            border-radius: 5px;
+            margin: auto;
+            margin-top: 10px;
+        }
+        .dateTitle {
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+        }
+        .eventBody {
+            width: 100%;
+            border: 5px solid #bbb;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .eventBodyTime {
+            background-color: #bbb;
+            padding-right: 3px;
+        }
+        .eventBodyInfo {
+            flex-grow: 1;
+            background-color: #b2ffbc;
+            overflow-x: auto;
+            padding-left: 5px;
+            color: #277230;
+        }
+        .scheduleBodies {
+            width: 100%;
+            height: calc(100% - 70px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+        .schedule {
+            width: 650px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            display: block;
+            padding-left: 10px;
+        }
+        .scheduleDay {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .scheduleTitle {
+            text-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 20px;
+        }
+        .scheduleBlock {
+            width: 110px;
+            height: 80px;
+            min-height: 50px;
+            /* border-bottom: 1px solid black;
+            border-right: 1px solid black; */
+            margin: 10px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            background-color: white;
+            font-size: 12px;
+            /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            border-radius: 5px;
+        }
+        .scheduleBlock div {
+            margin-top: 5px;
+            text-align: center;
+        }
+        .homeTabView {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.5);
+            z-index: 4;
+        }
+        .tab {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            border-right: 1px solid rgba(255,255,255,0.5);
+            font-size: 10px;
+        }
+        .selectedTab {
+            background-color: rgba(255,255,255,0.4);
+        }
+        .noBorder  {
+            border: none !important;
+        }
+        .fa-chevron-right {
+            margin-left: 10px;
+            color: orange;
+        }
+        .alert {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 5px;
+            padding-right: 5px;
+            width: 95%;
+            border: 1px solid black;
+            position: absolute;
+            top: 20%;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #d9edf7;
+            border-color: #bcdff1;
+            color: #31708f;
+            border-radius: 5px;
+            -webkit-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            -moz-box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            box-shadow: 13px 17px 43px -19px rgba(0,0,0,0.75);
+            transition: top 0.2s linear;
+        }
+        .activityHolder {
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .activityTile {
+            padding: 7px 15px;
+            background-color: #fff;
+            border-radius: 100px;
+            margin: 0px 10px 10px 10px;
+            font-weight: 500;
+            color: rgba(0,0,0,0.5);
+            box-shadow: 1px 2px 3px rgba(0,0,0,0.11);
+            display: inline-block;
+        }
+        .activityPlaceholder {
+            background-color: rgb(238, 238, 238);
+        }
+        @media screen and (max-height: 520px) {
+            .homeHeader {
+                height: 0px;
+            }
+            .homeRow {
+                display: none;
+            }
+            .backdrop {
+                height: calc(100% - 40px);
+            }
+        }
+        @media screen and (max-width: 320px) {
+            .className {
+                font-size: 14px;
+            }
+            .timeBlock {
+                font-size: 14px;   
+            }
+            .teacherName {
+                font-size: 10px;
+            }
+            .blockHeader {
+                font-size: 18px;
+            }
+            .blockMain {
+                font-size: 27px;
+            }
+            .blockSecondary {
+                font-size: 12px;
+            }
+            .dayHeader h1 {
+                font-size: 25px;
+            }
+        }
+        @media screen and (min-width: 768px) {
+            .backdrop {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-evenly;
+                background-color: rgb(240,240,240);
+                overflow-y: auto;
+                
+            }
+            .bodyTile {
+                width: 350px;
+                height: 500px;
+                margin-left: 50px;
+                margin-right: 50px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                border: 1px solid rgb(210,210,210);
+            }
+        }
     </style>
     </head>
     <body onunload="unload()">

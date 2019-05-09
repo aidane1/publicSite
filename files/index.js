@@ -218,6 +218,8 @@ let Categories = require("../models/categorychar.js");
 
 let Semesters = require("../models/semesterchar.js");
 
+let Form = require("../models/swimmingformchar");
+
 let Log = require("../models/logchar.js");
 
 let webpush = require("web-push");
@@ -887,6 +889,34 @@ function makeColorMap(blockNames) {
   return colorMap;
 }
 
+
+app.get("/forms", async (req, res) => {
+  res.render("swimming/swimmingForms");
+});
+
+app.post("/forms", urlencodedParser, async (req,res) => {
+  if (req.body.name) {
+    req.body.practiceDay = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][["M", "T", "W", "TH", "F", "S"].indexOf(req.body.practiceDay)];
+    let form = await Form.create(req.body);
+    form = JSON.parse(JSON.stringify(form));
+    form.valid = true;
+    form.reason = "Error";
+    res.send(form);
+  } else {
+    res.send({valid: false, reason: "No Name Supplied"});
+  }
+});
+
+app.get("/coach", async (req, res) => {
+  let forms = await Form.find({coach: req.query.coach || "Jason"});
+  // forms = JSON.parse(JSON.stringify(forms));
+  forms.sort((a,b) => {
+    return a.date.getTime() > b.date.getTime() ? -1 : 1;
+  });
+  res.render("swimming/coachForms", { forms });
+});
+
+
 app.post("/changeDayTitles", urlencodedParser, async function(req, res) {
   try {
     if (req.session.userId && req.body.schedule && req.body.day && req.body.text) {
@@ -1131,7 +1161,10 @@ app.get("/dashboard/courses/teachers", async function(req,res) {
           {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
           {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
         ];
-        res.render("dashboard/dashboardTemplate", {title: "Edit teachers - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Teacher", keys: keys, list: teachers});
+        let clickFunction = (teacher) => {
+          return `window.location = \"/teacher/${teacher._id}\"`;
+        }
+        res.render("dashboard/dashboardTemplate", {title: "Edit teachers - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Teacher", keys: keys, list: teachers, listClick: clickFunction});
       } else {
         res.redirect("/home");
       }
@@ -1162,7 +1195,10 @@ app.get("/dashboard/courses/categories", async function(req,res) {
           {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
           {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
         ];
-        res.render("dashboard/dashboardTemplate", {title: "Edit categories - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Category", keys: keys, list: categories});
+        let clickFunction = (item) => {
+          return "";
+        }
+        res.render("dashboard/dashboardTemplate", {title: "Edit categories - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Category", keys: keys, list: categories, listClick: clickFunction});
       } else {
         res.redirect("/login");
       }
@@ -1232,11 +1268,15 @@ app.get("/dashboard/courses/courses", async function(req,res) {
           {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
         ];
         courses.sort((a,b) => a.course.localeCompare(b.course));
-        res.render("dashboard/dashboardTemplate", {title: "Edit courses - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Course", keys: keys, list: courses});
+        let clickFunction = (item) => {
+          return "window.location = \"/teacher/" + item.teacher._id + "/" + item._id + "/overview\"";
+        }
+        res.render("dashboard/dashboardTemplate", {title: "Edit courses - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Course", keys: keys, list: courses, listClick: clickFunction});
       } else {
         res.redirect("/login");
       }
     } catch(e) {
+      console.log(e);
       res.redirect("/login");
     }
   } else {
@@ -1267,7 +1307,10 @@ app.get("/dashboard/courses/codes", async function(req, res) {
           {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
           {name: "Codes", selected: true, href: "/dashboard/courses/codes"},
         ];
-        res.render("dashboard/dashboardTemplate", {title: "Edit codes - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Code", keys: keys, list: codeList});
+        let clickFunction = (item) => {
+          return "";
+        }
+        res.render("dashboard/dashboardTemplate", {title: "Edit codes - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Courses", singular: "Code", keys: keys, list: codeList, listClick: clickFunction});
       } else {
         res.redirect("/login");
       }
@@ -1308,7 +1351,10 @@ app.get("/dashboard/events", async function(req, res) {
           "dayRolled": {type: "checkbox", default: "open"},
           "displayedEvent": {type: "checkbox", default: "checked"},
         }
-        res.render("dashboard/dashboardTemplate", {tabs: [], title: "Edit events - dashboard", inputTypes: inputTypes, name: "Events", singular: "Event", keys: keys, list: events});
+        let clickFunction = (item) => {
+          return "";
+        }
+        res.render("dashboard/dashboardTemplate", {tabs: [], title: "Edit events - dashboard", inputTypes: inputTypes, name: "Events", singular: "Event", keys: keys, list: events, listClick: clickFunction});
       } else {
         res.redirect("/login");
       }
@@ -1323,38 +1369,39 @@ app.get("/teacher/:id", async function(req, res) {
   try {
     let currentDate = (new Date()).local();
     if (req.session.teacherId || req.session.userId) {
-      if (req.session.teacherId) {
-        let teacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
-        if (teacher.teacherAccount._id.toString() == req.params.id.toString()) {
-          let school = await School.findOne({_id : teacher.school}).populate("semesters");
-          let colorMap = makeColorMap(school.blockNames);
-          let currentSemesters = calculateSemesters(school.semesters, currentDate);
-          let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
-          let allowedUserCourses = await Course.find({$and: [{teacher: teacher.teacherAccount._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
-          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
-          let map = await makeDayMap(school._id);
-          let today = map[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`];
-          console.log(today);
-          res.render("teacherDashboard/teacherDashboard", {today: today, colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher.teacherAccount});
-        } else {
-          res.redirect("/home");
-        }
-      } else {
+      let valid = false;
+      let teacher;
+      let school;
+      if (req.session.userId) {
         let user = await User.findOne({_id : req.session.userId});
-        let teacher = await Teachers.findOne({_id : req.params.id});
-        if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-          let school = await School.findOne({_id : user.school}).populate("semesters");
-          let colorMap = makeColorMap(school.blockNames);
-          let currentSemesters = calculateSemesters(school.semesters, currentDate);
-          let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-          let allowedUserCourses = await Course.find({$and: [{teacher: teacher._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
-          let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
-          let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
-          res.render("teacherDashboard/teacherDashboard", {colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher});
-        } else {
-          res.redirect("/dashboard");
+        let currentTeacher = await Teachers.findOne({_id : req.params.id});
+        if (user != null && currentTeacher != null && ((user.permissions == "admin" && user.school.toString() == currentTeacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == currentTeacher._id.toString()))) {
+          school = await School.findOne({_id : user.school}).populate("semesters");
+          let mainAccount = await TeacherUser.findOne({'teacherAccount' : currentTeacher._id}).populate("teacherAccount");
+          teacher = mainAccount;
+          valid = true;
         }
+      }
+      if (!valid && req.session.teacherId) {
+        let currentTeacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
+        if (currentTeacher.teacherAccount._id.toString() == req.params.id.toString()) {
+          school = await School.findOne({_id : teacher.school}).populate("semesters");
+          teacher = currentTeacher;
+          valid = true;
+        }
+      }
+      if (valid && teacher && school) {
+        let colorMap = makeColorMap(school.blockNames);
+        let currentSemesters = calculateSemesters(school.semesters, currentDate);
+        let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
+        let allowedUserCourses = await Course.find({$and: [{teacher: teacher.teacherAccount._id}, {semester: currentSemesters}]}).populate("category").populate("teacher");
+        let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, {}, school.spareName);
+        let readSchedule = (makeReadableSchedule(true, school.constantBlockSchedule, blockMap, school.spareName));
+        let map = await makeDayMap(school._id);
+        let today = map[`${currentDate.getFullYear()}_${currentDate.getMonth()}_${currentDate.getDate()}`];
+        res.render("teacherDashboard/teacherDashboard", {school: school, today: today, colorMap: colorMap, titles: school.dayTitles, readSchedule: readSchedule, courses: courses, teacher: teacher.teacherAccount, averageColours: averageColors});
+      } else {
+        res.redirect("/home");
       }
     } else {
       res.redirect("/home");
@@ -1391,45 +1438,59 @@ app.get("/teacher/:id/:course/overview", async function(req, res) {
 
 app.get("/teacher/:id/:course/assignments", async function(req, res) {
   try {
+    let valid = false;
+    let teacher;
+    let school;
     if (req.session.userId) {
       let user = await User.findOne({_id : req.session.userId});
-      let teacher = await Teachers.findOne({_id : req.params.id});
-      if (user != null && teacher != null && ((user.permissions == "admin" && user.school.toString() == teacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == teacher._id.toString()))) {
-        let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
-        let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
-        let courses = await Course.find({teacher: teacher._id}).populate("semester").populate("category");
-        if (course != null && course.teacher.toString() == teacher._id.toString()) {
-
-          let keys = [
-            {displayFunc: (obj) => {return obj.topic}, name: "Topic", propertyName: "topic"},
-            {displayFunc: (obj) => {return obj.type}, name: "Type", propertyName: "type"},
-            {displayFunc: (obj) => {return obj.type == "text" ? obj.assignment.replace(/(\r\\n|\n|\r)/gm, "<br>") : `${obj.assignment.split("_").slice(0, obj.assignment.split("_").length-1).join("_").replace(/(\r\\n|\n|\r)/gm, "<br>")}&nbsp;<a href = '/public/assignments/${obj.assignment.split("_").slice(obj.assignment.split("_").length-1, obj.assignment.split("_").length).join("_")}'>(file)</a>`}, name: "Assignment", propertyName: "assignment"},
-            {displayFunc: (obj) => {return obj.notes}, name: "Notes/Instruction", propertyName: "notes"},
-            {displayFunc: (obj) => {return obj.due}, name: "Due", propertyName: "due"},
-          ]
-          let topics = ["No Topic", ...course.topics];
-          let inputTypes = {
-            "topic": {type: "select", optionType: "list", options: topics, other: true, otherName: "Create Topic"},
-            "type": {type: "type-select", options: [{name: "Text", type: "blank-selector", default: ""}, {name: "File", type: "popup-file", default: ""}]},
-            "assignment": {type: "popup-textarea", default: "Blank Assignment"},
-            "notes": {type: "popup-textarea", default: "No Notes"},
-            "due": {type: "text"},
-          }
-          let tabOptions = [
-            {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
-            {name: "Teachers", selected: true, href: "/dashboard/courses/teachers"},
-            {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
-            {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
-          ];
-
-
-          // res.render("teacherDashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
-          res.render("teacherDashboard/teacherTemplate", {teacher: teacher, courses: courses, course: course, title: "Edit assignments - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Assignments", singular: "Assignment", keys: keys, list: assignments});
-        } else {
-          res.redirect("/teacher/" + req.query.id);
+      let currentTeacher = await Teachers.findOne({_id : req.params.id});
+      if (user != null && currentTeacher != null && ((user.permissions == "admin" && user.school.toString() == currentTeacher.school.toString()) || (user.permissions == "teacher" && user._id.toString() == currentTeacher._id.toString()))) {
+        school = await School.findOne({_id : user.school}).populate("semesters");
+        let mainAccount = await TeacherUser.findOne({'teacherAccount' : currentTeacher._id}).populate("teacherAccount");
+        teacher = mainAccount;
+        valid = true;
+      }
+    }
+    if (!valid && req.session.teacherId) {
+      let currentTeacher = await TeacherUser.findOne({_id : req.session.teacherId}).populate("teacherAccount");
+      if (currentTeacher.teacherAccount._id.toString() == req.params.id.toString()) {
+        school = await School.findOne({_id : teacher.school}).populate("semesters");
+        teacher = currentTeacher;
+        valid = true;
+      }
+    }
+    if (valid && teacher && school) {
+      let course = await Course.findOne({_id : req.params.course}).populate("semester").populate("category");
+      let assignments = await Assignments.find({forCourse: course._id}).populate("submittedBy");
+      let courses = await Course.find({teacher: teacher.teacherAccount._id}).populate("semester").populate("category");
+      if (course != null && course.teacher.toString() == teacher.teacherAccount._id.toString()) {
+        let keys = [
+          {displayFunc: (obj) => {return obj.topic}, name: "Topic", propertyName: "topic"},
+          {displayFunc: (obj) => {return obj.type}, name: "Type", propertyName: "type"},
+          {displayFunc: (obj) => {return obj.type == "text" ? obj.assignment.replace(/(\r\\n|\n|\r)/gm, "<br>") : `${obj.assignment.split("_").slice(0, obj.assignment.split("_").length-1).join("_").replace(/(\r\\n|\n|\r)/gm, "<br>")}&nbsp;<a href = '/public/assignments/${obj.assignment.split("_").slice(obj.assignment.split("_").length-1, obj.assignment.split("_").length).join("_")}'>(file)</a>`}, name: "Assignment", propertyName: "assignment"},
+          {displayFunc: (obj) => {return obj.notes}, name: "Notes/Instruction", propertyName: "notes"},
+          {displayFunc: (obj) => {return obj.due}, name: "Due", propertyName: "due"},
+        ]
+        let topics = ["No Topic", ...course.topics];
+        let inputTypes = {
+          "topic": {type: "select", optionType: "list", options: topics, other: true, otherName: "Create Topic"},
+          "type": {type: "type-select", options: [{name: "Text", type: "blank-selector", default: ""}, {name: "File", type: "popup-file", default: ""}]},
+          "assignment": {type: "popup-textarea", default: "Blank Assignment"},
+          "notes": {type: "popup-textarea", default: "No Notes"},
+          "due": {type: "text"},
         }
+        let tabOptions = [
+          {name: "Categories", selected: false, href: "/dashboard/courses/categories"},
+          {name: "Teachers", selected: true, href: "/dashboard/courses/teachers"},
+          {name: "Courses", selected: false, href: "/dashboard/courses/courses"},
+          {name: "Codes", selected: false, href: "/dashboard/courses/codes"},
+        ];
+
+
+        // res.render("teacherDashboard/teacherAssignments", {moment: moment, assignments: assignments, course: course, courses: courses, teacher: teacher});
+        res.render("teacherDashboard/teacherTemplate", {teacher: teacher, courses: courses, course: course, title: "Edit assignments - dashboard", tabs: tabOptions, inputTypes: inputTypes, name: "Assignments", singular: "Assignment", keys: keys, list: assignments, school: school});
       } else {
-        res.redirect("/dashboard");
+        res.redirect("/teacher/" + req.query.id);
       }
     } else {
       res.redirect("/login");
@@ -2187,6 +2248,23 @@ app.get("/dashboard/masterSchedule", async function(req, res) {
     }
   } else {
     res.redirect("/login");
+  }
+});
+app.get("/dashboard/announcements", async function(req, res) {
+  if (req.session.userId) {
+    try {
+      let user = await User.findOne({_id : req.session.userId});
+      if (user.permissions == "admin") {
+        let school = await School.findOne({_id : user.school});
+        res.render("dashboard/dashboardAlerts", {school: school});
+      } else {
+        res.redirect("/dashboard");
+      }
+    } catch(e) {
+      res.redirect("/dashboard");
+    }
+  } else {
+    res.redirect("/dashboard");
   }
 });
 app.get("/dashboard/courses", async function(req, res) {
@@ -4006,8 +4084,7 @@ app.get("/infoOnDay", async function(req, res) {
       let blockMap = blockNamesObject(school.blockNames, allowedUserCourses, user.blockNames, school.spareName);
       let eventsObject = await makeDayMap(school._id);
       let today = eventsObject[req.query.date];
-      
-      if (today) {
+      if (today && today[1]) {
         for (var i = 0; i < today[3].length; i++) {
           if (today[3][i].displayedEvent) {
             sendObject.events.push({info: today[3][i].info, time: today[3][i].time});
@@ -4546,55 +4623,18 @@ app.post("/questions/:id", urlencodedParser, async function(req, res) {
           body: req.body.comment,
           submittedBy: user.username
         }
-        console.log(params);
         let comment = await Posts.Comment.create(params);
         await Posts.Post.findOneAndUpdate({_id : req.params.id}, {$push:{comments : comment._id}});
         await Posts.Comment.findOneAndUpdate({_id : req.body.parents[req.body.parents.length-1]}, {$push:{children : comment._id}});
         res.send(params);
-        // res.redirect("/questions/" + req.params.id);
       }
     } else {
       res.send({});
-      // res.redirect("/questions/" + req.params.id);
     }
   } catch(e) {
     console.log(e);
     res.send({});
-    // res.redirect("/questions/" + req.params.id);
   }
-  // if (req.session.userId) {
-  //   if (req.body.deleteComment) {
-  //     User.findOne({_id : req.session.userId}, function(err, user) {
-  //       if (user.permissions == "admin") {
-  //         Posts.Post.findOneAndUpdate({_id : mongoose.Types.ObjectId(req.params.id)}, {$pull: {comments: req.body.deleteComment}}).then(() => {
-  //           Posts.Comment.remove({_id : mongoose.Types.ObjectId(req.body.deleteComment)}).then(() => {
-  //             res.redirect("/questions/" + req.params.id);
-  //           });
-  //         });
-  //       } else {
-
-  //       }
-  //     });
-
-  //   } else {
-  //     User.findOne({_id : req.session.userId}, function(err, user) {
-  //       let params = {
-  //         parentPost: mongoose.Types.ObjectId(req.params.id),
-  //         body: req.body.comment,
-  //         submittedBy: user.username
-  //       }
-  //       Posts.Comment.create(params, function(err, comment) {
-  //         Posts.Post.findOne({_id : mongoose.Types.ObjectId(req.params.id)}, function(err, post) {
-  //           User.findOneAndUpdate({username: post.submittedBy}, {$push:{alerts: [["postComment", "Someone commented on your post!", "https://www.pvstudents.ca" + req.url]]}}).then(function(err, user) {
-  //             Posts.Post.findOneAndUpdate({_id : post._id}, {$push:{comments : comment._id}}).then(function() {
-  //               res.redirect("/questions/" + req.params.id);
-  //             });
-  //           })
-  //         });
-  //       })
-  //     });
-  //   }
-  // }
 });
 
 app.get("/account", async function(req, res) {
@@ -4895,287 +4935,6 @@ app.get("/events", async function(req,res) {
 });
 
 
-app.get("/newIndex", async (req, res, next) => {
-
-
-  let currentDate = (new Date()).local();
-  
-
-  // let currentDate = new Date(2018, 9, 12, 0, 0, 0, 0);
-
-
-  // console.log(currentDate.getHours());
-
-
-  res.cookie("path", "/");
-  //makes sure the user has a session
-  if (req.session.userId) {
-
-    let user = await User.findOne({_id : req.session.userId});
-    if (!user || user == null) {
-      res.redirect("/login");
-    } else {
-      try {
-
-
-        let courses = await Course.find({_id : user.courses});
-        let school = await School.findOne({_id : user.school});
-        let weekOffset = Math.floor((currentDate.getTime() - (new Date(2018, 8, 2)).getTime())/1000/60/60/24/7)%school.blockOrder.length;
-        //gathers the events from the past month for the calendar
-        let monthEvent = await Events.find({$and: [{displayedEvent : true}, {school : user.school}, {month: (currentDate).getMonth()}, {year : (currentDate).getFullYear()}]});
-        let soonEvents = await Events.find({$and: [{displayedEvent : true}, {school : user.school}, {date: {$gt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1, 0, 0, 0, 0)}}, {date: {$lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1, 0, 0, 0, 0)}}]});
-        let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
-        let skippedDays = await Events.find({$and: [{school : user.school}, {schoolSkipped : true}]});
-        let schoolSkippedToday = false;
-        if (skippedDays.map(x => x.date.getTime()).indexOf((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())).getTime()) !== -1) {
-          schoolSkippedToday = true;
-        }
-        let courseIds = [];
-        for (var i = 0; i < courses.length; i++) {
-          courseIds.push(courses[i]._id);
-        }
-        let userNotes = await Notes.find({$and: [{writtenBy: user._id}, {date: {$gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0)}}, {forCourse: user.courses}]});
-        let allNotes = await Notes.find({forCourse: courseIds});
-        // let assignments = await Assignments.find({forCourse: user.courses});
-        let viewNotesDisplay = [1, "nothing"];
-        if (courses.length) {
-          viewNotesDisplay = [courses[0]._id || 1, courses[0].course];
-        }
-        let notesObject = {
-
-        }
-        let allNotesObject = {
-
-        }
-        for (var i = 0; i < courses.length; i++) {
-          notesObject[courses[i]._id] = [];
-          allNotesObject[courses[i]._id] = {
-            course: courses[i].course,
-            notes: []
-          };
-        }
-
-        for (var i = 0; i < userNotes.length; i++) {
-          notesObject[userNotes[i].forCourse].push(userNotes[i]);
-        }
-        for (var i = 0; i < allNotes.length; i++) {
-          allNotesObject[allNotes[i].forCourse].notes.push(allNotes[i]);
-        }
-
-        for (var key in allNotesObject) {
-          allNotesObject[key].notes.sort((a,b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
-          let setterDate = allNotesObject[key].notes[0] ? allNotesObject[key].notes[0].date : false;
-          if (setterDate) {
-            setterDate = new Date(setterDate.getFullYear(), setterDate.getMonth(), setterDate.getDate());
-            let newFormat = [];
-            let currentPart = [moment(setterDate).format("dddd, MMMM Do YYYY"), allNotesObject[key].notes[0]];
-            for (var i = 1; i < allNotesObject[key].notes.length; i++) {
-              let currentDate = allNotesObject[key].notes[i].date;
-              currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-              if (currentDate.getTime() < setterDate.getTime()) {
-                setterDate = currentDate;
-                newFormat.push(currentPart);
-                currentPart = [moment(setterDate).format("dddd, MMMM Do YYYY")];
-              }
-              currentPart.push(allNotesObject[key].notes[i]);
-            }
-            newFormat.push(currentPart);
-            allNotesObject[key].notes = newFormat;
-          } else {
-
-          }
-        }
-        
-        
-        soonEvents = soonEvents.reverse();
-
-        let dayOffSetToday = dayOffset(offSetEvents, new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
-        let currentDay;
-        let offLine = false;
-        if (req.query.day) {
-          currentDay = parseInt(req.query.day);
-        }  else {
-          currentDay = (((currentDate.getDay()-1)-dayOffSetToday%5+5)%5+1);
-        }
-        if (req.query.offline) {
-          offLine = true;
-        }
-        let endDate = moment(currentDate);
-        let startDate = moment([2018,8,1]);
-        let daysFromStart = (endDate.diff(startDate, "days"))+1;
-        let userPlans = [];
-        for (var i = 0; i < user.planner.length; i++) {
-          if (user.planner[i][0] == daysFromStart.toString()) {
-            userPlans.push(user.planner[i][1]);
-          }
-        }
-        let weeklySchedule = user.weeklySchedule["day" + currentDate.getDay()];
-        
-        //declares the top level variables that will be used
-
-        let courseBlocks = {
-
-        }
-        for (var i = 0; i < courses.length; i++) {
-          courseBlocks[courses[i].block] = courses[i].course;
-          courseBlocks[courses[i].block + "_id"] = courses[i]._id;
-        }
-        let homeworkList = [];
-        let todaysOrderedClasses = [];
-        let courseCodes = [];
-        let daysArray = [];
-        //pushes all the course codes onto an array for use in resources, and pushes all the course's homework onto an array to pass to the index.ejs file
-        for (var i = 0; i < courses.length; i++) {
-          courseCodes.push(courses[i].code);
-          let currentAssignments = await Assignments.find({forCourse: courses[i]._id});
-          let currentHomework = [courses[i].course, currentAssignments, courses[i].block, courses[i].teacher, courses[i]._id];
-          homeworkList.push(currentHomework);
-        }
-        
-
-        //gets the order of todays blocks from a function
-        //also accounts for time offsets due to pro-D days
-
-        let todaysBlocks;
-        let blockOrderLetters;
-        if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
-          todaysBlocks = false;
-          todaysOrderedClasses = false;
-          blockOrderLetters = false;
-        } else {
-          if (school.constantBlocks) {
-            if (school.name === "PVSS") {
-              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDay.toString()];
-            } else {
-              todaysBlocks = school.constantBlockSchedule.schedule[weekOffset]["day" + currentDate.getDay()];
-            }
-            let constantSchedule = school.constantBlockSchedule.blockSchedule;
-            for (var i = 0; i < todaysBlocks.length; i++) {
-              todaysBlocks[i] = [todaysBlocks[i][0], constantSchedule[i][0], constantSchedule[i][1], constantSchedule[i][2], constantSchedule[i][3], todaysBlocks[i][1]];
-            }
-          } else {
-            if (school.name === "PVSS") {
-              todaysBlocks = (school.blockOrder[weekOffset]["day" + currentDay.toString()]);
-            } else {
-              todaysBlocks = (school.blockOrder[weekOffset]["day" + currentDate.getDay()]);
-            }
-          }
-        }
-        if (todaysBlocks) {
-          blockOrderLetters = todaysBlocks.map(x => (x[5] === "changing" ? x[0][0] : "")).join("");
-        }
-        
-
-
-        // console.log(todaysBlocks);
-        //itterates through those blocks and find which course matches the block
-        for (var i = 0; i < todaysBlocks.length; i++) {
-          //finds matching courses using the array.find method and pushing the result to todaysOrderedClasses
-          let todayClass = [todaysBlocks[i][1],todaysBlocks[i][2],todaysBlocks[i][3],todaysBlocks[i][4], todaysBlocks[i][5]]
-
-          if (todaysBlocks[i][5] === "constant") {
-
-            todayClass.push(todaysBlocks[i][0]);
-          } else {
-            if (user.blockNames) {
-              todayClass.push((user.blockNames[todaysBlocks[i][0]] || courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
-              todayClass.push(courseBlocks[todaysBlocks[i][0] + "_id"] || "1");
-            } else {
-              todayClass.push((courseBlocks[todaysBlocks[i][0]]) || (school.spareName || "Spare"));
-              todayClass.push(courseBlocks[todaysBlocks[i][0] + "_id"] || "1");
-            }
-
-          }
-          todaysOrderedClasses.push(todayClass);
-        }
-
-        //gets what the title for the app should be given what the admins have assigned it
-
-
-        let titleDisplay = school.titleDisplay ? school.titleDisplay : 0;
-
-        if (titleDisplay === 0) {
-          titleDisplay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()];
-        } else if (titleDisplay === 1) {
-          titleDisplay = blockOrderLetters || "___";
-        } else if (titleDisplay === 2) {
-          if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-            titleDisplay = "Day _";
-          } else {
-            titleDisplay = "day " + currentDay.toString();
-          }
-
-        } else {
-          titleDisplay = "___";
-        }
-
-
-        //makes a for loop that itterates as many times as their are days in the current month
-        for (var i = 0; i < getDays(currentDate.getMonth()); i++) {
-          let todayArray = [];
-          let dayEvents = [];
-          for (var j = 0; j < monthEvent.length; j++) {
-            if (monthEvent[j].day === i+1) {
-              //if one of the month's events happens on this day, add it to the array
-              dayEvents.push(monthEvent[j].time + ": " + monthEvent[j].info);
-            }
-          }
-          //after we've gone through all the month's events, add them to a 'todayArray' along with the day of the month, and the day of the week.
-          todayArray.push(dayEvents);
-          todayArray.push(i);
-          todayArray.push(((new Date(months[currentDate.getMonth()] + "1" + currentDate.getFullYear())).getDay()+i)%7);
-          //push todays array onto the month array
-          daysArray.push(todayArray);
-        }
-        //gathers the resources and assigns them to their induvidual classes
-        Resources.find({class: courseCodes}, function(err, resource) {
-          //itterates through all the courses
-          courses.forEach(function(course) {
-            //gives all the courses a property 'resources' that is blank
-            course.resource = [];
-            for (var i = 0; i < resource.length; i++) {
-              //if the resources class matches the courses code, add that resource as one of the resources for the class
-              if (course.code === resource[i].class) {
-                course.resource.push(resource[i]);
-              }
-            }
-          });
-          for (var i = 0; i < soonEvents.length; i++) {
-            soonEvents[i].dateDescription = new Date(soonEvents[i].date.getFullYear(), soonEvents[i].date.getMonth(), soonEvents[i].date.getDate()+1, 0, 0, 0, 0).toDateString();
-          }
-
-
-          let timeInMinutes = (currentDate.getHours())*60 + currentDate.getMinutes();
-
-          let blockForTime;
-          let currentLCOpen = ["Nothing!"];
-          if (currentDate.getDay() == 0 || currentDate.getDay() == 6 || timeInMinutes > todaysBlocks[todaysBlocks.length-1][3]*60 + todaysBlocks[todaysBlocks.length-1][4]) {
-            blockForTime = [["", "Nothing!"], ["", "Nothing!"]];
-          } else {
-            blockForTime = [["", "Nothing!"], [`${todaysOrderedClasses[0][0]}:${todaysOrderedClasses[0][1].toString().length === 1 ? "0" + todaysOrderedClasses[0][1].toString() : todaysOrderedClasses[0][1]}-${todaysOrderedClasses[0][2]}:${todaysOrderedClasses[0][3].toString().length === 1 ? "0" + todaysOrderedClasses[0][3].toString() : todaysOrderedClasses[0][3]} `, todaysOrderedClasses[0][5]]];
-            for (var i = 0; i < todaysBlocks.length; i++) {
-              if (timeInMinutes > todaysBlocks[i][1]*60+todaysBlocks[i][2]) {
-                let secondArray;
-                if (i+1 >= todaysBlocks.length) {
-                  secondArray = ["", "Nothing!"];
-                } else {
-                  secondArray = [`${(todaysOrderedClasses[i+1][0]-1)%12+1}:${todaysOrderedClasses[i+1][1].toString().length == 1 ? "0" + todaysOrderedClasses[i+1][1].toString() : todaysOrderedClasses[i+1][1]}-${(todaysOrderedClasses[i+1][2]-1)%12+1}:${todaysOrderedClasses[i+1][3].toString().length == 1 ? "0" + todaysOrderedClasses[i+1][3] : todaysOrderedClasses[i+1][3]} : `,(todaysOrderedClasses[i+1][5])];
-                }
-                blockForTime = [[`${(todaysOrderedClasses[i][0]-1)%12+1}:${todaysOrderedClasses[i][1].toString().length == 1 ? "0" + todaysOrderedClasses[i][1] : todaysOrderedClasses[i][1]}-${(todaysOrderedClasses[i][2]-1)%12+1}:${todaysOrderedClasses[i][3].toString().length == 1 ? "0" + todaysOrderedClasses[i][3] : todaysOrderedClasses[i][3]} : `, (todaysOrderedClasses[i][5])], secondArray];
-              }
-            }
-          }
-          res.render("index", {schoolSkipped: schoolSkippedToday, viewNotesDisplay: viewNotesDisplay, allNotes: allNotesObject, notes: notesObject, offLine : offLine, titleDisplay : titleDisplay, schoolName : school.name, currentDate : currentDate, favicon : school.favicon || "favicon.ico", blockDay: ((currentDate.getDay() +4 - dayOffSetToday%5)%5)+1, currentBlock: blockForTime, font: holidayFont(user.font), order: user.order, colours: user.colors, username: user.username, courses: courses, homework: homeworkList, blockOrder: todaysOrderedClasses, calendar: daysArray, month: months[currentDate.getMonth()], lcSchedule: currentLCOpen, permissions: user.permissions, soonEvents: soonEvents});
-        });
-      } catch(e) {
-        console.log(e);
-        res.sendFile(__dirname + "/errors/serverError.html");
-      }
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
 
 app.post("/", urlencodedParser, function(req,res) {
   //makes sure the user has a session
@@ -5481,7 +5240,6 @@ app.get("/courses", async function(req, res) {
           return (a.teacher > b.teacher ? 1 : -1);
         });
         res.render("redesign/courses", {disallowed: disallowedBlocks, selectedSemester: selectedSemester, userCourses: userCourses, categories: categories, courses: courses, school: school, icons: iconMap});
-        // res.render("addCourses", {schoolName : school.name, categories: categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
 
       } else {
         res.redirect("/login");
@@ -5490,35 +5248,8 @@ app.get("/courses", async function(req, res) {
       console.log(e);
       res.redirect("/login");
     }
-    // try {
-    //   if (req.session.userId) {
-    //     let user = await User.findOne({_id : req.session.userId});
-    //     let courses = await Course.find({school: user.school}).populate("teacher");
-    //     let school = await School.findOne({_id : user.school});
-    //     let categories = await Categories.find({school: school._id});
-    //     console.log(courses[0].category.toString() == categories[0]._id);
-    //     console.log(categories[0]._id);
-    //     courses.sort(function(a,b) {
-    //       return (a.teacher > b.teacher ? 1 : -1);
-    //     });
-    //     res.render("addCourses", {schoolName : school.name, categories: categories, colours: user.colors, font: holidayFont(user.font), courses : courses});
-
-    //   } else {
-    //     res.redirect("/login");
-    //   }
-    // } catch(e) {
-    //   res.redirect("/login");
-    // }
 });
 
-
-app.get("/getUserCourses", async function(req, res) {
-  if (req.query.user) {
-
-  } else {
-
-  }
-});
 
 app.post("/courses", urlencodedParser, async function(req, res) {
 
@@ -5566,350 +5297,16 @@ app.post("/courses", urlencodedParser, async function(req, res) {
     console.log(e);
     res.redirect("/login");
   }
-  // if (req.session.userId && req.body.coursesID) {
-  //   User.findOne({_id : req.session.userId}, function(err, user) {
-  //     if (err || user == null) {
-  //       console.log(err);
-  //       res.redirect("/");
-  //     } else {
-  //       console.log(req.body.coursesID);
-  //       Course.find({school : user.school, _id : req.body.coursesID}, function(err, courses) {
-  //         console.log(courses);
-  //         if (err || courses == null) {
-  //           console.log(err);
-  //           res.redirect("/");
-  //         } else {
-  //           User.findOneAndUpdate({_id : req.session.userId}, {courses : courses, blockNames : {A: "", B: "", C: "", D: "", E: ""}}).then(function() {
-  //             res.redirect("/");
-  //           });
-  //         }
-  //       });
-  //     }
-  //   })
-  // } else {
-  //   res.redirect("/");
-  // }
 });
 
-app.get("/add", function(req, res) {
-  res.cookie("path", "/add");
-  if (req.session.userId) {
-      res.sendFile(__dirname + "/add.html");
-  } else {
-    res.redirect("/login");
-  }
-
-});
-
-app.post("/add", urlencodedParser, function(req, res) {
-
-  //there are three types of adds supported right now. event, course, and resource.
 
 
-  //makes sure the user has a session
-  User.findOne({_id : req.session.userId}, function(err, user) {
-    if (err) {
-      res.redirect("/");
-    } else {
-      //makes sure the user is an admin
-      if (user != null && user.permissions === "admin") {
-        //makes courses
-        if (req.body.teacher && req.body.course && req.body.block && req.body.code) {
-          var courseData = {
-            teacher : req.body.teacher,
-            course : req.body.course.toLowerCase(),
-            block : req.body.block.toUpperCase(),
-            code : req.body.code.toUpperCase()
-          }
-          Course.create(courseData, function() {
-            res.redirect("/add");
-          });
-        //makes events
-        } else if (req.body.year) {
-          if (req.body.year && req.body.month && req.body.day && req.body.time && req.body.info) {
-            var eventData = {};
-            if (req.body.longInfo) {
-              eventData = {
-                year: req.body.year,
-                month: req.body.month-1,
-                day: req.body.day-1,
-                time: req.body.time,
-                info: req.body.info,
-                longForm: req.body.longInfo,
-                date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0)
-              }
-            } else {
-              eventData = {
-                year: req.body.year,
-                month: req.body.month-1,
-                day: req.body.day-1,
-                time: req.body.time,
-                info: req.body.info,
-                date: new Date(parseInt(req.body.year), req.body.month-1, req.body.day-1, 0, 0, 0, 0)
-              }
-            }
-            Events.create(eventData, function() {
-              res.redirect("/add");
-            })
-          }
-        //makes resources
-        } else if (req.body.url) {
-          if (req.body.url && req.body.class && req.body.type && req.body.description) {
-            var resourceData = {
-              url: req.body.url,
-              class: req.body.class,
-              type: req.body.type,
-              description: req.body.description
-            }
-            Resources.create(resourceData, function() {
-              res.redirect("/add");
-            });
-          }
-        } else if (req.body.alert) {
-          if (req.body.alert) {
-            User.update({}, {$push:{alerts: [[req.body.alert]]}}, {"multi": true}).then(function() {
-              Push.find({}, function(err, pushes) {
-                pushUsers(pushes, {title: req.body.alert, data: ""});
-              });
-              res.redirect("/add");
-            });
-          }
-        } else if (req.body.createCode && user.username === "AidanEglin") {
-          let code = Math.floor(Math.random() * 1000000) + 1000000;
-          Code.create({code : code}, function(err, code) {
-            console.log("created");
-            if (err) {
-              console.log(err);
-              res.redirect("/login");
-            } else {
-              let mailOptions = {
-                from: "pvsstudents@gmail.com",
-                to: "aidaneglin@gmail.com",
-                subject: "school code created",
-                text: "the school code is : " + code.code.toString()
-              }
-              transporter.sendMail(mailOptions, function(error, info) {
-                if (error) {
-                  console.log(error)
-
-                } else {
-
-                }
-              });
-              res.redirect("/add");
-            }
-          });
-        }
-      } else {
-        res.redirect("/login");
-      }
-    }
-  })
-});
-
-app.get("/calendar-view", function(req, res) {
-  res.render("loading", {getURL : "calendar"});
-});
-
-app.get("/calendar", async (req, res, next) => {
-  res.cookie("path", "/calendar");
-
-  if (req.session.userId) {
-    let user = await User.findOne({_id : req.session.userId});
-    if (!user || user == null) {
-
-    } else {
-      //declares a currentDate, monthArray, and monthName for later use
-      let currentDate = (new Date()).local();
-      let lowEnd;
-      let highEnd;
-      if (currentDate.getMonth() < 6) {
-        lowEnd = new Date(currentDate.getFullYear()-1, 8);
-        highEnd = new Date(currentDate.getFullYear(), 6);
-      } else {
-        lowEnd = new Date(currentDate.getFullYear(), 8);
-        highEnd = new Date(currentDate.getFullYear()+1, 6);
-      }
-      let monthsArray = [];
-      let monthsNames = ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June"];
-      let offSetEvents = await Events.find({$and: [{school : user.school}, {dayRolled: true}]});
-      let skipEvents = await Events.find({$and: [{school : user.school}, {schoolSkipped: true}]});
-      let offSetDays = offSetEvents.map(x => x.date);
-      skipEvents = skipEvents.map(x => x.date);
-      console.log(offSetDays);
-      console.log(skipEvents);
-      //finds ALL events. will fix later.
-      //fix with something like: Events.find({$and: [{date: {$gt: september (currentYear)}}, {date: {$lt: june (nextYear)}}]}, function(err, yearEvent))
-      let yearEvent = await Events.find({school : user.school, $and: [{date: {$gte: lowEnd}}, {date: {$lte: highEnd}}, {displayedEvent : true}]});
-      let school = await School.findOne({_id : user.school});
-
-      // starts the first day of the calendar on september first of that year
-      let theDay = lowEnd.getDay();
-      // declares an array that will be filled with the info for every day of the year
-      let daysArray = [];
-      let foundEvent = false;
-      //cycles through the 10 school months
-      for (var i = 0; i < 10; i++) {
-        //declares a currentMonth variable for later use
-        let currentMonth = [];
-        //get the amount of days in that month using the getDays function i defined.
-        for (var j = 0; j < getDays((i+8)%12); j++) {
-          //the days event array
-          let dayEvents = [];
-          foundEvent = false;
-          //i know this is terribly ineffiecient (O(n^2)) but for a low n it isn't too bad. cycles through every event called by events.find and checks if it lies on the current day
-          for (var k = 0; k < yearEvent.length; k++) {
-            //if there is an event today, add it to the array and confirm an event was found
-            if (yearEvent[k].month === (i+8)%12 && yearEvent[k].day === j+1) {
-              foundEvent = true;
-              dayEvents.push(yearEvent[k].time + ": " + yearEvent[k].info);
-            }
-          }
-          //pushes today on to the currentMonth array
-          currentMonth.push([dayEvents, j, (theDay%7)]);
-          //adds one to the day of the week
-          theDay++;
-        }
-        //pushes this month to the array
-        monthsArray.push(currentMonth);
-      }
-
-      res.render("calendar", {skipEvents: skipEvents, school: school, offSetDays: offSetDays, calendar : monthsArray, months : monthsNames, colours: user.colors, font: holidayFont(user.font)});
-    }
-  }
-});
-
-app.get("/submit-view", function(req,res) {
-  res.render("loading", {getURL : "submit"});
-});
-
-app.get("/submit", function(req, res) {
-  res.cookie("path", "/submit");
-
-  //renders the page with the user's courses
-  if (req.session.userId) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      Course.find({_id : user.courses}, function(err, courses) {
-        res.render("submitWork", {user : user.username, courses : courses, error : "", colours: user.colors, font: holidayFont(user.font)});
-      });
-    });
-  } else {
-    res.redirect("/login");
-  }
-});
-
-app.post("/submit", urlencodedParser, function(req, res) {
-  var tampered = false;
-  //idk why i did this but i felt like it sooooo the user gets banned if they tamper with input names
-  for (var key in req.body) {
-    if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed" && key != "due") {
-      tampered = true;
-
-    }
-  }
-
-  //makes sure all fields exist, and are of the proper length
-  if (req.session.userId && !tampered && (req.body.questions || req.body.assignment) && req.body.due.length < 60 && req.body.submittedBy.length < 40 && req.body.assignment.length < 512 && req.body.notes.length < 256 && req.body.questions.length < 40) {
-
-      User.findOne({username : req.body.submittedBy}, function(err, user) {
-
-        //makes a homework object
-        let homeworkObject = {
-          submittedBy: req.session.userId,
-          confirmed: false,
-          assignment: profanityFilter(req.body.assignment),
-          notes: profanityFilter(req.body.notes),
-          due: profanityFilter(req.body.due),
-          date: (new Date()).local(),
-          forCourse: mongoose.Types.ObjectId(req.body.courseID),
-        }
-
-        Assignments.create({submittedBy: req.session.userId, assignment: profanityFilter(req.body.assignment), confirmed: false, notes: profanityFilter(req.body.notes), due: req.body.due, forCourse: req.body.courseID, date: (new Date()).local()}, function(err, assignment) {
-          res.redirect("/");
-        });
-        //if the user is a teacher or an admin, let them submit it as confirmed.
-        if (err || !user) {
-
-        } else if (user.permissions == "teacher" || user.permissions == "admin") {
-          homeworkObject.confirmed = "T";
-        }
-        //adds the homework to the course
-        
-      })
-
-
-
-
-  } else if (!req.session.userId) {
-    res.redirect("/login");
-  } else if (tampered) {
-    //gonna add a ban function
-    User.findOneAndUpdate({_id : req.session.userId}, {$set:{banned : true}}).then(function() {
-        res.redirect("/login?banned=true");
-    });
-  } else {
-    res.redirect("/");
-  }
-});
 //self explanitory. logs the user out.
 app.get("/logout", function(req, res) {
   req.session.destroy();
   res.redirect("/login");
 });
 
-app.get("/suggestions", async (req, res, next) => {
-  res.cookie("path", "/suggestions");
-  if (req.session.userId) {
-    try {
-      let user = await User.findOne({_id : req.session.userId});
-      res.render("suggestions", {colours: user.colors, font: holidayFont(user.font)});
-
-    } catch(e) {
-      console.log(e);
-      res.redirect("/");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
-//sends the suggestions to me.
-app.post("/suggestions", urlencodedParser, function(req, res) {
-
-  if (req.session.userId && req.body.body) {
-    User.findOne({_id : req.session.userId}, function(err, user) {
-      //makes sure they aren't spamming me
-      if ((((new Date()).local()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
-        res.redirect("/");
-      } else {
-        //sends the email
-        let mailOptions = {
-          from: "pvsstudents@gmail.com",
-          to: "aidaneglin@gmail.com",
-          subject: "user suggestion",
-          text: req.body.body + "\n\n\nsubmitted by: " + user.firstName + " " + user.lastName + " (" + user.username + ")"
-        }
-        transporter.sendMail(mailOptions, function(error, info) {
-          if (error) {
-              console.log(error)
-            res.redirect("/")
-          } else {
-            let suggestions = user.suggestions;
-            suggestions.push([req.body.body, (new Date()).local()]);
-            //adds it to their list of sent suggestiona
-            User.findOneAndUpdate({_id : req.session.userId}, {suggestions: suggestions}).then(function() {
-              res.redirect("/");
-            });
-          }
-        });
-      }
-    });
-
-
-
-  } else {
-    res.redirect("/login");
-  }
-});
 
 
 

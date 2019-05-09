@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
+    <title>Dashboard | Announcements</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css">
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.js"></script>
@@ -104,7 +105,6 @@
             color: #aaa;
         }
         .sideBarOverview {
-            color: rgb(67,181,245);
             padding: 20px;
             border-top: 1px solid rgb(56, 70, 90);
             border-bottom: 1px solid rgb(56, 70, 90);
@@ -261,23 +261,117 @@
         .extendedBar {
             left: 0px !important;
         }
-        .userHolder {
+        .announcementList {
             width: 95%;
             max-width: 900px;
             margin: auto;
             /* padding-bottom: 60px; */
-            margin-top: 50px;
             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
             border-radius: 10px;
             background-color: #f5f5f5;
             overflow: hidden;
+        }
+        .title {
+            width: 95%;
+            max-width: 900px;
+            margin: auto;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size: 23px;
+            color: #5a6170;
+        }
+        .todaysAnnouncements {
+            width: 95%;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+        .todayHeadingBar {
+            width: 100%;
+            padding: 15px 25px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .todayHeadingBar * {
+            cursor: pointer;
+            color: #6697e8;
+        }
+        .todaysAnnouncements::after {
+            content: "";
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 50px;
+            border-top: 1px solid #ccc;
+            
+        }
+        .announcementBlock {
+            width: 100%;
+            padding: 20px 40px;
+            padding-left: 50px;
+            background-color: white;
+            position: relative;
+            cursor: grabbing;
+            border-bottom: 1px solid #ccc;
+        }
+        .announcementHeader {
+            width: 100%;
+            padding: 5px 40px;
+            padding-left: 30px;
+            background-color: white;
+            position: relative;
+            font-size: 22px;
+            cursor: grabbing;
+            border-bottom: 1px solid #ccc;
+        }
+        .announcementHeader svg {
+            position: absolute;
+            top: 50%;
+            left: 2.5px;
+            width: 30px;
+            height: 30px;
+            transform: translateY(-50%);
+            fill: grey;
+            cursor: pointer;   
+            display: none;
+        }
+        .announcementBlock:hover, .announcementHeader:hover {
+            background-color: #f5f5f5;
+        }
+        .announcementBlock:hover svg, .announcementHeader:hover svg {
+            display: block;
+        }
+        .announcementBlock svg {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            transform: translateY(-50%);
+            fill: grey;
+            cursor: pointer;
+            display: none;
+        }
+        .announcementBlockText {
+            font-size: 17px;
+        }
+        .announcementBlockGrades {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            font-weight: 900;
+            margin-top: 20px;
         }
         .bottomPadding {
             width: 100%;
             height: 60px;
             border-top: 1px solid #ccc;
         }
-        .searchUsers {
+        .searchAnnouncements {
             width: 100%;
             height: 70px;
             border-bottom: 1px solid #ccc;
@@ -309,7 +403,7 @@
             font-weight: 300;
             color: #999;
         }
-        .titleList {
+        .announcementsTitle {
             width: 100%;
             display: flex;
             flex-direction: row;
@@ -317,17 +411,53 @@
             padding: 10px 15px;
             border-bottom: 1px solid #ccc;
         }
+        .createAnnouncement {
+            overflow: hidden;
+            height: 300px;
+            max-height: 300px;
+            transition: max-height 0.2s linear;
+        }
+        .createHeader {
+            overflow: hidden;
+            height: 50px;
+            max-height: 50px;
+            transition: max-height 0.2s linear;
+            /* border-bottom: 1px solid #ccc; */
+        }
+        .createSubject {
+            color: white;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+        }
+        .hidden {
+            max-height: 1px;
+        }
+        .ql-toolbar  {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        .ql-container {
+            border-left: 0 !important;
+            border-right: 0 !important;
+            background-color: white;
+        }
         .titleListItem {
-            width: 33.333%;
+            width: 50%;
             font-size: 13px;
             font-weight: 600; 
         }
-        .userList {
+        .announcementsBody {
             width: 100%;
             overflow-y: auto;
             max-height: 250px;
         }
-        .user {
+        .announcement {
             width: 100%;
             padding: 10px 20px;
             display: flex;
@@ -337,8 +467,8 @@
             border-bottom: 1px solid #ccc;
             align-items: center;
         }
-        .userProperty {
-            width: 33.333%;
+        .announcementProperty {
+            width: 50%;
             font-size: 13px;
             font-weight: 500;
         }
@@ -431,6 +561,154 @@
                 width: 95%;
             }
         }
+        .createAnnouncementBlock {
+            width: 95%;
+            background-color: #f5f5f5;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            margin: auto;
+            margin-top: 20px;
+        }
+        .createCancel {
+            color: white;
+            padding: 10px 8px;
+            background-color: rgb(3,155,229);
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            display: none;
+        }
+        #cancelRow {
+            background-color: transparent;
+            box-shadow: none;
+            color: black;
+        }
+        #cancelRow:hover {
+            background-color: #ddd;
+        }
+        .createHeaderHolder {
+            width: 100%;
+            height: 100%;
+            border-bottom: 1px solid #ccc;
+            padding-left: 28px;
+        }
+        .enterHeader {
+            width: 100%;
+            height: 100%;
+            font-size: 22px;
+            border-radius: 0px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: transparent;
+            outline: none;
+            border: 0;
+        }
+        .expansionBlockHolder {
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .expansionBlock {
+            width: 95%;
+            margin: auto;
+            padding: 20px;
+            padding-bottom: 15px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .expansionBlockHeader {
+            width: 100%;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            color: #444;
+        }
+        .editHeaderInput {
+            font-size: 22px;
+            color: #444;
+            appearance: none;
+            border-radius: 0;
+            outline: 0;
+            border: 0;
+            width: 200px;
+        }
+        .expansionBlockSeperated {
+            margin-top: 20px;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.15);
+            border-bottom: 0;
+        }
+        .lastBlock {
+            border-bottom: 0;
+        }
+        .lastAnnouncement {
+            border-bottom: 0;
+        }
+        .expansionBlockHidden {
+            padding: 0 !important;
+            max-height: 0 !important;
+            opacity: 0;
+        }
+        .expansionBlockContent {
+            width: 100%;
+            padding: 10px 20px 0px 40px;
+            overflow: hidden;
+            max-height: none;
+        }
+        .contentBlock {
+            width: 100%;
+            font-size: 14px;
+            margin: 10px 0px;
+            line-height: 18px;
+            letter-spacing: 0.4px;
+            position: relative;
+        }
+        .arrowUp {
+            transform: rotate(180deg);
+        }
+        .edit {
+            font-size: 14px;
+            padding: 10px 20px;
+            color: #ddd;
+        }
+        .edit:hover {
+            color: black;
+            background-color: #ccc;
+        }
+        .delete {
+            font-size: 14px;
+            padding: 10px 20px;
+            color: #ddd;
+        }
+        .delete:hover {
+            color: red;
+        }
+        .editContentBlock {
+            position: absolute;
+            bottom: 0px;
+            right: 0;
+            color: black;
+            padding: 10px 8px;
+            /* background-color: rgb(3,155,229); */
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            /* -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26); */
+            /* -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.26); */
+            /* box-shadow: 0 2px 5px 0 rgba(0,0,0,.26); */
+        }
+        .editContentBlock:hover {
+            background-color: #ddd;
+        }
+        .editAnnouncements {
+            width: 100%;
+            height: 200px;
+            max-height: 200px !important;
+        }
     </style>
 </head>
 <body>
@@ -442,7 +720,7 @@
             <div class="sideBarTitle">
                     <img class = "headerLogo" src = "/public/images/logo_transparent.png" />
             </div>
-            <div class="sideBarOverview">
+            <div class="sideBarOverview" style = "color: white" onclick="window.location = '/dashboard'">
                 <div class="overViewMain">
                     School Overview
                 </div>
@@ -455,8 +733,8 @@
                     Edit and view the master schedule
                 </div>                
             </div>
-            <div class="sideBarTopic" onclick = "window.location = '/dashboard/announcements/'">
-                <div class="sideBarMain">
+            <div class="sideBarTopic">
+                <div class="sideBarMain" style = "color: rgb(67,181,245);">
                     Announcements
                 </div>
                 <div class="sideBarSecondary">
@@ -517,59 +795,129 @@
                 </div>
                 <div class="secondaryBar">
                     <div class="barTitle">
-                        PVSS (sd83)
+                        Announcements
                     </div>
                 </div>
             </div>
             <div class = "bodyLowerSection">
-                <div class="userHolder">
-                    <div class="searchUsers" id = "searchUsers">
-                        <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search users">
+                <div class="title">
+                    All Announcements
+                </div>
+                <div class="announcementList">
+                    <div class="searchAnnouncements" id = "searchAnnouncements">
+                        <i class="searchIcon fas fa-search"></i><input oninput = "searchText(this.value)" type="text" onfocus = "toggleBlur()" onblur = "toggleBlur()" class = "searchInput" placeholder = "Search announcements">
                     </div>
-                    <div class="titleList">
-                        <div class="titleListItem">
-                            User
-                        </div>
-                        <div class="titleListItem">
-                            Method
-                        </div>
+                    <div class="announcementsTitle">
                         <div class="titleListItem">
                             Date
                         </div>
+                        <div class="titleListItem">
+                            Announcements
+                        </div>
                     </div>
-                    <div class="userList">
-                        <% for (var i = recent.length-1; i > (recent.length-100 > 0 ? recent.length-100 : -1); i--) { %>
-                        <div class="user">
-                            <div class="userProperty">
-                                <div class="username">
-                                    <%=recent[i].user%>
+                    <div class="announcementsBody">
+                        <div class="announcement lastAnnouncement">
+                            <div class="announcementProperty">
+                                September 21st, 2018
+                            </div>
+                            <div class="announcementProperty" style = "color: #6697e8; text-decoration: underline; cursor: pointer">
+                                View
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottomPadding"></div>
+                </div>
+                <div class="title">
+                    Todays Announcements
+                </div>
+                <div class="todaysAnnouncements">
+                    <div class="todayHeadingBar">
+                        <div id = "newAnnouncement" class="createSubject" onclick = "toggleCreateBar('announcement')">
+                            NEW ANNOUNCEMENT
+                        </div>   
+                        <div class="createCancel" id = "cancelRow" onclick = "cancelCreation()">CANCEL</div>
+                        <div class="createCancel" id = "createButton" onclick = "create('announcement')">CREATE</div> 
+                    </div>
+                    <div extended = "false" id = "createAnnouncement" class="createAnnouncement hidden">
+                        <div id="editor"></div>
+                    </div>
+                    <div class="expansionBlockHolder">
+                        <div expansionEnabled="true" header="Caines Corner" class="expansionBlock expansionBlockSeperated">
+                            <div class="expansionBlockHeader" onclick="openExpansionBlock(this.parentNode)">
+                                <div>
+                                    Caines Corner
+                                </div>
+                                <div class="edit" onclick="editHeader(this.parentNode.parentNode)">edit</div>
+                                <div class="delete" onclick="deleteHeader(this.parentNode.parentNode)">delete</div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="expansionBlockContent expansionBlockHidden">
+                                <div class="contentBlock">
+                                    Women are equal and they deserve respect
+                                    <br>
+                                    Just kidding they can suck my dick
+                                    <div class="editContentBlock">
+                                        EDIT
+                                    </div>
+                                </div>
+                                <div extended = "false" class="editAnnouncements hidden">
+                                    <div class="editor"></div>
                                 </div>
                             </div>
-                            <div class="userProperty"><%=recent[i].info%></div>
-                            <div class="userProperty"><%=recent[i].dateString%></div>
                         </div>
-                        <% } %>
-                    </div>
-                    <div class="bottomPadding">
-
-                    </div>
-                </div>
-                <div class="addAlert">
-                    <div class="addAlertHeader">Mass Alert</div>
-                    <div class="addAlertInfo">
-                        <div class="infoBox">
-                            <div class="infoBoxHeader">text</div>
-                            <textarea id = "alertText"></textarea>
+                        <div onclick="openExpansionBlock(this)" class="expansionBlock expansionBlockSeperated">
+                            <div class="expansionBlockHeader">
+                                <div>Office News</div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="expansionBlockContent expansionBlockHidden">
+                                <div class="contentBlock">
+                                    Women are equal and they deserve respect
+                                    <br>
+                                    Just kidding they can suck my dick
+                                </div>
+                            </div>
                         </div>
-                        <div class="infoBox">
-                            <div class="infoBoxHeader">link (optional)</div>
-                            <textarea id = "alertLink"></textarea>
+                        <div onclick="openExpansionBlock(this)" class="expansionBlock expansionBlockSeperated">
+                            <div class="expansionBlockHeader">
+                                <div>Career Center</div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="expansionBlockContent expansionBlockHidden">
+                                <div class="contentBlock">
+                                    Women are equal and they deserve respect
+                                    <br>
+                                    Just kidding they can suck my dick
+                                </div>
+                            </div>
                         </div>
-                        
-                    </div>
-                    <div class="sendAlertHolder">
-                        <div class="sendAlert" id="sendAlert" onclick = "sendAlert()">
-                            CREATE ALERT
+                        <div onclick="openExpansionBlock(this)" class="expansionBlock expansionBlockSeperated">
+                            <div class="expansionBlockHeader">
+                                <div>Library</div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="expansionBlockContent expansionBlockHidden">
+                                <div class="contentBlock">
+                                    Women are equal and they deserve respect
+                                </div>
+                                <div class="contentBlock">
+                                    Just kidding they can suck my dick
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="openExpansionBlock(this)" class="expansionBlock expansionBlockSeperated">
+                            <div class="expansionBlockHeader">
+                                <div>Miscellaneous</div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="expansionBlockContent expansionBlockHidden">
+                                <div class="contentBlock">
+                                    Women are equal and they deserve respect
+                                </div>
+                                <div class="contentBlock">
+                                    Just kidding they can suck my dick
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -644,6 +992,30 @@
         </div>
     </div>
 </body>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    let options = {
+        debug: "info",
+
+        theme: "snow",
+
+    }
+    var quill = new Quill('#editor', options);
+
+    let editors = document.getElementsByClassName("editor");
+    let quills = [];
+    for (var i = 0; i < editors.length; i++) {
+        let quill = new Quill(editors[i], options);
+        quills.push(quill);
+        // quill.addEventListener("onclick", function(click) {
+        //     return false;
+        // });
+    }
+
+    document.getElementById("editor").onclick = function() {
+        console.log(quill.getContents());
+    }
+</script>
 <script>
     
     let coursesExpanded = false;
@@ -683,6 +1055,27 @@
         let modal = document.getElementById("bodyModal");
         modal.classList.toggle("openModal");
     }
+    function editHeader(block) {
+        block.setAttribute("expansionEnabled", "false");
+        block.children[0].children[0].innerHTML = `<input type="text" onKeydown="event.key == 'Enter' ? finishEdit(this) : ''" class="editHeaderInput" value="${block.getAttribute("header")}">`;
+        block.children[0].children[0].children[0].focus();
+    }
+    function finishEdit(block) {
+        let value = block.value;
+        block.parentNode.parentNode.parentNode.setAttribute("header", value);
+        block.parentNode.parentNode.parentNode.setAttribute("expansionEnabled", "true");
+        block.parentNode.innerHTML = value;
+    }
+    function deleteHeader(block) {
+
+    }
+    function openExpansionBlock(block) {
+        if (block.getAttribute("expansionEnabled") === "true") {
+            block.children[1].classList.toggle("expansionBlockHidden");
+            block.children[0].children[3].classList.toggle("arrowUp");
+        }
+        return false;
+    }
     let alertOut = false;
     function sendAlert() {
         let alertText = document.getElementById("alertText").value;
@@ -714,14 +1107,65 @@
             loadRequest.send("alertText=" + alertText + "&alertLink=" + alertLink); 
         }
     }
+    function cancelCreation() {
+        let bar = document.getElementById("createAnnouncement");
+        let buttons = document.getElementsByClassName("createSubject");
+        let createCancel = document.getElementsByClassName("createCancel");
+        bar.classList.add("hidden");
+        bar.setAttribute("extended", "false");
+        buttons[0].style.display = "block";
+        createCancel[0].style.display = "none";
+        createCancel[1].style.display = "none"; 
+    }
+    function toggleCreateBar(type) {
+        let bar = document.getElementById("createAnnouncement");
+        let buttons = document.getElementsByClassName("createSubject");
+        let createCancel = document.getElementsByClassName("createCancel");
+        
+        if (type == "announcement") { 
+            if (bar.getAttribute("extended") == "true") {
+                bar.classList.add("hidden");
+                bar.setAttribute("extended", "false");
+                buttons[0].style.display = "block";
+                createCancel[0].style.display = "none";
+                createCancel[1].style.display = "none";
+            } else {
+                bar.classList.remove("hidden");
+                bar.setAttribute("extended", "true");
+                buttons[0].style.display = "none";
+                createCancel[0].style.display = "block";
+                createCancel[1].style.display = "block";
+            }   
+        } else if (type == "header") {
+            bar.classList.add("hidden");
+            bar.setAttribute("extended", "false");
+            if (secondBar.getAttribute("extended") == "true") {
+                secondBar.classList.add("hidden");
+                secondBar.setAttribute("extended", "false");
+                buttons[0].style.display = "block";
+                buttons[1].style.display = "block";
+                createCancel[0].style.display = "none";
+                createCancel[1].style.display = "none";
+            } else {
+                secondBar.classList.remove("hidden");
+                secondBar.setAttribute("extended", "true");
+                buttons[0].style.display = "none";
+                buttons[1].style.display = "none";
+                createCancel[0].style.display = "block";
+                createCancel[1].style.display = "block";
+            } 
+        } else {
+
+        }
+    }
     function toggleBlur() {
-        let element = document.getElementById("searchUsers");
+        let element = document.getElementById("searchAnnouncements");
         element.classList.toggle("activeSearch");
     }
     function searchText(text) {
-        let users = document.getElementsByClassName("user");
+        let users = document.getElementsByClassName("announcement");
         for (var i = 0; i < users.length; i++) {
-            let child = users[i].children[0].children[0];
+            let child = users[i].children[0];
             if (child.innerText.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
                 users[i].style.display = "flex";
             } else {
